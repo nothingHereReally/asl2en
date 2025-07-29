@@ -1,8 +1,10 @@
+from random import shuffle
+from typing import Generator
 from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, destroyAllWindows, line
-from mediapipe.python.solutions.holistic import Holistic
-from numpy import array, ndarray, uint8, zeros
+from numpy import array, ndarray, uint16, uint8, zeros
+from json import load as jsonload
 
-from .lmark_constant import FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, QUANTITY_FRAME, WORTHY_POSE_IDX
+from .lmark_constant import FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, PROJ_ROOT, QUANTITY_FRAME, TRAIN_BATCH, WLASL_VID_DIR, WORTHY_POSE_IDX
 from .lmark_constant import mpH
 
 
@@ -430,7 +432,7 @@ def getSkeletonFrames(fpath_vid: str, TqFRAMES: int= QUANTITY_FRAME) -> ndarray:
             # problem, oqFRAMES 33, 46
             target2orig_ratio: int= TqFRAMES//oqFRAMES
             for i in range(TqFRAMES):
-                if (i%target2orig_ratio) == 0 and i<oqFRAMES:
+                if (i%target2orig_ratio) == 0 and i<(oqFRAMES-1):
                     isNotEnd, frame= vid.read()
                 if isNotEnd:
                     frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
@@ -477,4 +479,30 @@ def getSkeletonFrames(fpath_vid: str, TqFRAMES: int= QUANTITY_FRAME) -> ndarray:
     if len(all_frames)!=TqFRAMES:
         raise ValueError(f"frames on single video failed match target( {TqFRAMES} ), but result is {len(all_frames)} -- {fpath_vid}")
     return array(all_frames, dtype=uint8)
+
+
+def getdata(batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
+    wlasl_ready: dict= {}
+    with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.ready.json", "r") as f:
+        wlasl_ready= jsonload(f)
+        # wlasl_ready['train']
+        # wlasl_ready['val']
+        # wlasl_ready['test']
+        # wlasl_ready['label_id2gloss']
+        # wlasl_ready['label_gloss2id']
+    shuffle(wlasl_ready['train'])
+    current_idxTRAIN: int= 0
+    while current_idxTRAIN<len(wlasl_ready['train']):
+        batch_vids: ndarray= zeros((batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+        batch_class: ndarray= zeros((batch), dtype=uint16)
+        for i in range(current_idxTRAIN, current_idxTRAIN+batch):
+            # batch_vids[i, :, :, :, :]= getSkeletonFrames(f"{WLASL_VID_DIR}{wlasl_ready['train'][i]['video_id']}.mp4")
+            # batch_vids[i]= getSkeletonFrames(f"{WLASL_VID_DIR}{wlasl_ready['train'][i]['video_id']}.mp4")
+            batch_vids[i]= getSkeletonFrames(f"/home/o_o/JDrv/myProperty/usjr/thesis.hearo/asl2en/dataset/wlasl_dataset/videos/16443.mp4")
+            batch_class[i]= 1
+        yield (
+            {"batch_vid": batch_vids},
+            {"batch_class": batch_class}
+        )
+        current_idxTRAIN +=batch
 
