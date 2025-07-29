@@ -3,13 +3,10 @@ from mediapipe.python.solutions.holistic import Holistic
 
 PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
 
-IMG_SIZE: int= 480
-# IMG_SIZE: int= 150
-QUANTITY_FRAME: int= 48
-# QUANTITY_FRAME: int= 2
-WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
 TRAIN_BATCH: int= 32
-# TRAIN_BATCH: int= 2
+QUANTITY_FRAME: int= 48
+IMG_SIZE: int= 480
+WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
 
 
 
