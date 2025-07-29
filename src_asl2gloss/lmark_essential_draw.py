@@ -3,6 +3,7 @@ from mediapipe.python.solutions.holistic import Holistic
 from numpy import array, ndarray, uint8, zeros
 
 from .lmark_constant import FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, QUANTITY_FRAME, WORTHY_POSE_IDX
+from .lmark_constant import mpH
 
 
 def drawSkeletonImg(img_orig: ndarray, \
@@ -424,12 +425,6 @@ def getSkeletonFrames(fpath_vid: str, TqFRAMES: int= QUANTITY_FRAME) -> ndarray:
 
 
     if vid.isOpened():
-        mph= Holistic( # mph, midiapipe holistic
-            static_image_mode=False,
-            model_complexity=1,
-            min_detection_confidence=0.5,
-            min_tracking_confidence=0.5
-        )
         isNotEnd, frame= True, zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
         if oqFRAMES < TqFRAMES:
             # problem, oqFRAMES 33, 46
@@ -441,7 +436,7 @@ def getSkeletonFrames(fpath_vid: str, TqFRAMES: int= QUANTITY_FRAME) -> ndarray:
                     frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
                     all_frames.append(drawFacePoseHand(
                         img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                        lmark_mph=mph.process(frame),
+                        lmark_mph=mpH.process(frame),
                         orig_shape=frame.shape
                     ))
         elif oqFRAMES==TqFRAMES:
@@ -451,7 +446,7 @@ def getSkeletonFrames(fpath_vid: str, TqFRAMES: int= QUANTITY_FRAME) -> ndarray:
                     frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
                     all_frames.append(drawFacePoseHand(
                         img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                        lmark_mph=mph.process(frame),
+                        lmark_mph=mpH.process(frame),
                         orig_shape=frame.shape
                     ))
         else: # TqFRAMES < oqFRAMES
@@ -463,7 +458,7 @@ def getSkeletonFrames(fpath_vid: str, TqFRAMES: int= QUANTITY_FRAME) -> ndarray:
                         frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
                         all_frames.append(drawFacePoseHand(
                             img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mph.process(frame),
+                            lmark_mph=mpH.process(frame),
                             orig_shape=frame.shape
                         ))
                 elif 1==orig2target_ratio:
@@ -471,7 +466,7 @@ def getSkeletonFrames(fpath_vid: str, TqFRAMES: int= QUANTITY_FRAME) -> ndarray:
                         frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
                         all_frames.append(drawFacePoseHand(
                             img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mph.process(frame),
+                            lmark_mph=mpH.process(frame),
                             orig_shape=frame.shape
                         ))
     else:

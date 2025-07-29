@@ -1,3 +1,6 @@
+from mediapipe.python.solutions.holistic import Holistic
+
+
 PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
 
 IMG_SIZE: int= 480
@@ -7,6 +10,17 @@ QUANTITY_FRAME: int= 48
 WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
 TRAIN_BATCH: int= 32
 # TRAIN_BATCH: int= 2
+
+
+
+
+mpH: Holistic= Holistic( # mph, midiapipe holistic
+    static_image_mode=False,
+    model_complexity=1,
+    min_detection_confidence=0.5,
+    min_tracking_confidence=0.5
+)
+
 
 FACE_CONNECTIONS: tuple= (
     # oval face
