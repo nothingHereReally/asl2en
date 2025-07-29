@@ -7,6 +7,7 @@ TRAIN_BATCH: int= 32
 QUANTITY_FRAME: int= 48
 IMG_SIZE: int= 480
 WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
+TOTAL_GLOSS_UNIQ: int= 2000
 
 
 
