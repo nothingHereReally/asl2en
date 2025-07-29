@@ -23,36 +23,45 @@ if __name__=="__main__":
 
     x= Conv3D(
         filters=16,
-        kernel_size=(QUANTITY_FRAME,3,3),
+        kernel_size=(13,3,3),
         strides=(1,1,1),
         padding='valid',
         activation=relu,
         dtype=float32,
         name='conv_1'
     )(x)
-    # x= MaxPooling3D(
-    #     pool_size=(5,5,5),
-    #     strides=(3,3,3),
-    #     padding='valid',
-    #     dtype=float32,
-    #     name='maxpool_1'
-    # )(x)
-    # x= Conv3D(
-    #     filters=64,
-    #     kernel_size=(3,3,3),
-    #     strides=(1,1,1),
-    #     padding='valid',
-    #     activation=relu,
-    #     dtype=float32,
-    #     name='conv_2'
-    # )(x)
-    # x= MaxPooling3D(
-    #     pool_size=(7,7,7),
-    #     strides=(5,5,5),
-    #     padding='valid',
-    #     dtype=float32,
-    #     name='maxpool_2'
-    # )(x)
+    x= MaxPooling3D(
+        pool_size=(5,5,5),
+        strides=(3,3,3),
+        padding='valid',
+        dtype=float32,
+        name='maxpool_1'
+    )(x)
+    x= Conv3D(
+        filters=64,
+        kernel_size=(3,3,3),
+        strides=(1,1,1),
+        padding='valid',
+        activation=relu,
+        dtype=float32,
+        name='conv_2'
+    )(x)
+    x= MaxPooling3D(
+        pool_size=(7,7,7),
+        strides=(5,5,5),
+        padding='valid',
+        dtype=float32,
+        name='maxpool_2'
+    )(x)
+    x= Conv3D(
+        filters=16,
+        kernel_size=(1,3,3),
+        strides=(1,1,1),
+        padding='valid',
+        activation=relu,
+        dtype=float32,
+        name='conv_3'
+    )(x)
 
 
     x= Flatten()(x)
