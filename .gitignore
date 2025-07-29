@@ -1,2 +1,6 @@
 /.venv
+/*/__pycache__
+/*/*/__pycache__
+/dataset
+/src_asl2gloss/file.png
 

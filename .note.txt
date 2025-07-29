@@ -1,0 +1,21 @@
+pytorch: https://pytorch.org/get-started/locally/
+fail: install torch torchvision torchaudio
+cuda 12.8: pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu128
+pip install -U git+https://github.com/PrithivirajDamodaran/Gramformer.git
+
+
+
+
+solution to error
+'''
+  File "/home/o_o/JDrv/myProperty/usjr/thesis.hearo/asl2en/.venv2/lib/python3.12/site-packages/spacy/util.py", line 484, in load_model
+    raise IOError(Errors.E050.format(name=name))
+OSError: [E050] Can't find model 'en_core_web_sm'. It doesn't seem to be a Python package or a valid path to a data directory.
+''' is below
+python -m spacy download en_core_web_sm
+
+
+
+
+https://github.com/google-ai-edge/mediapipe/blob/master/docs/solutions/face_mesh.md#min_detection_confidence
+https://chuoling.github.io/mediapipe/solutions/holistic.html
