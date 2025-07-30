@@ -74,7 +74,8 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
             img_orig=img,
             lmark_cords=lmark_pose,
             conn_idxs_list=POSE_CONNECTIONS,
-            thick=4,
+            # thick=4,
+            thick=1,
             color_conn=(51, 204, 204), # 204/255= 0.8
             color_lmark=(204, 204, 51) # 51/255= 0.2
             # color_conn=(255,255,255), # blackNwhite
@@ -87,7 +88,8 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
             img_orig=img,
             lmark_cords=lmark_lhand,
             conn_idxs_list=HAND_CONNECTIONS,
-            thick=2,
+            # thick=2,
+            thick=1,
             color_conn=(204,0,0), # 204/255= 0.8
             color_lmark=(255,255,255) # 255/255= 1.0
             # color_conn=(204,255,255), # blackNwhite
@@ -100,7 +102,8 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
             img_orig=img,
             lmark_cords=lmark_rhand,
             conn_idxs_list=HAND_CONNECTIONS,
-            thick=2,
+            # thick=2,
+            thick=1,
             color_conn=(204,0,0), # 204/255= 0.8
             color_lmark=(255,0,255) # 255/255= 1.0
             # color_conn=(255,255,255), # blackNwhite
