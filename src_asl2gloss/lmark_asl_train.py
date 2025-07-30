@@ -1,14 +1,15 @@
 from keras.src.losses import sparse_categorical_crossentropy
 from keras.src.models import Model
 from keras.src.optimizers import Adam
-# from json import load as jsonload
+from keras.src.saving import load_model
+from numpy import argmax, float32
 
 # from .lmark_constant import TOTAL_TRAIN_FILE, TRAIN_BATCH, PROJ_ROOT
-from .lmark_constant import TOTAL_TRAIN_FILE, TRAIN_BATCH
+from .lmark_constant import IMG_SIZE, PROJ_ROOT, QUANTITY_FRAME, TOTAL_TRAIN_FILE, TRAIN_BATCH, wlasl_READY
 
 
 from .modelasl2gloss_layers import data_in, data_out
-from .lmark_essential_draw import getdata
+from .lmark_essential_draw import getSkeletonFrames, getdata
 
 if __name__=="__main__":
     model: Model= Model(
@@ -28,8 +29,8 @@ if __name__=="__main__":
         epochs=7,
         steps_per_epoch=TOTAL_TRAIN_FILE//TRAIN_BATCH
     )
-    # wlasl_ready= {}
-    # with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.ready.json", "r") as f:
-    #     wlasl_ready= jsonload(f)
-    # print(f"type {type(wlasl_ready['train'][0]['video_id'])}")
-    # print(f"type {type(wlasl_ready['train'][0]['gloss_id'])}")
+    print(f"proj_root {PROJ_ROOT}")
+    model.save(f"{PROJ_ROOT}model/aslvid2gloss_v1.keras")
+    loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v1.keras")
+    shouldBeBook= loadModel.predict(getSkeletonFrames(f"{PROJ_ROOT}dataset/wlasl_dataset/videos/07092.mp4").reshape((1, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)).astype(float32)/255.0)
+    print(f"{wlasl_READY['label_id2gloss'][argmax(shouldBeBook[0], axis=-1)]} --> accuracy {shouldBeBook[0][argmax(shouldBeBook[0], axis=-1)]*100}%")
