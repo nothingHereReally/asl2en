@@ -22,16 +22,20 @@ x= Rescaling(
 
 x= Conv3D(
     filters=16,
-    kernel_size=(13,3,3),
-    strides=(1,1,1),
+    # kernel_size=(13,3,3),
+    # strides=(1,1,1),
+    kernel_size=(5,5,5),
+    strides=(3,3,3),
     padding='valid',
     activation=relu,
     dtype=float32,
     name='conv_1'
 )(x)
 x= MaxPooling3D(
-    pool_size=(5,5,5),
-    strides=(3,3,3),
+    # pool_size=(5,5,5),
+    # strides=(3,3,3),
+    pool_size=(3,3,3),
+    strides=(2,2,2),
     padding='valid',
     dtype=float32,
     name='maxpool_1'
@@ -46,15 +50,18 @@ x= Conv3D(
     name='conv_2'
 )(x)
 x= MaxPooling3D(
-    pool_size=(7,7,7),
-    strides=(5,5,5),
+    # pool_size=(7,7,7),
+    # strides=(5,5,5),
+    pool_size=(3,3,3),
+    strides=(2,2,2),
     padding='valid',
     dtype=float32,
     name='maxpool_2'
 )(x)
 x= Conv3D(
     filters=16,
-    kernel_size=(1,3,3),
+    # kernel_size=(1,3,3),
+    kernel_size=(2,5,5),
     strides=(1,1,1),
     padding='valid',
     activation=relu,
@@ -65,7 +72,8 @@ x= Conv3D(
 
 x= Flatten()(x)
 x= Dense(
-    units=16,
+    # units=16,
+    units=TOTAL_GLOSS_UNIQ//100,
     activation=sigmoid,
     dtype=float32,
     name='dense_1'
