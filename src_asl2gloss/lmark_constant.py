@@ -3,9 +3,11 @@ from mediapipe.python.solutions.holistic import Holistic
 
 PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
 
-TRAIN_BATCH: int= 32
+# TRAIN_BATCH: int= 32
+TRAIN_BATCH: int= 2
 QUANTITY_FRAME: int= 48
-IMG_SIZE: int= 480
+# IMG_SIZE: int= 480
+IMG_SIZE: int= 100
 WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
 TOTAL_GLOSS_UNIQ: int= 2000
 TOTAL_TRAIN_FILE: int= 14289
