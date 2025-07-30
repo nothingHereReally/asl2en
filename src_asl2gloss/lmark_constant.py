@@ -1,4 +1,5 @@
 from mediapipe.python.solutions.holistic import Holistic
+from json import load as jload
 
 
 # PROJ_ROOT: str= f"/absolute/dir/to/project/"
@@ -22,6 +23,11 @@ mpH: Holistic= Holistic( # mph, midiapipe holistic
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5
 )
+tmp_ready: dict= {}
+with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.ready.json", 'r') as f:
+    tmp_ready= jload(f)
+wlasl_READY: dict= tmp_ready.copy()
+del tmp_ready
 
 
 FACE_CONNECTIONS: tuple= (
