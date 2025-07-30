@@ -1,6 +1,7 @@
 from mediapipe.python.solutions.holistic import Holistic
 
 
+# PROJ_ROOT: str= f"/absolute/dir/to/project/"
 PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
 
 # TRAIN_BATCH: int= 32
