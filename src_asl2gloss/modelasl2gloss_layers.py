@@ -14,7 +14,7 @@ data_in= Input(
 x= Rescaling(
     scale=1./255,
     offset=0.0,
-    dtype='float32',
+    dtype=float32,
     name='scale_0.0_1.0'
 )(data_in)
 
