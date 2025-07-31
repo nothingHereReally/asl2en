@@ -7,12 +7,12 @@ PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
 
 # TRAIN_BATCH: int= 32
 TRAIN_BATCH: int= 2
-QUANTITY_FRAME: int= 48
+# QUANTITY_FRAME: int= 48
+QUANTITY_FRAME: int= 50
 # IMG_SIZE: int= 480
 IMG_SIZE: int= 300
 WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
 TOTAL_GLOSS_UNIQ: int= 2000
-TOTAL_TRAIN_FILE: int= 14289
 
 
 
@@ -28,6 +28,7 @@ with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.ready.json", 'r') 
     tmp_ready= jload(f)
 wlasl_READY: dict= tmp_ready.copy()
 del tmp_ready
+TOTAL_TRAIN_FILE: int= int(len(wlasl_READY['train']))
 
 
 FACE_CONNECTIONS: tuple= (

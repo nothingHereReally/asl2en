@@ -11,12 +11,12 @@ data_in= Input(
     dtype=float32,
     name='batch_vid'
 )
-x= Rescaling(
-    scale=1./255,
-    offset=0.0,
-    dtype=float32,
-    name='scale_0.0_1.0'
-)(data_in)
+# x= Rescaling(
+#     scale=1./255,
+#     offset=0.0,
+#     dtype=float32,
+#     name='scale_0.0_1.0'
+# )(data_in)
 
 
 
@@ -30,7 +30,8 @@ x= Conv3D(
     activation=relu,
     dtype=float32,
     name='conv_1'
-)(x)
+# )(x)
+)(data_in)
 x= MaxPooling3D(
     # pool_size=(5,5,5),
     # strides=(3,3,3),

@@ -1,11 +1,10 @@
-from random import shuffle
+from random import choices, shuffle
 from typing import Generator
 from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, destroyAllWindows, line
 from numpy import array, float32, ndarray, uint16, uint8, zeros
-from json import load as jsonload
 from math import ceil
 
-from .lmark_constant import FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, PROJ_ROOT, QUANTITY_FRAME, TRAIN_BATCH, WLASL_VID_DIR, WORTHY_POSE_IDX
+from .lmark_constant import FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, QUANTITY_FRAME, TRAIN_BATCH, WLASL_VID_DIR, WORTHY_POSE_IDX, wlasl_READY
 from .lmark_constant import mpH
 
 
@@ -19,16 +18,18 @@ def drawSkeletonImg(img_orig: ndarray, \
     def isOKplt(coord: tuple) -> bool:
         return coord[0]<=1.0 and coord[1]<=1.0 and 0.0<=coord[0] and 0.0<=coord[1]
     img: ndarray= img_orig.copy()
-    del img_orig
     img_wh: dict= {"wx": img.shape[1], "hy": img.shape[0]}
+
+
+    # drawing the lines between 2 landmark connections
     for l in conn_idxs_list:
         pA: tuple= (
-            lmark_cords[l[0]][0], # x
-            lmark_cords[l[0]][1]  # y
+            lmark_cords[  l[0]  ][0], # x
+            lmark_cords[  l[0]  ][1]  # y
         )
         pB: tuple= (
-            lmark_cords[l[1]][0], # x
-            lmark_cords[l[1]][1]  # y
+            lmark_cords[  l[1]  ][0], # x
+            lmark_cords[  l[1]  ][1]  # y
         )
         if isOKplt(pA) and isOKplt(pB):
             line(
@@ -38,8 +39,13 @@ def drawSkeletonImg(img_orig: ndarray, \
                 color=color_conn,
                 thickness=thick
             )
+        else:
+            raise ValueError("Has landmark_coordinate<0.0 or 1.0<landmark_coordinate which is not allowed, it should be 0.0<= landmark_coordinate <=1.0")
         del pA
         del pB
+
+
+    # drawing joints as cricles
     if drawJoint:
         for o in lmark_cords:
             if isOKplt(o):
@@ -53,11 +59,20 @@ def drawSkeletonImg(img_orig: ndarray, \
                     color=color_lmark,
                     thickness=thick*2
                 )
+            else:
+                raise ValueError("Has landmark_coordinate<0.0 or 1.0<landmark_coordinate which is not allowed, it should be 0.0<= landmark_coordinate <=1.0")
     return img
+
+
+
+
+
+
+
+
 def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray:
     def recalcDrawFace(img_orig: ndarray, lmark_face: tuple) -> ndarray:
         img: ndarray= img_orig.copy()
-        del img_orig
         return drawSkeletonImg(
             img_orig=img,
             lmark_cords=lmark_face,
@@ -69,7 +84,6 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
         )
     def recalcDrawPose(img_orig: ndarray, lmark_pose: tuple) -> ndarray:
         img: ndarray= img_orig.copy()
-        del img_orig
         return drawSkeletonImg(
             img_orig=img,
             lmark_cords=lmark_pose,
@@ -77,13 +91,13 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
             # thick=4,
             thick=1,
             color_conn=(51, 204, 204), # 204/255= 0.8
-            color_lmark=(204, 204, 51) # 51/255= 0.2
+            color_lmark=(204, 204, 51), # 51/255= 0.2
             # color_conn=(255,255,255), # blackNwhite
-            # color_lmark=(255,255,255) # blackNwhite
+            # color_lmark=(255,255,255), # blackNwhite
+            drawJoint=False
         )
     def recalcDrawLeftHands(img_orig: ndarray, lmark_lhand: tuple) -> ndarray:
         img: ndarray= img_orig.copy()
-        del img_orig
         return drawSkeletonImg(
             img_orig=img,
             lmark_cords=lmark_lhand,
@@ -97,7 +111,6 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
         )
     def recalcDrawRightHands(img_orig: ndarray, lmark_rhand: tuple) -> ndarray:
         img: ndarray= img_orig.copy()
-        del img_orig
         return drawSkeletonImg(
             img_orig=img,
             lmark_cords=lmark_rhand,
@@ -110,7 +123,6 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
             # color_lmark=(255,255,255) # blackNwhite
         )
     img: ndarray= img_orig.copy()
-    del img_orig
 
 
     # lmark_fph.face_landmarks.landmark
@@ -150,6 +162,9 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
         recalc_lmark_right_hand= []
         all_x= []
         all_y= []
+        # here possible -2.0<= i[1].x <=2.0, mostly on pose
+        # here possible -2.0<= i[1].y <=2.0, mostly on pose
+        # that's why next force be 0.0<= all <=1.0
         if lmark_mph.face_landmarks != None:
             for i in enumerate(lmark_mph.face_landmarks.landmark):
                 recalc_lmark_face.append((  (i[1]).x, (i[1]).y  ))
@@ -220,6 +235,7 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
             min_y= 0.0
             all_y= tuple(all_y)
         # force all be less than or = to 1.0
+        # makes maximum be 1.0, due to max/max= 1.0
         max_xy= max([float(max(all_x)), float(max(all_y))])
         if 1.0<max_xy:
             all_x= []
@@ -232,18 +248,18 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
             if 0<len(recalc_lmark_pose):
                 recalc_lmark_pose= [(i[0]/max_xy, i[1]/max_xy)
                                     for i in recalc_lmark_pose]
-                all_x.extend([i[0] for i in recalc_lmark_face])
-                all_y.extend([i[1] for i in recalc_lmark_face])
+                all_x.extend([i[0] for i in recalc_lmark_pose])
+                all_y.extend([i[1] for i in recalc_lmark_pose])
             if 0<len(recalc_lmark_left_hand):
                 recalc_lmark_left_hand= [(i[0]/max_xy, i[1]/max_xy)
                                     for i in recalc_lmark_left_hand]
-                all_x.extend([i[0] for i in recalc_lmark_face])
-                all_y.extend([i[1] for i in recalc_lmark_face])
+                all_x.extend([i[0] for i in recalc_lmark_left_hand])
+                all_y.extend([i[1] for i in recalc_lmark_left_hand])
             if 0<len(recalc_lmark_right_hand):
                 recalc_lmark_right_hand= [(i[0]/max_xy, i[1]/max_xy)
                                     for i in recalc_lmark_right_hand]
-                all_x.extend([i[0] for i in recalc_lmark_face])
-                all_y.extend([i[1] for i in recalc_lmark_face])
+                all_x.extend([i[0] for i in recalc_lmark_right_hand])
+                all_y.extend([i[1] for i in recalc_lmark_right_hand])
             all_x= tuple(all_x)
             all_y= tuple(all_y)
             min_x= min(all_x)
@@ -251,7 +267,7 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
         del max_xy
 
 
-        ### 1) from old img ratio to new square img ratio
+        ### 1) from old img ratio to new ratio(ie. square img )
         # remap coords( x,y ) to rescale( same ratio as orig ) on square
         # and also center orig img to New img sqaure
         if orig_shape[0]!=orig_shape[1]: # else equal, then don't touch it
@@ -302,11 +318,18 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
                 min_y= min(all_y)
             del owx
             del ohy
+            del wx_hy
 
 
         ### 2) zoom in/out with padding 0.05 each side( with respecting orig aspect ratio )
         # zoom in/out for padding be 10% each side with respect to original aspect ratio
-        pad: float= 0.05
+        # ie.:
+        # ---- top/bottom pad 0.02, leftSide( fromPerspectiveOfSomeoneReadingThis ) pad 0.02: if wx < hy
+        # ---- top pad 0.02, leftSide/right pad 0.02: if hy < wx
+        # pad: float= 0.05
+        pad: float= 0.02
+        # scale: float= (1.0 -2.0*pad)/max_wy_hy, 0.0< max_wy_hy <=1.0
+        # scale: float= (whole -pad_leftRight_upDown)/max_wy_hy, 0.0< max_wy_hy <=1.0
         scale: float= (1.0 -2.0*pad)/max((  max(all_x)-min_x, max(all_y)-min_y  ))
         all_x= []
         all_y= []
@@ -363,16 +386,16 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
         elif lm_hy < lm_wx:
             # all_y= []
             shift_y_down= (1.0 -lm_hy) /2.0 -min_y
-            recalc_lmark_face= [(i[0]+shift_y_down, i[1])
+            recalc_lmark_face= [(i[0], i[1]+shift_y_down)
                                 for i in recalc_lmark_face]
             # all_y.extend([i[1] for i in recalc_lmark_face])
-            recalc_lmark_pose= [(i[0]+shift_y_down, i[1])
+            recalc_lmark_pose= [(i[0], i[1]+shift_y_down)
                                 for i in recalc_lmark_pose]
             # all_y.extend([i[1] for i in recalc_lmark_pose])
-            recalc_lmark_left_hand= [(i[0]+shift_y_down, i[1])
+            recalc_lmark_left_hand= [(i[0], i[1]+shift_y_down)
                                 for i in recalc_lmark_left_hand]
             # all_y.extend([i[1] for i in recalc_lmark_left_hand])
-            recalc_lmark_right_hand= [(i[0]+shift_y_down, i[1])
+            recalc_lmark_right_hand= [(i[0], i[1]+shift_y_down)
                                 for i in recalc_lmark_right_hand]
             # all_y.extend([i[1] for i in recalc_lmark_right_hand])
             # all_y= tuple(all_y)
@@ -437,7 +460,7 @@ def getSkeletonFrames(fpath_vid: str, TqFRAMES: int= QUANTITY_FRAME) -> ndarray:
             # for all target frames have frames from orig frames
             target2orig_ratio: int= int(ceil(TqFRAMES/oqFRAMES))
             for i in range(TqFRAMES):
-                if (i%target2orig_ratio)==0 and i<(oqFRAMES-1):
+                if (i%target2orig_ratio)==0:
                     isNotEnd, frame= vid.read()
                 if isNotEnd:
                     frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
@@ -459,23 +482,15 @@ def getSkeletonFrames(fpath_vid: str, TqFRAMES: int= QUANTITY_FRAME) -> ndarray:
         else: # TqFRAMES < oqFRAMES
             orig2target_ratio: int= oqFRAMES//TqFRAMES
             for i in range(orig2target_ratio*TqFRAMES):
-                isNotEnd, frame= vid.read()
-                if 1<orig2target_ratio and (i%orig2target_ratio)==(orig2target_ratio-1): # get last part
-                    if isNotEnd:
-                        frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
-                        all_frames.append(drawFacePoseHand(
-                            img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mpH.process(frame),
-                            orig_shape=frame.shape
-                        ))
-                elif 1==orig2target_ratio:
-                    if isNotEnd:
-                        frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
-                        all_frames.append(drawFacePoseHand(
-                            img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mpH.process(frame),
-                            orig_shape=frame.shape
-                        ))
+                if i<oqFRAMES:
+                    isNotEnd, frame= vid.read()
+                if i%orig2target_ratio==0 and isNotEnd:
+                    frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
+                    all_frames.append(drawFacePoseHand(
+                        img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+                        lmark_mph=mpH.process(frame),
+                        orig_shape=frame.shape
+                    ))
     else:
         raise FileExistsError(f"file {fpath_vid} can't be opened")
     vid.release()
@@ -487,25 +502,27 @@ def getSkeletonFrames(fpath_vid: str, TqFRAMES: int= QUANTITY_FRAME) -> ndarray:
 
 
 def getdata(batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
-    wlasl_ready: dict= {}
-    with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.ready.json", "r") as f:
-        wlasl_ready= jsonload(f)
-        # wlasl_ready['train']
-        # wlasl_ready['val']
-        # wlasl_ready['test']
-        # wlasl_ready['label_id2gloss']
-        # wlasl_ready['label_gloss2id']
-    shuffle(wlasl_ready['train'])
+    # wlasl_READY['train']
+    # wlasl_READY['val']
+    # wlasl_READY['test']
+    # wlasl_READY['label_id2gloss']
+    # wlasl_READY['label_gloss2id']
+    tmp_arrChoice: list= [2,3,4,5]
+    tmp_arrChoice= choices(tmp_arrChoice)
+    for _ in range(tmp_arrChoice[0]):
+        shuffle(wlasl_READY['train'])
+    del tmp_arrChoice
     current_idxTRAIN: int= 0
-    while current_idxTRAIN<len(wlasl_ready['train']):
+    while current_idxTRAIN<(  int(batch*( len(wlasl_READY['train'])//batch ))  ):
         batch_vids: ndarray= zeros((batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3), dtype=float32)
         batch_class: ndarray= zeros((batch), dtype=uint16)
-        for i in range(current_idxTRAIN%batch, (current_idxTRAIN+batch)%batch):
-            # batch_vids[i, :, :, :, :]= getSkeletonFrames(f"{WLASL_VID_DIR}{wlasl_ready['train'][i]['video_id']}.mp4")
-            batch_vids[i]= getSkeletonFrames(f"{WLASL_VID_DIR}{wlasl_ready['train'][i]['video_id']}.mp4").astype(float32)
-            batch_class[i]= int(wlasl_ready['train'][i]['gloss_id'])/1.0
-            # print(f"_________type {type(wlasl_ready['train'][i]['gloss_id'])}")
-            # print(f"_________{wlasl_ready['train'][i]['gloss_id']}")
+        for i in range(batch):
+            batch_vids[i]= getSkeletonFrames(f"{WLASL_VID_DIR}{wlasl_READY['train'][
+                    current_idxTRAIN+i
+                ]['video_id']}.mp4").astype(float32)/255.0
+            batch_class[i]= int(wlasl_READY['train'][
+                    current_idxTRAIN+i
+                ]['gloss_id'])/1.0
         current_idxTRAIN +=batch
         # yield (
         #     {"batch_vid": batch_vids.astype(float32)},
