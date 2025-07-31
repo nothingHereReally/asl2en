@@ -455,6 +455,8 @@ def getSkeletonFrames(fpath_vid: str, TqFRAMES: int= QUANTITY_FRAME) -> ndarray:
 
     if vid.isOpened():
         isNotEnd, frame= True, zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+        # to be used due to some frames are currupted/unAbleBeRead/bwesit
+        old_frame= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
         if oqFRAMES < TqFRAMES:
             # problem, oqFRAMES 33, 46
             # for all target frames have frames from orig frames
@@ -462,34 +464,57 @@ def getSkeletonFrames(fpath_vid: str, TqFRAMES: int= QUANTITY_FRAME) -> ndarray:
             for i in range(TqFRAMES):
                 if (i%target2orig_ratio)==0:
                     isNotEnd, frame= vid.read()
-                if isNotEnd:
+                if isNotEnd and len(all_frames)<TqFRAMES:
                     frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
                     all_frames.append(drawFacePoseHand(
                         img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
                         lmark_mph=mpH.process(frame),
                         orig_shape=frame.shape
+                    ))
+                    old_frame= frame
+                if not isNotEnd and len(all_frames)<TqFRAMES:
+                    frame= array(cvtColor(src=old_frame, code=COLOR_BGR2RGB), dtype=uint8)
+                    all_frames.append(drawFacePoseHand(
+                        img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+                        lmark_mph=mpH.process(old_frame),
+                        orig_shape=old_frame.shape
                     ))
         elif oqFRAMES==TqFRAMES:
             for i in range(TqFRAMES):
                 isNotEnd, frame= vid.read()
-                if isNotEnd:
+                if isNotEnd and len(all_frames)<TqFRAMES:
                     frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
                     all_frames.append(drawFacePoseHand(
                         img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
                         lmark_mph=mpH.process(frame),
                         orig_shape=frame.shape
                     ))
+                    old_frame= frame
+                if not isNotEnd and len(all_frames)<TqFRAMES:
+                    frame= array(cvtColor(src=old_frame, code=COLOR_BGR2RGB), dtype=uint8)
+                    all_frames.append(drawFacePoseHand(
+                        img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+                        lmark_mph=mpH.process(old_frame),
+                        orig_shape=old_frame.shape
+                    ))
         else: # TqFRAMES < oqFRAMES
             orig2target_ratio: int= oqFRAMES//TqFRAMES
             for i in range(orig2target_ratio*TqFRAMES):
-                if i<oqFRAMES:
-                    isNotEnd, frame= vid.read()
-                if i%orig2target_ratio==0 and isNotEnd:
+                isNotEnd, frame= vid.read()
+                if i%orig2target_ratio==0 and isNotEnd and len(all_frames)<TqFRAMES:
                     frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
                     all_frames.append(drawFacePoseHand(
                         img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
                         lmark_mph=mpH.process(frame),
                         orig_shape=frame.shape
+                    ))
+                    old_frame= frame
+                if not isNotEnd and len(all_frames)<TqFRAMES:
+                    frame= array(cvtColor(src=old_frame, code=COLOR_BGR2RGB), dtype=uint8)
+                    all_frames.append(drawFacePoseHand(
+                        img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+                        lmark_mph=mpH.process(old_frame),
+                        orig_shape=old_frame.shape
                     ))
     else:
         raise FileExistsError(f"file {fpath_vid} can't be opened")
@@ -497,7 +522,7 @@ def getSkeletonFrames(fpath_vid: str, TqFRAMES: int= QUANTITY_FRAME) -> ndarray:
     del vid
     destroyAllWindows()
     if len(all_frames)!=TqFRAMES:
-        raise ValueError(f"frames on single video failed match target( {TqFRAMES} ), but result is {len(all_frames)} --> {fpath_vid}")
+        raise ValueError(f"frames on single video failed match target( {TqFRAMES} ) orig( {oqFRAMES} ), but result is {len(all_frames)} --> {fpath_vid}")
     return array(all_frames, dtype=uint8)
 
 
