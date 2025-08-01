@@ -31,7 +31,7 @@ if __name__=="__main__":
     # print(f"TOTAL_TRAIN_FILE//TRAIN_BATCH {TOTAL_TRAIN_FILE//TRAIN_BATCH}")
     model.fit(
         getdata(),
-        epochs=7,
+        epochs=1,
         steps_per_epoch=TOTAL_TRAIN_FILE//TRAIN_BATCH
     )
     print(f"proj_root {PROJ_ROOT}")

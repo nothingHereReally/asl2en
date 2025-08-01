@@ -538,20 +538,20 @@ def getdata(batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
         shuffle(wlasl_READY['train'])
     del tmp_arrChoice
     current_idxTRAIN: int= 0
-    while current_idxTRAIN<(  int(batch*( len(wlasl_READY['train'])//batch ))  ):
+    # while current_idxTRAIN<(  int(batch*( len(wlasl_READY['train'])//batch ))  ):
+    while True:
         batch_vids: ndarray= zeros((batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3), dtype=float32)
         batch_class: ndarray= zeros((batch), dtype=uint16)
         for i in range(batch):
+            curr_IDX_USE: int= (current_idxTRAIN+i) if (current_idxTRAIN+i)<len(wlasl_READY['train']) else (0 +(
+                (current_idxTRAIN+i)-len(wlasl_READY['train'])
+            ))
             batch_vids[i]= getSkeletonFrames(f"{WLASL_VID_DIR}{wlasl_READY['train'][
-                    current_idxTRAIN+i
+                    curr_IDX_USE
                 ]['video_id']}.mp4").astype(float32)/255.0
             batch_class[i]= int(wlasl_READY['train'][
-                    current_idxTRAIN+i
+                    curr_IDX_USE
                 ]['gloss_id'])/1.0
-        current_idxTRAIN +=batch
-        # yield (
-        #     {"batch_vid": batch_vids.astype(float32)},
-        #     {"batch_class": batch_class.astype(float32)}
-        # )
+        current_idxTRAIN= (current_idxTRAIN+batch) if (current_idxTRAIN+batch)<len(wlasl_READY['train']) else 0
         yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
 
