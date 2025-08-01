@@ -24,6 +24,7 @@ if __name__=="__main__":
     )
     model.compile(
         optimizer=Adam(learning_rate=0.001),
+        # loss={"batch_class": sparse_categorical_crossentropy},
         loss=sparse_categorical_crossentropy,
         metrics=['accuracy']
     )
@@ -31,12 +32,12 @@ if __name__=="__main__":
     # print(f"TOTAL_TRAIN_FILE//TRAIN_BATCH {TOTAL_TRAIN_FILE//TRAIN_BATCH}")
     model.fit(
         getdata(),
-        epochs=1,
+        epochs=7,
         steps_per_epoch=TOTAL_TRAIN_FILE//TRAIN_BATCH
     )
     print(f"proj_root {PROJ_ROOT}")
-    model.save(f"{PROJ_ROOT}model/aslvid2gloss_v4.keras")
-    # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v4.keras")
+    model.save(f"{PROJ_ROOT}model/aslvid2gloss_v5.keras")
+    # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v5.keras")
     # loadModel.summary()
     # shouldBeBook= loadModel.predict(getSkeletonFrames(f"{PROJ_ROOT}dataset/wlasl_dataset/videos/07092.mp4").reshape((1, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)).astype(float32)/255.0)
     # print(f"{wlasl_READY['label_id2gloss'][argmax(shouldBeBook[0], axis=-1)]} --> accuracy {shouldBeBook[0][argmax(shouldBeBook[0], axis=-1)]*100}%")

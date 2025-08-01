@@ -10,7 +10,7 @@ TRAIN_BATCH: int= 2
 # QUANTITY_FRAME: int= 48
 QUANTITY_FRAME: int= 50
 # IMG_SIZE: int= 480
-IMG_SIZE: int= 150
+IMG_SIZE: int= 300
 WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
 
 
