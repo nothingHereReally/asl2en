@@ -1,0 +1,90 @@
+model file ./aslvid2gloss_v5.keras
+
+batch train size( TRAIN_BATCH ): 2
+TOTAL_GLOSS_UNIQ: 2000
+
+
+input size: (50, 200, 200, 3) with getdata() already in [0.0, 1.0] float32
+optimizer: Adam(learning_rate=0.001),
+loss: sparse_categorical_crossentropy,
+metrics: ['accuracy']
+epoch: 2
+steps_per_epoch: TOTAL_TRAIN_FILE//TRAIN_BATCH
+
+data_in= Input(
+    shape=(QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3),
+    dtype=float32,
+    name='batch_vid'
+)
+
+
+
+x= Conv3D(
+    filters=32,
+    kernel_size=(3,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    activation=relu,
+    dtype=float32,
+    name='conv_1'
+)(data_in)
+x= MaxPooling3D(
+    pool_size=(3,3,3),
+    strides=(3,3,3),
+    padding='valid',
+    dtype=float32,
+    name='maxpool_1'
+)(x)
+
+
+
+x= Conv3D(
+    filters=64,
+    kernel_size=(3,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    activation=sigmoid,
+    dtype=float32,
+    name='conv_2'
+)(x)
+x= MaxPooling3D(
+    pool_size=(7,8,8),
+    strides=(7,8,8),
+    padding='valid',
+    dtype=float32,
+    name='maxpool_2'
+)(x)
+
+
+x= Conv3D(
+    filters=256,
+    kernel_size=(2,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    activation=relu,
+    dtype=float32,
+    name='conv_3'
+)(x)
+x= MaxPooling3D(
+    pool_size=(1,2,2),
+    strides=(1,2,2),
+    padding='valid',
+    dtype=float32,
+    name='maxpool_3'
+)(x)
+
+
+x= Conv3D(
+    filters=TOTAL_GLOSS_UNIQ,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    activation=softmax,
+    dtype=float32,
+    name='conv_9'
+)(x)
+
+
+data_out= Flatten(
+    name='flat_1'
+)(x)
