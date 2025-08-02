@@ -1,4 +1,4 @@
-model file ./aslvid2gloss_v5.keras
+model file ./aslvid2gloss_v6.keras
 
 batch train size( TRAIN_BATCH ): 2
 TOTAL_GLOSS_UNIQ: 2000
