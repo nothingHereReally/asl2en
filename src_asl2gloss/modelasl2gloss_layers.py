@@ -93,206 +93,6 @@ data_out= Dense(
 
 
 
-# model 4.1
-# data_in= Input(
-#     shape=(QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3),
-#     dtype=float32,
-#     name='batch_vid'
-# )
-#
-#
-#
-# x= Conv3D(
-#     filters=8,
-#     kernel_size=(3,3,3),
-#     strides=(1,1,1),
-#     padding='valid',
-#     activation=relu,
-#     dtype=float32,
-#     name='conv_1'
-# )(data_in)
-# x= MaxPooling3D(
-#     pool_size=(2,2,2),
-#     strides=(1,1,1),
-#     padding='valid',
-#     dtype=float32,
-#     name='maxpool_1'
-# )(x)
-#
-#
-# x= Conv3D(
-#     filters=16,
-#     kernel_size=(3,3,3),
-#     strides=(1,1,1),
-#     padding='valid',
-#     activation=sigmoid,
-#     dtype=float32,
-#     name='conv_2'
-# )(x)
-# x= MaxPooling3D(
-#     pool_size=(5,5,5),
-#     strides=(2,2,2),
-#     padding='valid',
-#     dtype=float32,
-#     name='maxpool_2'
-# )(x)
-#
-#
-# x= Conv3D(
-#     filters=32,
-#     kernel_size=(3,3,3),
-#     strides=(1,1,1),
-#     padding='valid',
-#     activation=relu,
-#     dtype=float32,
-#     name='conv_3'
-# )(x)
-# x= MaxPooling3D(
-#     pool_size=(2,2,2),
-#     strides=(1,1,1),
-#     padding='valid',
-#     dtype=float32,
-#     name='maxpool_3'
-# )(x)
-#
-#
-# x= Conv3D(
-#     filters=64,
-#     kernel_size=(3,3,3),
-#     strides=(1,1,1),
-#     padding='valid',
-#     activation=sigmoid,
-#     dtype=float32,
-#     name='conv_4'
-# )(x)
-# x= MaxPooling3D(
-#     pool_size=(5,5,5),
-#     strides=(2,2,2),
-#     padding='valid',
-#     dtype=float32,
-#     name='maxpool_4'
-# )(x)
-#
-#
-# x= Conv3D(
-#     filters=128,
-#     kernel_size=(3,3,3),
-#     strides=(1,1,1),
-#     padding='valid',
-#     activation=relu,
-#     dtype=float32,
-#     name='conv_5'
-# )(x)
-# x= MaxPooling3D(
-#     pool_size=(2,2,2),
-#     strides=(1,1,1),
-#     padding='valid',
-#     dtype=float32,
-#     name='maxpool_5'
-# )(x)
-#
-#
-# x= Conv3D(
-#     filters=256,
-#     kernel_size=(3,3,3),
-#     strides=(1,1,1),
-#     padding='valid',
-#     activation=sigmoid,
-#     dtype=float32,
-#     name='conv_6'
-# )(x)
-# x= MaxPooling3D(
-#     pool_size=(1,5,5),
-#     strides=(1,3,3),
-#     padding='valid',
-#     dtype=float32,
-#     name='maxpool_6'
-# )(x)
-#
-#
-# # x= Conv3D(
-# #     filters=512,
-# #     kernel_size=(2,3,3),
-# #     strides=(1,1,1),
-# #     padding='valid',
-# #     activation=relu,
-# #     dtype=float32,
-# #     name='conv_7'
-# # )(x)
-# # x= MaxPooling3D(
-# #     pool_size=(1,5,5),
-# #     strides=(1,2,2),
-# #     padding='valid',
-# #     dtype=float32,
-# #     name='maxpool_7'
-# # )(x)
-#
-#
-# # x= Conv3D(
-# #     filters=1024,
-# #     kernel_size=(1,3,3),
-# #     strides=(1,1,1),
-# #     padding='valid',
-# #     activation=sigmoid,
-# #     dtype=float32,
-# #     name='conv_8'
-# # )(x)
-# # x= MaxPooling3D(
-# #     pool_size=(1,2,2),
-# #     strides=(1,1,1),
-# #     padding='valid',
-# #     dtype=float32,
-# #     name='maxpool_8'
-# # )(x)
-#
-#
-# x= Conv3D(
-#     filters=2048,
-#     kernel_size=(1,3,3),
-#     strides=(1,1,1),
-#     padding='valid',
-#     activation=relu,
-#     dtype=float32,
-#     name='conv_9'
-# )(x)
-# x= MaxPooling3D(
-#     pool_size=(1,6,6),
-#     strides=(1,1,1),
-#     padding='valid',
-#     dtype=float32,
-#     name='maxpool_9'
-# )(x)
-#
-#
-# # # x= Conv3D(
-# # #     filters=2048,
-# # #     kernel_size=(1,3,3),
-# # #     strides=(1,1,1),
-# # #     padding='valid',
-# # #     activation=relu,
-# # #     dtype=float32,
-# # #     name='conv_9'
-# # # )(x)
-#
-#
-# x= Flatten()(x)
-# # x= Dense(
-# #     units=TOTAL_GLOSS_UNIQ//100,
-# #     activation=sigmoid,
-# #     dtype=float32,
-# #     name='dense_1'
-# # )(x)
-# data_out= Dense(
-#     units=TOTAL_GLOSS_UNIQ,
-#     activation=softmax,
-#     dtype=float32,
-#     name='batch_class'
-# )(x)
-
-
-
-
-# model 4.2
 data_in= Input(
     shape=(QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3),
     dtype=float32,
@@ -302,7 +102,7 @@ data_in= Input(
 
 
 x= Conv3D(
-    filters=32,
+    filters=8,
     kernel_size=(3,3,3),
     strides=(1,1,1),
     padding='valid',
@@ -319,9 +119,8 @@ x= MaxPooling3D(
 )(x)
 
 
-
 x= Conv3D(
-    filters=64,
+    filters=16,
     kernel_size=(3,3,3),
     strides=(1,1,1),
     padding='valid',
@@ -330,8 +129,8 @@ x= Conv3D(
     name='conv_2'
 )(x)
 x= MaxPooling3D(
-    pool_size=(7,8,8),
-    strides=(7,8,8),
+    pool_size=(2,2,2),
+    strides=(2,2,2),
     padding='valid',
     dtype=float32,
     name='maxpool_2'
@@ -339,8 +138,8 @@ x= MaxPooling3D(
 
 
 x= Conv3D(
-    filters=256,
-    kernel_size=(2,3,3),
+    filters=24,
+    kernel_size=(3,3,3),
     strides=(1,1,1),
     padding='valid',
     activation=relu,
@@ -348,8 +147,8 @@ x= Conv3D(
     name='conv_3'
 )(x)
 x= MaxPooling3D(
-    pool_size=(1,2,2),
-    strides=(1,2,2),
+    pool_size=(5,3,3),
+    strides=(5,3,3),
     padding='valid',
     dtype=float32,
     name='maxpool_3'
@@ -357,16 +156,32 @@ x= MaxPooling3D(
 
 
 x= Conv3D(
-    filters=TOTAL_GLOSS_UNIQ,
+    filters=128,
     kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    activation=relu,
+    dtype=float32,
+    name='conv_4'
+)(x)
+x= MaxPooling3D(
+    pool_size=(1,2,2),
+    strides=(1,2,2),
+    padding='valid',
+    dtype=float32,
+    name='maxpool_4'
+)(x)
+
+
+x= Conv3D(
+    filters=TOTAL_GLOSS_UNIQ,
+    kernel_size=(1,4,4),
     strides=(1,1,1),
     padding='valid',
     activation=softmax,
     dtype=float32,
-    name='conv_9'
+    name='conv_5'
 )(x)
 
 
-data_out= Flatten(
-    name='flat_1'
-)(x)
+data_out= Flatten()(x)
