@@ -1,0 +1,116 @@
+model file ./aslvid2gloss_v8.keras
+
+batch train size( TRAIN_BATCH ): 2
+TOTAL_GLOSS_UNIQ: 2000
+
+Epoch 1/2
+7144/7144 ━━━━━━━━━━━━━━━━━━━━ 23350s 3s/step - accuracy: 0.0012 - loss: 7.7388
+Epoch 2/2
+7144/7144 ━━━━━━━━━━━━━━━━━━━━ 22928s 3s/step - accuracy: 0.0070 - loss: 7.0786
+input size: (50, 200, 200, 3) with getdata() already in [0.0, 1.0] float32
+optimizer: Adam(learning_rate=0.001),
+loss: sparse_categorical_crossentropy,
+metrics: ['accuracy']
+epoch: 2
+steps_per_epoch: TOTAL_TRAIN_FILE//TRAIN_BATCH
+
+50            200            200            3
+50            198            198            8         <-- (1,3,3) 8    <--- (1,1,1) CNN
+50            66             66             8         <-- (1,3,3)      <--- (1,3,3) mp
+
+50            64             64             16        <-- (1,3,3) 16   <--- (1,1,1) CNN
+50            32             32             16        <-- (1,2,2)      <--- (1,2,2) mp
+
+50            30             30             24        <-- (1,3,3) 24   <--- (1,1,1) CNN
+50            7              7              24        <-- (1,4,4)      <--- (1,4,4) mp
+
+5             5              32                       <-- (1,3,3) 32  <--- (1,1,1) ConvLSTM2D
+800                                                   <-- flatten ie. 5*5*32= 800
+
+2000                                                  <-- 2000 ANN dense
+
+x= TimeDistributed(Conv2D(
+    filters=8,
+    kernel_size=(3,3),
+    strides=(1,1),
+    padding='valid',
+    activation=relu,
+    dtype=float32,
+),
+    name='conv2d_1'
+)(data_in)
+x= MaxPooling3D(
+    pool_size=(1,3,3),
+    strides=(1,3,3),
+    padding='valid',
+    dtype=float32,
+    name='mp_1'
+)(x)
+
+
+x= TimeDistributed(Conv2D(
+    filters=16,
+    kernel_size=(3,3),
+    strides=(1,1),
+    padding='valid',
+    activation=relu,
+    dtype=float32,
+),
+    name='conv2d_2'
+)(x)
+x= MaxPooling3D(
+    pool_size=(1,2,2),
+    strides=(1,2,2),
+    padding='valid',
+    dtype=float32,
+    name='mp_2'
+)(x)
+
+
+x= TimeDistributed(Conv2D(
+    filters=24,
+    kernel_size=(3,3),
+    strides=(1,1),
+    padding='valid',
+    activation=relu,
+    dtype=float32,
+),
+    name='conv2d_3'
+)(x)
+x= MaxPooling3D(
+    pool_size=(1,4,4),
+    strides=(1,4,4),
+    padding='valid',
+    dtype=float32,
+    name='mp_3'
+)(x)
+
+
+x= ConvLSTM2D(
+    filters=32,
+    kernel_size=(3,3),
+    strides=1,
+    padding='valid',
+    return_sequences=False,
+    dtype=float32,
+    name='convLstm2d_5'
+)(x)
+# x= ConvLSTM2D(
+#     filters=32,
+#     kernel_size=(3,3),
+#     strides=1,
+#     padding='valid',
+#     return_sequences=False,
+#     dtype=float32,
+#     name='convLstm2d_5'
+# )(x)
+
+
+x= Flatten(
+    name='flat_1'
+)(x)
+data_out= Dense(
+    units=TOTAL_GLOSS_UNIQ,
+    activation=softmax,
+    name='batch_class'
+)(x)

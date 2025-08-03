@@ -1,4 +1,4 @@
-from keras.src.layers import Conv3D, Dense, Flatten, Input, MaxPooling3D, Rescaling
+from keras.src.layers import Conv2D, Conv3D, ConvLSTM2D, Dense, Flatten, Input, MaxPooling2D, MaxPooling3D, Rescaling, TimeDistributed
 from keras.src.activations import relu, sigmoid, softmax
 from numpy import float32
 
@@ -11,177 +11,91 @@ data_in= Input(
     dtype=float32,
     name='batch_vid'
 )
-# x= Rescaling(
-#     scale=1./255,
-#     offset=0.0,
-#     dtype=float32,
-#     name='scale_0.0_1.0'
-# )(data_in)
 
 
 
-x= Conv3D(
-    filters=16,
-    # kernel_size=(13,3,3),
-    # strides=(1,1,1),
-    kernel_size=(5,5,5),
-    strides=(3,3,3),
-    padding='valid',
-    activation=relu,
-    dtype=float32,
-    name='conv_1'
-# )(x)
-)(data_in)
-x= MaxPooling3D(
-    # pool_size=(5,5,5),
-    # strides=(3,3,3),
-    pool_size=(3,3,3),
-    strides=(2,2,2),
-    padding='valid',
-    dtype=float32,
-    name='maxpool_1'
-)(x)
-x= Conv3D(
-    filters=64,
-    kernel_size=(3,3,3),
-    strides=(1,1,1),
-    padding='valid',
-    activation=relu,
-    dtype=float32,
-    name='conv_2'
-)(x)
-x= MaxPooling3D(
-    # pool_size=(7,7,7),
-    # strides=(5,5,5),
-    pool_size=(3,3,3),
-    strides=(2,2,2),
-    padding='valid',
-    dtype=float32,
-    name='maxpool_2'
-)(x)
-x= Conv3D(
-    filters=16,
-    # kernel_size=(1,3,3),
-    kernel_size=(2,5,5),
-    strides=(1,1,1),
-    padding='valid',
-    activation=relu,
-    dtype=float32,
-    name='conv_3'
-)(x)
-
-
-x= Flatten()(x)
-x= Dense(
-    # units=16,
-    units=TOTAL_GLOSS_UNIQ//100,
-    activation=sigmoid,
-    dtype=float32,
-    name='dense_1'
-)(x)
-data_out= Dense(
-    units=TOTAL_GLOSS_UNIQ,
-    activation=softmax,
-    dtype=float32,
-    name='batch_class'
-)(x)
-
-
-
-
-
-
-
-
-data_in= Input(
-    shape=(QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3),
-    dtype=float32,
-    name='batch_vid'
-)
-
-
-
-x= Conv3D(
+x= TimeDistributed(Conv2D(
     filters=8,
-    kernel_size=(3,3,3),
-    strides=(1,1,1),
+    kernel_size=(3,3),
+    strides=(1,1),
     padding='valid',
     activation=relu,
     dtype=float32,
-    name='conv_1'
+),
+    name='conv2d_1'
 )(data_in)
 x= MaxPooling3D(
-    pool_size=(3,3,3),
-    strides=(3,3,3),
+    pool_size=(1,3,3),
+    strides=(1,3,3),
     padding='valid',
     dtype=float32,
-    name='maxpool_1'
+    name='mp_1'
 )(x)
 
 
-x= Conv3D(
+x= TimeDistributed(Conv2D(
     filters=16,
-    kernel_size=(3,3,3),
-    strides=(1,1,1),
-    padding='valid',
-    activation=sigmoid,
-    dtype=float32,
-    name='conv_2'
-)(x)
-x= MaxPooling3D(
-    pool_size=(2,2,2),
-    strides=(2,2,2),
-    padding='valid',
-    dtype=float32,
-    name='maxpool_2'
-)(x)
-
-
-x= Conv3D(
-    filters=24,
-    kernel_size=(3,3,3),
-    strides=(1,1,1),
+    kernel_size=(3,3),
+    strides=(1,1),
     padding='valid',
     activation=relu,
     dtype=float32,
-    name='conv_3'
-)(x)
-x= MaxPooling3D(
-    pool_size=(5,3,3),
-    strides=(5,3,3),
-    padding='valid',
-    dtype=float32,
-    name='maxpool_3'
-)(x)
-
-
-x= Conv3D(
-    filters=128,
-    kernel_size=(1,3,3),
-    strides=(1,1,1),
-    padding='valid',
-    activation=relu,
-    dtype=float32,
-    name='conv_4'
+),
+    name='conv2d_2'
 )(x)
 x= MaxPooling3D(
     pool_size=(1,2,2),
     strides=(1,2,2),
     padding='valid',
     dtype=float32,
-    name='maxpool_4'
+    name='mp_2'
 )(x)
 
 
-x= Conv3D(
-    filters=TOTAL_GLOSS_UNIQ,
-    kernel_size=(1,4,4),
-    strides=(1,1,1),
+x= TimeDistributed(Conv2D(
+    filters=24,
+    kernel_size=(3,3),
+    strides=(1,1),
     padding='valid',
-    activation=softmax,
+    activation=relu,
     dtype=float32,
-    name='conv_5'
+),
+    name='conv2d_3'
+)(x)
+x= MaxPooling3D(
+    pool_size=(1,4,4),
+    strides=(1,4,4),
+    padding='valid',
+    dtype=float32,
+    name='mp_3'
 )(x)
 
 
-data_out= Flatten()(x)
+x= ConvLSTM2D(
+    filters=32,
+    kernel_size=(3,3),
+    strides=1,
+    padding='valid',
+    return_sequences=False,
+    dtype=float32,
+    name='convLstm2d_5'
+)(x)
+# x= ConvLSTM2D(
+#     filters=32,
+#     kernel_size=(3,3),
+#     strides=1,
+#     padding='valid',
+#     return_sequences=False,
+#     dtype=float32,
+#     name='convLstm2d_5'
+# )(x)
+
+
+x= Flatten(
+    name='flat_1'
+)(x)
+data_out= Dense(
+    units=TOTAL_GLOSS_UNIQ,
+    activation=softmax,
+    name='batch_class'
+)(x)
