@@ -589,7 +589,8 @@ def getdata(isSimg: bool=False, batch: int=TRAIN_BATCH) -> Generator[tuple, None
     current_idxTRAIN: int= 0
     # while current_idxTRAIN<(  int(batch*( len(wlasl_READY['train'])//batch ))  ):
     while True:
-        batch_vids: ndarray= zeros((batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3), dtype=float32)
+        shape_vidBatch: tuple= (batch, QUANTITY_FRAME*IMG_SIZE, IMG_SIZE, 3) if isSimg else (batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)
+        batch_vids: ndarray= zeros(shape_vidBatch, dtype=float32)
         batch_class: ndarray= zeros((batch), dtype=uint16)
         for i in range(batch):
             curr_IDX_USE: int= (current_idxTRAIN+i) if (current_idxTRAIN+i)<len(wlasl_READY['train']) else (0 +(
