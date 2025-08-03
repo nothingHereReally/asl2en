@@ -575,7 +575,7 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, TqFRAMES: int= QU
     return array(all_frames, dtype=uint8)
 
 
-def getdata(batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
+def getdata(isSimg: bool=False, batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
     # wlasl_READY['train']
     # wlasl_READY['val']
     # wlasl_READY['test']
@@ -597,7 +597,9 @@ def getdata(batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
             ))
             batch_vids[i]= getSkeletonFrames(f"{WLASL_VID_DIR}{wlasl_READY['train'][
                     curr_IDX_USE
-                ]['video_id']}.mp4").astype(float32)/255.0
+                ]['video_id']}.mp4",
+                isSingleImg=isSimg
+            ).astype(float32)/255.0
             batch_class[i]= int(wlasl_READY['train'][
                     curr_IDX_USE
                 ]['gloss_id'])/1.0
