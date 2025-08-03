@@ -35,6 +35,10 @@ if __name__=="__main__":
                     filename=f"/tmp/wlasl_vid_test/0{i+1}.png",
                     img=img
                 )
+        imwrite(
+            filename="/tmp/wlasl_vid_test/000_single.png",
+            img=getSkeletonFrames(fpath_vid=vid, isSingleImg=True)
+        )
     else:
         print(f"file [{vid}] does not exist")
 
