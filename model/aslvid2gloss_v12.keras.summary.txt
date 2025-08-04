@@ -1,0 +1,147 @@
+model file ./aslvid2gloss_v12.keras   1st trainign about 0.02 accuracy
+model file ./aslvid2gloss_v12.1.keras 2nd training about 0.2 accuracy
+model file ./aslvid2gloss_v12.2.keras 3rd training about 0.5 accuracy
+
+batch train size( TRAIN_BATCH ): 2
+TOTAL_GLOSS_UNIQ: 2000
+
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)               │ (None, 20, 150, 150, 3)     │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ conv_lstm2d (ConvLSTM2D)             │ (None, 20, 148, 148, 4)     │           1,024 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling3d (MaxPooling3D)         │ (None, 20, 74, 74, 4)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ time_distributed (TimeDistributed)   │ (None, 20, 74, 74, 4)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ conv_lstm2d_1 (ConvLSTM2D)           │ (None, 20, 72, 72, 8)       │           3,488 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling3d_1 (MaxPooling3D)       │ (None, 20, 36, 36, 8)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ time_distributed_1 (TimeDistributed) │ (None, 20, 36, 36, 8)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ conv_lstm2d_2 (ConvLSTM2D)           │ (None, 20, 34, 34, 14)      │          11,144 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling3d_2 (MaxPooling3D)       │ (None, 20, 17, 17, 14)      │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ time_distributed_2 (TimeDistributed) │ (None, 20, 17, 17, 14)      │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ conv_lstm2d_3 (ConvLSTM2D)           │ (None, 20, 15, 15, 16)      │          17,344 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ max_pooling3d_3 (MaxPooling3D)       │ (None, 20, 7, 7, 16)        │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ flat_1 (Flatten)                     │ (None, 15680)               │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_class (Dense)                  │ (None, 2000)                │      31,362,000 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 94,185,002 (359.29 MB)
+ Trainable params: 31,395,000 (119.76 MB)
+ Non-trainable params: 0 (0.00 B)
+ Optimizer params: 62,790,002 (239.52 MB)
+Epoch 1/2
+7144/7144 ━━━━━━━━━━━━━━━━━━━━ 10255s 1s/step - accuracy: 0.0777 - loss: 5.8036
+Epoch 2/2
+7144/7144 ━━━━━━━━━━━━━━━━━━━━ 10255s 1s/step - accuracy: 0.2023 - loss: 4.2352
+input size: (20, 150, 150, 3) with getdata() already in [0.0, 1.0] float32
+optimizer: Adam(learning_rate=0.001),
+loss: sparse_categorical_crossentropy,
+metrics: ['accuracy']
+epoch: 2
+steps_per_epoch: TOTAL_TRAIN_FILE//TRAIN_BATCH
+
+20            150            150            3
+20            148            148            4         <-- (1,3,3) 4    <--- (1,1,1) CNN_LSTM
+20            74             74             4         <-- (1,2,2)      <--- (1,2,2) mp3d
+20            74             74             4         <-- time distributed dropout
+
+20            72             72             8         <-- (1,3,3) 8    <--- (1,1,1) CNN
+20            36             36             8         <-- (1,2,2)      <--- (1,2,2) mp
+20            36             36             8         <-- time distributed dropout
+
+20            34             34             14        <-- (1,3,3) 14   <--- (1,1,1) CNN
+20            17             17             14        <-- (1,2,2)      <--- (1,2,2) mp
+20            17             17             14        <-- time distributed dropout
+
+20            15             15             16        <-- (1,3,3) 14   <--- (1,1,1) CNN
+20            7              7              16        <-- (1,2,2)      <--- (1,2,2) mp
+
+1568                                                  <-- flatten ie. 20*7*7*16= 1568
+
+2000                                                  <-- 2000 ANN dense
+
+data_in= Input(
+    shape=(QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3),
+    dtype=float32,
+    name='batch_vid'
+)
+
+
+
+x= ConvLSTM2D(
+    filters=4,
+    kernel_size=(3,3),
+    activation='tanh',
+    data_format='channels_last',
+    recurrent_dropout=0.2,
+    return_sequences=True
+)(data_in)
+x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last'
+)(x)
+x= TimeDistributed(Dropout(0.2))(x)
+x= ConvLSTM2D(
+    filters=8,
+    kernel_size=(3,3),
+    activation='tanh',
+    data_format='channels_last',
+    recurrent_dropout=0.2,
+    return_sequences=True
+)(x)
+x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last'
+)(x)
+x= TimeDistributed(Dropout(0.2))(x)
+x= ConvLSTM2D(
+    filters=14,
+    kernel_size=(3,3),
+    activation='tanh',
+    data_format='channels_last',
+    recurrent_dropout=0.2,
+    return_sequences=True
+)(x)
+x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last'
+)(x)
+x= TimeDistributed(Dropout(0.2))(x)
+x= ConvLSTM2D(
+    filters=16,
+    kernel_size=(3,3),
+    activation='tanh',
+    data_format='channels_last',
+    recurrent_dropout=0.2,
+    return_sequences=True
+)(x)
+x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last'
+)(x)
+
+
+x= Flatten(
+    name='flat_1'
+)(x)
+data_out= Dense(
+    units=TOTAL_GLOSS_UNIQ,
+    activation=softmax,
+    name='batch_class'
+)(x)

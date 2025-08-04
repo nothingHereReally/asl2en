@@ -1,3 +1,4 @@
+from math import ceil
 from os.path import exists
 from keras.src.losses import sparse_categorical_crossentropy
 from keras.src.models import Model
@@ -18,26 +19,27 @@ from .lmark_essential_draw import getSkeletonFrames
     
 
 if __name__=="__main__":
-    model: Model= Model(
-        inputs=data_in,
-        outputs=[data_out]
-    )
-    model.compile(
-        optimizer=Adam(learning_rate=0.001),
-        # loss={"batch_class": sparse_categorical_crossentropy},
-        loss=sparse_categorical_crossentropy,
-        metrics=['accuracy']
-    )
+    # model: Model= Model(
+    #     inputs=data_in,
+    #     outputs=[data_out]
+    # )
+    # model.compile(
+    #     optimizer=Adam(learning_rate=0.0001),
+    #     # loss={"batch_class": sparse_categorical_crossentropy},
+    #     loss=sparse_categorical_crossentropy,
+    #     metrics=['accuracy']
+    # )
+    model= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v12.1.keras")
     model.summary()
     # print(f"TOTAL_TRAIN_FILE//TRAIN_BATCH {TOTAL_TRAIN_FILE//TRAIN_BATCH}")
-    model.fit(
-        getdata(),
-        epochs=2,
-        steps_per_epoch=TOTAL_TRAIN_FILE//TRAIN_BATCH
-    )
-    print(f"proj_root {PROJ_ROOT}")
-    model.save(f"{PROJ_ROOT}model/aslvid2gloss_v8.keras")
-    # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v8.keras")
+    # model.fit(
+    #     getdata(),
+    #     epochs=2,
+    #     steps_per_epoch=int(ceil(TOTAL_TRAIN_FILE/TRAIN_BATCH))
+    # )
+    # print(f"proj_root {PROJ_ROOT}")
+    # model.save(f"{PROJ_ROOT}model/aslvid2gloss_v12.2.keras")
+    # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v12.2.keras")
     # loadModel.summary()
     # shouldBeBook= loadModel.predict(getSkeletonFrames(f"{PROJ_ROOT}dataset/wlasl_dataset/videos/07092.mp4").reshape((1, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)).astype(float32)/255.0)
     # print(f"{wlasl_READY['label_id2gloss'][argmax(shouldBeBook[0], axis=-1)]} --> accuracy {shouldBeBook[0][argmax(shouldBeBook[0], axis=-1)]*100}%")

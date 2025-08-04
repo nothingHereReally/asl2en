@@ -1,5 +1,5 @@
-from keras.src.layers import Conv2D, Conv3D, ConvLSTM2D, Dense, Flatten, Input, MaxPooling2D, MaxPooling3D, Rescaling, TimeDistributed
-from keras.src.activations import relu, sigmoid, softmax
+from keras.src.layers import Conv2D, Conv3D, ConvLSTM2D, Dense, Dropout, Flatten, Input, MaxPooling2D, MaxPooling3D, Rescaling, TimeDistributed
+from keras.src.activations import relu, softmax
 from numpy import float32
 
 
@@ -14,81 +14,61 @@ data_in= Input(
 
 
 
-x= TimeDistributed(Conv2D(
-    filters=8,
+x= ConvLSTM2D(
+    filters=4,
     kernel_size=(3,3),
-    strides=(1,1),
-    padding='valid',
-    activation=relu,
-    dtype=float32,
-),
-    name='conv2d_1'
+    activation='tanh',
+    data_format='channels_last',
+    recurrent_dropout=0.2,
+    return_sequences=True
 )(data_in)
 x= MaxPooling3D(
-    pool_size=(1,3,3),
-    strides=(1,3,3),
+    pool_size=(1,2,2),
     padding='valid',
-    dtype=float32,
-    name='mp_1'
+    data_format='channels_last'
 )(x)
-
-
-x= TimeDistributed(Conv2D(
-    filters=16,
+x= TimeDistributed(Dropout(0.2))(x)
+x= ConvLSTM2D(
+    filters=8,
     kernel_size=(3,3),
-    strides=(1,1),
-    padding='valid',
-    activation=relu,
-    dtype=float32,
-),
-    name='conv2d_2'
+    activation='tanh',
+    data_format='channels_last',
+    recurrent_dropout=0.2,
+    return_sequences=True
 )(x)
 x= MaxPooling3D(
     pool_size=(1,2,2),
-    strides=(1,2,2),
     padding='valid',
-    dtype=float32,
-    name='mp_2'
+    data_format='channels_last'
 )(x)
-
-
-x= TimeDistributed(Conv2D(
-    filters=24,
+x= TimeDistributed(Dropout(0.2))(x)
+x= ConvLSTM2D(
+    filters=14,
     kernel_size=(3,3),
-    strides=(1,1),
-    padding='valid',
-    activation=relu,
-    dtype=float32,
-),
-    name='conv2d_3'
+    activation='tanh',
+    data_format='channels_last',
+    recurrent_dropout=0.2,
+    return_sequences=True
 )(x)
 x= MaxPooling3D(
-    pool_size=(1,4,4),
-    strides=(1,4,4),
+    pool_size=(1,2,2),
     padding='valid',
-    dtype=float32,
-    name='mp_3'
+    data_format='channels_last'
 )(x)
-
-
+x= TimeDistributed(Dropout(0.2))(x)
 x= ConvLSTM2D(
-    filters=32,
+    filters=16,
     kernel_size=(3,3),
-    strides=1,
-    padding='valid',
-    return_sequences=False,
-    dtype=float32,
-    name='convLstm2d_5'
+    activation='tanh',
+    data_format='channels_last',
+    recurrent_dropout=0.2,
+    return_sequences=True
 )(x)
-# x= ConvLSTM2D(
-#     filters=32,
-#     kernel_size=(3,3),
-#     strides=1,
-#     padding='valid',
-#     return_sequences=False,
-#     dtype=float32,
-#     name='convLstm2d_5'
-# )(x)
+x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last'
+)(x)
 
 
 x= Flatten(
