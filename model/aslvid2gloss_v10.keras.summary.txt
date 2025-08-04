@@ -1,0 +1,213 @@
+model file ./aslvid2gloss_v8.keras
+
+batch train size( TRAIN_BATCH ): 2
+TOTAL_GLOSS_UNIQ: 2000
+
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)               │ (None, 3000, 150, 3)        │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn2d_1 (Conv2D)                     │ (None, 2998, 148, 8)        │             224 │ <-- cnn2d (3,3) -- (1,1)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp2d_1 (MaxPooling2D)                │ (None, 1499, 74, 8)         │               0 │ <-- (2,2) -- (2,2)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_1 (Dropout)                       │ (None, 1499, 74, 8)         │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn2d_2 (Conv2D)                     │ (None, 1497, 72, 16)        │           1,168 │ <-- cnn2d (3,3) -- (1,1)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp2d_2 (MaxPooling2D)                │ (None, 748, 36, 16)         │               0 │ <-- (2,2) -- (2,2)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_2 (Dropout)                       │ (None, 748, 36, 16)         │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn2d_3 (Conv2D)                     │ (None, 746, 34, 24)         │           3,480 │ <-- cnn2d (3,3) -- (1,1)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp2d_3 (MaxPooling2D)                │ (None, 373, 17, 24)         │               0 │ <-- (2,2) -- (2,2)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_3 (Dropout)                       │ (None, 373, 17, 24)         │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn2d_4 (Conv2D)                     │ (None, 371, 15, 24)         │           5,208 │ <-- cnn2d (3,3) -- (1,1)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp2d_4 (MaxPooling2D)                │ (None, 185, 7, 24)          │               0 │ <-- (2,2) -- (2,2)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_4 (Dropout)                       │ (None, 185, 7, 24)          │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn2d_5 (Conv2D)                     │ (None, 183, 5, 24)          │           5,208 │ <-- cnn2d (3,3) -- (1,1)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ flat_1 (Flatten)                     │ (None, 21960)               │               0 │ <-- 183*5*24= 21960
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_class (Dense)                  │ (None, 2000)                │      43,922,000 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 43,937,288 (167.61 MB)
+ Trainable params: 43,937,288 (167.61 MB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/2
+7145/7145 ━━━━━━━━━━━━━━━━━━━━ 9960s 1s/step - accuracy: 0.0048 - loss: 7.5062
+Epoch 2/2
+7145/7145 ━━━━━━━━━━━━━━━━━━━━ 9185s 1s/step - accuracy: 0.3859 - loss: 3.5245
+input size: (20*150, 150, 3) with getdata(isSimg=True) already in [0.0, 1.0] float32
+optimizer: Adam(learning_rate=0.001),
+loss: sparse_categorical_crossentropy,
+metrics: ['accuracy']
+epoch: 2
+steps_per_epoch: TOTAL_TRAIN_FILE//TRAIN_BATCH
+
+
+
+
+
+
+
+
+data_in= Input(
+    shape=(QUANTITY_FRAME*IMG_SIZE, IMG_SIZE, 3),
+    dtype=float32,
+    name='batch_vid'
+)
+
+
+
+x= Conv2D(
+    filters=8,
+    kernel_size=(3,3),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='cnn2d_1'
+)(data_in)
+x= MaxPooling2D(
+    pool_size=(2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='mp2d_1'
+)(x)
+x= Dropout(
+    rate=0.2,
+    name='do_1'
+)(x)
+x= Conv2D(
+    filters=16,
+    kernel_size=(3,3),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='cnn2d_2'
+)(x)
+x= MaxPooling2D(
+    pool_size=(2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='mp2d_2'
+)(x)
+x= Dropout(
+    rate=0.2,
+    name='do_2'
+)(x)
+x= Conv2D(
+    filters=24,
+    kernel_size=(3,3),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='cnn2d_3'
+)(x)
+x= MaxPooling2D(
+    pool_size=(2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='mp2d_3'
+)(x)
+x= Dropout(
+    rate=0.2,
+    name='do_3'
+)(x)
+x= Conv2D(
+    filters=24,
+    kernel_size=(3,3),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='cnn2d_4'
+)(x)
+x= MaxPooling2D(
+    pool_size=(2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='mp2d_4'
+)(x)
+x= Dropout(
+    rate=0.2,
+    name='do_4'
+)(x)
+x= Conv2D(
+    filters=24,
+    kernel_size=(3,3),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='cnn2d_5'
+)(x)
+# x= MaxPooling2D(
+#     pool_size=(2,2),
+#     padding='valid',
+#     data_format='channels_last',
+#     name='mp2d_5'
+# )(x)
+# x= Dropout(
+#     rate=0.2,
+#     name='do_5'
+# )(x)
+# x= Conv2D(
+#     filters=24,
+#     kernel_size=(3,3),
+#     strides=(1,1),
+#     padding='valid',
+#     data_format='channels_last',
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     name='cnn2d_6'
+# )(x)
+# x= MaxPooling2D(
+#     pool_size=(2,2),
+#     padding='valid',
+#     data_format='channels_last',
+#     name='mp2d_6'
+# )(x)
+# x= Dropout(
+#     rate=0.2,
+#     name='do_6'
+# )(x)
+# x= Conv2D(
+#     filters=24,
+#     kernel_size=(3,3),
+#     strides=(1,1),
+#     padding='valid',
+#     data_format='channels_last',
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     name='cnn2d_7'
+# )(x)
+# x= MaxPooling2D(
+#     pool_size=(2,2),
+#     padding='valid',
+#     data_format='channels_last',
+#     name='mp2d_7'
+# )(x)
+# x= Dropout(
+#     rate=0.2,
+#     name='do_7'
+# )(x)
+
+
+x= Flatten(
+    name='flat_1'
+)(x)
+data_out= Dense(
+    units=TOTAL_GLOSS_UNIQ,
+    activation=softmax,
+    name='batch_class'
+)(x)
