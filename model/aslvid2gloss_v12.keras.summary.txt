@@ -1,3 +1,40 @@
+model file ./aslvid2gloss_v12.4.keras
+    result is overfitting, due to on training:
+        Total params: 94,185,002 (359.29 MB)
+        Trainable params: 31,395,000 (119.76 MB)
+        Non-trainable params: 0 (0.00 B)
+        Optimizer params: 62,790,002 (239.52 MB)
+        Epoch 1/5
+        7145/7145 ━━━━━━━━━━━━━━━━━━━━ 10288s 1s/step - accuracy: 0.7587 - loss: 1.1678
+        Epoch 2/5
+        7145/7145 ━━━━━━━━━━━━━━━━━━━━ 10124s 1s/step - accuracy: 0.8770 - loss: 0.6540
+        Epoch 3/5
+        7145/7145 ━━━━━━━━━━━━━━━━━━━━ 10059s 1s/step - accuracy: 0.9229 - loss: 0.4160
+        Epoch 4/5
+        7145/7145 ━━━━━━━━━━━━━━━━━━━━ 10269s 1s/step - accuracy: 0.9496 - loss: 0.2620
+        Epoch 5/5
+        7145/7145 ━━━━━━━━━━━━━━━━━━━━ 10196s 1s/step - accuracy: 0.9663 - loss: 0.1711
+    and yet on testing:
+        ...
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 39ms/step
+        INcorrect( should be wheelchair ) calculated be repeat 13.794955611228943% ________ 63044
+        current in progress idx 2877
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 38ms/step
+        INcorrect( should be whistle ) calculated be oral 39.49519693851471% ________ 63185
+        correct 131 / 2878 = 4.551772063933287%
+
+model file ./aslvid2gloss_v12.3.keras
+    result is overfitting, due to on training:
+        Total params: 94,185,002 (359.29 MB)
+        Trainable params: 31,395,000 (119.76 MB)
+        Non-trainable params: 0 (0.00 B)
+        Optimizer params: 62,790,002 (239.52 MB)
+        Epoch 1/2
+        7145/7145 ━━━━━━━━━━━━━━━━━━━━ 10273s 1s/step - accuracy: 0.5922 - loss: 1.9340
+        Epoch 2/2
+        7145/7145 ━━━━━━━━━━━━━━━━━━━━ 10214s 1s/step - accuracy: 0.7815 - loss: 1.0867
+    and yet testing see ./aslvid2gloss_v12.4.keras above
+
 model file ./aslvid2gloss_v12.keras   1st trainign about 0.02 accuracy
 model file ./aslvid2gloss_v12.1.keras 2nd training about 0.2 accuracy
 model file ./aslvid2gloss_v12.2.keras 3rd training about 0.5 accuracy
@@ -145,3 +182,47 @@ data_out= Dense(
     activation=softmax,
     name='batch_class'
 )(x)
+
+
+
+
+
+
+
+
+testing ./aslvid2gloss_v12.4.keras: src_asl2gloss/checks/test_asl_vid2gloss_model.py
+_______________________________________________________
+from os.path import exists
+from keras.src.saving import load_model
+from numpy import argmax, float32
+
+from ..lmark_constant import IMG_SIZE, PROJ_ROOT, QUANTITY_FRAME, WLASL_VID_DIR, wlasl_READY
+
+
+from ..lmark_essential_draw import getSkeletonFrames
+
+
+def test(modelFile: str) -> None:
+    if exists(modelFile):
+        loadedModel= load_model(modelFile)
+        correct: int= 0
+        print(f"testing over {len(wlasl_READY['test'])} files, processing...")
+        for cur, i in zip(range(len(wlasl_READY['test'])), wlasl_READY['test']):
+            print(f"current in progress idx {cur}")
+            out: list= loadedModel.predict(getSkeletonFrames(
+                f"{WLASL_VID_DIR}{i['video_id']}.mp4"
+            ).reshape((1, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)).astype(float32)/255.0)
+            out= out[0]
+            if int(argmax(out, axis=-1))==int(i['gloss_id']):
+                correct +=1
+                print(f"correct( should be {wlasl_READY['label_id2gloss'][i['gloss_id']]} ) calculated be {wlasl_READY['label_id2gloss'][argmax(out, axis=-1)]} {out[argmax(out, axis=-1)]*100}%")
+            else:
+                print(f"INcorrect( should be {wlasl_READY['label_id2gloss'][i['gloss_id']]} ) calculated be {wlasl_READY['label_id2gloss'][argmax(out, axis=-1)]} {out[argmax(out, axis=-1)]*100}% ________ {i['video_id']}")
+        print(f"correct {correct} / {len(wlasl_READY['test'])} = {correct/float(len(wlasl_READY['test']))*100}%")
+    else:
+        print(f"model file: {modelFile} does not exist")
+
+
+if __name__=="__main__":
+    test(f"{PROJ_ROOT}model/aslvid2gloss_v12.4.keras")
+
