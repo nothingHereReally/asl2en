@@ -28,7 +28,7 @@ for influent_sentence in influent_sentences:
     print("[Input] ", influent_sentence)
     for corrected_sentence in corrected_sentences:
       print("[Correction] ",corrected_sentence)
-    print("-" *100)
+    print("-" *50)
 
 
 
