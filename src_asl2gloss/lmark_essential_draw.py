@@ -575,35 +575,35 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, TqFRAMES: int= QU
     return array(all_frames, dtype=uint8)
 
 
-def getdata(isSimg: bool=False, batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
+def getdata(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
     # wlasl_READY['train']
     # wlasl_READY['val']
     # wlasl_READY['test']
     # wlasl_READY['label_id2gloss']
     # wlasl_READY['label_gloss2id']
-    tmp_arrChoice: list= [2,3,4,5]
+    tmp_arrChoice: list= [2,3,1]
     tmp_arrChoice= choices(tmp_arrChoice)
     for _ in range(tmp_arrChoice[0]):
-        shuffle(wlasl_READY['train'])
+        shuffle(wlasl_READY[TrainVal])
     del tmp_arrChoice
     current_idxTRAIN: int= 0
-    # while current_idxTRAIN<(  int(batch*( len(wlasl_READY['train'])//batch ))  ):
+    # while current_idxTRAIN<(  int(batch*( len(wlasl_READY[TrainVal])//batch ))  ):
     while True:
         shape_vidBatch: tuple= (batch, QUANTITY_FRAME*IMG_SIZE, IMG_SIZE, 3) if isSimg else (batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)
         batch_vids: ndarray= zeros(shape_vidBatch, dtype=float32)
         batch_class: ndarray= zeros((batch), dtype=uint16)
         for i in range(batch):
-            curr_IDX_USE: int= (current_idxTRAIN+i) if (current_idxTRAIN+i)<len(wlasl_READY['train']) else (0 +(
-                (current_idxTRAIN+i)-len(wlasl_READY['train'])
+            curr_IDX_USE: int= (current_idxTRAIN+i) if (current_idxTRAIN+i)<len(wlasl_READY[TrainVal]) else (0 +(
+                (current_idxTRAIN+i)-len(wlasl_READY[TrainVal])
             ))
-            batch_vids[i]= getSkeletonFrames(f"{WLASL_VID_DIR}{wlasl_READY['train'][
+            batch_vids[i]= getSkeletonFrames(f"{WLASL_VID_DIR}{wlasl_READY[TrainVal][
                     curr_IDX_USE
                 ]['video_id']}.mp4",
                 isSingleImg=isSimg
             ).astype(float32)/255.0
-            batch_class[i]= int(wlasl_READY['train'][
+            batch_class[i]= int(wlasl_READY[TrainVal][
                     curr_IDX_USE
                 ]['gloss_id'])/1.0
-        current_idxTRAIN= (current_idxTRAIN+batch) if (current_idxTRAIN+batch)<len(wlasl_READY['train']) else 0
+        current_idxTRAIN= (current_idxTRAIN+batch) if (current_idxTRAIN+batch)<len(wlasl_READY[TrainVal]) else 0
         yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
 
