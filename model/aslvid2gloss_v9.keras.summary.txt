@@ -1,0 +1,387 @@
+model file: model/aslvid2gloss_v9.keras
+
+
+optimizer: Adam(learning_rate=0.001),
+loss: sparse_categorical_crossentropy,
+metrics: ['accuracy']
+epoch: 2
+steps_per_epoch: TOTAL_TRAIN_FILE//TRAIN_BATCH
+
+still model v10 and v12 is better
+due to on test:
+...
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 28ms/step
+INcorrect( should be wheelchair ) calculated be action 30.60221290588379% ________ 63044
+current in progress idx 2877
+1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 29ms/step
+INcorrect( should be whistle ) calculated be who 23.796735763549805% ________ 63185
+correct 100 / 2878 = 3.4746351633078527%
+
+
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)               │ (None, 20, 150, 150, 3)     │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn2d_1 (TimeDistributed)            │ (None, 20, 148, 148, 8)     │             224 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp2d_1 (MaxPooling3D)                │ (None, 20, 74, 74, 8)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn3d_1 (Conv3D)                     │ (None, 18, 74, 74, 8)       │             200 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp3d_1 (MaxPooling3D)                │ (None, 9, 74, 74, 8)        │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_1 (Dropout)                       │ (None, 9, 74, 74, 8)        │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn2d_2 (TimeDistributed)            │ (None, 9, 72, 72, 16)       │           1,168 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp2d_2 (MaxPooling3D)                │ (None, 9, 36, 36, 16)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn3d_2 (Conv3D)                     │ (None, 7, 36, 36, 16)       │             784 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_2 (Dropout)                       │ (None, 7, 36, 36, 16)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn2d_3 (TimeDistributed)            │ (None, 7, 34, 34, 32)       │           4,640 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp2d_3 (MaxPooling3D)                │ (None, 7, 17, 17, 32)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn3d_3 (Conv3D)                     │ (None, 5, 17, 17, 32)       │           3,104 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_3 (Dropout)                       │ (None, 5, 17, 17, 32)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn2d_4 (TimeDistributed)            │ (None, 5, 15, 15, 32)       │           9,248 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp2d_4 (MaxPooling3D)                │ (None, 5, 5, 5, 32)         │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn3d_4 (Conv3D)                     │ (None, 3, 5, 5, 32)         │           3,104 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_4 (Dropout)                       │ (None, 3, 5, 5, 32)         │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ flat (Flatten)                       │ (None, 2400)                │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_class (Dense)                  │ (None, 2000)                │       4,802,000 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 4,824,472 (18.40 MB)
+ Trainable params: 4,824,472 (18.40 MB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/12
+7145/7145 ━━━━━━━━━━━━━━━━━━━━ 9552s 1s/step - accuracy: 0.0036 - loss: 7.5233 - learning_rate: 1.0000e-04
+Epoch 2/12
+7145/7145 ━━━━━━━━━━━━━━━━━━━━ 8694s 1s/step - accuracy: 0.0468 - loss: 5.8465 - learning_rate: 1.0000e-04
+Epoch 3/12
+7145/7145 ━━━━━━━━━━━━━━━━━━━━ 8894s 1s/step - accuracy: 0.1470 - loss: 4.4472 - learning_rate: 1.0000e-04
+Epoch 4/12
+7145/7145 ━━━━━━━━━━━━━━━━━━━━ 8935s 1s/step - accuracy: 0.2536 - loss: 3.5327 - learning_rate: 1.0000e-04
+Epoch 5/12
+7145/7145 ━━━━━━━━━━━━━━━━━━━━ 9127s 1s/step - accuracy: 0.3493 - loss: 2.8836 - learning_rate: 1.0000e-04
+Epoch 6/12
+7145/7145 ━━━━━━━━━━━━━━━━━━━━ 9011s 1s/step - accuracy: 0.4345 - loss: 2.4119 - learning_rate: 1.0000e-04
+Epoch 7/12
+7145/7145 ━━━━━━━━━━━━━━━━━━━━ 9152s 1s/step - accuracy: 0.5118 - loss: 1.9953 - learning_rate: 1.0000e-04
+Epoch 8/12
+7145/7145 ━━━━━━━━━━━━━━━━━━━━ 8935s 1s/step - accuracy: 0.5694 - loss: 1.6925 - learning_rate: 1.0000e-04
+Epoch 9/12
+7145/7145 ━━━━━━━━━━━━━━━━━━━━ 8766s 1s/step - accuracy: 0.6388 - loss: 1.3945 - learning_rate: 1.0000e-04
+Epoch 10/12
+7145/7145 ━━━━━━━━━━━━━━━━━━━━ 8874s 1s/step - accuracy: 0.6866 - loss: 1.1577 - learning_rate: 1.0000e-04
+Epoch 11/12
+7145/7145 ━━━━━━━━━━━━━━━━━━━━ 8810s 1s/step - accuracy: 0.7402 - loss: 0.9533 - learning_rate: 1.0000e-04
+Epoch 12/12
+7145/7145 ━━━━━━━━━━━━━━━━━━━━ 8916s 1s/step - accuracy: 0.7845 - loss: 0.7815 - learning_rate: 1.0000e-04
+
+
+data_in= Input(
+    shape=(QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3),
+    dtype=float32,
+    name='batch_vid'
+)
+
+
+x= TimeDistributed(Conv2D(
+    filters=8,
+    kernel_size=(3,3),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+),
+    name='cnn2d_1'
+)(data_in)
+x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='mp2d_1'
+)(x)
+x= Conv3D(
+    filters=8,
+    kernel_size=(3,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='cnn3d_1'
+)(x)
+x= MaxPooling3D(
+    pool_size=(2,1,1),
+    padding='valid',
+    data_format='channels_last',
+    name='mp3d_1'
+)(x)
+x= Dropout(
+    rate=0.2,
+    name='do_1'
+)(x)
+x= TimeDistributed(Conv2D(
+    filters=16,
+    kernel_size=(3,3),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+),
+    name='cnn2d_2'
+)(x)
+x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='mp2d_2'
+)(x)
+x= Conv3D(
+    filters=16,
+    kernel_size=(3,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='cnn3d_2'
+)(x)
+# x= MaxPooling3D(
+#     pool_size=(2,1,1),
+#     padding='valid',
+#     data_format='channels_last',
+#     name='mp3d_2'
+# )
+x= Dropout(
+    rate=0.2,
+    name='do_2'
+)(x)
+x= TimeDistributed(Conv2D(
+    filters=32,
+    kernel_size=(3,3),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+),
+    name='cnn2d_3'
+)(x)
+x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='mp2d_3'
+)(x)
+x= Conv3D(
+    filters=32,
+    kernel_size=(3,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='cnn3d_3'
+)(x)
+x= Dropout(
+    rate=0.2,
+    name='do_3'
+)(x)
+x= TimeDistributed(Conv2D(
+    filters=32,
+    kernel_size=(3,3),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+),
+    name='cnn2d_4'
+)(x)
+x= MaxPooling3D(
+    pool_size=(1,3,3),
+    padding='valid',
+    data_format='channels_last',
+    name='mp2d_4'
+)(x)
+x= Conv3D(
+    filters=32,
+    kernel_size=(3,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='cnn3d_4'
+)(x)
+x= Dropout(
+    rate=0.2,
+    name='do_4'
+)(x)
+# x= Conv3D(
+#     filters=8,
+#     kernel_size=(3,1,1),
+#     strides=(1,1,1),
+#     padding='valid',
+#     data_format='channels_last',
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     name='cnn3d_5'
+# )(x)
+# x= MaxPooling3D(
+#     pool_size=(2,1,1),
+#     padding='valid',
+#     data_format='channels_last',
+#     name='mp3d_5'
+# )(x)
+# x= Conv3D(
+#     filters=8,
+#     kernel_size=(3,1,1),
+#     strides=(1,1,1),
+#     padding='valid',
+#     data_format='channels_last',
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     name='cnn3d_6'
+# )(x)
+# x= MaxPooling3D(
+#     pool_size=(2,1,1),
+#     padding='valid',
+#     data_format='channels_last',
+#     name='mp3d_6'
+# )(x)
+# x= Conv3D(
+#     filters=32,
+#     kernel_size=(3,1,1),
+#     strides=(1,1,1),
+#     padding='valid',
+#     data_format='channels_last',
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     name='cnn3d_7'
+# )(x)
+x= Flatten(name='flat')(x)
+
+
+data_out = Dense(TOTAL_GLOSS_UNIQ, activation=softmax, name='batch_class')(x)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+latest( ambot pangka pila, lost track quantity revision of v9 ), this notGoodPerformance, see above
+maybe better
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)               │ (None, 20, 150, 150, 3)     │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ time_distributed (TimeDistributed)   │ (None, 20, 148, 148, 8)     │             224 │ <-- cnn3d (1,3,3) -- (1,1,1)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp2d_1 (MaxPooling3D)                │ (None, 20, 74, 74, 8)       │               0 │ <-- maxpool3d (1,2,2) -- (1,1,1)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_1 (Dropout)                       │ (None, 20, 74, 74, 8)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ time_distributed_1 (TimeDistributed) │ (None, 20, 72, 72, 16)      │           1,168 │ <-- cnn3d (1,3,3) -- (1,1,1)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp2d_2 (MaxPooling3D)                │ (None, 20, 36, 36, 16)      │               0 │ <-- maxpool3d (1,2,2) -- (1,1,1)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_2 (Dropout)                       │ (None, 20, 36, 36, 16)      │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ time_distributed_2 (TimeDistributed) │ (None, 20, 34, 34, 32)      │           4,640 │ <-- cnn3d (1,3,3) -- (1,1,1)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp2d_3 (MaxPooling3D)                │ (None, 20, 17, 17, 32)      │               0 │ <-- maxpool3d (1,2,2) -- (1,1,1)
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_3 (Dropout)                       │ (None, 20, 17, 17, 32)      │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ time_distributed_3 (TimeDistributed) │ (None, 20, 15, 15, 32)      │           9,248 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn3d_5 (Conv3D)                     │ (None, 1, 15, 15, 3)        │           1,923 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ reshape2_2d (Reshape)                │ (None, 15, 15, 3)           │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn2d_6 (Conv2D)                     │ (None, 7, 7, 16)            │             448 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_6 (Dropout)                       │ (None, 7, 7, 16)            │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn2d_7 (Conv2D)                     │ (None, 5, 5, 32)            │           4,640 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn2d_8 (Conv2D)                     │ (None, 3, 3, 128)           │          36,992 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_8 (Dropout)                       │ (None, 3, 3, 128)           │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ cnn2d_9 (Conv2D)                     │ (None, 1, 1, 512)           │         590,336 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ flat (Flatten)                       │ (None, 512)                 │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_class (Dense)                  │ (None, 2000)                │       1,026,000 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 1,675,619 (6.39 MB)
+ Trainable params: 1,675,619 (6.39 MB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/2
+7144/7144 ━━━━━━━━━━━━━━━━━━━━ 12068s 2s/step - accuracy: 5.0198e-04 - loss: 7.6869
+Epoch 2/2
+7144/7144 ━━━━━━━━━━━━━━━━━━━━ 11725s 2s/step - accuracy: 0.0025 - loss: 7.5191
+
+
+
+
+
+
+
+1st verion not good, so was changed to above
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)               │ (None, 20, 150, 150, 3)     │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ conv2d_1 (TimeDistributed)           │ (None, 20, 148, 148, 8)     │             224 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp2d_1 (TimeDistributed)             │ (None, 20, 74, 74, 8)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ conv2d_2 (TimeDistributed)           │ (None, 20, 72, 72, 8)       │             584 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp3d_2 (TimeDistributed)             │ (None, 20, 36, 36, 8)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ conv2d_3 (TimeDistributed)           │ (None, 20, 34, 34, 8)       │             584 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp2d_3 (TimeDistributed)             │ (None, 20, 11, 11, 8)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ conv2d_4 (TimeDistributed)           │ (None, 20, 9, 9, 8)         │             584 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ mp2d_4 (TimeDistributed)             │ (None, 20, 3, 3, 8)         │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ time_distributed (TimeDistributed)   │ (None, 20, 72)              │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ lstm (LSTM)                          │ (None, 32)                  │          13,440 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_class (Dense)                  │ (None, 2000)                │          66,000 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 81,416 (318.03 KB)
+ Trainable params: 81,416 (318.03 KB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/4
+7144/7144 ━━━━━━━━━━━━━━━━━━━━ 11894s 2s/step - accuracy: 6.5146e-04 - loss: 8.9858
+Epoch 2/4
+7144/7144 ━━━━━━━━━━━━━━━━━━━━ 11955s 2s/step - accuracy: 4.9266e-04 - loss: 8.2022
+Epoch 3/4
+ 119/7144 ━━━━━━━━━━━━━━━━━━━━ 3:10:42 2s/step - accuracy: 0.0000e+00 - loss: 8.1437
