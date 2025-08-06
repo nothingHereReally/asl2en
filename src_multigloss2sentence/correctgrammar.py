@@ -9,9 +9,9 @@ def set_seed(seed):
 set_seed(1212)
 
 
-gf= Gramformer(models = 1, use_gpu=True) # 1=corrector, 2=detector
+gf= Gramformer(models=1, use_gpu=True) # 1=corrector, 2=detector
 
-influent_sentences= [
+incorrect_gram= [
     "where comfort room?",
     "this available?",
     "why life hard?",
@@ -23,10 +23,10 @@ influent_sentences= [
     "I peanut allergy",
 ]   
 
-for influent_sentence in influent_sentences:
+for influent_sentence in incorrect_gram:
     corrected_sentences= gf.correct(influent_sentence, max_candidates=1)
     print("[Input] ", influent_sentence)
-    for corrected_sentence in corrected_sentences:
+    for corrected_sentence in incorrect_gram:
       print("[Correction] ",corrected_sentence)
     print("-" *50)
 
