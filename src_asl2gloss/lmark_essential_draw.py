@@ -3,6 +3,7 @@ from typing import Generator
 from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, destroyAllWindows, line
 from numpy import array, float32, ndarray, uint16, uint8, zeros
 from math import ceil
+from os.path import exists
 
 from .lmark_constant import FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, QUANTITY_FRAME, TRAIN_BATCH, WLASL_VID_DIR, WORTHY_POSE_IDX, wlasl_READY
 from .lmark_constant import mpH
@@ -586,24 +587,27 @@ def getdata(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) 
     for _ in range(tmp_arrChoice[0]):
         shuffle(wlasl_READY[TrainVal])
     del tmp_arrChoice
-    current_idxTRAIN: int= 0
-    # while current_idxTRAIN<(  int(batch*( len(wlasl_READY[TrainVal])//batch ))  ):
+    b_idxINIT: int= 0
+    shape_vidBatch: tuple= (batch, QUANTITY_FRAME*IMG_SIZE, IMG_SIZE, 3) if isSimg else (batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)
+    # while loop runs 1 for every epoch
     while True:
-        shape_vidBatch: tuple= (batch, QUANTITY_FRAME*IMG_SIZE, IMG_SIZE, 3) if isSimg else (batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)
         batch_vids: ndarray= zeros(shape_vidBatch, dtype=float32)
         batch_class: ndarray= zeros((batch), dtype=uint16)
-        for i in range(batch):
-            curr_IDX_USE: int= (current_idxTRAIN+i) if (current_idxTRAIN+i)<len(wlasl_READY[TrainVal]) else (0 +(
-                (current_idxTRAIN+i)-len(wlasl_READY[TrainVal])
+        i_0toBatchOrMore: int= 0
+        idx_add2batch: int= 0
+        while idx_add2batch<batch:
+            curr_IDX_USE: int= (b_idxINIT+i_0toBatchOrMore) if (b_idxINIT+i_0toBatchOrMore)<len(wlasl_READY[TrainVal]) else (0 +(
+                (b_idxINIT+i_0toBatchOrMore)-len(wlasl_READY[TrainVal])
             ))
-            batch_vids[i]= getSkeletonFrames(f"{WLASL_VID_DIR}{wlasl_READY[TrainVal][
-                    curr_IDX_USE
-                ]['video_id']}.mp4",
-                isSingleImg=isSimg
-            ).astype(float32)/255.0
-            batch_class[i]= int(wlasl_READY[TrainVal][
-                    curr_IDX_USE
-                ]['gloss_id'])/1.0
-        current_idxTRAIN= (current_idxTRAIN+batch) if (current_idxTRAIN+batch)<len(wlasl_READY[TrainVal]) else 0
+            vidfile_dir: str= f"{WLASL_VID_DIR}{wlasl_READY[TrainVal][  curr_IDX_USE  ]['video_id']}.mp4"
+            if exists(vidfile_dir):
+                try:
+                    batch_vids[idx_add2batch]= getSkeletonFrames(vidfile_dir, isSingleImg=isSimg).astype(float32)/255.0
+                    batch_class[idx_add2batch]= int(wlasl_READY[TrainVal][  curr_IDX_USE  ]['gloss_id'])/1.0
+                    idx_add2batch+= 1
+                except FileExistsError as e:
+                    del e
+            i_0toBatchOrMore+= 1
+        b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<len(wlasl_READY[TrainVal]) else 0
         yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
 
