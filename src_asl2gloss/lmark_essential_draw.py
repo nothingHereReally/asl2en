@@ -1,6 +1,6 @@
 from random import choices, shuffle
 from typing import Generator
-from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, destroyAllWindows, line
+from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, line
 from numpy import array, float32, ndarray, uint16, uint8, zeros
 from math import ceil
 from os.path import exists
@@ -449,128 +449,99 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, TqFRAMES: int= QU
     output is ndarray of image frames, from start of the video till end
     of size (TqFRAMES, IMG_SIZE, IMG_SIZE, 3) of dtype=numpy.uint8
     '''
-    vid= VideoCapture(fpath_vid)
-    oqFRAMES: int= int(vid.get(CAP_PROP_FRAME_COUNT))
-    all_frames: list= []
-
-
-    if vid.isOpened():
-        isNotEnd, frame= True, zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
-        # to be used due to some frames are currupted/unAbleBeRead/bwesit
-        old_frame= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
-        qImgAdded: int= 0
-        if oqFRAMES < TqFRAMES:
-            # problem, oqFRAMES 33, 46
-            # for all target frames have frames from orig frames
-            target2orig_ratio: int= int(ceil(TqFRAMES/oqFRAMES))
-            for i in range(TqFRAMES):
-                if (i%target2orig_ratio)==0:
+    def getAllImg_frames(vidpath: str) -> list:
+        try:
+            vid= VideoCapture(vidpath)
+            if vid.isOpened():
+                q_images: int= int(vid.get(CAP_PROP_FRAME_COUNT))
+                if q_images==0:
+                    vid.release()
+                    del vid
+                    # destroyAllWindows() has bug, due to will make
+                    # all vid.read() data prev be gone/disappear
+                    # destroyAllWindows()
+                    return []
+                all_Imgs: list= []
+                for _ in range(q_images):
                     isNotEnd, frame= vid.read()
-                if isNotEnd and qImgAdded<TqFRAMES:
-                    frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
-                    if isSingleImg:
-                        all_frames.extend(drawFacePoseHand(
-                            img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mpH.process(frame),
-                            orig_shape=frame.shape
-                        ))
-                    else:
-                        all_frames.append(drawFacePoseHand(
-                            img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mpH.process(frame),
-                            orig_shape=frame.shape
-                        ))
-                    qImgAdded+= 1
-                    old_frame= frame.copy()
-                if not isNotEnd and qImgAdded<TqFRAMES:
-                    if isSingleImg:
-                        all_frames.extend(drawFacePoseHand(
-                            img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mpH.process(old_frame),
-                            orig_shape=old_frame.shape
-                        ))
-                    else:
-                        all_frames.append(drawFacePoseHand(
-                            img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mpH.process(old_frame),
-                            orig_shape=old_frame.shape
-                        ))
-                    qImgAdded+= 1
-        elif oqFRAMES==TqFRAMES:
-            for i in range(TqFRAMES):
-                isNotEnd, frame= vid.read()
-                if isNotEnd and qImgAdded<TqFRAMES:
-                    frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
-                    if isSingleImg:
-                        all_frames.extend(drawFacePoseHand(
-                            img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mpH.process(frame),
-                            orig_shape=frame.shape
-                        ))
-                    else:
-                        all_frames.append(drawFacePoseHand(
-                            img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mpH.process(frame),
-                            orig_shape=frame.shape
-                        ))
-                    qImgAdded+= 1
-                    old_frame= frame.copy()
-                if not isNotEnd and qImgAdded<TqFRAMES:
-                    if isSingleImg:
-                        all_frames.extend(drawFacePoseHand(
-                            img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mpH.process(old_frame),
-                            orig_shape=old_frame.shape
-                        ))
-                    else:
-                        all_frames.append(drawFacePoseHand(
-                            img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mpH.process(old_frame),
-                            orig_shape=old_frame.shape
-                        ))
-                    qImgAdded+= 1
-        else: # TqFRAMES < oqFRAMES
-            orig2target_ratio: int= oqFRAMES//TqFRAMES
-            for i in range(orig2target_ratio*TqFRAMES):
-                isNotEnd, frame= vid.read()
-                if i%orig2target_ratio==0 and isNotEnd and qImgAdded<TqFRAMES:
-                    frame= array(cvtColor(src=frame, code=COLOR_BGR2RGB), dtype=uint8)
-                    if isSingleImg:
-                        all_frames.extend(drawFacePoseHand(
-                            img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mpH.process(frame),
-                            orig_shape=frame.shape
-                        ))
-                    else:
-                        all_frames.append(drawFacePoseHand(
-                            img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mpH.process(frame),
-                            orig_shape=frame.shape
-                        ))
-                    qImgAdded+= 1
-                    old_frame= frame.copy()
-                if not isNotEnd and qImgAdded<TqFRAMES:
-                    if isSingleImg:
-                        all_frames.extend(drawFacePoseHand(
-                            img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mpH.process(old_frame),
-                            orig_shape=old_frame.shape
-                        ))
-                    else:
-                        all_frames.append(drawFacePoseHand(
-                            img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                            lmark_mph=mpH.process(old_frame),
-                            orig_shape=old_frame.shape
-                        ))
-                    qImgAdded+= 1
-    else:
-        raise FileExistsError(f"file {fpath_vid} can't be opened")
-    vid.release()
-    del vid
-    destroyAllWindows()
-    if qImgAdded!=TqFRAMES and not isSingleImg:
-        raise ValueError(f"frames on single video failed match target( {TqFRAMES} ) orig( {oqFRAMES} ), but result is {qImgAdded} --> {fpath_vid}")
-    return array(all_frames, dtype=uint8)
+                    frame= array(frame, dtype=uint8)
+                    if isNotEnd and 0<len(frame):
+                        all_Imgs.append(array(cvtColor(
+                            src=frame,
+                            code=COLOR_BGR2RGB
+                        ).copy(), dtype=uint8))
+                vid.release()
+                del vid
+                # destroyAllWindows() has bug, due to will make
+                # all vid.read() data prev be gone/disappear
+                # destroyAllWindows()
+                return all_Imgs
+            vid.release()
+            del vid
+            # destroyAllWindows() has bug, due to will make
+            # all vid.read() data prev be gone/disappear
+            # destroyAllWindows()
+            return []
+        except Exception as e:
+            del e
+            return []
+    allImg_human: list= getAllImg_frames(fpath_vid)
+    allImg_skeleton: list= []
+    oqFRAMES: int= int(len(allImg_human))
+    if oqFRAMES<=0:
+        raise FileExistsError("file can't be opened or is corrupted")
+    if oqFRAMES<TqFRAMES:
+        t2o_ratio: int= int(ceil(TqFRAMES/oqFRAMES))
+        for i in range(oqFRAMES):
+            for ii in range(t2o_ratio):
+                if isSingleImg and (i*t2o_ratio +ii)<TqFRAMES:
+                    allImg_skeleton.extend(drawFacePoseHand(
+                        img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+                        lmark_mph=mpH.process(allImg_human[i]),
+                        orig_shape=allImg_human[i].shape
+                    ))
+                elif (i*t2o_ratio +ii)<TqFRAMES:
+                    allImg_skeleton.append(drawFacePoseHand(
+                        img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+                        lmark_mph=mpH.process(allImg_human[i]),
+                        orig_shape=allImg_human[i].shape
+                    ))
+    elif oqFRAMES==TqFRAMES:
+        for i in range(TqFRAMES):
+            if isSingleImg:
+                allImg_skeleton.extend(drawFacePoseHand(
+                    img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+                    lmark_mph=mpH.process(allImg_human[i]),
+                    orig_shape=allImg_human[i].shape
+                ))
+            else:
+                allImg_skeleton.append(drawFacePoseHand(
+                    img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+                    lmark_mph=mpH.process(allImg_human[i]),
+                    orig_shape=allImg_human[i].shape
+                ))
+    else: # TqFRAMES < oqFRAMES
+        o2t_ratio: int= oqFRAMES//TqFRAMES
+        for i in range(TqFRAMES):
+            if isSingleImg:
+                allImg_skeleton.extend(drawFacePoseHand(
+                    img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+                    lmark_mph=mpH.process(allImg_human[i*o2t_ratio]),
+                    orig_shape=allImg_human[i].shape
+                ))
+            else:
+                allImg_skeleton.append(drawFacePoseHand(
+                    img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+                    lmark_mph=mpH.process(allImg_human[i*o2t_ratio]),
+                    orig_shape=allImg_human[i].shape
+                ))
+    if len(allImg_skeleton)!=TqFRAMES and not isSingleImg:
+        raise ValueError(f"frames on single video failed match target( {
+        TqFRAMES
+        } ) orig( {oqFRAMES} ), but result is {
+        allImg_skeleton
+        } --> {fpath_vid}")
+    return array(allImg_skeleton, dtype=uint8)
 
 
 def getdata(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
