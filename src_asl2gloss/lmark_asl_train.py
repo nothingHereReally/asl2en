@@ -17,7 +17,7 @@ from .lmark_constant import IMG_SIZE, PROJ_ROOT, QUANTITY_FRAME, TOTAL_TRAIN_FIL
 from .lmark_constant import IMG_SIZE, PROJ_ROOT, QUANTITY_FRAME, WLASL_VID_DIR, wlasl_READY
 
 
-from .modelasl2gloss_layers import data_in, data_out
+from .model_layers import data_in, data_out
 from .lmark_essential_draw import getSkeletonFrames, getdata
 from .lmark_essential_draw import getSkeletonFrames
 from .checks.test_asl_vid2gloss_model import test
