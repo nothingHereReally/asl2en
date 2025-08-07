@@ -445,6 +445,13 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, initGT: int= 0, T
     '''
     fpath_vid: str, video file path string
     TqFRAMES: int, target quantity of frames on output
+    initGT: int, init Get Target at what mod, for when original frame( oqFRAMES )
+        is greater than target( TqFRAMES ) then get
+        at what mod, say is it mod( 0 ) ie. initGT=0,
+        mod( 1 ) ie. initGT=1, ..., due to TqFRAMES<oqFRAMES, then might be that
+        oqFRAMES//TqFRAMES > 1, then it would be a waste for other frames to
+        not be used
+    TqFRAMES: int= QUANTITY_FRAMES, output number of frames which is from the video data
 
     output is ndarray of image frames, from start of the video till end
     of size (TqFRAMES, IMG_SIZE, IMG_SIZE, 3) of dtype=numpy.uint8
