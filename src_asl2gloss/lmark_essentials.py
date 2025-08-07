@@ -494,7 +494,6 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, initGT: int= 0, T
     allImg_human: list= getAllImg_frames(fpath_vid)
     allImg_skeleton: list= []
     oqFRAMES: int= int(len(allImg_human))
-    print(f"q frames {oqFRAMES}")
     if oqFRAMES<=0:
         raise FileExistsError("file can't be opened or is corrupted")
     qHands: int= 0

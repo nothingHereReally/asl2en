@@ -5,7 +5,7 @@ from cv2 import imwrite
 from numpy import ndarray
 
 from ..lmark_constant import PROJ_ROOT, WLASL_VID_DIR
-from ..lmark_essential_draw import getSkeletonFrames
+from ..lmark_essentials import getSkeletonFrames
 
 
 if __name__=="__main__":
@@ -23,7 +23,7 @@ if __name__=="__main__":
 
     vid= f"{WLASL_VID_DIR}{wlasl_ready['train'][0]['video_id']}.mp4"
     if exists(vid):
-        all_frames: ndarray= getSkeletonFrames(fpath_vid=vid)
+        all_frames: ndarray= getSkeletonFrames(fpath_vid=vid)[0]
         for i, img in zip(range(len(all_frames)), all_frames):
             if (i+1)<10:
                 imwrite(
@@ -37,7 +37,7 @@ if __name__=="__main__":
                 )
         imwrite(
             filename="/tmp/wlasl_vid_test/000_single.png",
-            img=getSkeletonFrames(fpath_vid=vid, isSingleImg=True)
+            img=(getSkeletonFrames(fpath_vid=vid, isSingleImg=True))[0]
         )
     else:
         print(f"file [{vid}] does not exist")
