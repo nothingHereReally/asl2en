@@ -18,8 +18,8 @@ from .lmark_constant import IMG_SIZE, PROJ_ROOT, QUANTITY_FRAME, WLASL_VID_DIR, 
 
 
 from .model_layers import data_in, data_out
-from .lmark_essential_draw import getSkeletonFrames, getdata
-from .lmark_essential_draw import getSkeletonFrames
+from .lmark_essentials import getSkeletonFrames, getdata
+from .lmark_essentials import getSkeletonFrames
 from .checks.test_asl_vid2gloss_model import test
 
 

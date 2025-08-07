@@ -5,8 +5,7 @@ from numpy import array, float32, ndarray, uint16, uint8, zeros
 from math import ceil
 from os.path import exists
 
-from .lmark_constant import FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, QUANTITY_FRAME, TRAIN_BATCH, WLASL_VID_DIR, WORTHY_POSE_IDX, wlasl_READY, MIN_FRAMES_HAS_HANDS
-from .lmark_constant import mpH
+from .lmark_constant import FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, QUANTITY_FRAME, TRAIN_BATCH, WLASL_VID_DIR, WORTHY_POSE_IDX, wlasl_READY, MIN_FRAMES_HAS_HANDS, mpH
 
 
 def drawSkeletonImg(img_orig: ndarray, \
