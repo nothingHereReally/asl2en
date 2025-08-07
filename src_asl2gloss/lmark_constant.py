@@ -11,6 +11,13 @@ TRAIN_BATCH: int= 2
 QUANTITY_FRAME: int= 20
 # IMG_SIZE: int= 480
 IMG_SIZE: int= 150
+# MIN_FRAMES_HAS_HANDS, meaning on a single video file
+# where only QUANTITY_FRAME img will be included, then
+# mandatory that atleast MIN_FRAMES_HAS_HANDS out of
+# QUANTITY_FRAME has at least 1 hand( ie. either left
+# or right hand )
+# ie. current is at least 12 or 20 has hand/s 20*0.6= 12
+MIN_FRAMES_HAS_HANDS: int= int(QUANTITY_FRAME*0.6)
 WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
 
 

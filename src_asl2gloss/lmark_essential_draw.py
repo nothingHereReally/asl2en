@@ -5,7 +5,7 @@ from numpy import array, float32, ndarray, uint16, uint8, zeros
 from math import ceil
 from os.path import exists
 
-from .lmark_constant import FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, QUANTITY_FRAME, TRAIN_BATCH, WLASL_VID_DIR, WORTHY_POSE_IDX, wlasl_READY
+from .lmark_constant import FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, QUANTITY_FRAME, TRAIN_BATCH, WLASL_VID_DIR, WORTHY_POSE_IDX, wlasl_READY, MIN_FRAMES_HAS_HANDS
 from .lmark_constant import mpH
 
 
@@ -488,52 +488,88 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, TqFRAMES: int= QU
     allImg_human: list= getAllImg_frames(fpath_vid)
     allImg_skeleton: list= []
     oqFRAMES: int= int(len(allImg_human))
+    print(f"q frames {oqFRAMES}")
     if oqFRAMES<=0:
         raise FileExistsError("file can't be opened or is corrupted")
+    qHands: int= 0
     if oqFRAMES<TqFRAMES:
         t2o_ratio: int= int(ceil(TqFRAMES/oqFRAMES))
         for i in range(oqFRAMES):
+            fph_lmark= mpH.process(allImg_human[i])
             for ii in range(t2o_ratio):
+                if fph_lmark.left_hand_landmarks!=None or fph_lmark.right_hand_landmarks!=None:
+                    qHands+= 1
+                # start checking but on 2nd be opposite
+                # if (TqFRAMES-MIN_FRAMES_HAS_HANDS)<=(i*t2o_ratio +ii) and ((i*t2o_ratio +ii) -(TqFRAMES-MIN_FRAMES_HAS_HANDS))<qHands:
+                if (TqFRAMES-MIN_FRAMES_HAS_HANDS)<=(i*t2o_ratio +ii) and qHands<=((i*t2o_ratio +ii) -(TqFRAMES-MIN_FRAMES_HAS_HANDS)):
+                    del allImg_human
+                    del allImg_skeleton
+                    del oqFRAMES
+                    del t2o_ratio
+                    del fph_lmark
+                    del qHands
+                    raise FileExistsError("video not worthy to be on training due to did not meet MIN_FRAMES_HAS_HANDS")
                 if isSingleImg and (i*t2o_ratio +ii)<TqFRAMES:
                     allImg_skeleton.extend(drawFacePoseHand(
                         img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                        lmark_mph=mpH.process(allImg_human[i]),
+                        lmark_mph=fph_lmark,
                         orig_shape=allImg_human[i].shape
                     ))
                 elif (i*t2o_ratio +ii)<TqFRAMES:
                     allImg_skeleton.append(drawFacePoseHand(
                         img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                        lmark_mph=mpH.process(allImg_human[i]),
+                        lmark_mph=fph_lmark,
                         orig_shape=allImg_human[i].shape
                     ))
     elif oqFRAMES==TqFRAMES:
         for i in range(TqFRAMES):
+            fph_lmark= mpH.process(allImg_human[i])
+            if fph_lmark.left_hand_landmarks!=None or fph_lmark.right_hand_landmarks!=None:
+                qHands+= 1
+            if (TqFRAMES-MIN_FRAMES_HAS_HANDS)<=i and qHands<=(i -(TqFRAMES-MIN_FRAMES_HAS_HANDS)):
+                del allImg_human
+                del allImg_skeleton
+                del oqFRAMES
+                del fph_lmark
+                del qHands
+                raise FileExistsError("video not worthy to be on training due to did not meet MIN_FRAMES_HAS_HANDS")
             if isSingleImg:
                 allImg_skeleton.extend(drawFacePoseHand(
                     img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                    lmark_mph=mpH.process(allImg_human[i]),
+                    lmark_mph=fph_lmark,
                     orig_shape=allImg_human[i].shape
                 ))
             else:
                 allImg_skeleton.append(drawFacePoseHand(
                     img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                    lmark_mph=mpH.process(allImg_human[i]),
+                    lmark_mph=fph_lmark,
                     orig_shape=allImg_human[i].shape
                 ))
     else: # TqFRAMES < oqFRAMES
         o2t_ratio: int= oqFRAMES//TqFRAMES
         for i in range(TqFRAMES):
+            fph_lmark= mpH.process(allImg_human[i*o2t_ratio])
+            if fph_lmark.left_hand_landmarks!=None or fph_lmark.right_hand_landmarks!=None:
+                qHands+= 1
+            if (TqFRAMES-MIN_FRAMES_HAS_HANDS)<=i and qHands<=(i -(TqFRAMES-MIN_FRAMES_HAS_HANDS)):
+                del allImg_human
+                del allImg_skeleton
+                del oqFRAMES
+                del o2t_ratio
+                del fph_lmark
+                del qHands
+                raise FileExistsError("video not worthy to be on training due to did not meet MIN_FRAMES_HAS_HANDS")
             if isSingleImg:
                 allImg_skeleton.extend(drawFacePoseHand(
                     img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                    lmark_mph=mpH.process(allImg_human[i*o2t_ratio]),
-                    orig_shape=allImg_human[i].shape
+                    lmark_mph=fph_lmark,
+                    orig_shape=allImg_human[i*o2t_ratio].shape
                 ))
             else:
                 allImg_skeleton.append(drawFacePoseHand(
                     img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                    lmark_mph=mpH.process(allImg_human[i*o2t_ratio]),
-                    orig_shape=allImg_human[i].shape
+                    lmark_mph=fph_lmark,
+                    orig_shape=allImg_human[i*o2t_ratio].shape
                 ))
     if len(allImg_skeleton)!=TqFRAMES and not isSingleImg:
         raise ValueError(f"frames on single video failed match target( {
@@ -541,6 +577,9 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, TqFRAMES: int= QU
         } ) orig( {oqFRAMES} ), but result is {
         allImg_skeleton
         } --> {fpath_vid}")
+    del allImg_human
+    del oqFRAMES
+    del qHands
     return array(allImg_skeleton, dtype=uint8)
 
 
