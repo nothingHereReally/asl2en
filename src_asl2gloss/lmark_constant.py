@@ -29,6 +29,7 @@ wlasl_READY: dict= tmp_ready.copy()
 del tmp_ready
 TOTAL_GLOSS_UNIQ: int= int(len(wlasl_READY['label_id2gloss']))
 TOTAL_TRAIN_FILE: int= int(len(wlasl_READY['train']))
+TOTAL_VAL_FILE: int= int(len(wlasl_READY['val']))
 
 
 FACE_CONNECTIONS: tuple= (
