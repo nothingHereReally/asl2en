@@ -481,9 +481,8 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, TqFRAMES: int= QU
                             orig_shape=frame.shape
                         ))
                     qImgAdded+= 1
-                    old_frame= frame
+                    old_frame= frame.copy()
                 if not isNotEnd and qImgAdded<TqFRAMES:
-                    frame= array(cvtColor(src=old_frame, code=COLOR_BGR2RGB), dtype=uint8)
                     if isSingleImg:
                         all_frames.extend(drawFacePoseHand(
                             img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
@@ -515,9 +514,8 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, TqFRAMES: int= QU
                             orig_shape=frame.shape
                         ))
                     qImgAdded+= 1
-                    old_frame= frame
+                    old_frame= frame.copy()
                 if not isNotEnd and qImgAdded<TqFRAMES:
-                    frame= array(cvtColor(src=old_frame, code=COLOR_BGR2RGB), dtype=uint8)
                     if isSingleImg:
                         all_frames.extend(drawFacePoseHand(
                             img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
@@ -550,9 +548,8 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, TqFRAMES: int= QU
                             orig_shape=frame.shape
                         ))
                     qImgAdded+= 1
-                    old_frame= frame
+                    old_frame= frame.copy()
                 if not isNotEnd and qImgAdded<TqFRAMES:
-                    frame= array(cvtColor(src=old_frame, code=COLOR_BGR2RGB), dtype=uint8)
                     if isSingleImg:
                         all_frames.extend(drawFacePoseHand(
                             img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
