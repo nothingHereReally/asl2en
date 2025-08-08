@@ -599,8 +599,7 @@ def getdata(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) 
     # wlasl_READY['test']
     # wlasl_READY['label_id2gloss']
     # wlasl_READY['label_gloss2id']
-    tmp_arrChoice: list= [2,3,1]
-    tmp_arrChoice= choices(tmp_arrChoice)
+    tmp_arrChoice= choices([2,3,1])
     for _ in range(tmp_arrChoice[0]):
         shuffle(wlasl_READY[TrainVal])
     del tmp_arrChoice
@@ -613,6 +612,7 @@ def getdata(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) 
         i_0toBatchOrMore: int= 0
         idx_add2batch: int= 0
         modWhat: int= 0
+        # below( ie. while idx_add2batch<batch: ) runs 1 time per epoch
         while idx_add2batch<batch:
             curr_IDX_USE: int= (b_idxINIT+i_0toBatchOrMore) if (b_idxINIT+i_0toBatchOrMore)<len(wlasl_READY[TrainVal]) else (0 +(
                 (b_idxINIT+i_0toBatchOrMore)-len(wlasl_READY[TrainVal])
@@ -633,7 +633,7 @@ def getdata(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) 
                         # modWhat==1 meaning has just recently processed the last mod
                         # due to modWhat==0 is already done and was the 1st 1 to be
                         # processed
-                        elif modWhat!=1:
+                        if modWhat!=1:
                             # meaning modWhat be 0, 2, 3, 4, 5, 6, 7, 8, ...
                             # then go back, due process be 0, ..., 4, 3, 2
                             # to go back, but on 1 since last part, then dili na due to 2nd last
@@ -642,6 +642,6 @@ def getdata(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) 
                 except FileExistsError as e:
                     del e
             i_0toBatchOrMore+= 1
-        b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<len(wlasl_READY[TrainVal]) else 0
+        b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<len(wlasl_READY[TrainVal]) else 0+( (b_idxINIT+batch)-int(len(wlasl_READY[TrainVal])) )
         yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
 
