@@ -6,7 +6,7 @@ from json import load as jload
 PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
 
 # TRAIN_BATCH: int= 32
-TRAIN_BATCH: int= 2
+TRAIN_BATCH: int= 8
 # QUANTITY_FRAME: int= 48
 QUANTITY_FRAME: int= 20
 # IMG_SIZE: int= 480
