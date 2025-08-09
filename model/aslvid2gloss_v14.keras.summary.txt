@@ -1,0 +1,370 @@
+model file ./aslvid2gloss_v14.keras
+trained on 1st 10 gloss: book, drink, computer, before, chair, go, clothes, who, candy, cousin
+best model yet( compare to model v10 and model v12 ), see testing result below( ie. about 56% accurate )
+    result:
+        Total params: 148,164 (578.77 KB)
+        Trainable params: 148,164 (578.77 KB)
+        Non-trainable params: 0 (0.00 B)
+        Epoch 1/1
+        1400/1400 ━━━━━━━━━━━━━━━━━━━━ 2070s 1s/step - accuracy: 0.5214 - loss: 1.3310 - val_accuracy: 0.4565 - val_loss: 3.0661 - learning_rate: 0.0010
+    and on testing:
+        testing over 35 files, processing...
+        current in progress idx 0
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 2s 2s/step
+        correct( should be book ) calculated be book 98.98717999458313%
+        current in progress idx 1
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 53ms/step
+        correct( should be book ) calculated be book 99.99943971633911%
+        current in progress idx 2
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 48ms/step
+        INcorrect( should be book ) calculated be before 93.85979771614075% ________ 07095
+        current in progress idx 3
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 46ms/step
+        correct( should be book ) calculated be book 99.99979734420776%
+        current in progress idx 4
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 41ms/step
+        correct( should be drink ) calculated be drink 98.16190600395203%
+        current in progress idx 5
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 6
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step
+        INcorrect( should be drink ) calculated be before 99.92802143096924% ________ 17716
+        current in progress idx 7
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 8
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 39ms/step
+        correct( should be computer ) calculated be computer 99.69524145126343%
+        current in progress idx 9
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 38ms/step
+        correct( should be computer ) calculated be computer 58.731669187545776%
+        current in progress idx 10
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 39ms/step
+        INcorrect( should be computer ) calculated be drink 66.53295159339905% ________ 12336
+        current in progress idx 11
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 12
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 37ms/step
+        correct( should be computer ) calculated be computer 93.37733387947083%
+        current in progress idx 13
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 38ms/step
+        INcorrect( should be before ) calculated be computer 87.11812496185303% ________ 05735
+        current in progress idx 14
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 41ms/step
+        INcorrect( should be before ) calculated be chair 87.74338364601135% ________ 05727
+        current in progress idx 15
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 16
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 38ms/step
+        INcorrect( should be before ) calculated be cousin 66.73586964607239% ________ 05741
+        current in progress idx 17
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 40ms/step
+        INcorrect( should be chair ) calculated be book 74.13042187690735% ________ 09847
+        current in progress idx 18
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 38ms/step
+        correct( should be chair ) calculated be chair 99.88499879837036%
+        current in progress idx 19
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 38ms/step
+        correct( should be chair ) calculated be chair 70.60224413871765%
+        current in progress idx 20
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 39ms/step
+        INcorrect( should be go ) calculated be computer 99.01343584060669% ________ 24857
+        current in progress idx 21
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 22
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 39ms/step
+        correct( should be go ) calculated be go 99.97296929359436%
+        current in progress idx 23
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 38ms/step
+        INcorrect( should be clothes ) calculated be go 96.35784029960632% ________ 11305
+        current in progress idx 24
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 37ms/step
+        correct( should be clothes ) calculated be clothes 99.028080701828%
+        current in progress idx 25
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 38ms/step
+        correct( should be clothes ) calculated be clothes 97.54990339279175%
+        current in progress idx 26
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 38ms/step
+        INcorrect( should be who ) calculated be candy 75.09151101112366% ________ 63219
+        current in progress idx 27
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 28
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 38ms/step
+        INcorrect( should be who ) calculated be candy 76.50296688079834% ________ 63233
+        current in progress idx 29
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 38ms/step
+        correct( should be candy ) calculated be candy 92.26546287536621%
+        current in progress idx 30
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 31
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 32
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 33
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 34
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 39ms/step
+        correct( should be cousin ) calculated be cousin 88.66239786148071%
+        correct 14 / 25 = 56.00000000000001%
+
+
+batch train size( TRAIN_BATCH ): 2
+T10_GLOSS: 10
+
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)               │ (None, 20, 150, 150, 3)     │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ p1_cnn_2d (Conv3D)                   │ (None, 20, 148, 148, 128)   │           3,584 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ p1_mp_2d (MaxPooling3D)              │ (None, 20, 74, 74, 128)     │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ p1_cnn_3d (Conv3D)                   │ (None, 18, 74, 74, 128)     │          49,280 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ p1_mp_3d (MaxPooling3D)              │ (None, 9, 74, 74, 128)      │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_1 (Dropout)                       │ (None, 9, 74, 74, 128)      │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ p2_cnn_2d (Conv3D)                   │ (None, 9, 72, 72, 64)       │          73,792 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ p2_mp_2d (MaxPooling3D)              │ (None, 9, 24, 24, 64)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ p2_cnn_3d (Conv3D)                   │ (None, 7, 24, 24, 64)       │          12,352 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ p2_mp_3d (MaxPooling3D)              │ (None, 6, 24, 24, 64)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ do_2 (Dropout)                       │ (None, 6, 24, 24, 64)       │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ p3_cnn_2d (Conv3D)                   │ (None, 6, 22, 22, 8)        │           4,616 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ p3_mp_2d (MaxPooling3D)              │ (None, 6, 11, 11, 8)        │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ p3_cnn_3d (Conv3D)                   │ (None, 4, 11, 11, 8)        │             200 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ p4_cnn_2d (Conv3D)                   │ (None, 4, 9, 9, 10)         │             730 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ p4_mp_2d (MaxPooling3D)              │ (None, 4, 3, 3, 10)         │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ flat (Flatten)                       │ (None, 360)                 │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_class (Dense)                  │ (None, 10)                  │           3,610 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 148,164 (578.77 KB)
+ Trainable params: 148,164 (578.77 KB)
+ Non-trainable params: 0 (0.00 B)
+1400/1400 ━━━━━━━━━━━━━━━━━━━━ 2070s 1s/step - accuracy: 0.5214 - loss: 1.3310 - val_accuracy: 0.4565 - val_loss: 3.0661 - learning_rate: 0.0010
+input size: (20, 150, 150, 3) with getdata() already in [0.0, 1.0] float32
+optimizer: Adam(learning_rate=0.001),
+loss: sparse_categorical_crossentropy,
+metrics: ['accuracy']
+epoch: 1
+steps_per_epoch: int(ceil((T10_TRAIN*2*7)/TRAIN_BATCH))
+
+20            150            150            3
+20            148            148            128       <-- (1,3,3) 128  <--- (1,1,1) cnn
+20            74             74             128       <-- (1,2,2)      <--- (1,2,2) mp
+18            74             74             128       <-- (3,1,1) 128  <--- (3,1,1) cnn
+9             74             74             128       <-- (2,1,1)      <--- (2,1,1) mp
+9             74             74             128       <-- 0.1 dropout
+
+9             72             72             64        <-- (1,3,3) 64   <--- (1,3,3) CNN
+9             24             24             64        <-- (1,3,3)      <--- (1,3,3) mp
+7             24             24             64        <-- (3,1,1) 64   <--- (3,1,1) cnn
+6             24             24             64        <-- (2,1,1)      <--- (1,1,1) mp
+6             24             24             64        <-- 0.1 droput
+
+6             22             22             8         <-- (1,3,3) 8    <--- (1,1,1) CNN
+6             11             11             8         <-- (1,2,2)      <--- (1,2,2) mp
+4             11             11             8         <-- (3,1,1) 8    <--- (1,1,1) CNN
+
+4             9              9              10        <-- (1,2,2) 10   <--- (1,2,2) mp
+4             3              3              10        <-- (1,3,3) 10   <--- (1,3,3) mp
+
+360                                                   <-- flatten 4*3*3*10= 360
+
+10                                                    <-- nueral network softmax 10
+
+
+data_in= Input(
+    shape=(QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3),
+    dtype=float32,
+    name='batch_vid'
+)
+
+
+x= Conv3D(
+    filters=128,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='p1_cnn_2d'
+)(data_in)
+x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='p1_mp_2d'
+)(x)
+x= Conv3D(
+    filters=128,
+    kernel_size=(3,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='p1_cnn_3d'
+)(x)
+x= MaxPooling3D(
+    pool_size=(2,1,1),
+    padding='valid',
+    data_format='channels_last',
+    name='p1_mp_3d'
+)(x)
+x= Dropout(
+    rate=0.1,
+    name='do_1'
+)(x)
+
+
+
+
+x= Conv3D(
+    filters=64,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='p2_cnn_2d'
+)(x)
+x= MaxPooling3D(
+    pool_size=(1,3,3),
+    padding='valid',
+    data_format='channels_last',
+    name='p2_mp_2d'
+)(x)
+x= Conv3D(
+    filters=64,
+    kernel_size=(3,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='p2_cnn_3d'
+)(x)
+x= MaxPooling3D(
+    pool_size=(2,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    name='p2_mp_3d'
+)(x)
+x= Dropout(
+    rate=0.1,
+    name='do_2'
+)(x)
+
+
+
+
+x= Conv3D(
+    filters=8,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='p3_cnn_2d'
+)(x)
+x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='p3_mp_2d'
+)(x)
+x= Conv3D(
+    filters=8,
+    kernel_size=(3,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='p3_cnn_3d'
+)(x)
+
+
+
+
+x= Conv3D(
+    filters=T10_GLOSS,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='p4_cnn_2d'
+)(x)
+x= MaxPooling3D(
+    pool_size=(1,3,3),
+    padding='valid',
+    data_format='channels_last',
+    name='p4_mp_2d'
+)(x)
+x= Flatten(name='flat')(x)
+
+
+data_out = Dense(T10_GLOSS, activation=softmax, name='batch_class')(x)
+
+
+
+
+
+
+
+
+testing ./aslvid2gloss_v14.keras: src_asl2gloss/checks/test_g10_vid2gloss_model.py
+_______________________________________________________
+from os.path import exists
+from keras.src.saving import load_model
+from numpy import argmax, float32
+
+from ..lmark_constant import IMG_SIZE, PROJ_ROOT, QUANTITY_FRAME, WLASL_VID_DIR, wlasl_READY_10
+
+
+from ..lmark_essentials import getSkeletonFrames
+
+
+def test(modelFile: str) -> None:
+    if exists(modelFile):
+        loadedModel= load_model(modelFile)
+        correct: int= 0
+        total: int= 0
+        print(f"testing over {len(wlasl_READY_10['test'])} files, processing...")
+        for cur, i in zip(range(len(wlasl_READY_10['test'])), wlasl_READY_10['test']):
+            print(f"current in progress idx {cur}")
+            try:
+                out: list= loadedModel.predict(getSkeletonFrames(
+                    f"{WLASL_VID_DIR}{i['video_id']}.mp4"
+                )[0].reshape((1, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)).astype(float32)/255.0)
+                out= out[0]
+                if int(argmax(out, axis=-1))==int(i['gloss_id']):
+                    correct +=1
+                    print(f"correct( should be {wlasl_READY_10['label_id2gloss'][i['gloss_id']]} ) calculated be {wlasl_READY_10['label_id2gloss'][argmax(out, axis=-1)]} {out[argmax(out, axis=-1)]*100}%")
+                else:
+                    print(f"INcorrect( should be {wlasl_READY_10['label_id2gloss'][i['gloss_id']]} ) calculated be {wlasl_READY_10['label_id2gloss'][argmax(out, axis=-1)]} {out[argmax(out, axis=-1)]*100}% ________ {i['video_id']}")
+                total+= 1
+            except FileExistsError as e:
+                del e
+                print("skipping due to on all images had less than 60% has a hand")
+        # print(f"correct {correct} / {len(wlasl_READY_10['test'])} = {correct/float(len(wlasl_READY_10['test']))*100}%")
+        print(f"correct {correct} / {total} = {correct/total*100}%")
+    else:
+        print(f"model file: {modelFile} does not exist")
+    
+
+if __name__=="__main__":
+    test(f"{PROJ_ROOT}model/aslvid2gloss_v14.keras")
+

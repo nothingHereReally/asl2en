@@ -39,6 +39,9 @@ with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.ready.1st_10.json"
     tmp_ready= jload(f)
 wlasl_READY_10: dict= tmp_ready.copy()
 del tmp_ready
+T10_GLOSS: int= int(len(wlasl_READY_10['label_id2gloss']))
+T10_TRAIN: int= int(len(wlasl_READY_10['train']))
+T10_VAL: int= int(len(wlasl_READY_10['val']))
 TOTAL_GLOSS_UNIQ: int= int(len(wlasl_READY['label_id2gloss']))
 TOTAL_TRAIN_FILE: int= int(len(wlasl_READY['train']))
 TOTAL_VAL_FILE: int= int(len(wlasl_READY['val']))
