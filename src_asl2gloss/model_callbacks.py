@@ -15,7 +15,7 @@ d_lr: ReduceLROnPlateau= ReduceLROnPlateau(
 sTraining: EarlyStopping= EarlyStopping(
     monitor='val_loss',
     min_delta=0.001,
-    patience=1,
+    patience=3,
     verbose=1,
     mode='min'
 )

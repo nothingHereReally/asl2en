@@ -44,10 +44,10 @@ x= MaxPooling3D(
     data_format='channels_last',
     name='p1_mp_3d'
 )(x)
-x= Dropout(
-    rate=0.1,
-    name='p1_do'
-)(x)
+# x= Dropout(
+#     rate=0.1,
+#     name='p1_do'
+# )(x)
 
 
 
@@ -82,10 +82,10 @@ x= Conv3D(
 #     data_format='channels_last',
 #     name='p2_mp_3d'
 # )(x)
-x= Dropout(
-    rate=0.1,
-    name='p2_do'
-)(x)
+# x= Dropout(
+#     rate=0.1,
+#     name='p2_do'
+# )(x)
 
 
 
@@ -114,10 +114,10 @@ x= Conv3D(
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     name='p3_cnn_3d'
 )(x)
-x= Dropout(
-    rate=0.1,
-    name='p3_do'
-)(x)
+# x= Dropout(
+#     rate=0.1,
+#     name='p3_do'
+# )(x)
 x= MaxPooling3D(
     pool_size=(1,3,3),
     strides=(1,2,2),
