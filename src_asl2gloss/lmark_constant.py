@@ -17,7 +17,8 @@ IMG_SIZE: int= 150
 # QUANTITY_FRAME has at least 1 hand( ie. either left
 # or right hand )
 # ie. current is at least 12 or 20 has hand/s 20*0.6= 12
-MIN_FRAMES_HAS_HANDS: int= int(QUANTITY_FRAME*0.6)
+# MIN_FRAMES_HAS_HANDS: int= int(QUANTITY_FRAME*0.6)
+MIN_FRAMES_HAS_HANDS: int= 1
 WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
 
 
