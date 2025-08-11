@@ -42,6 +42,7 @@ del tmp_ready
 T10_GLOSS: int= int(len(wlasl_READY_10['label_id2gloss']))
 T10_TRAIN: int= int(len(wlasl_READY_10['train']))
 T10_VAL: int= int(len(wlasl_READY_10['val']))
+T10_DIR_IMG: str= f"{PROJ_ROOT}dataset/wlasl_dataset/ins_images/"
 TOTAL_GLOSS_UNIQ: int= int(len(wlasl_READY['label_id2gloss']))
 TOTAL_TRAIN_FILE: int= int(len(wlasl_READY['train']))
 TOTAL_VAL_FILE: int= int(len(wlasl_READY['val']))
