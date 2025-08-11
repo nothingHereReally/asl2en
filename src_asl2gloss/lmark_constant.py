@@ -23,12 +23,6 @@ WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
 
 
 
-mpH: Holistic= Holistic( # mph, midiapipe holistic
-    static_image_mode=True,
-    model_complexity=1,
-    min_detection_confidence=0.5,
-    min_tracking_confidence=0.5
-)
 tmp_ready: dict= {}
 with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.ready.json", 'r') as f:
     tmp_ready= jload(f)
