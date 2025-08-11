@@ -1,14 +1,14 @@
 from os import listdir
 from os.path import join as pjoin
 from random import choices, shuffle
-from typing import Generator
+from typing import Any, Generator
 from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, imread, line
 from numpy import array, float32, ndarray, uint16, uint8, zeros
 from mediapipe.python.solutions.holistic import Holistic
 from math import ceil
 from os.path import exists
 
-from .lmark_constant import FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, QUANTITY_FRAME, T10_DIR_IMG, TRAIN_BATCH, WLASL_VID_DIR, WORTHY_POSE_IDX, wlasl_READY, MIN_FRAMES_HAS_HANDS, mpH, wlasl_READY_10
+from .lmark_constant import FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, QUANTITY_FRAME, T10_DIR_IMG, TRAIN_BATCH, WLASL_VID_DIR, WORTHY_POSE_IDX, wlasl_READY, MIN_FRAMES_HAS_HANDS, wlasl_READY_10
 
 
 def drawSkeletonImg(img_orig: ndarray, \
@@ -443,7 +443,7 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
     return img
 
 
-def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, initGT: int= 0, TqFRAMES: int= QUANTITY_FRAME) -> list:
+def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, initGT: int= 0, mpH: Any=None, TqFRAMES: int= QUANTITY_FRAME) -> list:
     '''
     fpath_vid: str, video file path string
     TqFRAMES: int, target quantity of frames on output
@@ -606,6 +606,12 @@ def getdata(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) 
     for _ in range(tmp_arrChoice[0]):
         shuffle(wlasl_READY[TrainVal])
     del tmp_arrChoice
+    mpH: Holistic= Holistic( # mph, midiapipe holistic
+        static_image_mode=True,
+        model_complexity=1,
+        min_detection_confidence=0.5,
+        min_tracking_confidence=0.5
+    )
     b_idxINIT: int= 0
     shape_vidBatch: tuple= (batch, QUANTITY_FRAME*IMG_SIZE, IMG_SIZE, 3) if isSimg else (batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)
     # while loop runs 1 for every epoch
@@ -623,7 +629,7 @@ def getdata(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) 
             vidfile_dir: str= f"{WLASL_VID_DIR}{wlasl_READY[TrainVal][  curr_IDX_USE  ]['video_id']}.mp4"
             if exists(vidfile_dir):
                 try:
-                    vidframes_data, o2tRatio= getSkeletonFrames(vidfile_dir, isSingleImg=isSimg, initGT=modWhat)
+                    vidframes_data, o2tRatio= getSkeletonFrames(vidfile_dir, isSingleImg=isSimg, initGT=modWhat, mpH=mpH)
                     batch_vids[idx_add2batch]= vidframes_data.astype(float32)/255.0
                     batch_class[idx_add2batch]= int(wlasl_READY[TrainVal][  curr_IDX_USE  ]['gloss_id'])/1.0
                     idx_add2batch+= 1
@@ -663,6 +669,12 @@ def getdata_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATC
     del tmp_arrChoice
     b_idxINIT: int= 0
     shape_vidBatch: tuple= (batch, QUANTITY_FRAME*IMG_SIZE, IMG_SIZE, 3) if isSimg else (batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)
+    mpH: Holistic= Holistic( # mph, midiapipe holistic
+        static_image_mode=True,
+        model_complexity=1,
+        min_detection_confidence=0.5,
+        min_tracking_confidence=0.5
+    )
     # while loop runs 1 for every epoch
     while True:
         batch_vids: ndarray= zeros(shape_vidBatch, dtype=float32)
@@ -678,7 +690,7 @@ def getdata_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATC
             vidfile_dir: str= f"{WLASL_VID_DIR}{wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['video_id']}.mp4"
             if exists(vidfile_dir):
                 try:
-                    vidframes_data, o2tRatio= getSkeletonFrames(vidfile_dir, isSingleImg=isSimg, initGT=modWhat)
+                    vidframes_data, o2tRatio= getSkeletonFrames(vidfile_dir, isSingleImg=isSimg, initGT=modWhat, mpH=mpH)
                     batch_vids[idx_add2batch]= vidframes_data.astype(float32)/255.0
                     batch_class[idx_add2batch]= int(wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['gloss_id'])/1.0
                     idx_add2batch+= 1
@@ -705,13 +717,13 @@ def getdata_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATC
 
 
 def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
-    mpHP: Holistic= Holistic( # mph, midiapipe holistic
+    mpH: Holistic= Holistic( # mph, midiapipe holistic
         static_image_mode=True,
         model_complexity=1,
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5
     )
-    def getFramesG10(viddir_abs: str, initGT: int=0, isSingle: bool=False, TqFrames: int=QUANTITY_FRAME) -> list:
+    def getFramesG10(viddir_abs: str, initGT: int=0, isSingle: bool=False, mpHfph: Any=None, TqFrames: int=QUANTITY_FRAME) -> list:
         imgFileList: list= listdir(viddir_abs)
         if len(imgFileList)<1:
             raise FileExistsError(f"no files exist on {viddir_abs}")
@@ -726,7 +738,7 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
                     src=imread(str(pjoin(viddir_abs, imgFileList[i]))),
                     code=COLOR_BGR2RGB
                 )
-                fph_lmark10g= mpHP.process(imgDataG10)
+                fph_lmark10g= mpHfph.process(imgDataG10)
                 imgDataG10= drawFacePoseHand(
                     img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
                     lmark_mph=fph_lmark10g,
@@ -755,7 +767,7 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
                     src=imread(str(pjoin(viddir_abs, imgFileList[i]))),
                     code=COLOR_BGR2RGB
                 )
-                fph_lmark10g= mpHP.process(imgDataG10)
+                fph_lmark10g= mpHfph.process(imgDataG10)
                 imgDataG10= drawFacePoseHand(
                     img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
                     lmark_mph=fph_lmark10g,
@@ -782,7 +794,7 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
                     src=imread(str(pjoin(viddir_abs, imgFileList[i*o2t_ratio +initGT]))),
                     code=COLOR_BGR2RGB
                 )
-                fph_lmark10g= mpHP.process(imgDataG10)
+                fph_lmark10g= mpHfph.process(imgDataG10)
                 imgDataG10= drawFacePoseHand(
                     img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
                     lmark_mph=fph_lmark10g,
@@ -822,7 +834,7 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
             vidfile_dir: str= str(pjoin(T10_DIR_IMG, wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['video_id']))
             if exists(vidfile_dir):
                 try:
-                    vidframes_data, o2tRatio= getFramesG10(vidfile_dir, initGT=modWhat, isSingle=isSimg)
+                    vidframes_data, o2tRatio= getFramesG10(vidfile_dir, initGT=modWhat, isSingle=isSimg, mpHfph=mpH)
                     batch_vids[idx_add2batch]= vidframes_data.astype(float32)/255.0
                     batch_class[idx_add2batch]= int(wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['gloss_id'])/1.0
                     idx_add2batch+= 1
