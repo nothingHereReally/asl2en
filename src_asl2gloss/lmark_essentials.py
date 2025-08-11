@@ -648,6 +648,8 @@ def getdata(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) 
         yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
 
 
+# def getdata_10(...) is for model v14, current best model
+# at 56% accuracy at testing as of 2025-8-11
 def getdata_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
     # wlasl_READY_10['train']
     # wlasl_READY_10['val']
@@ -712,49 +714,55 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
         if len(imgFileList)<TqFrames:
             t2o_ratio: int= int(ceil(TqFrames/len(imgFileList)))
             for i in range(len(imgFileList)):
+                imgDataG10: ndarray= cvtColor(
+                    src=imread(str(pjoin(viddir_abs, imgFileList[i]))),
+                    code=COLOR_BGR2RGB
+                )
+                fph_lmark10g= mpH.process(imgDataG10)
+                imgDataG10= drawFacePoseHand(
+                    img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+                    lmark_mph=fph_lmark10g,
+                    orig_shape=imgDataG10.shape
+                )
                 for ii in range(t2o_ratio):
                     if (i*t2o_ratio +ii)<TqFrames:
                         if isSingle:
-                            imgsList.extend(array(imread(
-                                str(pjoin(viddir_abs, imgFileList[i]))
-                            ),
-                            dtype=uint8,
-                            copy=True))
+                            imgsList.extend(imgDataG10)
                         else:
-                            imgsList.append(array(imread(
-                                str(pjoin(viddir_abs, imgFileList[i]))
-                            ),
-                            dtype=uint8,
-                            copy=True))
+                            imgsList.append(imgDataG10)
         elif len(imgFileList)==TqFrames:
             for imgfile_str in imgFileList:
+                imgDataG10: ndarray= cvtColor(
+                    src=imread(str(pjoin(viddir_abs, imgfile_str))),
+                    code=COLOR_BGR2RGB
+                )
+                fph_lmark10g= mpH.process(imgDataG10)
+                imgDataG10= drawFacePoseHand(
+                    img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+                    lmark_mph=fph_lmark10g,
+                    orig_shape=imgDataG10.shape
+                )
                 if isSingle:
-                    imgsList.extend(array(imread(
-                        str(pjoin(viddir_abs, imgfile_str))
-                    ),
-                    dtype=uint8,
-                    copy=True))
+                    imgsList.extend(imgDataG10)
                 else:
-                    imgsList.append(array(imread(
-                        str(pjoin(viddir_abs, imgfile_str))
-                    ),
-                    dtype=uint8,
-                    copy=True))
+                    imgsList.append(imgDataG10)
         else: # TqFrames<len(imgFileList)
             initGT= initGT%o2t_ratio
             for i in range(TqFrames):
+                imgDataG10: ndarray= cvtColor(
+                    src=imread(str(pjoin(viddir_abs, imgFileList[i*o2t_ratio +initGT]))),
+                    code=COLOR_BGR2RGB
+                )
+                fph_lmark10g= mpH.process(imgDataG10)
+                imgDataG10= drawFacePoseHand(
+                    img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+                    lmark_mph=fph_lmark10g,
+                    orig_shape=imgDataG10.shape
+                )
                 if isSingle:
-                    imgsList.extend(array(imread(
-                        str(pjoin(viddir_abs, imgFileList[i*o2t_ratio +initGT]))
-                    ),
-                    dtype=uint8,
-                    copy=True))
+                    imgsList.extend(imgDataG10)
                 else:
-                    imgsList.append(array(imread(
-                        str(pjoin(viddir_abs, imgFileList[i*o2t_ratio +initGT]))
-                    ),
-                    dtype=uint8,
-                    copy=True))
+                    imgsList.append(imgDataG10)
         return [
             array(imgsList, dtype=uint8, copy=True),
             o2t_ratio if 1<o2t_ratio else 0
@@ -772,7 +780,7 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
             curr_IDX_USE: int= (b_idxINIT+i_0toBatchOrMore) if (b_idxINIT+i_0toBatchOrMore)<len(wlasl_READY_10[TrainVal]) else (0 +(
                 (b_idxINIT+i_0toBatchOrMore)-len(wlasl_READY_10[TrainVal])
             ))
-            vidfile_dir: str= f"{T10_DIR_IMG}{wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['video_id']}"
+            vidfile_dir: str= str(pjoin(T10_DIR_IMG, wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['video_id']))
             if exists(vidfile_dir):
                 try:
                     vidframes_data, o2tRatio= getFramesG10(vidfile_dir, initGT=modWhat, isSingle=isSimg)
