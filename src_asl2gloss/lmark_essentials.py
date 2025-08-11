@@ -4,6 +4,7 @@ from random import choices, shuffle
 from typing import Generator
 from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, imread, line
 from numpy import array, float32, ndarray, uint16, uint8, zeros
+from mediapipe.python.solutions.holistic import Holistic
 from math import ceil
 from os.path import exists
 
@@ -704,6 +705,12 @@ def getdata_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATC
 
 
 def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
+    mpHP: Holistic= Holistic( # mph, midiapipe holistic
+        static_image_mode=True,
+        model_complexity=1,
+        min_detection_confidence=0.5,
+        min_tracking_confidence=0.5
+    )
     def getFramesG10(viddir_abs: str, initGT: int=0, isSingle: bool=False, TqFrames: int=QUANTITY_FRAME) -> list:
         imgFileList: list= listdir(viddir_abs)
         if len(imgFileList)<1:
@@ -711,6 +718,7 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
         imgFileList.sort()
         imgsList: list= []
         o2t_ratio: int= int(len(imgFileList)//TqFrames)
+        qHandsG10: int= 0
         if len(imgFileList)<TqFrames:
             t2o_ratio: int= int(ceil(TqFrames/len(imgFileList)))
             for i in range(len(imgFileList)):
@@ -718,7 +726,7 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
                     src=imread(str(pjoin(viddir_abs, imgFileList[i]))),
                     code=COLOR_BGR2RGB
                 )
-                fph_lmark10g= mpH.process(imgDataG10)
+                fph_lmark10g= mpHP.process(imgDataG10)
                 imgDataG10= drawFacePoseHand(
                     img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
                     lmark_mph=fph_lmark10g,
@@ -726,22 +734,43 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
                 )
                 for ii in range(t2o_ratio):
                     if (i*t2o_ratio +ii)<TqFrames:
+                        if fph_lmark10g.left_hand_landmarks!=None or fph_lmark10g.right_hand_landmarks!=None:
+                            qHandsG10+= 1
+                        if (TqFrames-MIN_FRAMES_HAS_HANDS)<=(i*t2o_ratio +ii) and qHandsG10<=((i*t2o_ratio +ii) -(TqFrames-MIN_FRAMES_HAS_HANDS)):
+                            del imgFileList
+                            del imgsList
+                            del o2t_ratio
+                            del t2o_ratio
+                            del fph_lmark10g
+                            del imgDataG10
+                            del qHandsG10
+                            raise FileExistsError(f"frames/imgs not worthy, see MIN_FRAMES_HAS_HANDS")
                         if isSingle:
                             imgsList.extend(imgDataG10)
                         else:
                             imgsList.append(imgDataG10)
         elif len(imgFileList)==TqFrames:
-            for imgfile_str in imgFileList:
+            for i in range(TqFrames):
                 imgDataG10: ndarray= cvtColor(
-                    src=imread(str(pjoin(viddir_abs, imgfile_str))),
+                    src=imread(str(pjoin(viddir_abs, imgFileList[i]))),
                     code=COLOR_BGR2RGB
                 )
-                fph_lmark10g= mpH.process(imgDataG10)
+                fph_lmark10g= mpHP.process(imgDataG10)
                 imgDataG10= drawFacePoseHand(
                     img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
                     lmark_mph=fph_lmark10g,
                     orig_shape=imgDataG10.shape
                 )
+                if fph_lmark10g.left_hand_landmarks!=None or fph_lmark10g.right_hand_landmarks!=None:
+                    qHandsG10+= 1
+                if (TqFrames-MIN_FRAMES_HAS_HANDS)<=(i) and qHandsG10<=(i -(TqFrames-MIN_FRAMES_HAS_HANDS)):
+                    del imgFileList
+                    del imgsList
+                    del o2t_ratio
+                    del fph_lmark10g
+                    del imgDataG10
+                    del qHandsG10
+                    raise FileExistsError(f"frames/imgs not worthy, see MIN_FRAMES_HAS_HANDS")
                 if isSingle:
                     imgsList.extend(imgDataG10)
                 else:
@@ -753,12 +782,22 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
                     src=imread(str(pjoin(viddir_abs, imgFileList[i*o2t_ratio +initGT]))),
                     code=COLOR_BGR2RGB
                 )
-                fph_lmark10g= mpH.process(imgDataG10)
+                fph_lmark10g= mpHP.process(imgDataG10)
                 imgDataG10= drawFacePoseHand(
                     img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
                     lmark_mph=fph_lmark10g,
                     orig_shape=imgDataG10.shape
                 )
+                if fph_lmark10g.left_hand_landmarks!=None or fph_lmark10g.right_hand_landmarks!=None:
+                    qHandsG10+= 1
+                if (TqFrames-MIN_FRAMES_HAS_HANDS)<=(i) and qHandsG10<=(i -(TqFrames-MIN_FRAMES_HAS_HANDS)):
+                    del imgFileList
+                    del imgsList
+                    del o2t_ratio
+                    del fph_lmark10g
+                    del imgDataG10
+                    del qHandsG10
+                    raise FileExistsError(f"frames/imgs not worthy, see MIN_FRAMES_HAS_HANDS")
                 if isSingle:
                     imgsList.extend(imgDataG10)
                 else:
