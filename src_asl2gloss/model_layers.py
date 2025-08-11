@@ -15,7 +15,7 @@ data_in= Input(
 
 
 x= Conv3D(
-    filters=128,
+    filters=16,
     kernel_size=(1,3,3),
     strides=(1,1,1),
     padding='valid',
@@ -30,7 +30,7 @@ x= MaxPooling3D(
     name='p1_mp_2d'
 )(x)
 x= Conv3D(
-    filters=128,
+    filters=16,
     kernel_size=(3,1,1),
     strides=(1,1,1),
     padding='valid',
@@ -53,7 +53,7 @@ x= Dropout(
 
 
 x= Conv3D(
-    filters=64,
+    filters=32,
     kernel_size=(1,3,3),
     strides=(1,1,1),
     padding='valid',
@@ -68,7 +68,7 @@ x= MaxPooling3D(
     name='p2_mp_2d'
 )(x)
 x= Conv3D(
-    filters=64,
+    filters=32,
     kernel_size=(3,1,1),
     strides=(1,1,1),
     padding='valid',
@@ -92,7 +92,7 @@ x= Dropout(
 
 
 x= Conv3D(
-    filters=8,
+    filters=128,
     kernel_size=(1,3,3),
     strides=(1,1,1),
     padding='valid',
@@ -107,7 +107,7 @@ x= MaxPooling3D(
     name='p3_mp_2d'
 )(x)
 x= Conv3D(
-    filters=8,
+    filters=128,
     kernel_size=(3,1,1),
     strides=(1,1,1),
     padding='valid',
