@@ -6,7 +6,7 @@ from keras.src.models import Model
 from keras.src.optimizers import Adam
 # from keras.src.saving import load_model
 
-from .lmark_constant import PROJ_ROOT, T10_TRAIN, T10_VAL, TRAIN_BATCH
+from .lmark_constant import EPOCHS, PROJ_ROOT, T10_TRAIN, T10_VAL, TRAIN_BATCH, TRAIN_STEPS, VAL_STEPS
 from .lmark_essentials import getdataNotVid_10
 from .model_layers import data_in, data_out
 from .model_callbacks import d_lr, sTraining, tf_board
@@ -27,11 +27,11 @@ if __name__=="__main__":
     model.summary()
     model.fit(
         x=getdataNotVid_10(isSimg=False, TrainVal='train'),
-        epochs=4,
+        epochs=EPOCHS,
         callbacks=[d_lr, sTraining, tf_board],
         validation_data=getdataNotVid_10(isSimg=False, TrainVal='val'),
-        steps_per_epoch=int(ceil((T10_TRAIN*2)/TRAIN_BATCH)),
-        validation_steps=int(ceil(T10_VAL/TRAIN_BATCH)),
+        steps_per_epoch=TRAIN_STEPS,
+        validation_steps=VAL_STEPS,
         validation_freq=1
     )
     print(f"proj_root {PROJ_ROOT}")
