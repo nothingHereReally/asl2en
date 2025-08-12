@@ -1,4 +1,5 @@
-from os import listdir
+from json import dump
+from os import listdir, makedirs
 from os.path import join as pjoin
 from random import choices, shuffle
 from typing import Any, Generator
@@ -8,7 +9,7 @@ from mediapipe.python.solutions.holistic import Holistic
 from math import ceil
 from os.path import exists
 
-from .lmark_constant import FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, QUANTITY_FRAME, T10_DIR_IMG, TRAIN_BATCH, WLASL_VID_DIR, WORTHY_POSE_IDX, wlasl_READY, MIN_FRAMES_HAS_HANDS, wlasl_READY_10
+from .lmark_constant import EPOCHS, FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, PROJ_ROOT, QUANTITY_FRAME, T10_DIR_IMG, TRAIN_BATCH, TRAIN_STEPS, VAL_STEPS, WLASL_VID_DIR, WORTHY_POSE_IDX, wlasl_READY, MIN_FRAMES_HAS_HANDS, wlasl_READY_10
 
 
 def drawSkeletonImg(img_orig: ndarray, \
@@ -819,7 +820,13 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
             o2t_ratio if 1<o2t_ratio else 0
         ]
     b_idxINIT: int= 0
+    batchWhat: int= 0
+    glossDist: dict= { i: {'quantity': 0, 'video_id': []} for i in range(len(wlasl_READY_10['label_id2gloss']))}
+    glossDist['split']= TrainVal
+    glossDist['split_size']= len(wlasl_READY_10[TrainVal])
+    # print(len(wlasl_READY_10['label_id2gloss'])) # correct, it exist
     while True:
+        batchWhat+= 1
         batch_vids: ndarray= zeros(
             (batch, QUANTITY_FRAME*IMG_SIZE, IMG_SIZE, 3) if isSimg else (batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3),
             dtype=float32)
@@ -837,6 +844,10 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
                     vidframes_data, o2tRatio= getFramesG10(vidfile_dir, initGT=modWhat, isSingle=isSimg, mpHfph=mpH)
                     batch_vids[idx_add2batch]= vidframes_data.astype(float32)/255.0
                     batch_class[idx_add2batch]= int(wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['gloss_id'])/1.0
+                    glossDist[int(wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['gloss_id'])]['quantity']+= 1
+                    glossDist[int(wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['gloss_id'])]['video_id'].append(
+                        wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['video_id']
+                    )
                     idx_add2batch+= 1
                     # if true below, then worthy be balik to igbaw same vidfile_dir as previous
                     # due to original_frames_quantity//target_frames_quantity > 1
@@ -857,5 +868,15 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
                     del e
             i_0toBatchOrMore+= 1
         b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<len(wlasl_READY_10[TrainVal]) else 0+( (b_idxINIT+batch)-int(len(wlasl_READY_10[TrainVal])) )
+        if batchWhat==(TRAIN_STEPS*EPOCHS) or batchWhat==VAL_STEPS:
+            for i in range(len(wlasl_READY_10['label_id2gloss'])):
+                glossDist[ i ]['video_id']= list(set(
+                    glossDist[ i ]['video_id']
+                ))
+                glossDist[ i ]['vid_q_uniq']= int(len(glossDist[ i ]['video_id']))
+            if not exists(str(pjoin(PROJ_ROOT, f"training_{TrainVal}"))):
+                makedirs(str(pjoin(PROJ_ROOT, f"training_{TrainVal}")))
+            with open(str(pjoin(PROJ_ROOT, f"training_{TrainVal}", f"{TrainVal}_{batchWhat}.json")), 'w') as f:
+                dump(glossDist, f)
         yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
 
