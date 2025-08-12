@@ -1,10 +1,11 @@
-from mediapipe.python.solutions.holistic import Holistic
+from math import ceil
 from json import load as jload
 
 
 # PROJ_ROOT: str= f"/absolute/dir/to/project/"
 PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
 
+EPOCHS: int= 2
 # TRAIN_BATCH: int= 32
 TRAIN_BATCH: int= 2
 # QUANTITY_FRAME: int= 48
@@ -40,6 +41,8 @@ T10_DIR_IMG: str= f"{PROJ_ROOT}dataset/wlasl_dataset/raw_images/"
 TOTAL_GLOSS_UNIQ: int= int(len(wlasl_READY['label_id2gloss']))
 TOTAL_TRAIN_FILE: int= int(len(wlasl_READY['train']))
 TOTAL_VAL_FILE: int= int(len(wlasl_READY['val']))
+TRAIN_STEPS: int= int(ceil((T10_TRAIN*2)/TRAIN_BATCH))
+VAL_STEPS: int= int(ceil(T10_VAL/TRAIN_BATCH))
 
 
 FACE_CONNECTIONS: tuple= (
