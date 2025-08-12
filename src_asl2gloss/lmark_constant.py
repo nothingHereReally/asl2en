@@ -5,7 +5,7 @@ from json import load as jload
 # PROJ_ROOT: str= f"/absolute/dir/to/project/"
 PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
 
-EPOCHS: int= 2
+EPOCHS: int= 4
 # TRAIN_BATCH: int= 32
 TRAIN_BATCH: int= 2
 # QUANTITY_FRAME: int= 48
