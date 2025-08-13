@@ -9,7 +9,7 @@ EPOCHS: int= 4
 # TRAIN_BATCH: int= 32
 TRAIN_BATCH: int= 2
 # QUANTITY_FRAME: int= 48
-QUANTITY_FRAME: int= 20
+QUANTITY_FRAME: int= 30
 # IMG_SIZE: int= 480
 IMG_SIZE: int= 150
 # MIN_FRAMES_HAS_HANDS, meaning on a single video file
@@ -18,7 +18,7 @@ IMG_SIZE: int= 150
 # QUANTITY_FRAME has at least 1 hand( ie. either left
 # or right hand )
 # ie. current is at least 12 or 20 has hand/s 20*0.6= 12
-MIN_FRAMES_HAS_HANDS: int= int(QUANTITY_FRAME*0.8)
+MIN_FRAMES_HAS_HANDS: int= int(QUANTITY_FRAME*0.7)
 WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
 
 

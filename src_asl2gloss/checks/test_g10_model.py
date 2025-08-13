@@ -1,6 +1,8 @@
 from os.path import exists
+from typing import Any
 from keras.src.saving import load_model
 from numpy import argmax, float32
+from mediapipe.python.solutions.holistic import Holistic
 
 from ..lmark_constant import IMG_SIZE, PROJ_ROOT, QUANTITY_FRAME, WLASL_VID_DIR, wlasl_READY_10
 
@@ -10,7 +12,13 @@ from ..lmark_essentials import getSkeletonFrames
 
 def test(modelFile: str) -> None:
     if exists(modelFile):
-        loadedModel= load_model(modelFile)
+        mpH: Holistic= Holistic( # mph, midiapipe holistic
+            static_image_mode=True,
+            model_complexity=1,
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5
+        )
+        loadedModel: Any= load_model(modelFile)
         correct: int= 0
         total: int= 0
         print(f"testing over {len(wlasl_READY_10['test'])} files, processing...")
@@ -18,7 +26,8 @@ def test(modelFile: str) -> None:
             print(f"current in progress idx {cur}")
             try:
                 out: list= loadedModel.predict(getSkeletonFrames(
-                    f"{WLASL_VID_DIR}{i['video_id']}.mp4"
+                    f"{WLASL_VID_DIR}{i['video_id']}.mp4",
+                    mpH=mpH
                 )[0].reshape((1, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)).astype(float32)/255.0)
                 out= out[0]
                 if int(argmax(out, axis=-1))==int(i['gloss_id']):
@@ -37,5 +46,5 @@ def test(modelFile: str) -> None:
     
 
 if __name__=="__main__":
-    test(f"{PROJ_ROOT}model/aslvid2gloss_v14.keras")
+    test(f"{PROJ_ROOT}model/aslvid2gloss_v15.keras")
 
