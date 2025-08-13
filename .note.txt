@@ -19,3 +19,115 @@ python -m spacy download en_core_web_sm
 
 https://github.com/google-ai-edge/mediapipe/blob/master/docs/solutions/face_mesh.md#min_detection_confidence
 https://chuoling.github.io/mediapipe/solutions/holistic.html
+
+
+
+
+
+
+
+
+cutom layer
+# try this for getting each channels RGB
+# a= np.array([
+#     [
+#         [111,112,113,114],
+#         [121,122,123,124],
+#         [131,132,133,134]
+#     ],
+#     [
+#         [211,112,113,114],
+#         [221,122,123,124],
+#         [231,132,133,134]
+#     ]
+# ])
+# b= np.array([
+#     [
+#         [1],
+#         [0],
+#         [0],
+#         [0]
+#     ],
+#     [
+#         [1],
+#         [0],
+#         [0],
+#         [0]
+#     ]
+# ])
+# x= Dot(axes=(2,1))([a,b])
+
+
+# @register_keras_serializable('get_channel0')
+# class getChannel0(Layer):
+#     def __init__(self, **kwargs) -> None:
+#         super().__init__(**kwargs)
+#         self.trainable: bool= False
+#         # self.weights: list= []
+#         # self.trainable_variables: list= []
+#         # self.non_trainable_weights: list= []
+#         # self.non_trainable_variables: list= []
+#     def get_config(self) -> dict:
+#         self._check_super_called()
+#         base_config= super().get_config()
+#         config= {
+#             "trainable": self.trainable
+#         }
+#         return {**base_config, **config}
+#     def build(self, input_shape) -> None:
+#         super().build(input_shape)
+#     def call(self, inputs):
+#         # print(f"_____________________________ shape {inputs.shape}")
+#         # print(f"_____________________________ shape {inputs[:,:,:,:,0:1].shape}")
+#         # print(f"_____________________________ type {type(inputs)}")
+#         return inputs[:, :, :, :, 0:1]
+# @register_keras_serializable('get_channel1')
+# class getChannel1(Layer):
+#     def __init__(self, **kwargs) -> None:
+#         super().__init__(**kwargs)
+#         self.trainable: bool= False
+#         # self.weights: list= []
+#         # self.trainable_variables: list= []
+#         # self.non_trainable_weights: list= []
+#         # self.non_trainable_variables: list= []
+#     def get_config(self) -> dict:
+#         self._check_super_called()
+#         base_config= super().get_config()
+#         config= {
+#             "trainable": self.trainable
+#         }
+#         return {**base_config, **config}
+#     def build(self, input_shape) -> None:
+#         super().build(input_shape)
+#     def call(self, inputs):
+#         return inputs[:, :, :, :, 1:2]
+# @register_keras_serializable('get_channel2')
+# class getChannel2(Layer):
+#     def __init__(self, **kwargs) -> None:
+#         super().__init__(**kwargs)
+#         self.trainable: bool= False
+#         # self.weights: list= []
+#         # self.trainable_variables: list= []
+#         # self.non_trainable_weights: list= []
+#         # self.non_trainable_variables: list= []
+#     def get_config(self) -> dict:
+#         self._check_super_called()
+#         base_config= super().get_config()
+#         config= {
+#             "trainable": self.trainable
+#         }
+#         return {**base_config, **config}
+#     def build(self, input_shape) -> None:
+#         super().build(input_shape)
+#     def call(self, inputs):
+#         return inputs[:, :, :, :, 2:]
+# c0x= getChannel0(
+#     name='channel_0'
+# )(data_in)
+# c1x= getChannel1(
+#     name='channel_1'
+# )(data_in)
+# c2x= getChannel2(
+#     name='channel_2'
+# )(data_in)
+
