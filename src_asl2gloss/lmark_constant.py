@@ -9,9 +9,9 @@ EPOCHS: int= 4
 # TRAIN_BATCH: int= 32
 TRAIN_BATCH: int= 2
 # QUANTITY_FRAME: int= 48
-QUANTITY_FRAME: int= 30
+QUANTITY_FRAME: int= 24
 # IMG_SIZE: int= 480
-IMG_SIZE: int= 150
+IMG_SIZE: int= 158
 # MIN_FRAMES_HAS_HANDS, meaning on a single video file
 # where only QUANTITY_FRAME img will be included, then
 # mandatory that atleast MIN_FRAMES_HAS_HANDS out of
