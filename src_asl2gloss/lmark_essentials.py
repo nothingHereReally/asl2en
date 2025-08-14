@@ -718,109 +718,66 @@ def getdata_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATC
 
 
 def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
-    mpH: Holistic= Holistic( # mph, midiapipe holistic
-        static_image_mode=True,
-        model_complexity=1,
-        min_detection_confidence=0.5,
-        min_tracking_confidence=0.5
-    )
-    def getFramesG10(viddir_abs: str, initGT: int=0, isSingle: bool=False, mpHfph: Any=None, TqFrames: int=QUANTITY_FRAME) -> list:
-        imgFileList: list= listdir(viddir_abs)
-        if len(imgFileList)<1:
-            raise FileExistsError(f"no files exist on {viddir_abs}")
-        imgFileList.sort()
+    def getFramesG10(vid: dict, initGT: int=0, TqFrames: int=QUANTITY_FRAME) -> list:
+        if int(len(vid['images']))<1:
+            raise FileExistsError(f"no files exist on {vid['video_id']}")
         imgsList: list= []
-        o2t_ratio: int= int(len(imgFileList)//TqFrames)
+        oqFrames: int= len(vid['images'])
+        o2t_ratio: int= int(oqFrames//TqFrames)
         qHandsG10: int= 0
-        if len(imgFileList)<TqFrames:
-            t2o_ratio: int= int(ceil(TqFrames/len(imgFileList)))
-            for i in range(len(imgFileList)):
-                imgDataG10: ndarray= cvtColor(
-                    src=imread(str(pjoin(viddir_abs, imgFileList[i]))),
-                    code=COLOR_BGR2RGB
-                )
-                fph_lmark10g= mpHfph.process(imgDataG10)
-                imgDataG10= drawFacePoseHand(
-                    img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                    lmark_mph=fph_lmark10g,
-                    orig_shape=imgDataG10.shape
-                )
+        if oqFrames<TqFrames:
+            t2o_ratio: int= int(ceil(TqFrames/oqFrames))
+            for i in range(oqFrames):
                 for ii in range(t2o_ratio):
                     if (i*t2o_ratio +ii)<TqFrames:
-                        if fph_lmark10g.left_hand_landmarks!=None or fph_lmark10g.right_hand_landmarks!=None:
+                        if vid['images'][i]['left_hand'] or vid['images'][i]['right_hand']:
                             qHandsG10+= 1
                         if (TqFrames-MIN_FRAMES_HAS_HANDS)<=(i*t2o_ratio +ii) and qHandsG10<=((i*t2o_ratio +ii) -(TqFrames-MIN_FRAMES_HAS_HANDS)):
-                            del imgFileList
                             del imgsList
                             del o2t_ratio
                             del t2o_ratio
-                            del fph_lmark10g
-                            del imgDataG10
                             del qHandsG10
                             raise FileExistsError(f"frames/imgs not worthy, see MIN_FRAMES_HAS_HANDS")
-                        if isSingle:
-                            imgsList.extend(imgDataG10)
-                        else:
-                            imgsList.append(imgDataG10)
-        elif len(imgFileList)==TqFrames:
+                        imgsList.append(array(
+                            imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))),
+                            dtype=uint8,
+                            copy=True
+                        ))
+        elif oqFrames==TqFrames:
             for i in range(TqFrames):
-                imgDataG10: ndarray= cvtColor(
-                    src=imread(str(pjoin(viddir_abs, imgFileList[i]))),
-                    code=COLOR_BGR2RGB
-                )
-                fph_lmark10g= mpHfph.process(imgDataG10)
-                imgDataG10= drawFacePoseHand(
-                    img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                    lmark_mph=fph_lmark10g,
-                    orig_shape=imgDataG10.shape
-                )
-                if fph_lmark10g.left_hand_landmarks!=None or fph_lmark10g.right_hand_landmarks!=None:
+                if vid['images'][i]['left_hand'] or vid['images'][i]['right_hand']:
                     qHandsG10+= 1
-                if (TqFrames-MIN_FRAMES_HAS_HANDS)<=(i) and qHandsG10<=(i -(TqFrames-MIN_FRAMES_HAS_HANDS)):
-                    del imgFileList
+                if (TqFrames-MIN_FRAMES_HAS_HANDS)<=i and qHandsG10<=(i -(TqFrames-MIN_FRAMES_HAS_HANDS)):
                     del imgsList
                     del o2t_ratio
-                    del fph_lmark10g
-                    del imgDataG10
                     del qHandsG10
                     raise FileExistsError(f"frames/imgs not worthy, see MIN_FRAMES_HAS_HANDS")
-                if isSingle:
-                    imgsList.extend(imgDataG10)
-                else:
-                    imgsList.append(imgDataG10)
-        else: # TqFrames<len(imgFileList)
+                imgsList.append(array(
+                    imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))),
+                    dtype=uint8,
+                    copy=True
+                ))
+        else: # TqFrames<oqFrames
             initGT= initGT%o2t_ratio
             for i in range(TqFrames):
-                imgDataG10: ndarray= cvtColor(
-                    src=imread(str(pjoin(viddir_abs, imgFileList[i*o2t_ratio +initGT]))),
-                    code=COLOR_BGR2RGB
-                )
-                fph_lmark10g= mpHfph.process(imgDataG10)
-                imgDataG10= drawFacePoseHand(
-                    img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-                    lmark_mph=fph_lmark10g,
-                    orig_shape=imgDataG10.shape
-                )
-                if fph_lmark10g.left_hand_landmarks!=None or fph_lmark10g.right_hand_landmarks!=None:
+                if vid['images'][i*o2t_ratio +initGT]['left_hand'] or vid['images'][i*o2t_ratio +initGT]['right_hand']:
                     qHandsG10+= 1
-                if (TqFrames-MIN_FRAMES_HAS_HANDS)<=(i) and qHandsG10<=(i -(TqFrames-MIN_FRAMES_HAS_HANDS)):
-                    del imgFileList
+                if (TqFrames-MIN_FRAMES_HAS_HANDS)<=i and qHandsG10<=(i -(TqFrames-MIN_FRAMES_HAS_HANDS)):
                     del imgsList
                     del o2t_ratio
-                    del fph_lmark10g
-                    del imgDataG10
                     del qHandsG10
                     raise FileExistsError(f"frames/imgs not worthy, see MIN_FRAMES_HAS_HANDS")
-                if isSingle:
-                    imgsList.extend(imgDataG10)
-                else:
-                    imgsList.append(imgDataG10)
+                imgsList.append(array(
+                    imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i*o2t_ratio +initGT]['file']}.png")))
+                ))
         return [
             array(imgsList, dtype=uint8, copy=True),
             o2t_ratio if 1<o2t_ratio else 0
         ]
     b_idxINIT: int= 0
     batchWhat: int= 0
+    shuffle(wlasl_READY_10[TrainVal])
+    shuffle(wlasl_READY_10[TrainVal])
     glossDist: dict= { i: {'quantity': 0, 'video_id': []} for i in range(len(wlasl_READY_10['label_id2gloss']))}
     glossDist['split']= TrainVal
     glossDist['split_size']= len(wlasl_READY_10[TrainVal])
@@ -828,7 +785,7 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
     while True:
         batchWhat+= 1
         batch_vids: ndarray= zeros(
-            (batch, QUANTITY_FRAME*IMG_SIZE, IMG_SIZE, 3) if isSimg else (batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3),
+            (batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3),
             dtype=float32)
         batch_class: ndarray= zeros((batch), dtype=uint16)
         i_0toBatchOrMore: int= 0
@@ -838,15 +795,15 @@ def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAI
             curr_IDX_USE: int= (b_idxINIT+i_0toBatchOrMore) if (b_idxINIT+i_0toBatchOrMore)<len(wlasl_READY_10[TrainVal]) else (0 +(
                 (b_idxINIT+i_0toBatchOrMore)-len(wlasl_READY_10[TrainVal])
             ))
-            vidfile_dir: str= str(pjoin(T10_DIR_IMG, wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['video_id']))
-            if exists(vidfile_dir):
+            vidcurr_ann: dict= wlasl_READY_10[TrainVal][  curr_IDX_USE  ]
+            if exists(str(pjoin(T10_DIR_IMG, vidcurr_ann['video_id']))):
                 try:
-                    vidframes_data, o2tRatio= getFramesG10(vidfile_dir, initGT=modWhat, isSingle=isSimg, mpHfph=mpH)
+                    vidframes_data, o2tRatio= getFramesG10(vidcurr_ann, initGT=modWhat)
                     batch_vids[idx_add2batch]= vidframes_data.astype(float32)/255.0
-                    batch_class[idx_add2batch]= int(wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['gloss_id'])/1.0
-                    glossDist[int(wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['gloss_id'])]['quantity']+= 1
-                    glossDist[int(wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['gloss_id'])]['video_id'].append(
-                        wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['video_id']
+                    batch_class[idx_add2batch]= int(vidcurr_ann['gloss_id'])/1.0
+                    glossDist[int(vidcurr_ann['gloss_id'])]['quantity']+= 1
+                    glossDist[int(vidcurr_ann['gloss_id'])]['video_id'].append(
+                        vidcurr_ann['video_id']
                     )
                     idx_add2batch+= 1
                     # if true below, then worthy be balik to igbaw same vidfile_dir as previous
