@@ -13,10 +13,12 @@ if __name__=="__main__":
             'q_left_hand': 0,
             'q_right_hand': 0
         } for _ in range(len(wlasl_READY_10['label_id2gloss']))]
+        min_img: int= 99999
         min_face: int= 99999
         min_pose: int= 99999
         min_left_hand: int= 99999
         min_right_hand: int= 99999
+        max_img: int= 0
         max_face: int= 0
         max_pose: int= 0
         max_left_hand: int= 0
@@ -28,6 +30,9 @@ if __name__=="__main__":
             g10_dist[  vid['gloss_id']  ]['q_pose']+= int(len(list(filter(lambda x: x['pose']==True, vid['images']))))
             g10_dist[  vid['gloss_id']  ]['q_left_hand']+= int(len(list(filter(lambda x: x['left_hand']==True, vid['images']))))
             g10_dist[  vid['gloss_id']  ]['q_right_hand']+= int(len(list(filter(lambda x: x['right_hand']==True, vid['images']))))
+            min_img= min_img if min_img<int(len(vid['images'])) else int(
+                len(vid['images'])
+            )
             min_face= min_face if min_face<int(len(list(filter(lambda x: x['face']==True, vid['images'])))) else int(
                 len(list(filter(lambda x: x['face']==True, vid['images'])))
             )
@@ -41,6 +46,9 @@ if __name__=="__main__":
                 len(list(filter(lambda x: x['right_hand']==True, vid['images'])))
             )
 
+            max_img= max_img if int(len(vid['images']))<max_img else int(
+                len(vid['images'])
+            )
             max_face= max_face if int(len(list(filter(lambda x: x['face']==True, vid['images']))))<max_face else int(
                 len(list(filter(lambda x: x['face']==True, vid['images'])))
             )
@@ -63,10 +71,12 @@ if __name__=="__main__":
             print(f"____ quantity pose( on all vides combined ): {g10_dist[i]['q_pose']}")
             print(f"____ quantity left hand( on all vides combined ): {g10_dist[i]['q_left_hand']}")
             print(f"____ quantity right hand( on all vides combined ): {g10_dist[i]['q_right_hand']}")
+            print(f"______ on single video quantity of images has min --> q images <--( compare to other videos ) {min_img}")
             print(f"______ on single video quantity of images has min --> FACE <--( compare to other videos ) {min_face}")
             print(f"______ on single video quantity of images has min --> POSE <--( compare to other videos ) {min_pose}")
             print(f"______ on single video quantity of images has min --> LEFT HAND <--( compare to other videos ) {min_left_hand}")
             print(f"______ on single video quantity of images has min --> RIGHT HAND <--( compare to other videos ) {min_right_hand}")
+            print(f"________ on single video quantity of images has max --> q images <--( compare to other videos ) {max_img}")
             print(f"________ on single video quantity of images has max --> FACE <--( compare to other videos ) {max_face}")
             print(f"________ on single video quantity of images has max --> POSE <--( compare to other videos ) {max_pose}")
             print(f"________ on single video quantity of images has max --> LEFT HAND <--( compare to other videos ) {max_left_hand}")
