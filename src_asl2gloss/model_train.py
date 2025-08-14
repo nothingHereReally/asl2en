@@ -19,16 +19,16 @@ if __name__=="__main__":
         outputs=data_out
     )
     model.compile(
-        optimizer=Adam(learning_rate=0.0001),
+        optimizer=Adam(learning_rate=0.001),
         loss=sparse_categorical_crossentropy,
         metrics=['accuracy']
     )
     model.summary()
     model.fit(
-        x=getdataNotVid_10(isSimg=False, TrainVal='train'),
+        x=getdataNotVid_10(TrainVal='train'),
         epochs=EPOCHS,
         callbacks=[d_lr, sTraining, tf_board],
-        validation_data=getdataNotVid_10(isSimg=False, TrainVal='val'),
+        validation_data=getdataNotVid_10(TrainVal='val'),
         steps_per_epoch=TRAIN_STEPS,
         validation_steps=VAL_STEPS,
         validation_freq=1
