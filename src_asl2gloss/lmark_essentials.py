@@ -718,6 +718,58 @@ def getdata_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATC
 
 
 def getdataNotVid_10(TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
+    def getFramesG10_sHand(vid: dict, initGT: int=0, TqFrames: int=QUANTITY_FRAME) -> list:
+        if int(len(vid['images']))<1:
+            raise FileExistsError(f"no files exist on {vid['video_id']}")
+        imgsList: list= []
+        oqFrames: int= len(vid['images'])
+        o2t_ratio: int= int(oqFrames//TqFrames)
+        qHandsG10: int= 0
+        if oqFrames<TqFrames:
+            t2o_ratio: int= int(ceil(TqFrames/oqFrames))
+            for i in range(oqFrames):
+                if vid['images'][i]['left_hand'] or vid['images'][i]['right_hand']:
+                    for ii in range(t2o_ratio):
+                        if (i*t2o_ratio +ii)<TqFrames:
+                            imgsList.append(array(
+                                imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))),
+                                dtype=uint8,
+                                copy=True
+                            ))
+            while len(imgsList)<TqFrames:
+                imgsList.append(array(imgsList[-1], dtype=uint8, copy=True))
+        elif oqFrames==TqFrames:
+            for i in range(TqFrames):
+                if vid['images'][i]['left_hand'] or vid['images'][i]['right_hand']:
+                    imgsList.append(array(
+                        imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))),
+                        dtype=uint8,
+                        copy=True
+                    ))
+            while len(imgsList)<TqFrames:
+                imgsList.append(array(imgsList[-1], dtype=uint8, copy=True))
+        else: # TqFrames<oqFrames
+            initGT= initGT%o2t_ratio
+            for i in range(TqFrames):
+                i_has_hands: int= 0
+                for ii in range(o2t_ratio):
+                    if ( not vid['images'][i*o2t_ratio +i_has_hands]['left_hand'] and \
+                        not vid['images'][i*o2t_ratio +i_has_hands]['right_hand'] ) and \
+                        ( vid['images'][i*o2t_ratio +ii]['left_hand'] or \
+                        vid['images'][i*o2t_ratio +ii]['right_hand'] ):
+                        i_has_hands= ii
+                if vid['images'][i*o2t_ratio +i_has_hands]['left_hand'] or vid['images'][i*o2t_ratio +i_has_hands]['right_hand']:
+                    imgsList.append(array(
+                        imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i*o2t_ratio +initGT]['file']}.png")))
+                    ))
+                elif 0<len(imgsList):
+                    imgsList.append(array(imgsList[-1], dtype=uint8, copy=True))
+            while len(imgsList)<TqFrames:
+                imgsList.append(array(imgsList[-1], dtype=uint8, copy=True))
+        return [
+            array(imgsList, dtype=uint8, copy=True),
+            o2t_ratio if 1<o2t_ratio else 0
+        ]
     def getFramesG10(vid: dict, initGT: int=0, TqFrames: int=QUANTITY_FRAME) -> list:
         if int(len(vid['images']))<1:
             raise FileExistsError(f"no files exist on {vid['video_id']}")
@@ -798,7 +850,7 @@ def getdataNotVid_10(TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
             vidcurr_ann: dict= wlasl_READY_10[TrainVal][  curr_IDX_USE  ]
             if exists(str(pjoin(T10_DIR_IMG, vidcurr_ann['video_id']))):
                 try:
-                    vidframes_data, o2tRatio= getFramesG10(vidcurr_ann, initGT=modWhat)
+                    vidframes_data, o2tRatio= getFramesG10_sHand(vidcurr_ann, initGT=modWhat)
                     batch_vids[idx_add2batch]= vidframes_data.astype(float32)/255.0
                     batch_class[idx_add2batch]= int(vidcurr_ann['gloss_id'])/1.0
                     glossDist[int(vidcurr_ann['gloss_id'])]['quantity']+= 1
