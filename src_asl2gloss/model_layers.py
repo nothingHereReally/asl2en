@@ -16,29 +16,7 @@ data_in= Input(
     shape=(QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3),
     dtype=float32,
     name='batch_vid',
-    # batch_size=TRAIN_BATCH
 )
-# mask_channel0= zeros((3, 1), dtype=float32)
-# mask_channel0[0:1, :]= 1.0
-# mask_channel1= zeros((3, 1), dtype=float32)
-# mask_channel1[1:2, :]= 1.0
-# mask_channel2= zeros((3, 1), dtype=float32)
-# mask_channel2[2:, :]= 1.0
-# mask_channel0= array([[
-#     [1],
-#     [0],
-#     [0]
-# ] for _ in range(TRAIN_BATCH)], dtype=float32)
-# mask_channel1= array([[
-#     [1],
-#     [0],
-#     [0]
-# ] for _ in range(TRAIN_BATCH)], dtype=float32)
-# mask_channel2= array([[
-#     [1],
-#     [0],
-#     [0]
-# ] for _ in range(TRAIN_BATCH)], dtype=float32)
 mask_channel0= array([[
     [1],
     [0],
@@ -71,7 +49,7 @@ c0x= Reshape(
     name='channel_0_reshape'
 )(c0x)
 c0x= Conv3D(
-    filters=3,
+    filters=8,
     kernel_size=(1,3,3),
     strides=(1,1,1),
     padding='valid',
@@ -86,7 +64,7 @@ c0x= MaxPooling3D(
     name='c0p1_mp_2d'
 )(c0x)
 c0x= Conv3D(
-    filters=32,
+    filters=16,
     kernel_size=(1,3,3),
     strides=(1,1,1),
     padding='valid',
@@ -101,7 +79,7 @@ c0x= MaxPooling3D(
     name='c0p2_mp_2d'
 )(c0x)
 c0x= Conv3D(
-    filters=1,
+    filters=32,
     kernel_size=(1,3,3),
     strides=(1,1,1),
     padding='valid',
@@ -114,6 +92,36 @@ c0x= MaxPooling3D(
     padding='valid',
     data_format='channels_last',
     name='c0p3_mp_2d'
+)(c0x)
+c0x= Conv3D(
+    filters=64,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c0p4_cnn_2d'
+)(c0x)
+c0x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='c0p4_mp_2d'
+)(c0x)
+c0x= Conv3D(
+    filters=1,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c0p5_cnn_2d'
+)(c0x)
+c0x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='c0p5_mp_2d'
 )(c0x)
 c1x= Reshape(
     target_shape=(-1, 3)
@@ -128,7 +136,7 @@ c1x= Reshape(
     name='channel_1_reshape'
 )(c1x)
 c1x= Conv3D(
-    filters=3,
+    filters=8,
     kernel_size=(1,3,3),
     strides=(1,1,1),
     padding='valid',
@@ -143,7 +151,7 @@ c1x= MaxPooling3D(
     name='c1p1_mp_2d'
 )(c1x)
 c1x= Conv3D(
-    filters=32,
+    filters=16,
     kernel_size=(1,3,3),
     strides=(1,1,1),
     padding='valid',
@@ -158,7 +166,7 @@ c1x= MaxPooling3D(
     name='c1p2_mp_2d'
 )(c1x)
 c1x= Conv3D(
-    filters=1,
+    filters=32,
     kernel_size=(1,3,3),
     strides=(1,1,1),
     padding='valid',
@@ -171,6 +179,36 @@ c1x= MaxPooling3D(
     padding='valid',
     data_format='channels_last',
     name='c1p3_mp_2d'
+)(c1x)
+c1x= Conv3D(
+    filters=64,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c1p4_cnn_2d'
+)(c1x)
+c1x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='c1p4_mp_2d'
+)(c1x)
+c1x= Conv3D(
+    filters=1,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c1p5_cnn_2d'
+)(c1x)
+c1x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='c1p5_mp_2d'
 )(c1x)
 c2x= Reshape(
     target_shape=(-1, 3)
@@ -185,7 +223,7 @@ c2x= Reshape(
     name='channel_2_reshape'
 )(c2x)
 c2x= Conv3D(
-    filters=3,
+    filters=8,
     kernel_size=(1,3,3),
     strides=(1,1,1),
     padding='valid',
@@ -200,7 +238,7 @@ c2x= MaxPooling3D(
     name='c2p1_mp_2d'
 )(c2x)
 c2x= Conv3D(
-    filters=32,
+    filters=16,
     kernel_size=(1,3,3),
     strides=(1,1,1),
     padding='valid',
@@ -215,7 +253,7 @@ c2x= MaxPooling3D(
     name='c2p2_mp_2d'
 )(c2x)
 c2x= Conv3D(
-    filters=1,
+    filters=32,
     kernel_size=(1,3,3),
     strides=(1,1,1),
     padding='valid',
@@ -228,6 +266,36 @@ c2x= MaxPooling3D(
     padding='valid',
     data_format='channels_last',
     name='c2p3_mp_2d'
+)(c2x)
+c2x= Conv3D(
+    filters=64,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c2p4_cnn_2d'
+)(c2x)
+c2x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='c2p4_mp_2d'
+)(c2x)
+c2x= Conv3D(
+    filters=1,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c2p5_cnn_2d'
+)(c2x)
+c2x= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='c2p5_mp_2d'
 )(c2x)
 x= Concatenate(
     axis=-1,
@@ -242,74 +310,59 @@ x= Concatenate(
 
 
 x= Conv3D(
-    filters=3,
+    filters=16,
     kernel_size=(3,1,1),
     strides=(1,1,1),
     padding='valid',
     data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    name='p1_cnn_3d'
-)(x) # output shape (48, 17, 17, 3)
+    name='p1_cnn_3d_1'
+)(x)
+x= Conv3D(
+    filters=16,
+    kernel_size=(3,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='p1_cnn_3d_2'
+)(x)
 x= MaxPooling3D(
     pool_size=(2,1,1),
     padding='valid',
     data_format='channels_last',
     name='p1_mp_3d'
-)(x) # output shape (24, 17, 17, 3)
+)(x)
 x= Conv3D(
-    filters=16,
+    filters=10,
     kernel_size=(3,1,1),
     strides=(1,1,1),
     padding='valid',
     data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     name='p2_cnn_3d'
-)(x) # output shape (22, 17, 17, 16)
-x= Conv3D(
-    filters=16,
-    kernel_size=(3,1,1),
-    strides=(1,1,1),
-    padding='valid',
-    data_format='channels_last',
-    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    name='p21_cnn_3d'
-)(x) # output shape (20, 17, 17, 16)
+)(x)
 x= MaxPooling3D(
     pool_size=(2,1,1),
     padding='valid',
     data_format='channels_last',
     name='p2_mp_3d'
-)(x) # output shape (10, 17, 17, 16)
-x= Conv3D(
-    filters=32,
-    kernel_size=(1,3,3),
-    strides=(1,1,1),
-    padding='valid',
-    data_format='channels_last',
-    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    name='p3_cnn_2d'
-)(x) # output shape (10, 15, 15, 32)
-x= Conv3D(
-    filters=16,
-    kernel_size=(1,3,3),
-    strides=(1,1,1),
-    padding='valid',
-    data_format='channels_last',
-    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    name='p31_cnn_2d'
-)(x) # output shape (10, 13, 13, 16)
-x= Dropout(
-    rate=0.1,
-    name='do_1'
 )(x)
-
-
-
-
-
-
-
-
+x= Conv3D(
+    filters=10,
+    kernel_size=(3,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='p3_cnn_3d'
+)(x)
+x= MaxPooling3D(
+    pool_size=(2,1,1),
+    padding='valid',
+    data_format='channels_last',
+    name='p3_mp_3d'
+)(x)
 x= Flatten(name='flat')(x)
 
 
