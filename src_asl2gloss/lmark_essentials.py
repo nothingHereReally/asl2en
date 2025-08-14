@@ -717,7 +717,7 @@ def getdata_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATC
         yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
 
 
-def getdataNotVid_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
+def getdataNotVid_10(TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
     def getFramesG10(vid: dict, initGT: int=0, TqFrames: int=QUANTITY_FRAME) -> list:
         if int(len(vid['images']))<1:
             raise FileExistsError(f"no files exist on {vid['video_id']}")
