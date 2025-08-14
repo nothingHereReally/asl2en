@@ -30,19 +30,21 @@ with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.ready.json", 'r') 
 wlasl_READY: dict= tmp_ready.copy()
 del tmp_ready
 tmp_ready: dict= {}
-with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.ready.1st_10.json", 'r') as f:
+with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.g10_skeleton_images.json", 'r') as f:
     tmp_ready= jload(f)
 wlasl_READY_10: dict= tmp_ready.copy()
 del tmp_ready
 T10_GLOSS: int= int(len(wlasl_READY_10['label_id2gloss']))
 T10_TRAIN: int= int(len(wlasl_READY_10['train']))
 T10_VAL: int= int(len(wlasl_READY_10['val']))
-T10_DIR_IMG: str= f"{PROJ_ROOT}dataset/wlasl_dataset/raw_images/"
+T10_TEST: int= int(len(wlasl_READY_10['test']))
+T10_DIR_IMG: str= f"{PROJ_ROOT}dataset/wlasl_dataset/skeleton_images/"
+TRAIN_STEPS: int= int(ceil((T10_TRAIN*2)/TRAIN_BATCH))
+VAL_STEPS: int= int(ceil(T10_VAL/TRAIN_BATCH))
+
 TOTAL_GLOSS_UNIQ: int= int(len(wlasl_READY['label_id2gloss']))
 TOTAL_TRAIN_FILE: int= int(len(wlasl_READY['train']))
 TOTAL_VAL_FILE: int= int(len(wlasl_READY['val']))
-TRAIN_STEPS: int= int(ceil((T10_TRAIN*2)/TRAIN_BATCH))
-VAL_STEPS: int= int(ceil(T10_VAL/TRAIN_BATCH))
 
 
 FACE_CONNECTIONS: tuple= (
