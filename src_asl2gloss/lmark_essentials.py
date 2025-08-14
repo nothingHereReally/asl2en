@@ -724,7 +724,6 @@ def getdataNotVid_10(TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
         imgsList: list= []
         oqFrames: int= len(vid['images'])
         o2t_ratio: int= int(oqFrames//TqFrames)
-        qHandsG10: int= 0
         if oqFrames<TqFrames:
             t2o_ratio: int= int(ceil(TqFrames/oqFrames))
             for i in range(oqFrames):
