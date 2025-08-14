@@ -150,3 +150,37 @@ c2x= Conv3D(
     name='c2p1_cnn_2d'
 )(data_in[:, :, :, :, 2:])
 
+
+
+
+
+
+
+
+corrupted files
+processing train...
+err: file 07074.mp4 can't be opened or is corrupted
+err: file 17720.mp4 can't be opened or is corrupted
+err: file 17721.mp4 can't be opened or is corrupted
+err: file 17722.mp4 can't be opened or is corrupted
+err: file 17723.mp4 can't be opened or is corrupted
+err: file 05740.mp4 can't be opened or is corrupted
+err: file 05743.mp4 can't be opened or is corrupted
+err: file 24955.mp4 can't be opened or is corrupted
+err: file 24956.mp4 can't be opened or is corrupted
+err: file 24961.mp4 can't be opened or is corrupted
+err: file 24962.mp4 can't be opened or is corrupted
+err: file 24954.mp4 can't be opened or is corrupted
+err: file 11313.mp4 can't be opened or is corrupted
+err: file 63236.mp4 can't be opened or is corrupted
+err: file 13642.mp4 can't be opened or is corrupted
+processing val...
+err: file 17724.mp4 can't be opened or is corrupted
+err: file 09854.mp4 can't be opened or is corrupted
+err: file 24952.mp4 can't be opened or is corrupted
+err: file 63237.mp4 can't be opened or is corrupted
+processing test...
+err: file 05739.mp4 can't be opened or is corrupted
+err: file 24960.mp4 can't be opened or is corrupted
+err: file 08925.mp4 can't be opened or is corrupted
+
