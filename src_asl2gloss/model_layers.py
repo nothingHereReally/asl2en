@@ -1,7 +1,7 @@
 # from types import LambdaType
 # from typing import Any
 from keras.src.activations.activations import ReLU
-from keras.src.layers import Conv2D, Conv3D, Dense, Flatten, Input, MaxPooling2D, MaxPooling3D, Reshape
+from keras.src.layers import Conv2D, Conv3D, Dense, Dropout, Flatten, Input, MaxPooling2D, MaxPooling3D, Reshape
 from keras.src.activations import softmax
 # from keras.ops import expand_dims
 # from tensorflow import reshape, convert_to_tensor
@@ -47,6 +47,10 @@ cx= MaxPooling3D(
     data_format='channels_last',
     name='c0p1_mp_3d'
 )(cx)
+cx= Dropout(
+    rate=0.1,
+    name='c0p1_do'
+)(cx)
 cx= Conv3D(
     filters=16,
     kernel_size=(1,3,3),
@@ -76,6 +80,10 @@ cx= MaxPooling3D(
     padding='valid',
     data_format='channels_last',
     name='c0p2_mp_3d'
+)(cx)
+cx= Dropout(
+    rate=0.1,
+    name='c0p2_do'
 )(cx)
 cx= Conv3D(
     filters=32,
@@ -133,6 +141,10 @@ x= MaxPooling2D(
     padding='valid',
     data_format='channels_last',
     name='p1_mp_2d'
+)(x)
+x= Dropout(
+    rate=0.1,
+    name='p1_do'
 )(x)
 x= Conv2D(
     filters=128,
