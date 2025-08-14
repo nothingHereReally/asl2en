@@ -5,7 +5,7 @@ from json import load as jload
 # PROJ_ROOT: str= f"/absolute/dir/to/project/"
 PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
 
-EPOCHS: int= 4
+EPOCHS: int= 12
 # TRAIN_BATCH: int= 32
 TRAIN_BATCH: int= 2
 # QUANTITY_FRAME: int= 48
@@ -39,7 +39,7 @@ T10_TRAIN: int= int(len(wlasl_READY_10['train']))
 T10_VAL: int= int(len(wlasl_READY_10['val']))
 T10_TEST: int= int(len(wlasl_READY_10['test']))
 T10_DIR_IMG: str= f"{PROJ_ROOT}dataset/wlasl_dataset/skeleton_images/"
-TRAIN_STEPS: int= int(ceil((T10_TRAIN*2)/TRAIN_BATCH))
+TRAIN_STEPS: int= int(ceil((T10_TRAIN*7)/TRAIN_BATCH))
 VAL_STEPS: int= int(ceil(T10_VAL/TRAIN_BATCH))
 
 TOTAL_GLOSS_UNIQ: int= int(len(wlasl_READY['label_id2gloss']))
