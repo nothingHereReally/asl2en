@@ -148,63 +148,6 @@ cx= Permute(
 cx= Attention(
     name='c0p3_att'
 )([cx,cx])
-# cx= Permute(
-#     dims=(2, 1),
-#     name='transpose_a'
-# )(cx)
-# cx= Reshape(
-#     target_shape=(18, 18, 32),
-#     name='c0p3_reshape_a_att'
-# )(cx)
-# cx= Dropout(
-#     rate=0.1,
-#     name='c0p2_do'
-# )(cx)
-#
-#
-#
-#
-#
-#
-#
-#
-# x= Conv2D(
-#     filters=64,
-#     kernel_size=(3,3),
-#     strides=(1,1),
-#     padding='valid',
-#     data_format='channels_last',
-#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-#     name='p1_cnn_2d'
-# )(cx)
-# x= MaxPooling2D(
-#     pool_size=(2,2),
-#     padding='valid',
-#     data_format='channels_last',
-#     name='p1_mp_2d'
-# )(x)
-# x= Dropout(
-#     rate=0.1,
-#     name='p1_do'
-# )(x)
-# x= Conv2D(
-#     filters=128,
-#     kernel_size=(3,3),
-#     strides=(1,1),
-#     padding='valid',
-#     data_format='channels_last',
-#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-#     name='p2_cnn_2d'
-# )(x)
-# x= Conv2D(
-#     filters=10,
-#     kernel_size=(3,3),
-#     strides=(1,1),
-#     padding='valid',
-#     data_format='channels_last',
-#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-#     name='p3_cnn_2d'
-# )(x)
 x= Flatten(name='flat')(cx)
 
 
