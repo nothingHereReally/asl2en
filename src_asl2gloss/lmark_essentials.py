@@ -759,7 +759,7 @@ def getdataNotVid_10(TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                         i_has_hands= ii
                 if vid['images'][i*o2t_ratio +i_has_hands]['left_hand'] or vid['images'][i*o2t_ratio +i_has_hands]['right_hand']:
                     imgsList.append(array(
-                        imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i*o2t_ratio +initGT]['file']}.png")))
+                        imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i*o2t_ratio +i_has_hands]['file']}.png")))
                     ))
                 elif 0<len(imgsList):
                     imgsList.append(array(imgsList[-1], dtype=uint8, copy=True))
