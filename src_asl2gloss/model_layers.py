@@ -1,7 +1,7 @@
 # from types import LambdaType
 # from typing import Any
 from keras.src.activations.activations import ReLU
-from keras.src.layers import LSTM, Attention, Conv2D, Conv3D, Dense, Dropout, Flatten, Input, MaxPooling2D, MaxPooling3D, Permute, Reshape
+from keras.src.layers import Attention, Conv2D, Conv3D, Dense, Dropout, Flatten, Input, MaxPooling2D, MaxPooling3D, Permute, Reshape
 from keras.src.activations import softmax
 # from keras.ops import expand_dims
 # from tensorflow import reshape, convert_to_tensor
@@ -148,10 +148,6 @@ cx= Permute(
 cx= Attention(
     name='c0p3_att'
 )([cx,cx])
-cx= LSTM(
-    units=10,
-    name='lstm'
-)(cx)
 x= Flatten(name='flat')(cx)
 
 
