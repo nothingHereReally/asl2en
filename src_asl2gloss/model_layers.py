@@ -1,8 +1,7 @@
 # from types import LambdaType
 # from typing import Any
-# from keras.src.activations.activations import ReLU
-# from keras.src.layers import Attention, Conv2D, Conv3D, Dense, Dropout, Flatten, Input, MaxPooling2D, MaxPooling3D, Permute, Reshape
-from keras.src.layers import ConvLSTM2D, Dense, Dropout, Flatten, Input, MaxPooling3D, TimeDistributed
+from keras.src.activations.activations import ReLU
+from keras.src.layers import Attention, Conv3D, Dense, Dropout, Flatten, Input, MaxPooling3D, Permute, Reshape
 from keras.src.activations import softmax
 # from keras.ops import expand_dims
 # from tensorflow import reshape, convert_to_tensor
@@ -18,196 +17,138 @@ data_in= Input(
     dtype=float32,
     name='batch_vid',
 )
-# cx= Conv3D(
-#     filters=8,
-#     kernel_size=(1,3,3),
-#     strides=(1,1,1),
-#     padding='valid',
-#     data_format='channels_last',
-#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-#     name='c0p1_cnn_2d'
-# )(data_in)
-# cx= MaxPooling3D(
-#     pool_size=(1,2,2),
-#     padding='valid',
-#     data_format='channels_last',
-#     name='c0p1_mp_2d'
-# )(cx)
-# cx= Conv3D(
-#     filters=8,
-#     kernel_size=(3,1,1),
-#     strides=(1,1,1),
-#     padding='valid',
-#     data_format='channels_last',
-#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-#     name='c0p1_cnn_3d'
-# )(cx)
-# cx= MaxPooling3D(
-#     pool_size=(2,1,1),
-#     padding='valid',
-#     data_format='channels_last',
-#     name='c0p1_mp_3d'
-# )(cx)
-# cx= Reshape(
-#     target_shape=(10, -1),
-#     name='c0p1_reshape_b_att'
-# )(cx)
-# cx= Attention(
-#     name='c0p1_att'
-# )([cx,cx])
-# cx= Reshape(
-#     target_shape=(10, 78, 78, 8),
-#     name='c0p1_reshape_a_att'
-# )(cx)
-# cx= Dropout(
-#     rate=0.1,
-#     name='c0p1_do'
-# )(cx)
-# cx= Conv3D(
-#     filters=16,
-#     kernel_size=(1,3,3),
-#     strides=(1,1,1),
-#     padding='valid',
-#     data_format='channels_last',
-#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-#     name='c0p2_cnn_2d'
-# )(cx)
-# cx= MaxPooling3D(
-#     pool_size=(1,2,2),
-#     padding='valid',
-#     data_format='channels_last',
-#     name='c0p2_mp_2d'
-# )(cx)
-# cx= Conv3D(
-#     filters=16,
-#     kernel_size=(3,1,1),
-#     strides=(1,1,1),
-#     padding='valid',
-#     data_format='channels_last',
-#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-#     name='c0p2_cnn_3d'
-# )(cx)
-# cx= MaxPooling3D(
-#     pool_size=(2,1,1),
-#     padding='valid',
-#     data_format='channels_last',
-#     name='c0p2_mp_3d'
-# )(cx)
-# cx= Reshape(
-#     target_shape=(4, -1),
-#     name='c0p2_reshape_b_att'
-# )(cx)
-# cx= Attention(
-#     name='c0p2_att'
-# )([cx,cx])
-# cx= Reshape(
-#     target_shape=(4, 38, 38, 16),
-#     name='c0p2_reshape_a_att'
-# )(cx)
-# cx= Dropout(
-#     rate=0.1,
-#     name='c0p2_do'
-# )(cx)
-# cx= Conv3D(
-#     filters=32,
-#     kernel_size=(1,3,3),
-#     strides=(1,1,1),
-#     padding='valid',
-#     data_format='channels_last',
-#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-#     name='c0p3_cnn_2d'
-# )(cx)
-# cx= MaxPooling3D(
-#     pool_size=(1,2,2),
-#     padding='valid',
-#     data_format='channels_last',
-#     name='c0p3_mp_2d'
-# )(cx)
-# cx= Conv3D(
-#     filters=32,
-#     kernel_size=(3,1,1),
-#     strides=(1,1,1),
-#     padding='valid',
-#     data_format='channels_last',
-#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-#     name='c0p3_cnn_3d'
-# )(cx)
-# cx= MaxPooling3D(
-#     pool_size=(2,1,1),
-#     padding='valid',
-#     data_format='channels_last',
-#     name='c0p3_mp_3d'
-# )(cx)
-# cx= Reshape(
-#     target_shape=(-1, 32),
-#     name='c0p3_reshape_b_att'
-# )(cx)
-# cx= Permute(
-#     dims=(2, 1),
-#     name='transpose_b'
-# )(cx)
-# cx= Attention(
-#     name='c0p3_att'
-# )([cx,cx])
-ct= ConvLSTM2D(
-    filters=4,
-    kernel_size=(3, 3),
-    activation='tanh',
-    data_format="channels_last",
-    recurrent_dropout=0.2,
-    return_sequences=True,
-)(data_in)
-ct= MaxPooling3D(
-    pool_size=(1, 2, 2),
-    padding='valid',
-    # padding='same',
-    data_format='channels_last'
-)(ct)
-ct= TimeDistributed(Dropout(0.2))(ct)
-ct= ConvLSTM2D(
+cx= Conv3D(
     filters=8,
-    kernel_size=(3, 3),
-    activation='tanh',
-    data_format="channels_last",
-    recurrent_dropout=0.2,
-    return_sequences=True
-)(ct)
-ct= MaxPooling3D(
-    pool_size=(1, 2, 2),
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
     padding='valid',
-    # padding='same',
-    data_format='channels_last'
-)(ct)
-ct= TimeDistributed(Dropout(0.2))(ct)
-ct= ConvLSTM2D(
-    filters=14,
-    kernel_size=(3, 3),
-    activation='tanh',
-    data_format="channels_last",
-    recurrent_dropout=0.2, return_sequences=True
-)(ct)
-ct= MaxPooling3D(
-    pool_size=(1, 2, 2),
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c0p1_cnn_2d'
+)(data_in)
+cx= MaxPooling3D(
+    pool_size=(1,2,2),
     padding='valid',
-    # padding='same',
-    data_format='channels_last'
-)(ct)
-ct= TimeDistributed(Dropout(0.2))(ct)
-ct= ConvLSTM2D(
+    data_format='channels_last',
+    name='c0p1_mp_2d'
+)(cx)
+cx= Conv3D(
+    filters=8,
+    kernel_size=(3,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c0p1_cnn_3d'
+)(cx)
+cx= MaxPooling3D(
+    pool_size=(2,1,1),
+    padding='valid',
+    data_format='channels_last',
+    name='c0p1_mp_3d'
+)(cx)
+cx= Reshape(
+    target_shape=(10, -1),
+    name='c0p1_reshape_b_att'
+)(cx)
+cx= Attention(
+    name='c0p1_att'
+)([cx,cx])
+cx= Reshape(
+    target_shape=(10, 78, 78, 8),
+    name='c0p1_reshape_a_att'
+)(cx)
+cx= Dropout(
+    rate=0.1,
+    name='c0p1_do'
+)(cx)
+cx= Conv3D(
     filters=16,
-    kernel_size=(3, 3),
-    activation='tanh',
-    data_format="channels_last",
-    recurrent_dropout=0.2,
-    return_sequences=True
-)(ct)
-ct= MaxPooling3D(
-    pool_size=(1, 2, 2),
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
     padding='valid',
-    # padding='same',
-    data_format='channels_last'
-)(ct)
-x= Flatten(name='flat')(ct)
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c0p2_cnn_2d'
+)(cx)
+cx= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='c0p2_mp_2d'
+)(cx)
+cx= Conv3D(
+    filters=16,
+    kernel_size=(3,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c0p2_cnn_3d'
+)(cx)
+cx= MaxPooling3D(
+    pool_size=(2,1,1),
+    padding='valid',
+    data_format='channels_last',
+    name='c0p2_mp_3d'
+)(cx)
+cx= Reshape(
+    target_shape=(4, -1),
+    name='c0p2_reshape_b_att'
+)(cx)
+cx= Attention(
+    name='c0p2_att'
+)([cx,cx])
+cx= Reshape(
+    target_shape=(4, 38, 38, 16),
+    name='c0p2_reshape_a_att'
+)(cx)
+cx= Dropout(
+    rate=0.1,
+    name='c0p2_do'
+)(cx)
+cx= Conv3D(
+    filters=32,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c0p3_cnn_2d'
+)(cx)
+cx= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='c0p3_mp_2d'
+)(cx)
+cx= Conv3D(
+    filters=32,
+    kernel_size=(3,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c0p3_cnn_3d'
+)(cx)
+cx= MaxPooling3D(
+    pool_size=(2,1,1),
+    padding='valid',
+    data_format='channels_last',
+    name='c0p3_mp_3d'
+)(cx)
+cx= Reshape(
+    target_shape=(-1, 32),
+    name='c0p3_reshape_b_att'
+)(cx)
+cx= Permute(
+    dims=(2, 1),
+    name='transpose_b'
+)(cx)
+cx= Attention(
+    name='c0p3_att'
+)([cx,cx])
+x= Flatten(name='flat')(cx)
 
 
 data_out = Dense(T10_GLOSS, activation=softmax, name='batch_class')(x)
