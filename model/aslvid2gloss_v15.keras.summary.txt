@@ -1,0 +1,348 @@
+model file ./aslvid2gloss_v15.keras
+trained on 1st 10 gloss: book, drink, computer, before, chair, go, clothes, who, candy, cousin
+best model yet( compare to model v10, model v12 and model v14 ), see testing result below( ie. about 57% accurate )
+    result:
+        Model: "functional"
+        ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+        ┃ Layer (type)                  ┃ Output Shape              ┃         Param # ┃ Connected to               ┃
+        ┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+        │ batch_vid (InputLayer)        │ (None, 22, 158, 158, 3)   │               0 │ -                          │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ c0p1_cnn_2d (Conv3D)          │ (None, 22, 156, 156, 8)   │             224 │ batch_vid[0][0]            │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ c0p1_mp_2d (MaxPooling3D)     │ (None, 22, 78, 78, 8)     │               0 │ c0p1_cnn_2d[0][0]          │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ c0p1_cnn_3d (Conv3D)          │ (None, 20, 78, 78, 8)     │             200 │ c0p1_mp_2d[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ c0p1_mp_3d (MaxPooling3D)     │ (None, 10, 78, 78, 8)     │               0 │ c0p1_cnn_3d[0][0]          │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ c0p1_do (Dropout)             │ (None, 10, 78, 78, 8)     │               0 │ c0p1_mp_3d[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ c0p2_cnn_2d (Conv3D)          │ (None, 10, 76, 76, 16)    │           1,168 │ c0p1_do[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ c0p2_mp_2d (MaxPooling3D)     │ (None, 10, 38, 38, 16)    │               0 │ c0p2_cnn_2d[0][0]          │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ c0p2_cnn_3d (Conv3D)          │ (None, 8, 38, 38, 16)     │             784 │ c0p2_mp_2d[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ c0p2_mp_3d (MaxPooling3D)     │ (None, 4, 38, 38, 16)     │               0 │ c0p2_cnn_3d[0][0]          │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ c0p3_cnn_2d (Conv3D)          │ (None, 4, 36, 36, 16)     │           2,320 │ c0p2_mp_3d[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ c0p3_mp_2d (MaxPooling3D)     │ (None, 4, 18, 18, 16)     │               0 │ c0p3_cnn_2d[0][0]          │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ reshape (Reshape)             │ (None, 4, 5184)           │               0 │ c0p3_mp_2d[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ att (Attention)               │ (None, 4, 5184)           │               0 │ reshape[0][0],             │
+        │                               │                           │                 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ flat (Flatten)                │ (None, 20736)             │               0 │ att[0][0]                  │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ batch_class (Dense)           │ (None, 10)                │         207,370 │ flat[0][0]                 │
+        └───────────────────────────────┴───────────────────────────┴─────────────────┴────────────────────────────┘
+        Total params: 212,066 (828.38 KB)
+        Trainable params: 212,066 (828.38 KB)
+        Non-trainable params: 0 (0.00 B)
+        Epoch 1/12
+        648/648 ━━━━━━━━━━━━━━━━━━━━ 23s 24ms/step - accuracy: 0.8781 - loss: 0.3715 - val_accuracy: 0.5000 - val_loss: 2.2898 - learning_rate: 0.0010
+        Epoch 2/12
+        646/648 ━━━━━━━━━━━━━━━━━━━━ 0s 21ms/step - accuracy: 0.9927 - loss: 0.0254
+        Epoch 2: ReduceLROnPlateau reducing learning rate to 0.00010000000474974513.
+        648/648 ━━━━━━━━━━━━━━━━━━━━ 14s 22ms/step - accuracy: 0.9961 - loss: 0.0123 - val_accuracy: 0.5000 - val_loss: 2.6606 - learning_rate: 0.0010
+        Epoch 3/12
+        647/648 ━━━━━━━━━━━━━━━━━━━━ 0s 21ms/step - accuracy: 1.0000 - loss: 2.4857e-04
+        Epoch 3: ReduceLROnPlateau reducing learning rate to 1.0000000474974514e-05.
+        648/648 ━━━━━━━━━━━━━━━━━━━━ 14s 22ms/step - accuracy: 1.0000 - loss: 2.0458e-04 - val_accuracy: 0.4524 - val_loss: 2.5592 - learning_rate: 1.0000e-04
+        Epoch 3: early stopping
+    and on testing:
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 30ms/step
+        correct( should be go ) calculated be go 57.652729749679565%
+        current in progress idx 21
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 29ms/step
+        correct( should be clothes ) calculated be clothes 98.71958494186401%
+        current in progress idx 22
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 23
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 32ms/step
+        correct( should be clothes ) calculated be clothes 99.99998807907104%
+        current in progress idx 24
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 31ms/step
+        INcorrect( should be who ) calculated be candy 100.0% ________ 63219
+        current in progress idx 25
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 26
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 30ms/step
+        INcorrect( should be who ) calculated be candy 100.0% ________ 63233
+        current in progress idx 27
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 30ms/step
+        correct( should be candy ) calculated be candy 100.0%
+        current in progress idx 28
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 29
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 30
+        skipping due to on all images had less than 60% has a hand
+        current in progress idx 31
+        skipping due to on all images had less than 60% has a hand
+        correct 12 / 21 = 57.14285714285714%
+
+
+batch train size( TRAIN_BATCH ): 2
+T10_GLOSS: 10
+
+input size: (20, 150, 150, 3) with getdata() already in [0.0, 1.0] float32
+optimizer: Adam(learning_rate=0.001),
+loss: sparse_categorical_crossentropy,
+metrics: ['accuracy']
+epoch: 1
+T10_GLOSS: int= int(len(wlasl_READY_10['label_id2gloss']))
+T10_TRAIN: int= int(len(wlasl_READY_10['train']))
+T10_VAL: int= int(len(wlasl_READY_10['val']))
+T10_TEST: int= int(len(wlasl_READY_10['test']))
+T10_DIR_IMG: str= f"{PROJ_ROOT}dataset/wlasl_dataset/skeleton_images/"
+TRAIN_STEPS: int= int(ceil((T10_TRAIN*7)/TRAIN_BATCH)) =648
+VAL_STEPS: int= int(ceil(T10_VAL/TRAIN_BATCH))
+
+
+data_in= Input(
+    shape=(QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3),
+    dtype=float32,
+    name='batch_vid',
+)
+cx= Conv3D(
+    filters=8,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c0p1_cnn_2d'
+)(data_in)
+cx= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='c0p1_mp_2d'
+)(cx)
+cx= Conv3D(
+    filters=8,
+    kernel_size=(3,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c0p1_cnn_3d'
+)(cx)
+cx= MaxPooling3D(
+    pool_size=(2,1,1),
+    padding='valid',
+    data_format='channels_last',
+    name='c0p1_mp_3d'
+)(cx)
+cx= Dropout(
+    rate=0.1,
+    name='c0p1_do'
+)(cx)
+cx= Conv3D(
+    filters=16,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c0p2_cnn_2d'
+)(cx)
+cx= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='c0p2_mp_2d'
+)(cx)
+cx= Conv3D(
+    filters=16,
+    kernel_size=(3,1,1),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c0p2_cnn_3d'
+)(cx)
+cx= MaxPooling3D(
+    pool_size=(2,1,1),
+    padding='valid',
+    data_format='channels_last',
+    name='c0p2_mp_3d'
+)(cx)
+cx= Conv3D(
+    filters=16,
+    kernel_size=(1,3,3),
+    strides=(1,1,1),
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='c0p3_cnn_2d'
+)(cx)
+cx= MaxPooling3D(
+    pool_size=(1,2,2),
+    padding='valid',
+    data_format='channels_last',
+    name='c0p3_mp_2d'
+)(cx)
+cx= Reshape(
+    target_shape=(4, -1)
+)(cx)
+cx= Attention(
+    name='att'
+)([cx,cx])
+# cx= Dropout(
+#     rate=0.1,
+#     name='c0p2_do'
+# )(cx)
+# cx= Conv3D(
+#     filters=32,
+#     kernel_size=(1,3,3),
+#     strides=(1,1,1),
+#     padding='valid',
+#     data_format='channels_last',
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     name='c0p3_cnn_2d'
+# )(cx)
+# cx= MaxPooling3D(
+#     pool_size=(1,2,2),
+#     padding='valid',
+#     data_format='channels_last',
+#     name='c0p3_mp_2d'
+# )(cx)
+# cx= Conv3D(
+#     filters=32,
+#     kernel_size=(3,1,1),
+#     strides=(1,1,1),
+#     padding='valid',
+#     data_format='channels_last',
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     name='c0p3_cnn_3d'
+# )(cx)
+# cx= MaxPooling3D(
+#     pool_size=(2,1,1),
+#     padding='valid',
+#     data_format='channels_last',
+#     name='c0p3_mp_3d'
+# )(cx)
+# cx= Reshape(
+#     target_shape=(18, 18, 32),
+#     name='channel_0_to2d'
+# )(cx)
+
+
+
+
+
+
+
+
+# x= Conv2D(
+#     filters=64,
+#     kernel_size=(3,3),
+#     strides=(1,1),
+#     padding='valid',
+#     data_format='channels_last',
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     name='p1_cnn_2d'
+# )(cx)
+# x= MaxPooling2D(
+#     pool_size=(2,2),
+#     padding='valid',
+#     data_format='channels_last',
+#     name='p1_mp_2d'
+# )(x)
+# x= Dropout(
+#     rate=0.1,
+#     name='p1_do'
+# )(x)
+# x= Conv2D(
+#     filters=128,
+#     kernel_size=(3,3),
+#     strides=(1,1),
+#     padding='valid',
+#     data_format='channels_last',
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     name='p2_cnn_2d'
+# )(x)
+# x= MaxPooling2D(
+#     pool_size=(2,2),
+#     padding='valid',
+#     data_format='channels_last',
+#     name='p2_mp_2d'
+# )(x)
+# x= Conv2D(
+#     filters=10,
+#     kernel_size=(3,3),
+#     strides=(1,1),
+#     padding='valid',
+#     data_format='channels_last',
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     name='p3_cnn_2d'
+# )(x)
+x= Flatten(name='flat')(cx)
+
+
+data_out = Dense(T10_GLOSS, activation=softmax, name='batch_class')(x)
+
+
+
+
+
+
+
+
+testing ./aslvid2gloss_v15.keras: src_asl2gloss/checks/test_g10_vid2gloss_model.py
+_______________________________________________________
+from os.path import exists
+from typing import Any
+from keras.src.saving import load_model
+from numpy import argmax, float32
+from mediapipe.python.solutions.holistic import Holistic
+
+from ..lmark_constant import IMG_SIZE, PROJ_ROOT, QUANTITY_FRAME, WLASL_VID_DIR, wlasl_READY_10
+
+
+from ..lmark_essentials import getSkeletonFrames
+
+
+def test(modelFile: str) -> None:
+    if exists(modelFile):
+        mpH: Holistic= Holistic( # mph, midiapipe holistic
+            static_image_mode=True,
+            model_complexity=1,
+            min_detection_confidence=0.5,
+            min_tracking_confidence=0.5
+        )
+        loadedModel: Any= load_model(modelFile)
+        correct: int= 0
+        total: int= 0
+        print(f"testing over {len(wlasl_READY_10['test'])} files, processing...")
+        for cur, i in zip(range(len(wlasl_READY_10['test'])), wlasl_READY_10['test']):
+            print(f"current in progress idx {cur}")
+            try:
+                out: list= loadedModel.predict(getSkeletonFrames(
+                    f"{WLASL_VID_DIR}{i['video_id']}.mp4",
+                    mpH=mpH
+                )[0].reshape((1, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)).astype(float32)/255.0)
+                out= out[0]
+                if int(argmax(out, axis=-1))==int(i['gloss_id']):
+                    correct +=1
+                    print(f"correct( should be {wlasl_READY_10['label_id2gloss'][i['gloss_id']]} ) calculated be {wlasl_READY_10['label_id2gloss'][argmax(out, axis=-1)]} {out[argmax(out, axis=-1)]*100}%")
+                else:
+                    print(f"INcorrect( should be {wlasl_READY_10['label_id2gloss'][i['gloss_id']]} ) calculated be {wlasl_READY_10['label_id2gloss'][argmax(out, axis=-1)]} {out[argmax(out, axis=-1)]*100}% ________ {i['video_id']}")
+                total+= 1
+            except FileExistsError as e:
+                del e
+                print("skipping due to on all images had less than 60% has a hand")
+        # print(f"correct {correct} / {len(wlasl_READY_10['test'])} = {correct/float(len(wlasl_READY_10['test']))*100}%")
+        print(f"correct {correct} / {total} = {correct/total*100}%")
+    else:
+        print(f"model file: {modelFile} does not exist")
+    
+
+if __name__=="__main__":
+    test(f"{PROJ_ROOT}model/aslvid2gloss_v15.keras")
+
