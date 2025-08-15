@@ -882,6 +882,8 @@ def getdataNotVid_10(TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 except FileExistsError as e:
                     del e
             i_0toBatchOrMore+= 1
+            if len(wlasl_READY_10[TrainVal])<i_0toBatchOrMore:
+                i_0toBatchOrMore= 0
         b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<len(wlasl_READY_10[TrainVal]) else 0+( (b_idxINIT+batch)-int(len(wlasl_READY_10[TrainVal])) )
         if batchWhat==(TRAIN_STEPS*EPOCHS) or batchWhat==VAL_STEPS:
             for i in range(len(wlasl_READY_10['label_id2gloss'])):
