@@ -1,47 +1,47 @@
-from mediapipe.python.solutions.holistic import Holistic
+from math import ceil
 from json import load as jload
 
 
 # PROJ_ROOT: str= f"/absolute/dir/to/project/"
 PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
 
+EPOCHS: int= 12
 # TRAIN_BATCH: int= 32
 TRAIN_BATCH: int= 2
 # QUANTITY_FRAME: int= 48
-QUANTITY_FRAME: int= 20
+QUANTITY_FRAME: int= 22
 # IMG_SIZE: int= 480
-IMG_SIZE: int= 150
+IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
 # MIN_FRAMES_HAS_HANDS, meaning on a single video file
 # where only QUANTITY_FRAME img will be included, then
 # mandatory that atleast MIN_FRAMES_HAS_HANDS out of
 # QUANTITY_FRAME has at least 1 hand( ie. either left
 # or right hand )
 # ie. current is at least 12 or 20 has hand/s 20*0.6= 12
-MIN_FRAMES_HAS_HANDS: int= int(QUANTITY_FRAME*0.6)
+MIN_FRAMES_HAS_HANDS: int= int(QUANTITY_FRAME*0.7)
 WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
 
 
 
 
-mpH: Holistic= Holistic( # mph, midiapipe holistic
-    static_image_mode=False,
-    model_complexity=1,
-    min_detection_confidence=0.5,
-    min_tracking_confidence=0.5
-)
 tmp_ready: dict= {}
 with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.ready.json", 'r') as f:
     tmp_ready= jload(f)
 wlasl_READY: dict= tmp_ready.copy()
 del tmp_ready
 tmp_ready: dict= {}
-with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.ready.1st_10.json", 'r') as f:
+with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.g10_skeleton_images.json", 'r') as f:
     tmp_ready= jload(f)
 wlasl_READY_10: dict= tmp_ready.copy()
 del tmp_ready
 T10_GLOSS: int= int(len(wlasl_READY_10['label_id2gloss']))
 T10_TRAIN: int= int(len(wlasl_READY_10['train']))
 T10_VAL: int= int(len(wlasl_READY_10['val']))
+T10_TEST: int= int(len(wlasl_READY_10['test']))
+T10_DIR_IMG: str= f"{PROJ_ROOT}dataset/wlasl_dataset/skeleton_images/"
+TRAIN_STEPS: int= int(ceil((T10_TRAIN*7)/TRAIN_BATCH))
+VAL_STEPS: int= int(ceil(T10_VAL/TRAIN_BATCH))
+
 TOTAL_GLOSS_UNIQ: int= int(len(wlasl_READY['label_id2gloss']))
 TOTAL_TRAIN_FILE: int= int(len(wlasl_READY['train']))
 TOTAL_VAL_FILE: int= int(len(wlasl_READY['val']))
