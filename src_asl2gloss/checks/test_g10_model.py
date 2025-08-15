@@ -46,5 +46,5 @@ def test(modelFile: str) -> None:
     
 
 if __name__=="__main__":
-    test(f"{PROJ_ROOT}model/aslvid2gloss_v15.keras")
+    test(f"{PROJ_ROOT}model/aslvid2gloss_v16.keras")
 
