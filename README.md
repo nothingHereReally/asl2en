@@ -6,11 +6,15 @@ Clone this repo, better to use `bash` if you have it, compared to `cmd`.
 Installing git by defualt also installs bash.
 ```bash
 GIT_LFS_SKIP_SMUDGE=1 git clone --branch only_1st_10gloss https://github.com/nothingHereReally/asl2en.git
+cd asl2en
+git reset --hard 522d3622fb032ea2b713259b014d48c2daabf044
 ```
 on cmd is
 ```bash
 set GIT_LFS_SKIP_SMUDGE=1
 git clone --branch only_1st_10gloss https://github.com/nothingHereReally/asl2en.git
+cd asl2en
+git reset --hard 522d3622fb032ea2b713259b014d48c2daabf044
 ```
 The `GIT_LFS_SKIP_SMUDGE=1` is to skip downloading the lfs files,
 due to this repo creator( me, nothingHereReally ) is not a pro
@@ -34,7 +38,6 @@ asl2en/dataset/wlasl_dataset
 
 create a python environment
 ```bash
-cd asl2en
 python -m venv .venv
 ```
 
