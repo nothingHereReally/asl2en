@@ -847,7 +847,14 @@ def getdataNotVid_10(TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 (b_idxINIT+i_0toBatchOrMore)-len(wlasl_READY_10[TrainVal])
             ))
             vidcurr_ann: dict= wlasl_READY_10[TrainVal][  curr_IDX_USE  ]
-            if exists(str(pjoin(T10_DIR_IMG, vidcurr_ann['video_id']))):
+            min_q: int= 99999
+            trainThisClass: int= -1
+            for i in range(len(wlasl_READY_10['label_id2gloss'])):
+                if glossDist[i]['quantity']<min_q:
+                    min_q= glossDist[i]['quantity']
+                    trainThisClass= i
+            if exists(str(pjoin(T10_DIR_IMG, vidcurr_ann['video_id']))) and \
+                int(vidcurr_ann['gloss_id'])==trainThisClass:
                 try:
                     vidframes_data, o2tRatio= getFramesG10_sHand(vidcurr_ann, initGT=modWhat)
                     batch_vids[idx_add2batch]= vidframes_data.astype(float32)/255.0
