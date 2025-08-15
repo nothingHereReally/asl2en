@@ -58,10 +58,10 @@ cx= Reshape(
     target_shape=(10, 78, 78, 8),
     name='c0p1_reshape_a_att'
 )(cx)
-# cx= Dropout(
-#     rate=0.1,
-#     name='c0p1_do'
-# )(cx)
+cx= Dropout(
+    rate=0.1,
+    name='c0p1_do'
+)(cx)
 cx= Conv3D(
     filters=16,
     kernel_size=(1,3,3),
@@ -103,10 +103,10 @@ cx= Reshape(
     target_shape=(4, 38, 38, 16),
     name='c0p2_reshape_a_att'
 )(cx)
-# cx= Dropout(
-#     rate=0.1,
-#     name='c0p2_do'
-# )(cx)
+cx= Dropout(
+    rate=0.1,
+    name='c0p2_do'
+)(cx)
 cx= Conv3D(
     filters=32,
     kernel_size=(1,3,3),
