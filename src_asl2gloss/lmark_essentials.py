@@ -718,7 +718,9 @@ def getdata_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATC
 
 
 def getdataNotVid_10(TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
-    def getFramesG10_sHand(vid: dict, initGT: int=0, TqFrames: int=QUANTITY_FRAME) -> list:
+    def getFramesG10_sHand(vid: dict, initGT: int=0, q_train: int=0, TqFrames: int=QUANTITY_FRAME) -> list:
+        q_minTrain2addMissing_img: int= 2
+        modWhere2empty: int= choices([3,4])[0]
         if int(len(vid['images']))<1:
             raise FileExistsError(f"no files exist on {vid['video_id']}")
         imgsList: list= []
@@ -730,21 +732,37 @@ def getdataNotVid_10(TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 if vid['images'][i]['left_hand'] or vid['images'][i]['right_hand']:
                     for ii in range(t2o_ratio):
                         if (i*t2o_ratio +ii)<TqFrames:
-                            imgsList.append(array(
-                                imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))),
-                                dtype=uint8,
-                                copy=True
-                            ))
+                            if q_minTrain2addMissing_img<=q_train and \
+                                (((i*t2o_ratio+ii)%modWhere2empty)==(modWhere2empty-1) or \
+                                 ((i*t2o_ratio+ii)%modWhere2empty)==0):
+                                imgsList.append(zeros(
+                                    (IMG_SIZE, IMG_SIZE, 3),
+                                    dtype=uint8
+                                ))
+                            else:
+                                imgsList.append(array(
+                                    imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))),
+                                    dtype=uint8,
+                                    copy=True
+                                ))
             while len(imgsList)<TqFrames:
                 imgsList.append(array(imgsList[-1], dtype=uint8, copy=True))
         elif oqFrames==TqFrames:
             for i in range(TqFrames):
-                if vid['images'][i]['left_hand'] or vid['images'][i]['right_hand']:
-                    imgsList.append(array(
-                        imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))),
-                        dtype=uint8,
-                        copy=True
+                if q_minTrain2addMissing_img<=q_train and \
+                    ((i%modWhere2empty)==(modWhere2empty-1) or \
+                     (i%modWhere2empty)==0):
+                    imgsList.append(zeros(
+                        (IMG_SIZE, IMG_SIZE, 3),
+                        dtype=uint8
                     ))
+                else:
+                    if vid['images'][i]['left_hand'] or vid['images'][i]['right_hand']:
+                        imgsList.append(array(
+                            imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))),
+                            dtype=uint8,
+                            copy=True
+                        ))
             while len(imgsList)<TqFrames:
                 imgsList.append(array(imgsList[-1], dtype=uint8, copy=True))
         else: # TqFrames<oqFrames
@@ -757,12 +775,20 @@ def getdataNotVid_10(TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                         ( vid['images'][i*o2t_ratio +ii]['left_hand'] or \
                         vid['images'][i*o2t_ratio +ii]['right_hand'] ):
                         i_has_hands= ii
-                if vid['images'][i*o2t_ratio +i_has_hands]['left_hand'] or vid['images'][i*o2t_ratio +i_has_hands]['right_hand']:
-                    imgsList.append(array(
-                        imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i*o2t_ratio +i_has_hands]['file']}.png")))
+                if q_minTrain2addMissing_img<=q_train and \
+                    ((i%modWhere2empty)==(modWhere2empty-1) or \
+                     (i%modWhere2empty)==0):
+                    imgsList.append(zeros(
+                        (IMG_SIZE, IMG_SIZE, 3),
+                        dtype=uint8
                     ))
-                elif 0<len(imgsList):
-                    imgsList.append(array(imgsList[-1], dtype=uint8, copy=True))
+                else:
+                    if vid['images'][i*o2t_ratio +i_has_hands]['left_hand'] or vid['images'][i*o2t_ratio +i_has_hands]['right_hand']:
+                        imgsList.append(array(
+                            imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i*o2t_ratio +i_has_hands]['file']}.png")))
+                        ))
+                    elif 0<len(imgsList):
+                        imgsList.append(array(imgsList[-1], dtype=uint8, copy=True))
             while len(imgsList)<TqFrames:
                 imgsList.append(array(imgsList[-1], dtype=uint8, copy=True))
         return [
@@ -856,7 +882,9 @@ def getdataNotVid_10(TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
             if exists(str(pjoin(T10_DIR_IMG, vidcurr_ann['video_id']))) and \
                 int(vidcurr_ann['gloss_id'])==trainThisClass:
                 try:
-                    vidframes_data, o2tRatio= getFramesG10_sHand(vidcurr_ann, initGT=modWhat)
+                    vidframes_data, o2tRatio= getFramesG10_sHand(vidcurr_ann, initGT=modWhat, q_train=glossDist[
+                        vidcurr_ann['gloss_id']
+                    ]['quantity'])
                     batch_vids[idx_add2batch]= vidframes_data.astype(float32)/255.0
                     batch_class[idx_add2batch]= int(vidcurr_ann['gloss_id'])/1.0
                     glossDist[int(vidcurr_ann['gloss_id'])]['quantity']+= 1
