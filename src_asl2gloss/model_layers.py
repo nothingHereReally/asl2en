@@ -53,7 +53,7 @@ cx= Reshape(
 )(cx)
 cx= Attention(
     name='c0p1_att'
-)([cx,cx])
+)([cx,cx,cx])
 cx= Reshape(
     target_shape=(10, 78, 78, 8),
     name='c0p1_reshape_a_att'
@@ -98,7 +98,7 @@ cx= Reshape(
 )(cx)
 cx= Attention(
     name='c0p2_att'
-)([cx,cx])
+)([cx,cx,cx])
 cx= Reshape(
     target_shape=(4, 38, 38, 16),
     name='c0p2_reshape_a_att'
@@ -147,7 +147,7 @@ cx= Permute(
 )(cx)
 cx= Attention(
     name='c0p3_att'
-)([cx,cx])
+)([cx,cx,cx])
 x= Flatten(name='flat')(cx)
 
 
