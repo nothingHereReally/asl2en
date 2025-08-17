@@ -14,8 +14,8 @@ from .lmark_constant import EPOCHS, IMG_SIZE, PROJ_ROOT, QUANTITY_FRAME, T10_DIR
 
 
 def getFramesLessThanTarget(vid: dict, TqFrames: int=QUANTITY_FRAME) -> tuple:
-    if int(len(vid['images']))<1:
-        raise FileExistsError(f"no files exist on {vid['video_id']}")
+    if int(len(vid['images']))<1 or TqFrames<=int(len(vid['images'])):
+        raise FileExistsError(f"files exist on {vid['video_id']} quantity images is NOT Less(or zero) than {TqFrames}( TqFrames )")
     oqFrames: int= len(vid['images'])
     t2o_ratio: int= int(ceil(TqFrames/oqFrames))
     multiVids: list= [[]]
@@ -96,7 +96,7 @@ def getFramesLessThanTarget(vid: dict, TqFrames: int=QUANTITY_FRAME) -> tuple:
 
 def getEqualTarget(vid: dict, TqFrames: int=QUANTITY_FRAME) -> tuple:
     if int(len(vid['images']))!=TqFrames:
-        raise FileExistsError(f"files exist on {vid['video_id']} quantity images is NOT Equal to {TqFrames}")
+        raise FileExistsError(f"files exist on {vid['video_id']} quantity images is NOT Equal to {TqFrames}( TqFrames )")
     multiVids: list= [[]]
     for i in range(TqFrames):
         img_path: str= str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))
