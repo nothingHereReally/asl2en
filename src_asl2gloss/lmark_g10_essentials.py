@@ -13,7 +13,7 @@ from .lmark_constant import EPOCHS, IMG_SIZE, PROJ_ROOT, QUANTITY_FRAME, T10_DIR
 
 
 
-def getFramesLessThanTarget(vid: dict, TqFrames: int=QUANTITY_FRAME) -> list:
+def getFramesLessThanTarget(vid: dict, TqFrames: int=QUANTITY_FRAME) -> tuple:
     if int(len(vid['images']))<1:
         raise FileExistsError(f"no files exist on {vid['video_id']}")
     oqFrames: int= len(vid['images'])
@@ -91,7 +91,7 @@ def getFramesLessThanTarget(vid: dict, TqFrames: int=QUANTITY_FRAME) -> list:
         if i+4<TqFrames:
             multiVids[16][i +4]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
 
-    return multiVids
+    return tuple(multiVids)
 
 
 def getFramesG10_sHand(vid: dict, initGT: int=0, q_train: int=0, TqFrames: int=QUANTITY_FRAME) -> list:
