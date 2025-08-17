@@ -94,6 +94,83 @@ def getFramesLessThanTarget(vid: dict, TqFrames: int=QUANTITY_FRAME) -> tuple:
     return tuple(multiVids)
 
 
+def getEqualTarget(vid: dict, TqFrames: int=QUANTITY_FRAME) -> tuple:
+    if int(len(vid['images']))!=TqFrames:
+        raise FileExistsError(f"files exist on {vid['video_id']} quantity images is NOT Equal to {TqFrames}")
+    multiVids: list= [[]]
+    for i in range(TqFrames):
+        img_path: str= str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))
+        if exists(img_path):
+            multiVids[0].append(imread(  img_path  ).astype(uint8))
+        else:
+            raise FileExistsError(f"no file exist on {img_path}")
+    # by 2
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 1
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 2
+    beEmpty: list= [i for i in range(0, TqFrames, 2)]
+    for i in beEmpty:
+        multiVids[1][i]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+        if i+1<TqFrames:
+            multiVids[2][i+1]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+
+
+    # by 3
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 3
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 4
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 5
+
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 6
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 7
+    beEmpty= [i for i in range(0, TqFrames, 3)]
+    for i in beEmpty:
+        multiVids[3][i]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8) # 1 missing 1st mod
+        multiVids[6][i]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8) # 2 missing 1st and 2nd mod
+        if i+1<TqFrames:
+            multiVids[4][i +1]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8) # 1 missing 2nd mod
+            multiVids[6][i +1]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8) # 2 missing 1st and 2nd mod
+            multiVids[7][i +1]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8) # 2 missing 2nd and 3rd mod
+        if i+2<TqFrames:
+            multiVids[5][i +2]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8) # 1 missing 3rd mod
+            multiVids[7][i +2]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8) # 2 missing 2nd and 3rd mod
+
+
+    # by 4
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 8
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 9
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 10
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 11
+    beEmpty= [i for i in range(0, TqFrames, 4)]
+    for i in beEmpty:
+        multiVids[8][i]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+        if i+1<TqFrames:
+            multiVids[9][i +1]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+        if i+2<TqFrames:
+            multiVids[10][i +2]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+        if i+3<TqFrames:
+            multiVids[11][i +3]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+
+
+    # by 5
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 12
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 13
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 14
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 15
+    multiVids.append(array(multiVids[0], dtype=uint8, copy=True)) # index 16
+    beEmpty= [i for i in range(0, TqFrames, 5)]
+    for i in beEmpty:
+        multiVids[12][i]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+        if i+1<TqFrames:
+            multiVids[13][i +1]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+        if i+2<TqFrames:
+            multiVids[14][i +2]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+        if i+3<TqFrames:
+            multiVids[15][i +3]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+        if i+4<TqFrames:
+            multiVids[16][i +4]= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+
+    return tuple(multiVids)
+
+
 def getFramesG10_sHand(vid: dict, initGT: int=0, q_train: int=0, TqFrames: int=QUANTITY_FRAME) -> list:
     q_minTrain2addMissing_img: int= 2
     modWhere2empty: int= choices([3,4])[0]
