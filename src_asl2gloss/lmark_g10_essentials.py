@@ -94,7 +94,7 @@ def getFramesLessThanTarget(vid: dict, TqFrames: int=QUANTITY_FRAME) -> tuple:
     return tuple(multiVids)
 
 
-def getEqualTarget(vid: dict, TqFrames: int=QUANTITY_FRAME) -> tuple:
+def getFramesEqualTarget(vid: dict, TqFrames: int=QUANTITY_FRAME) -> tuple:
     if int(len(vid['images']))!=TqFrames:
         raise FileExistsError(f"files exist on {vid['video_id']} quantity images is NOT Equal to {TqFrames}( TqFrames )")
     multiVids: list= [[]]
