@@ -372,7 +372,7 @@ def getFramesGreaterThanTarget(vid: dict, TqFrames: int=QUANTITY_FRAME) -> tuple
         if init_HasHand==-1:
             init_HasHand= 0
     # to check if has atleast enough frames for 1 TqFrames
-    if TqFrames<=((int(len(vid['images']))-TqFrames) -init_HasHand):
+    if TqFrames<=(int(len(vid['images'])) -init_HasHand):
         for init_consecutive in range(init_HasHand, int(len(vid['images']))-TqFrames): # if a>b on range(a,b), then forLoopNotRun
             multiVids.append([]) # --------------- idx -8
             multiVids.append([]) # for by 2 -- idx -7
@@ -493,7 +493,7 @@ def getFramesGreaterThanTarget_lessEmpty(vid: dict, TqFrames: int=QUANTITY_FRAME
         if init_HasHand==-1:
             init_HasHand= 0
     # to check if has atleast enough frames for 1 TqFrames
-    if TqFrames<=((int(len(vid['images']))-TqFrames) -init_HasHand):
+    if TqFrames<=(int(len(vid['images'])) -init_HasHand):
         for init_consecutive in range(init_HasHand, int(len(vid['images']))-TqFrames): # if a>b on range(a,b), then forLoopNotRun
             multiVids.append([]) # --------------- idx -6
             multiVids.append([]) # for by 2 -- idx -5
