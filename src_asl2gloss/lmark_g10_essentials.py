@@ -371,70 +371,73 @@ def getFramesGreaterThanTarget(vid: dict, TqFrames: int=QUANTITY_FRAME) -> tuple
             i+= 1
         if init_HasHand==-1:
             init_HasHand= 0
-    for init_consecutive in range(init_HasHand, int(len(vid['images']))-TqFrames): # if a>b on range(a,b), then forLoopNotRun
-        multiVids.append([]) # --------------- idx -8
-        multiVids.append([]) # for by 2 -- idx -7
-        multiVids.append([]) # for by 2 ------ idx -6
-        multiVids.append([]) # for by 3 -- idx -5
-        multiVids.append([]) # for by 3 ------ idx -4
-        multiVids.append([]) # for by 3 -- idx -3
-        multiVids.append([]) # for by 3 ------ idx -2
-        multiVids.append([]) # for by 3 -- idx -1
-        for i in range(init_consecutive, init_consecutive+TqFrames):
-            img_path: str= str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))
-            if exists(img_path):
-                multiVids[-8].append(imread(  img_path  ).astype(uint8))
-                if i%2==0:
-                    multiVids[-7].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
-                    multiVids[-6].append(imread(  img_path  ).astype(uint8))
+    # to check if has atleast enough frames for 1 TqFrames
+    if TqFrames<=((int(len(vid['images']))-TqFrames) -init_HasHand):
+        for init_consecutive in range(init_HasHand, int(len(vid['images']))-TqFrames): # if a>b on range(a,b), then forLoopNotRun
+            multiVids.append([]) # --------------- idx -8
+            multiVids.append([]) # for by 2 -- idx -7
+            multiVids.append([]) # for by 2 ------ idx -6
+            multiVids.append([]) # for by 3 -- idx -5
+            multiVids.append([]) # for by 3 ------ idx -4
+            multiVids.append([]) # for by 3 -- idx -3
+            multiVids.append([]) # for by 3 ------ idx -2
+            multiVids.append([]) # for by 3 -- idx -1
+            for i in range(init_consecutive, init_consecutive+TqFrames):
+                img_path: str= str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))
+                if exists(img_path):
+                    multiVids[-8].append(imread(  img_path  ).astype(uint8))
+                    if i%2==0:
+                        multiVids[-7].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
+                        multiVids[-6].append(imread(  img_path  ).astype(uint8))
+                    else:
+                        multiVids[-7].append(imread(  img_path  ).astype(uint8))
+                        multiVids[-6].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
+
+
+                    if i%3==0:
+                        multiVids[-5].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
+                        multiVids[-4].append(imread(  img_path  ).astype(uint8))
+                        multiVids[-3].append(imread(  img_path  ).astype(uint8))
+
+                        multiVids[-2].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
+                        multiVids[-1].append(imread(  img_path  ).astype(uint8))
+                    elif i%3==1:
+                        multiVids[-5].append(imread(  img_path  ).astype(uint8))
+                        multiVids[-4].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
+                        multiVids[-3].append(imread(  img_path  ).astype(uint8))
+
+                        multiVids[-2].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
+                        multiVids[-1].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
+                    else:
+                        multiVids[-5].append(imread(  img_path  ).astype(uint8))
+                        multiVids[-4].append(imread(  img_path  ).astype(uint8))
+                        multiVids[-3].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
+
+                        multiVids[-2].append(imread(  img_path  ).astype(uint8))
+                        multiVids[-1].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
                 else:
-                    multiVids[-7].append(imread(  img_path  ).astype(uint8))
-                    multiVids[-6].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
+                    raise FileExistsError(f"no file exist on {img_path}")
 
 
-                if i%3==0:
-                    multiVids[-5].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
-                    multiVids[-4].append(imread(  img_path  ).astype(uint8))
-                    multiVids[-3].append(imread(  img_path  ).astype(uint8))
-
+        # use floor in a different way, a different way of evenly splitting to TqFrames
+        # be included on checking if has atleast enough frames for 1 TqFrames
+        multiVids.append([])
+        multiVids.append([])
+        multiVids.append([])
+        o2t_rFloat: float= (len(vid['images'])-init_HasHand)/TqFrames
+        for i in range(TqFrames):
+            idx_onVidImg: int= int(i*o2t_rFloat +init_HasHand)
+            img_path: str= str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][  idx_onVidImg  ]['file']}.png"))
+            if exists(img_path):
+                multiVids[-3].append(imread(  img_path  ).astype(uint8))
+                if idx_onVidImg%2==0:
                     multiVids[-2].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
                     multiVids[-1].append(imread(  img_path  ).astype(uint8))
-                elif i%3==1:
-                    multiVids[-5].append(imread(  img_path  ).astype(uint8))
-                    multiVids[-4].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
-                    multiVids[-3].append(imread(  img_path  ).astype(uint8))
-
-                    multiVids[-2].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
-                    multiVids[-1].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
                 else:
-                    multiVids[-5].append(imread(  img_path  ).astype(uint8))
-                    multiVids[-4].append(imread(  img_path  ).astype(uint8))
-                    multiVids[-3].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
-
                     multiVids[-2].append(imread(  img_path  ).astype(uint8))
                     multiVids[-1].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
             else:
                 raise FileExistsError(f"no file exist on {img_path}")
-
-
-    # use floor in a different way, a different way of evenly splitting to TqFrames
-    multiVids.append([])
-    multiVids.append([])
-    multiVids.append([])
-    o2t_rFloat: float= (len(vid['images'])-init_HasHand)/TqFrames
-    for i in range(TqFrames):
-        idx_onVidImg: int= int(i*o2t_rFloat +init_HasHand)
-        img_path: str= str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][  idx_onVidImg  ]['file']}.png"))
-        if exists(img_path):
-            multiVids[-3].append(imread(  img_path  ).astype(uint8))
-            if idx_onVidImg%2==0:
-                multiVids[-2].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
-                multiVids[-1].append(imread(  img_path  ).astype(uint8))
-            else:
-                multiVids[-2].append(imread(  img_path  ).astype(uint8))
-                multiVids[-1].append(zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8))
-        else:
-            raise FileExistsError(f"no file exist on {img_path}")
 
     return tuple(multiVids)
 
