@@ -8,7 +8,7 @@ d_lr: ReduceLROnPlateau= ReduceLROnPlateau(
     patience=1,
     verbose=1,
     mode='max',
-    min_delta=0.001,
+    min_delta=0.01,
     cooldown=1,
     min_lr=1.0e-8
 )
