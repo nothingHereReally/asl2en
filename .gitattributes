@@ -14,3 +14,5 @@ src_multigloss2sentence/model_sent/model.safetensors filter=lfs diff=lfs merge=l
 model/aslvid2gloss_v14.keras filter=lfs diff=lfs merge=lfs -text
 model/tfboard_logs_v15 filter=lfs diff=lfs merge=lfs -text
 model/aslvid2gloss_v15.keras filter=lfs diff=lfs merge=lfs -text
+model/aslvid2gloss_v16.keras filter=lfs diff=lfs merge=lfs -text
+model/aslvid2gloss_v16.1.keras filter=lfs diff=lfs merge=lfs -text
