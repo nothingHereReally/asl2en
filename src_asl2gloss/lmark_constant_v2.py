@@ -1,3 +1,4 @@
+from os.path import join as pjoin
 from math import ceil
 from json import load as jload
 
@@ -7,11 +8,11 @@ PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
 
 EPOCHS: int= 12
 # TRAIN_BATCH: int= 32
-TRAIN_BATCH: int= 2
+TRAIN_BATCH: int= 4
 # QUANTITY_FRAME: int= 48
 QUANTITY_FRAME: int= 22
 # IMG_SIZE: int= 480
-IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
+# IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
 # MIN_FRAMES_HAS_HANDS, meaning on a single video file
 # where only QUANTITY_FRAME img will be included, then
 # mandatory that atleast MIN_FRAMES_HAS_HANDS out of
@@ -19,18 +20,12 @@ IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
 # or right hand )
 # ie. current is at least 12 or 20 has hand/s 20*0.6= 12
 MIN_FRAMES_HAS_HANDS: int= int(QUANTITY_FRAME*0.7)
-WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
 
 
 
 
 tmp_ready: dict= {}
-with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.ready.json", 'r') as f:
-    tmp_ready= jload(f)
-wlasl_READY: dict= tmp_ready.copy()
-del tmp_ready
-tmp_ready: dict= {}
-with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.g10_skeleton_images.json", 'r') as f:
+with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.landmark.numpy.json", 'r') as f:
     tmp_ready= jload(f)
 wlasl_READY_10: dict= tmp_ready.copy()
 del tmp_ready
@@ -38,13 +33,12 @@ T10_GLOSS: int= int(len(wlasl_READY_10['label_id2gloss']))
 T10_TRAIN: int= int(len(wlasl_READY_10['train']))
 T10_VAL: int= int(len(wlasl_READY_10['val']))
 T10_TEST: int= int(len(wlasl_READY_10['test']))
-T10_DIR_IMG: str= f"{PROJ_ROOT}dataset/wlasl_dataset/skeleton_images/"
-TRAIN_STEPS: int= int(ceil((T10_TRAIN*7)/TRAIN_BATCH))
+LM_Q_FACE: int= 468
+LM_Q_POSE: int= 8
+LM_Q_HAND: int= 21
+TRAIN_STEPS: int= int(ceil(T10_TRAIN/TRAIN_BATCH))
 VAL_STEPS: int= int(ceil(T10_VAL/TRAIN_BATCH))
-
-TOTAL_GLOSS_UNIQ: int= int(len(wlasl_READY['label_id2gloss']))
-TOTAL_TRAIN_FILE: int= int(len(wlasl_READY['train']))
-TOTAL_VAL_FILE: int= int(len(wlasl_READY['val']))
+LM_NPZ_DIR: str= str(pjoin(PROJ_ROOT, "dataset", "wlasl_dataset", "landmark_numpy"))
 
 
 FACE_CONNECTIONS: tuple= (
