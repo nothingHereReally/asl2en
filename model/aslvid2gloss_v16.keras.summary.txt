@@ -1,0 +1,287 @@
+model file ./aslvid2gloss_v15.keras
+trained on 1st 10 gloss: book, drink, computer, before, chair, go, clothes, who, candy, cousin
+best model yet( compare to model v15, v14, v12 and v10 ), see testing result below( ie. about 64% accurate )
+    result:
+        Model: "functional"
+        ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+        ┃ Layer (type)                  ┃ Output Shape              ┃         Param # ┃ Connected to               ┃
+        ┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+        │ batch_vid (InputLayer)        │ (None, 22, 518, 2)        │               0 │ -                          │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann (TimeDistributed)       │ (None, 22, 518, 1)        │               3 │ batch_vid[0][0]            │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann (TimeDistributed)       │ (None, 22, 518, 1)        │               3 │ batch_vid[0][0]            │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ k_ann (TimeDistributed)       │ (None, 22, 518, 1)        │               3 │ batch_vid[0][0]            │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ reshape (Reshape)             │ (None, 22, 518)           │               0 │ q_ann[0][0]                │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ reshape_1 (Reshape)           │ (None, 22, 518)           │               0 │ v_ann[0][0]                │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ reshape_2 (Reshape)           │ (None, 22, 518)           │               0 │ k_ann[0][0]                │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_p1_lstm (LSTM)              │ (None, 22, 32)            │          70,528 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_p1_lstm (LSTM)              │ (None, 22, 32)            │          70,528 │ reshape_1[0][0]            │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ k_p1_lstm (LSTM)              │ (None, 22, 32)            │          70,528 │ reshape_2[0][0]            │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_p2_lstm (LSTM)              │ (None, 22, 64)            │          24,832 │ q_p1_lstm[0][0]            │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_p2_lstm (LSTM)              │ (None, 22, 64)            │          24,832 │ v_p1_lstm[0][0]            │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ k_p2_lstm (LSTM)              │ (None, 22, 64)            │          24,832 │ k_p1_lstm[0][0]            │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ attention (Attention)         │ (None, 22, 64)            │               0 │ q_p2_lstm[0][0],           │
+        │                               │                           │                 │ v_p2_lstm[0][0],           │
+        │                               │                           │                 │ k_p2_lstm[0][0]            │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ lstm (LSTM)                   │ [(None, 64), (None, 64),  │          33,024 │ attention[0][0]            │
+        │                               │ (None, 64)]               │                 │                            │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ dense_3 (Dense)               │ (None, 32)                │           2,080 │ lstm[0][2]                 │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ batch_class (Dense)           │ (None, 10)                │             330 │ dense_3[0][0]              │
+        └───────────────────────────────┴───────────────────────────┴─────────────────┴────────────────────────────┘
+        Total params: 321,523 (1.23 MB)
+        Trainable params: 321,523 (1.23 MB)
+        Non-trainable params: 0 (0.00 B)
+    ____1st training( "../model/aslvid2gloss_v16.keras" )
+        Epoch 1/12
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 3550s 1s/step - accuracy: 0.4296 - loss: 1.5714 - val_accuracy: 0.4509 - val_loss: 1.6259 - learning_rate: 1.0000e-04
+        Epoch 2/12
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 1915s 995ms/step - accuracy: 0.6675 - loss: 0.9093 - val_accuracy: 0.5152 - val_loss: 1.6274 - learning_rate: 1.0000e-04
+        Epoch 3/12
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 1916s 996ms/step - accuracy: 0.7557 - loss: 0.6764 - val_accuracy: 0.6139 - val_loss: 1.4487 - learning_rate: 1.0000e-04
+        Epoch 4/12
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 1922s 999ms/step - accuracy: 0.7982 - loss: 0.5559 - val_accuracy: 0.6273 - val_loss: 1.5183 - learning_rate: 1.0000e-04
+        Epoch 5/12
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 1933s 1s/step - accuracy: 0.8216 - loss: 0.4887 - val_accuracy: 0.6776 - val_loss: 1.4643 - learning_rate: 1.0000e-04
+        Epoch 5: early stopping
+    ____2nd training( "../model/aslvid2gloss_v16.1.keras" )
+        Epoch 1/12
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 3569s 1s/step - accuracy: 0.8460 - loss: 0.4180 - val_accuracy: 0.6659 - val_loss: 1.3599 - learning_rate: 1.0000e-04
+        Epoch 2/12
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 1914s 995ms/step - accuracy: 0.8660 - loss: 0.3642 - val_accuracy: 0.7155 - val_loss: 1.3551 - learning_rate: 1.0000e-04
+        Epoch 3/12
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 0s 904ms/step - accuracy: 0.8793 - loss: 0.3250
+        Epoch 3: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 1915s 996ms/step - accuracy: 0.8803 - loss: 0.3282 - val_accuracy: 0.7068 - val_loss: 1.3787 - learning_rate: 1.0000e-04
+        Epoch 4/12
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 0s 907ms/step - accuracy: 0.9222 - loss: 0.2232
+        Epoch 4: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 1923s 1000ms/step - accuracy: 0.9249 - loss: 0.2173 - val_accuracy: 0.7109 - val_loss: 1.4137 - learning_rate: 1.0000e-05
+        Epoch 4: early stopping
+    and on testing:
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 435ms/step
+        correct 9( true is 9 ) ---- cousin 0.7634570002555847% cousin
+        correct 9( true is 9 ) ---- cousin 0.7546576857566833% cousin
+        correct 9( true is 9 ) ---- cousin 0.7347153425216675% cousin
+        correct 9( true is 9 ) ---- cousin 0.7022055387496948% cousin
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 424ms/step
+        correct 9( true is 9 ) ---- cousin 0.6452323198318481% cousin
+        correct 9( true is 9 ) ---- cousin 0.5813724398612976% cousin
+        correct 9( true is 9 ) ---- cousin 0.48116210103034973% cousin
+        correct 9( true is 9 ) ---- cousin 0.31175148487091064% cousin
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 445ms/step
+        correct 9( true is 9 ) ---- cousin 0.8236807584762573% cousin
+        correct 0( true is 0 ) ---- book 0.9999244213104248% book
+        correct 0( true is 0 ) ---- book 0.9999375343322754% book
+        correct 0( true is 0 ) ---- book 0.9999325275421143% book
+        correct is 857/1329 = 64.48457486832204%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+batch train size( TRAIN_BATCH ): 4
+T10_GLOSS: 10
+
+input size: (22, 518, 2) with getdata() already in [0.0, 1.0] float32
+optimizer: Adam(learning_rate=0.0001),
+loss: sparse_categorical_crossentropy,
+metrics: ['accuracy']
+epoch: 12
+T10_GLOSS: int= int(len(wlasl_READY_10['label_id2gloss']))
+T10_TRAIN: int= int(len(wlasl_READY_10['train']))
+T10_VAL: int= int(len(wlasl_READY_10['val']))
+T10_TEST: int= int(len(wlasl_READY_10['test']))
+LM_Q_FACE: int= 468
+LM_Q_POSE: int= 8
+LM_Q_HAND: int= 21
+TRAIN_STEPS: int= int(ceil(T10_TRAIN/TRAIN_BATCH))
+VAL_STEPS: int= int(ceil(T10_VAL/TRAIN_BATCH))
+LM_NPZ_DIR: str= str(pjoin(PROJ_ROOT, "dataset", "wlasl_dataset", "landmark_numpy"))
+
+
+
+
+
+
+
+
+data_in= Input(
+    shape=(QUANTITY_FRAME, LM_Q_FACE+LM_Q_POSE+(LM_Q_HAND*2), 2),
+    dtype=float32,
+    name='batch_vid',
+)
+qatt_x= TimeDistributed(TimeDistributed(Dense(
+    units=1
+)),
+    name='q_ann'
+)(data_in)
+qatt_x= Reshape(
+    target_shape=(QUANTITY_FRAME, -1)
+)(qatt_x)
+qatt_x= LSTM(
+    units=32,
+    return_sequences=True,
+    name='q_p1_lstm'
+)(qatt_x)
+qatt_x= LSTM(
+    units=64,
+    return_sequences=True,
+    name='q_p2_lstm'
+)(qatt_x)
+
+
+vatt_x= TimeDistributed(TimeDistributed(Dense(
+    units=1
+)),
+    name='v_ann'
+)(data_in)
+vatt_x= Reshape(
+    target_shape=(QUANTITY_FRAME, -1)
+)(vatt_x)
+vatt_x= LSTM(
+    units=32,
+    return_sequences=True,
+    name='v_p1_lstm'
+)(vatt_x)
+vatt_x= LSTM(
+    units=64,
+    return_sequences=True,
+    name='v_p2_lstm'
+)(vatt_x)
+
+
+katt_x= TimeDistributed(TimeDistributed(Dense(
+    units=1
+)),
+    name='k_ann'
+)(data_in)
+katt_x= Reshape(
+    target_shape=(QUANTITY_FRAME, -1)
+)(katt_x)
+katt_x= LSTM(
+    units=32,
+    return_sequences=True,
+    name='k_p1_lstm'
+)(katt_x)
+katt_x= LSTM(
+    units=64,
+    return_sequences=True,
+    name='k_p2_lstm'
+)(katt_x)
+
+
+x= Attention()([qatt_x, vatt_x, katt_x])
+_, _, x= LSTM(
+    units=64,
+    return_state=True
+)(x)
+x= Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+)(x)
+
+
+data_out = Dense(T10_GLOSS, activation=softmax, name='batch_class')(x)
+
+
+
+
+
+
+
+
+testing ./aslvid2gloss_v16.keras: src_asl2gloss/checks/test_g10_vid2gloss_model_v2.py
+_______________________________________________________
+from math import ceil
+from os.path import exists, join as pjoin
+from typing import Any, Generator
+from keras.src.saving import load_model
+from numpy import argmax, float32, load, ndarray, uint16, zeros
+
+from ..lmark_constant_v2 import LM_NPZ_DIR, LM_Q_FACE, LM_Q_HAND, LM_Q_POSE, QUANTITY_FRAME, T10_TEST, wlasl_READY_10, PROJ_ROOT
+
+
+def getdata(TrainVal: str= 'test', batch: int=4) -> Generator[tuple, None, None]:
+    # glossDist= {
+    #     0: {
+    #         'gloss_id': 0,
+    #         'quantity': int(on this gloss id( ie. gloss_id=0 is book ) how many training was done),
+    #         'video_id': list(all video_id that training was done, later be processed as unique),
+    #         'vid_q_uniq': int(quantity of video_id that are unique, ie. above right after processed unique)
+    #       },
+    #     1: {...},
+    #     2: {...},
+    #     ...
+    #     9: {...},
+    #     'split': str(  'train'|'val'  )
+    #     'split_size': int(quantity of video_id on 'train'|'val' ie. len(wlasl_READY_10[TrainVal]))
+    # }
+    # print(len(wlasl_READY_10['label_id2gloss'])) # correct, it exist
+    init_IDXbatch: int= 0
+    while True:
+        batch_vids: ndarray= zeros(
+            (batch, QUANTITY_FRAME, LM_Q_FACE+LM_Q_POSE+(LM_Q_HAND*2), 2),
+            dtype=float32)
+        batch_class: ndarray= zeros((batch), dtype=uint16)
+        for i in range(batch):
+            idx_USE: int= (init_IDXbatch +i) if (init_IDXbatch +i)<len(wlasl_READY_10[TrainVal]) else (init_IDXbatch +i-len(wlasl_READY_10[TrainVal]))
+            vid_lmarkNPZ_file: str= str(pjoin(LM_NPZ_DIR, f"{wlasl_READY_10[TrainVal][idx_USE]['file']}.npy"))
+            if exists(vid_lmarkNPZ_file):
+                with open(vid_lmarkNPZ_file, 'rb') as f:
+                    gloss_id: int= int(wlasl_READY_10[TrainVal][idx_USE]['gloss_id'])
+                    batch_vids[i]= load(f)
+                    batch_class[i]= gloss_id
+            else:
+                raise FileNotFoundError(f"file {vid_lmarkNPZ_file} does not exist")
+        init_IDXbatch+= batch
+
+
+        if len(wlasl_READY_10[TrainVal])<=init_IDXbatch:
+            init_IDXbatch-= int(len(wlasl_READY_10[TrainVal]))
+        yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
+    
+
+if __name__=="__main__":
+    modelfile: str= f"{PROJ_ROOT}model/aslvid2gloss_v16.keras"
+    batch_size: int= 4
+    gdata: Generator= getdata(TrainVal='test', batch=batch_size)
+    model: Any= load_model(modelfile)
+    count_correct: int= 0
+    for i in range(ceil(T10_TEST/batch_size)):
+        batch_vid, batch_class= next(gdata)
+        preds= model.predict(batch_vid)
+        for pred, shouldBe in zip(preds, batch_class):
+            pred_y: int= int(argmax(pred, axis=-1))
+            if pred_y==shouldBe:
+                print(f"correct {pred_y}( true is {shouldBe} ) ---- {wlasl_READY_10['label_id2gloss'][pred_y]} {pred[pred_y]}% {wlasl_READY_10['label_id2gloss'][shouldBe]}")
+                count_correct+= 1
+            else:
+                print(f"INcorrect {pred_y}( true is {shouldBe} ) ---- {wlasl_READY_10['label_id2gloss'][pred_y]} {pred[pred_y]}% {wlasl_READY_10['label_id2gloss'][shouldBe]}")
+    print(f"correct is {count_correct}/{T10_TEST} = {count_correct/T10_TEST*100}%")
+
