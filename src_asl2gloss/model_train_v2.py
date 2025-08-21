@@ -26,7 +26,7 @@ if __name__=="__main__":
         outputs=data_out
     )
     model.compile(
-        optimizer=Adam(learning_rate=0.0001),
+        optimizer=Adam(learning_rate=0.001),
         loss=sparse_categorical_crossentropy,
         metrics=['accuracy']
     )
