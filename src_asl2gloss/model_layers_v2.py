@@ -18,7 +18,7 @@ x= Reshape(
     name='reshape'
 )(data_in)
 x= LSTM(
-    units=256,
+    units=512,
     return_sequences=True,
     dtype=float64,
     name='lstm'
@@ -30,13 +30,19 @@ x= LSTM(
     name='lstm1'
 )(x)
 x= LSTM(
-    units=128,
+    units=256,
+    return_sequences=True,
     dtype=float64,
-    name='lstm_out'
+    name='lstm2'
 )(x)
 x= Dropout(
     rate=0.1,
     dtype=float64,
+)(x)
+x= LSTM(
+    units=128,
+    dtype=float64,
+    name='lstm_out'
 )(x)
 
 
