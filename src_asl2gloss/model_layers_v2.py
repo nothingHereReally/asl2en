@@ -1,5 +1,5 @@
 from keras.src.activations.activations import ReLU
-from keras.src.layers import LSTM, Conv1D, Dropout, MaxPooling2D, Reshape, Dense, Input, TimeDistributed
+from keras.src.layers import LSTM, Dropout, Reshape, Dense, Input
 from keras.src.activations import softmax
 from numpy import float32, float64
 
@@ -24,13 +24,13 @@ x= LSTM(
     name='lstm'
 )(x)
 x= LSTM(
-    units=256,
+    units=512,
     return_sequences=True,
     dtype=float64,
     name='lstm1'
 )(x)
 x= LSTM(
-    units=256,
+    units=512,
     return_sequences=True,
     dtype=float64,
     name='lstm2'
@@ -40,7 +40,7 @@ x= Dropout(
     dtype=float64,
 )(x)
 x= LSTM(
-    units=128,
+    units=512,
     dtype=float64,
     name='lstm_out'
 )(x)
