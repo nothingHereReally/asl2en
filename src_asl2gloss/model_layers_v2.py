@@ -12,6 +12,7 @@ data_in= Input(
     dtype=float32,
     name='batch_vid',
 )
+# not good only about 40% accurate
 x= TimeDistributed(Conv1D(
     filters=8,
     kernel_size=3,
