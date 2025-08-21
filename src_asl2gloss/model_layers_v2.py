@@ -1,5 +1,5 @@
 from keras.src.activations.activations import ReLU
-from keras.src.layers import LSTM, Reshape, Attention, Dense, Input, TimeDistributed
+from keras.src.layers import LSTM, Conv1D, MaxPooling2D, Reshape, Dense, Input, TimeDistributed
 from keras.src.activations import softmax
 from numpy import float32
 
@@ -12,92 +12,61 @@ data_in= Input(
     dtype=float32,
     name='batch_vid',
 )
-qatt_x= TimeDistributed(TimeDistributed(Dense(
-    units=1
-)),
-    name='q_ann'
+x= TimeDistributed(Conv1D(
+    filters=8,
+    kernel_size=3,
+    strides=1,
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='cnn'
 )(data_in)
-qatt_x= Reshape(
-    target_shape=(QUANTITY_FRAME, -1)
-)(qatt_x)
-qatt_x= LSTM(
-    units=32,
-    return_sequences=True,
-    name='q_p1_lstm'
-)(qatt_x)
-qatt_x= LSTM(
-    units=64,
-    return_sequences=True,
-    name='q_p2_lstm'
-)(qatt_x)
-
-
-
-
-
-
-
-
-vatt_x= TimeDistributed(TimeDistributed(Dense(
-    units=1
-)),
-    name='v_ann'
-)(data_in)
-vatt_x= Reshape(
-    target_shape=(QUANTITY_FRAME, -1)
-)(vatt_x)
-vatt_x= LSTM(
-    units=32,
-    return_sequences=True,
-    name='v_p1_lstm'
-)(vatt_x)
-vatt_x= LSTM(
-    units=64,
-    return_sequences=True,
-    name='v_p2_lstm'
-)(vatt_x)
-
-
-
-
-
-
-
-
-katt_x= TimeDistributed(TimeDistributed(Dense(
-    units=1
-)),
-    name='k_ann'
-)(data_in)
-katt_x= Reshape(
-    target_shape=(QUANTITY_FRAME, -1)
-)(katt_x)
-katt_x= LSTM(
-    units=32,
-    return_sequences=True,
-    name='k_p1_lstm'
-)(katt_x)
-katt_x= LSTM(
-    units=64,
-    return_sequences=True,
-    name='k_p2_lstm'
-)(katt_x)
-
-
-
-
-
-
-
-
-x= Attention()([qatt_x, vatt_x, katt_x])
-_, _, x= LSTM(
-    units=64,
-    return_state=True
+x= MaxPooling2D(
+    pool_size=(1,2),
+    strides=(1,2),
+    padding='valid',
+    data_format='channels_last',
+    name='mp'
 )(x)
+x= TimeDistributed(Conv1D(
+    filters=16,
+    kernel_size=3,
+    strides=1,
+    padding='valid',
+    data_format='channels_last',
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='cnn1'
+)(data_in)
+x= MaxPooling2D(
+    pool_size=(1,2),
+    strides=(1,2),
+    padding='valid',
+    data_format='channels_last',
+    name='mp1'
+)(x)
+x= TimeDistributed(LSTM(
+    units=128,
+    return_sequences=True
+),
+    name='lstm'
+)(x)
+x= TimeDistributed(LSTM(
+    units=128
+),
+    name='lstm1'
+)(x)
+x= LSTM(
+    units=64,
+    name='lstm2'
+)(x)
+
+
 x= Dense(
     units=32,
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='ann'
 )(x)
 
 
