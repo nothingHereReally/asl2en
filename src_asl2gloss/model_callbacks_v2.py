@@ -1,5 +1,5 @@
 from keras.src.callbacks import ReduceLROnPlateau, EarlyStopping, TensorBoard
-from .lmark_constant import PROJ_ROOT
+from .lmark_constant_v2 import PROJ_ROOT
 
 
 d_lr: ReduceLROnPlateau= ReduceLROnPlateau(
