@@ -48,7 +48,7 @@ def getdata(TrainVal: str= 'test', batch: int=4) -> Generator[tuple, None, None]
     
 
 if __name__=="__main__":
-    modelfile: str= f"{PROJ_ROOT}model/aslvid2gloss_v16.keras"
+    modelfile: str= f"{PROJ_ROOT}model/aslvid2gloss_v17.keras"
     batch_size: int= 4
     gdata: Generator= getdata(TrainVal='test', batch=batch_size)
     model: Any= load_model(modelfile)
