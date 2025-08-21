@@ -1,5 +1,5 @@
 from keras.src.activations.activations import ReLU
-from keras.src.layers import LSTM, Conv1D, MaxPooling2D, Reshape, Dense, Input, TimeDistributed
+from keras.src.layers import LSTM, Conv1D, Dropout, MaxPooling2D, Reshape, Dense, Input, TimeDistributed
 from keras.src.activations import softmax
 from numpy import float32
 
@@ -38,7 +38,7 @@ x= TimeDistributed(Conv1D(
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
 ),
     name='cnn1'
-)(data_in)
+)(x)
 x= MaxPooling2D(
     pool_size=(1,2),
     strides=(1,2),
@@ -60,6 +60,9 @@ x= TimeDistributed(LSTM(
 x= LSTM(
     units=64,
     name='lstm2'
+)(x)
+x= Dropout(
+    rate=0.1
 )(x)
 
 
