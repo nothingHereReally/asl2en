@@ -17,3 +17,10 @@ model/aslvid2gloss_v15.keras filter=lfs diff=lfs merge=lfs -text
 model/aslvid2gloss_v16.keras filter=lfs diff=lfs merge=lfs -text
 model/aslvid2gloss_v16.1.keras filter=lfs diff=lfs merge=lfs -text
 model/aslvid2gloss_v17.keras filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs.v16.1/validation/events.out.tfevents.1755670291.dvxvb.1500600.1.v2 filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs.v16/train/events.out.tfevents.1755655502.dvxvb.1218145.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs.v16/validation/events.out.tfevents.1755658681.dvxvb.1218145.1.v2 filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs.v17/train/events.out.tfevents.1755872420.dvxvb.697235.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs.v17/validation/events.out.tfevents.1755872552.dvxvb.697235.1.v2 filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs.v16.1/train/events.out.tfevents.1755667061.dvxvb.1499410.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs.v16.1/train/events.out.tfevents.1755667103.dvxvb.1500600.0.v2 filter=lfs diff=lfs merge=lfs -text
