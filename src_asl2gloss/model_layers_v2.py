@@ -1,5 +1,5 @@
 from keras.src.activations.activations import ReLU
-from keras.src.layers import LSTM, Dropout, Reshape, Dense, Input
+from keras.src.layers import LSTM, Reshape, Dense, Input
 from keras.src.activations import softmax
 from numpy import float32, float64
 
@@ -29,34 +29,34 @@ x= LSTM(
     dtype=float64,
     name='lstm_1b'
 )(x)
-x= LSTM(
-    units=256,
-    return_sequences=True,
-    dtype=float64,
-    name='lstm2a'
-)(x)
-x= LSTM(
-    units=256,
-    return_sequences=True,
-    dtype=float64,
-    name='lstm2b'
-)(x)
-x= Dropout(
-    rate=0.1,
-    dtype=float64,
-)(x)
-x= LSTM(
-    units=128,
-    return_sequences=True,
-    dtype=float64,
-    name='lstm3a'
-)(x)
-x= LSTM(
-    units=128,
-    return_sequences=True,
-    dtype=float64,
-    name='lstm3b'
-)(x)
+# x= LSTM(
+#     units=256,
+#     return_sequences=True,
+#     dtype=float64,
+#     name='lstm2a'
+# )(x)
+# x= LSTM(
+#     units=256,
+#     return_sequences=True,
+#     dtype=float64,
+#     name='lstm2b'
+# )(x)
+# x= Dropout(
+#     rate=0.1,
+#     dtype=float64,
+# )(x)
+# x= LSTM(
+#     units=128,
+#     return_sequences=True,
+#     dtype=float64,
+#     name='lstm3a'
+# )(x)
+# x= LSTM(
+#     units=128,
+#     return_sequences=True,
+#     dtype=float64,
+#     name='lstm3b'
+# )(x)
 x= LSTM(
     units=64,
     return_sequences=True,
