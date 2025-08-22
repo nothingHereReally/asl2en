@@ -18,45 +18,69 @@ x= Reshape(
     name='reshape'
 )(data_in)
 x= LSTM(
-    units=512,
+    units=LM_Q_FACE+LM_Q_POSE+(LM_Q_HAND*2),
     return_sequences=True,
     dtype=float64,
-    name='lstm'
+    name='lstm_1a'
 )(x)
 x= LSTM(
-    units=512,
+    units=LM_Q_FACE+LM_Q_POSE+(LM_Q_HAND*2),
     return_sequences=True,
     dtype=float64,
-    name='lstm1'
+    name='lstm_1b'
 )(x)
 x= LSTM(
-    units=512,
+    units=256,
     return_sequences=True,
     dtype=float64,
-    name='lstm2'
+    name='lstm2a'
+)(x)
+x= LSTM(
+    units=256,
+    return_sequences=True,
+    dtype=float64,
+    name='lstm2b'
 )(x)
 x= Dropout(
     rate=0.1,
     dtype=float64,
 )(x)
 x= LSTM(
-    units=512,
+    units=128,
+    return_sequences=True,
+    dtype=float64,
+    name='lstm3a'
+)(x)
+x= LSTM(
+    units=128,
+    return_sequences=True,
+    dtype=float64,
+    name='lstm3b'
+)(x)
+x= LSTM(
+    units=64,
+    return_sequences=True,
+    dtype=float64,
+    name='lstm4a'
+)(x)
+x= LSTM(
+    units=64,
+    return_sequences=True,
+    dtype=float64,
+    name='lstm4b'
+)(x)
+x= LSTM(
+    units=64,
     dtype=float64,
     name='lstm_out'
 )(x)
 
 
 x= Dense(
-    units=128,
-    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-    name='ann'
-)(x)
-x= Dense(
     units=64,
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
-    name='ann1'
+    name='ann'
 )(x)
 
 
