@@ -1,0 +1,710 @@
+model file ./aslvid2gloss_v15.keras
+trained on 1st 10 gloss: book, drink, computer, before, chair, go, clothes, who, candy, cousin
+best model yet( compare to model v16, v15, v14, v12 and v10 ), see testing result below( ie. about 64% accurate )
+due to most stable on accuracy for classification and the fastest to run( compared to v16, v15, ... )
+    result:
+        Model: "functional"
+        ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+        ┃ Layer (type)                  ┃ Output Shape              ┃         Param # ┃ Connected to               ┃
+        ┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+        │ batch_vid (InputLayer)        │ (None, 22, 518, 2)        │               0 │ -                          │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ reshape (Reshape)             │ (None, 22, 1036)          │               0 │ batch_vid[0][0]            │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h1_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h1_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h2_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h2_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h3_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h3_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h4_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h4_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h5_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h5_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h6_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h6_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h7_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h7_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h8_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h8_1 (TimeDistributed)  │ (None, 22, 128)           │         132,736 │ reshape[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h1_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ q_ann_h1_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h1_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ v_ann_h1_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h2_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ q_ann_h2_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h2_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ v_ann_h2_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h3_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ q_ann_h3_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h3_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ v_ann_h3_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h4_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ q_ann_h4_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h4_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ v_ann_h4_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h5_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ q_ann_h5_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h5_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ v_ann_h5_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h6_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ q_ann_h6_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h6_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ v_ann_h6_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h7_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ q_ann_h7_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h7_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ v_ann_h7_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h8_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ q_ann_h8_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h8_3 (TimeDistributed)  │ (None, 22, 32)            │           4,128 │ v_ann_h8_1[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h1_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ q_ann_h1_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h1_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ v_ann_h1_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h2_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ q_ann_h2_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h2_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ v_ann_h2_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h3_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ q_ann_h3_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h3_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ v_ann_h3_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h4_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ q_ann_h4_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h4_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ v_ann_h4_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h5_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ q_ann_h5_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h5_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ v_ann_h5_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h6_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ q_ann_h6_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h6_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ v_ann_h6_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h7_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ q_ann_h7_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h7_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ v_ann_h7_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ q_ann_h8_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ q_ann_h8_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ v_ann_h8_4 (TimeDistributed)  │ (None, 22, 8)             │             264 │ v_ann_h8_3[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ att_h1 (Attention)            │ (None, 22, 8)             │               1 │ q_ann_h1_4[0][0],          │
+        │                               │                           │                 │ v_ann_h1_4[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ att_h2 (Attention)            │ (None, 22, 8)             │               1 │ q_ann_h2_4[0][0],          │
+        │                               │                           │                 │ v_ann_h2_4[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ att_h3 (Attention)            │ (None, 22, 8)             │               1 │ q_ann_h3_4[0][0],          │
+        │                               │                           │                 │ v_ann_h3_4[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ att_h4 (Attention)            │ (None, 22, 8)             │               1 │ q_ann_h4_4[0][0],          │
+        │                               │                           │                 │ v_ann_h4_4[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ att_h5 (Attention)            │ (None, 22, 8)             │               1 │ q_ann_h5_4[0][0],          │
+        │                               │                           │                 │ v_ann_h5_4[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ att_h6 (Attention)            │ (None, 22, 8)             │               1 │ q_ann_h6_4[0][0],          │
+        │                               │                           │                 │ v_ann_h6_4[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ att_h7 (Attention)            │ (None, 22, 8)             │               1 │ q_ann_h7_4[0][0],          │
+        │                               │                           │                 │ v_ann_h7_4[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ att_h8 (Attention)            │ (None, 22, 8)             │               1 │ q_ann_h8_4[0][0],          │
+        │                               │                           │                 │ v_ann_h8_4[0][0]           │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ add_h1 (Add)                  │ (None, 22, 8)             │               0 │ q_ann_h1_4[0][0],          │
+        │                               │                           │                 │ v_ann_h1_4[0][0],          │
+        │                               │                           │                 │ att_h1[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ add_h2 (Add)                  │ (None, 22, 8)             │               0 │ q_ann_h2_4[0][0],          │
+        │                               │                           │                 │ v_ann_h2_4[0][0],          │
+        │                               │                           │                 │ att_h2[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ add_h3 (Add)                  │ (None, 22, 8)             │               0 │ q_ann_h3_4[0][0],          │
+        │                               │                           │                 │ v_ann_h3_4[0][0],          │
+        │                               │                           │                 │ att_h3[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ add_h4 (Add)                  │ (None, 22, 8)             │               0 │ q_ann_h4_4[0][0],          │
+        │                               │                           │                 │ v_ann_h4_4[0][0],          │
+        │                               │                           │                 │ att_h4[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ add_h5 (Add)                  │ (None, 22, 8)             │               0 │ q_ann_h5_4[0][0],          │
+        │                               │                           │                 │ v_ann_h5_4[0][0],          │
+        │                               │                           │                 │ att_h5[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ add_h6 (Add)                  │ (None, 22, 8)             │               0 │ q_ann_h6_4[0][0],          │
+        │                               │                           │                 │ v_ann_h6_4[0][0],          │
+        │                               │                           │                 │ att_h6[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ add_h7 (Add)                  │ (None, 22, 8)             │               0 │ q_ann_h7_4[0][0],          │
+        │                               │                           │                 │ v_ann_h7_4[0][0],          │
+        │                               │                           │                 │ att_h7[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ add_h8 (Add)                  │ (None, 22, 8)             │               0 │ q_ann_h8_4[0][0],          │
+        │                               │                           │                 │ v_ann_h8_4[0][0],          │
+        │                               │                           │                 │ att_h8[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ norm_h1 (Normalization)       │ (None, 22, 8)             │              17 │ add_h1[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ norm_h2 (Normalization)       │ (None, 22, 8)             │              17 │ add_h2[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ norm_h3 (Normalization)       │ (None, 22, 8)             │              17 │ add_h3[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ norm_h4 (Normalization)       │ (None, 22, 8)             │              17 │ add_h4[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ norm_h5 (Normalization)       │ (None, 22, 8)             │              17 │ add_h5[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ norm_h6 (Normalization)       │ (None, 22, 8)             │              17 │ add_h6[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ norm_h7 (Normalization)       │ (None, 22, 8)             │              17 │ add_h7[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ norm_h8 (Normalization)       │ (None, 22, 8)             │              17 │ add_h8[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ concat_16heads (Concatenate)  │ (None, 22, 64)            │               0 │ norm_h1[0][0],             │
+        │                               │                           │                 │ norm_h2[0][0],             │
+        │                               │                           │                 │ norm_h3[0][0],             │
+        │                               │                           │                 │ norm_h4[0][0],             │
+        │                               │                           │                 │ norm_h5[0][0],             │
+        │                               │                           │                 │ norm_h6[0][0],             │
+        │                               │                           │                 │ norm_h7[0][0],             │
+        │                               │                           │                 │ norm_h8[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ flat (Flatten)                │ (None, 1408)              │               0 │ concat_16heads[0][0]       │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ ann1024 (Dense)               │ (None, 1024)              │       1,442,816 │ flat[0][0]                 │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ ann512 (Dense)                │ (None, 512)               │         524,800 │ ann1024[0][0]              │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ ann256 (Dense)                │ (None, 256)               │         131,328 │ ann512[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ ann128 (Dense)                │ (None, 128)               │          32,896 │ ann256[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ ann64 (Dense)                 │ (None, 64)                │           8,256 │ ann128[0][0]               │
+        ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+        │ batch_class (Dense)           │ (None, 10)                │             650 │ ann64[0][0]                │
+        └───────────────────────────────┴───────────────────────────┴─────────────────┴────────────────────────────┘
+        Total params: 4,334,938 (16.54 MB)
+        Trainable params: 4,334,802 (16.54 MB)
+        Non-trainable params: 136 (576.00 B)
+    training( "../model/aslvid2gloss_v17.keras" )
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 152s 28ms/step - accuracy: 0.4057 - loss: 1.5310 - val_accuracy: 0.3364 - val_loss: 2.0605 - learning_rate: 1.0000e-04
+        Epoch 2/12
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 34s 17ms/step - accuracy: 0.5748 - loss: 1.1146 - val_accuracy: 0.4317 - val_loss: 1.7664 - learning_rate: 1.0000e-04
+        Epoch 3/12
+        1922/1924 ━━━━━━━━━━━━━━━━━━━━ 0s 16ms/step - accuracy: 0.6522 - loss: 0.9200
+        Epoch 3: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 34s 18ms/step - accuracy: 0.6731 - loss: 0.8684 - val_accuracy: 0.4229 - val_loss: 2.1894 - learning_rate: 1.0000e-04
+        Epoch 4/12
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 33s 17ms/step - accuracy: 0.8319 - loss: 0.4848 - val_accuracy: 0.5345 - val_loss: 2.1969 - learning_rate: 1.0000e-05
+        Epoch 5/12
+        1922/1924 ━━━━━━━━━━━━━━━━━━━━ 0s 16ms/step - accuracy: 0.8422 - loss: 0.4485
+        Epoch 5: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+        1924/1924 ━━━━━━━━━━━━━━━━━━━━ 34s 17ms/step - accuracy: 0.8512 - loss: 0.4252 - val_accuracy: 0.5286 - val_loss: 2.3828 - learning_rate: 1.0000e-05
+        Epoch 5: early stopping
+    and on testing:
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 27ms/step
+        correct 9( true is 9 ) ---- cousin 0.5196889042854309% cousin
+        correct 9( true is 9 ) ---- cousin 0.4399958550930023% cousin
+        correct 9( true is 9 ) ---- cousin 0.41211459040641785% cousin
+        correct 9( true is 9 ) ---- cousin 0.3694658875465393% cousin
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 42ms/step
+        correct 9( true is 9 ) ---- cousin 0.32375985383987427% cousin
+        INcorrect 8( true is 9 ) ---- candy 0.31448766589164734% cousin
+        INcorrect 1( true is 9 ) ---- drink 0.29508382081985474% cousin
+        INcorrect 1( true is 9 ) ---- drink 0.31533706188201904% cousin
+        1/1 ━━━━━━━━━━━━━━━━━━━━ 0s 27ms/step
+        correct 9( true is 9 ) ---- cousin 0.39228105545043945% cousin
+        correct 0( true is 0 ) ---- book 0.9875368475914001% book
+        correct 0( true is 0 ) ---- book 0.9861736297607422% book
+        correct 0( true is 0 ) ---- book 0.9863793253898621% book
+        correct is 857/1329 = 64.48457486832204%
+batch train size( TRAIN_BATCH ): 4
+T10_GLOSS: 10
+
+input size: (22, 518, 2) with getdata() already in [0.0, 1.0] float32
+optimizer: Adam(learning_rate=0.0001),
+loss: sparse_categorical_crossentropy,
+metrics: ['accuracy']
+epoch: 12
+T10_GLOSS: int= int(len(wlasl_READY_10['label_id2gloss']))
+T10_TRAIN: int= int(len(wlasl_READY_10['train']))
+T10_VAL: int= int(len(wlasl_READY_10['val']))
+T10_TEST: int= int(len(wlasl_READY_10['test']))
+LM_Q_FACE: int= 468
+LM_Q_POSE: int= 8
+LM_Q_HAND: int= 21
+TRAIN_STEPS: int= int(ceil(T10_TRAIN/TRAIN_BATCH))
+VAL_STEPS: int= int(ceil(T10_VAL/TRAIN_BATCH))
+LM_NPZ_DIR: str= str(pjoin(PROJ_ROOT, "dataset", "wlasl_dataset", "landmark_numpy"))
+
+
+
+
+
+
+
+
+from .lmark_constant_v2 import LM_Q_FACE, LM_Q_HAND, LM_Q_POSE, QUANTITY_FRAME, T10_GLOSS
+
+
+data_in= Input(
+    shape=(QUANTITY_FRAME, LM_Q_FACE+LM_Q_POSE+(LM_Q_HAND*2), 2),
+    dtype=float32,
+    name='batch_vid',
+)
+x= Reshape(
+    target_shape=(QUANTITY_FRAME, -1),
+    dtype=float64,
+    name='reshape'
+)(data_in)
+
+
+q_ann_p1= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h1_1')(x)
+q_ann_p1= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h1_3')(q_ann_p1)
+q_ann_p1= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h1_4')(q_ann_p1)
+
+v_ann_p1= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h1_1')(x)
+v_ann_p1= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h1_3')(v_ann_p1)
+v_ann_p1= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h1_4')(v_ann_p1)
+
+
+q_ann_p2= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h2_1')(x)
+q_ann_p2= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h2_3')(q_ann_p2)
+q_ann_p2= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h2_4')(q_ann_p2)
+
+v_ann_p2= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h2_1')(x)
+v_ann_p2= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h2_3')(v_ann_p2)
+v_ann_p2= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h2_4')(v_ann_p2)
+
+
+q_ann_p3= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h3_1')(x)
+q_ann_p3= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h3_3')(q_ann_p3)
+q_ann_p3= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h3_4')(q_ann_p3)
+
+v_ann_p3= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h3_1')(x)
+v_ann_p3= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h3_3')(v_ann_p3)
+v_ann_p3= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h3_4')(v_ann_p3)
+
+
+q_ann_p4= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h4_1')(x)
+q_ann_p4= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h4_3')(q_ann_p4)
+q_ann_p4= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h4_4')(q_ann_p4)
+
+v_ann_p4= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h4_1')(x)
+v_ann_p4= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h4_3')(v_ann_p4)
+v_ann_p4= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h4_4')(v_ann_p4)
+
+
+q_ann_p5= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h5_1')(x)
+q_ann_p5= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h5_3')(q_ann_p5)
+q_ann_p5= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h5_4')(q_ann_p5)
+
+v_ann_p5= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h5_1')(x)
+v_ann_p5= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h5_3')(v_ann_p5)
+v_ann_p5= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h5_4')(v_ann_p5)
+
+
+q_ann_p6= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h6_1')(x)
+q_ann_p6= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h6_3')(q_ann_p6)
+q_ann_p6= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h6_4')(q_ann_p6)
+
+v_ann_p6= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h6_1')(x)
+v_ann_p6= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h6_3')(v_ann_p6)
+v_ann_p6= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h6_4')(v_ann_p6)
+
+
+q_ann_p7= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h7_1')(x)
+q_ann_p7= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h7_3')(q_ann_p7)
+q_ann_p7= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h7_4')(q_ann_p7)
+
+v_ann_p7= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h7_1')(x)
+v_ann_p7= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h7_3')(v_ann_p7)
+v_ann_p7= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h7_4')(v_ann_p7)
+
+
+q_ann_p8= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h8_1')(x)
+q_ann_p8= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h8_3')(q_ann_p8)
+q_ann_p8= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='q_ann_h8_4')(q_ann_p8)
+
+v_ann_p8= TimeDistributed(Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h8_1')(x)
+v_ann_p8= TimeDistributed(Dense(
+    units=32,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h8_3')(v_ann_p8)
+v_ann_p8= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0)
+),
+    name='v_ann_h8_4')(v_ann_p8)
+
+
+att_h1= Attention(
+    name='att_h1',
+    use_scale=True
+)([q_ann_p1, v_ann_p1])
+att_h2= Attention(
+    name='att_h2',
+    use_scale=True
+)([q_ann_p2, v_ann_p2])
+att_h3= Attention(
+    name='att_h3',
+    use_scale=True
+)([q_ann_p3, v_ann_p3])
+att_h4= Attention(
+    name='att_h4',
+    use_scale=True
+)([q_ann_p4, v_ann_p4])
+att_h5= Attention(
+    name='att_h5',
+    use_scale=True
+)([q_ann_p5, v_ann_p5])
+att_h6= Attention(
+    name='att_h6',
+    use_scale=True
+)([q_ann_p6, v_ann_p6])
+att_h7= Attention(
+    name='att_h7',
+    use_scale=True
+)([q_ann_p7, v_ann_p7])
+att_h8= Attention(
+    name='att_h8',
+    use_scale=True
+)([q_ann_p8, v_ann_p8])
+
+
+att_h1= Add(name='add_h1')([q_ann_p1, v_ann_p1, att_h1])
+att_h2= Add(name='add_h2')([q_ann_p2, v_ann_p2, att_h2])
+att_h3= Add(name='add_h3')([q_ann_p3, v_ann_p3, att_h3])
+att_h4= Add(name='add_h4')([q_ann_p4, v_ann_p4, att_h4])
+att_h5= Add(name='add_h5')([q_ann_p5, v_ann_p5, att_h5])
+att_h6= Add(name='add_h6')([q_ann_p6, v_ann_p6, att_h6])
+att_h7= Add(name='add_h7')([q_ann_p7, v_ann_p7, att_h7])
+att_h8= Add(name='add_h8')([q_ann_p8, v_ann_p8, att_h8])
+att_h1= Normalization(name='norm_h1')(att_h1)
+att_h2= Normalization(name='norm_h2')(att_h2)
+att_h3= Normalization(name='norm_h3')(att_h3)
+att_h4= Normalization(name='norm_h4')(att_h4)
+att_h5= Normalization(name='norm_h5')(att_h5)
+att_h6= Normalization(name='norm_h6')(att_h6)
+att_h7= Normalization(name='norm_h7')(att_h7)
+att_h8= Normalization(name='norm_h8')(att_h8)
+conct= Concatenate(
+    axis=-1,
+    name='concat_16heads'
+)([att_h1, att_h2, att_h3, att_h4, att_h5, att_h6, att_h7, att_h8]) # shape is (22, 8*16) is (22, 128)
+# conct= LSTM(
+#     units=256,
+#     name='lstm'
+# )(conct)
+
+
+ann= Flatten(
+    name='flat'
+)(conct)
+ann= Dense(
+    units=1024,
+    name='ann1024'
+)(ann)
+ann= Dense(
+    units=512,
+    name='ann512'
+)(ann)
+ann= Dense(
+    units=256,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='ann256'
+)(ann)
+ann= Dense(
+    units=128,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='ann128'
+)(ann)
+ann= Dense(
+    units=64,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    name='ann64'
+)(ann)
+
+
+data_out = Dense(T10_GLOSS, activation=softmax, name='batch_class')(ann)
+
+
+
+
+
+
+
+
+testing ./aslvid2gloss_v16.keras: src_asl2gloss/checks/test_g10_vid2gloss_model_v2.py
+_______________________________________________________
+from math import ceil
+from os.path import exists, join as pjoin
+from typing import Any, Generator
+from keras.src.saving import load_model
+from numpy import argmax, float32, load, ndarray, uint16, zeros
+
+from ..lmark_constant_v2 import LM_NPZ_DIR, LM_Q_FACE, LM_Q_HAND, LM_Q_POSE, QUANTITY_FRAME, T10_TEST, wlasl_READY_10, PROJ_ROOT
+
+
+def getdata(TrainVal: str= 'test', batch: int=4) -> Generator[tuple, None, None]:
+    # glossDist= {
+    #     0: {
+    #         'gloss_id': 0,
+    #         'quantity': int(on this gloss id( ie. gloss_id=0 is book ) how many training was done),
+    #         'video_id': list(all video_id that training was done, later be processed as unique),
+    #         'vid_q_uniq': int(quantity of video_id that are unique, ie. above right after processed unique)
+    #       },
+    #     1: {...},
+    #     2: {...},
+    #     ...
+    #     9: {...},
+    #     'split': str(  'train'|'val'  )
+    #     'split_size': int(quantity of video_id on 'train'|'val' ie. len(wlasl_READY_10[TrainVal]))
+    # }
+    # print(len(wlasl_READY_10['label_id2gloss'])) # correct, it exist
+    init_IDXbatch: int= 0
+    while True:
+        batch_vids: ndarray= zeros(
+            (batch, QUANTITY_FRAME, LM_Q_FACE+LM_Q_POSE+(LM_Q_HAND*2), 2),
+            dtype=float32)
+        batch_class: ndarray= zeros((batch), dtype=uint16)
+        for i in range(batch):
+            idx_USE: int= (init_IDXbatch +i) if (init_IDXbatch +i)<len(wlasl_READY_10[TrainVal]) else (init_IDXbatch +i-len(wlasl_READY_10[TrainVal]))
+            vid_lmarkNPZ_file: str= str(pjoin(LM_NPZ_DIR, f"{wlasl_READY_10[TrainVal][idx_USE]['file']}.npy"))
+            if exists(vid_lmarkNPZ_file):
+                with open(vid_lmarkNPZ_file, 'rb') as f:
+                    gloss_id: int= int(wlasl_READY_10[TrainVal][idx_USE]['gloss_id'])
+                    batch_vids[i]= load(f)
+                    batch_class[i]= gloss_id
+            else:
+                raise FileNotFoundError(f"file {vid_lmarkNPZ_file} does not exist")
+        init_IDXbatch+= batch
+
+
+        if len(wlasl_READY_10[TrainVal])<=init_IDXbatch:
+            init_IDXbatch-= int(len(wlasl_READY_10[TrainVal]))
+        yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
+    
+
+if __name__=="__main__":
+    modelfile: str= f"{PROJ_ROOT}model/aslvid2gloss_v17.keras"
+    batch_size: int= 4
+    gdata: Generator= getdata(TrainVal='test', batch=batch_size)
+    model: Any= load_model(modelfile)
+    count_correct: int= 0
+    for i in range(ceil(T10_TEST/batch_size)):
+        batch_vid, batch_class= next(gdata)
+        preds= model.predict(batch_vid)
+        for pred, shouldBe in zip(preds, batch_class):
+            pred_y: int= int(argmax(pred, axis=-1))
+            if pred_y==shouldBe:
+                print(f"correct {pred_y}( true is {shouldBe} ) ---- {wlasl_READY_10['label_id2gloss'][pred_y]} {pred[pred_y]}% {wlasl_READY_10['label_id2gloss'][shouldBe]}")
+                count_correct+= 1
+            else:
+                print(f"INcorrect {pred_y}( true is {shouldBe} ) ---- {wlasl_READY_10['label_id2gloss'][pred_y]} {pred[pred_y]}% {wlasl_READY_10['label_id2gloss'][shouldBe]}")
+    print(f"correct is {count_correct}/{T10_TEST} = {count_correct/T10_TEST*100}%")
+
