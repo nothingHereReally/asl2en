@@ -24,3 +24,6 @@ model/tfboard_logs.v17/train/events.out.tfevents.1755872420.dvxvb.697235.0.v2 fi
 model/tfboard_logs.v17/validation/events.out.tfevents.1755872552.dvxvb.697235.1.v2 filter=lfs diff=lfs merge=lfs -text
 model/tfboard_logs.v16.1/train/events.out.tfevents.1755667061.dvxvb.1499410.0.v2 filter=lfs diff=lfs merge=lfs -text
 model/tfboard_logs.v16.1/train/events.out.tfevents.1755667103.dvxvb.1500600.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/aslvid2gloss_v18.a.keras filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs.v18.a/train/events.out.tfevents.1755961144.dvxvb.790274.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs.v18.a/validation/events.out.tfevents.1755961600.dvxvb.790274.1.v2 filter=lfs diff=lfs merge=lfs -text
