@@ -1,3 +1,6 @@
+962/1329 = 72.38525206922498% test accuracy
+accuracy: 0.9231 - loss: 0.2558 - val_accuracy: 0.6887 - val_loss: 1.5182 - learning_rate: 1.0000e-05
+__________________________________________________
 from keras.src.activations.activations import ReLU
 from keras.src.layers import Add, Attention, Flatten, Reshape, Dense, Input, TimeDistributed
 from keras.src.activations import softmax
@@ -378,3 +381,4 @@ ann= Flatten()(x)
 
 
 data_out = Dense(T10_GLOSS, activation=softmax, name='batch_class')(ann)
+
