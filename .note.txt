@@ -545,3 +545,32 @@ x= Flatten(name='flat')(cx)
 
 data_out = Dense(T10_GLOSS, activation=softmax, name='batch_class')(x)
 
+
+
+
+
+
+
+
+files from ./src_asl2gloss/checks/ summary
+__________________________________________
+create_1st_10gloss.py
+    needs wlasl.annotation.clean.json
+    creates 🍁wlasl.annotation.ready.1st_10.json
+        keys: train, val, test, label_id2gloss, label_gloss2id
+        train|val|test: gloss_id: int, video_id: str
+g10_create_dataset.py
+g10_create_lmark4generator.py
+g10_create_lmark_dataset.py
+g10_extract_images.py
+g10_show_skeleton_images_details.py
+test_asl_vid2gloss_model.py
+test_g10_model.py
+test_g10_model_v2.py
+test_getdata.py
+vid2frames_img.py
+vid2frames_img_test_CAP_PROP_FRAME_COUNT.py
+video_frames_distribution.py
+wlasl_ready_data.py
+wlasl_train_val_test_checks.py
+
