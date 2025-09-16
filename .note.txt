@@ -558,18 +558,11 @@ create_1st_10gloss.py
     wlasl.annotation.clean.json -- needed
     🍁wlasl.annotation.ready.1st_10.json -- created
         {
-            train: [{
+            train|val|test: [{
                 gloss_id: int,
                 video_id: str
             }, ...],
-            val: [{
-                gloss_id: int,
-                video_id: str
-            }, ...],
-            test: [{
-                gloss_id: int,
-                video_id: str
-            }, ...],
+
             label_id2gloss: [book, drink, ...],
             label_gloss2id: {
                 book: 0,
@@ -578,6 +571,34 @@ create_1st_10gloss.py
             }
         }
 g10_create_dataset.py
+    needed:
+        wlasl.annotation.g10_skeleton_images.json
+    skeleton_images/< video_id >/< 0001.png > 🍁 created
+        notice ALL png file
+    wlasl.annotation.g10_skeleton_images.json 🍁 created
+        {
+            train|val|test: [{
+                gloss_id: int,
+                video_id: str,
+                images: [{
+                    file: str('0001'),
+                    face: bool,
+                    post: bool,
+                    left_hand: bool,
+                    right_hand: bool,
+                    width: int( 158 ),
+                    height: int( 158 ),
+                }, ...]
+            }, ...],
+
+            label_id2gloss: [book, drink, ...],
+            label_gloss2id: {
+                book: 0,
+                drink: 1,
+                ...
+            }
+        }
+    train|val|test|label_id2gloss|label_gloss2id
 g10_create_lmark4generator.py
 g10_create_lmark_dataset.py
 g10_extract_images.py
