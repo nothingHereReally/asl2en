@@ -651,6 +651,8 @@ g10_create_lmark4generator.py -- landmarks numpy file
 g10_extract_images.py -- video to images
     raw_images/< video_id >/< 0001.png > 🍁 created
 g10_show_skeleton_images_details.py
+    shows details on images( min, max, left hand, right hand, ...)
+    no data extraction
 test_asl_vid2gloss_model.py
 test_g10_model.py
 test_g10_model_v2.py
