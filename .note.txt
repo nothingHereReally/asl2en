@@ -680,5 +680,28 @@ video_frames_distribution.py
     max frames
     box plot q1( min ), q2, q3, q4, q5( max )
 wlasl_ready_data.py
+    creates the wlasl.annotation.ready.json
+        {
+            train|val|test: [{
+                gloss_id: int,
+                video_id: str
+            }, ...],
+
+            label_id2gloss: [book, drink, ...],
+            label_gloss2id: {
+                book: 0,
+                drink: 1,
+                ...
+            }
+
+            label_id2gloss: [book, drink, ...],
+            label_gloss2id: {
+                book: 0,
+                drink: 1,
+                ...
+            }
+        }
 wlasl_train_val_test_checks.py
+    wlasl.annotation.clean.json -- needed
+    test if json file has correct data
 
