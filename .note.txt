@@ -705,3 +705,37 @@ wlasl_train_val_test_checks.py
     wlasl.annotation.clean.json -- needed
     test if json file has correct data
 
+
+
+
+______________________________
+./src_asl2gloss/extract_data/raw_image.py
+output:
+________________________________________________________________________________
+processing train...
+
+[h264 @ 0x55f0db010f00] Invalid NAL unit size (745 > 472).
+[h264 @ 0x55f0db010f00] Error splitting the input into NAL units.
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a600a5300] stream 1, offset 0x3b468: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a600a5300] stream 1, offset 0x3b7d3: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a600a5300] stream 1, offset 0x3c9b9: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a600a5300] stream 1, offset 0x3cd00: partial file
+[NULL @ 0x55f0daf421c0] Invalid NAL unit size (71678 > 10776).
+[NULL @ 0x55f0daf421c0] missing picture in access unit with size 10780
+[h264 @ 0x55f0da27bc80] Invalid NAL unit size (71678 > 10776).
+[h264 @ 0x55f0da27bc80] Error splitting the input into NAL units.
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2a27a7: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2adc75: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2ba39c: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2c7847: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2d5d75: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2e33f9: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2f08cf: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2fdf28: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x30aec9: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x31797c: partial file
+processing val...
+
+processing test...
+________________________________________________________________________________
+
