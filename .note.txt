@@ -600,7 +600,33 @@ g10_create_dataset.py -- images
             }
         }
     train|val|test|label_id2gloss|label_gloss2id
-g10_create_lmark4generator.py
+g10_create_lmark4generator.py -- landmarks numpy file
+    needed:
+        wlasl.annotation.g10_landmarks.json
+    landmark_numpy/< 057240000.npy >
+        shape(22, 518, 2)
+            face 1st
+            pose 2nd
+            left hand 3rd
+            right hand 4th
+        22 frames
+        468 landmarks on face
+        8 landmarks for pose
+        21 landmarks per hand
+    wlasl.annotation.landmark.numpy.json 🍁 created
+        {
+            train|val|test: [{
+                gloss_id: int,
+                file: str('24320232')
+            }, ...]
+
+            label_id2gloss: [book, drink, ...],
+            label_gloss2id: {
+                book: 0,
+                drink: 1,
+                ...
+            }
+        }
 g10_create_lmark_dataset.py
 g10_extract_images.py
 g10_show_skeleton_images_details.py
