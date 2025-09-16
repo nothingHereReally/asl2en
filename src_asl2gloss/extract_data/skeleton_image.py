@@ -11,7 +11,7 @@ from cv2 import (
     circle
 )
 from mediapipe.python.solutions.holistic import Holistic
-from numpy import ndarray, array, uint8, zeros
+from numpy import float32, ndarray, array, save, uint8, zeros
 from json import load as jload
 
 
@@ -147,7 +147,7 @@ def drawSkeletonImg(img_orig: ndarray, \
             else:
                 raise ValueError("Has landmark_coordinate<0.0 or 1.0<landmark_coordinate which is not allowed, it should be 0.0<= landmark_coordinate <=1.0")
     return img
-def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray:
+def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> tuple:
     def recalcDrawFace(img_orig: ndarray, lmark_face: tuple) -> ndarray:
         img: ndarray= img_orig.copy()
         return drawSkeletonImg(
@@ -218,6 +218,8 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
     #         b) min_wx_hy as mn; max_wx_hy as mx
     #         c) if mn is wx, all X +( (mx-mn)/(mx*2) )
     #         d) if mn is hy, all Y +( (mx-mn)/(mx*2) )
+    landmark__face_pose_left_right_hand= zeros(((468+8+(21*2)), 2), dtype=float32)
+    landmark__face_pose_left_right_hand= landmark__face_pose_left_right_hand.tolist()
     if lmark_mph.face_landmarks!=None \
         or lmark_mph.pose_landmarks!=None \
         or lmark_mph.left_hand_landmarks!=None \
@@ -492,16 +494,37 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
         del min_y
 
 
+        landmark__face= zeros((468, 2), dtype=float32)
         if lmark_mph.face_landmarks != None:
             img= recalcDrawFace(img, tuple(recalc_lmark_face))
+            landmark__face= array(recalc_lmark_face, dtype=float32)
+        landmark__face= landmark__face.tolist()
+
+        landmark__pose= zeros((8, 2), dtype=float32)
         if lmark_mph.pose_landmarks != None:
             img= recalcDrawPose(img, tuple(recalc_lmark_pose))
+            landmark__pose= array(recalc_lmark_pose, dtype=float32)
+        landmark__pose= landmark__pose.tolist()
+
+        landmark__left_hand= zeros((21, 2), dtype=float32)
         if lmark_mph.left_hand_landmarks != None:
             img= recalcDrawLeftHands(img, tuple(recalc_lmark_left_hand))
+            landmark__left_hand= array(recalc_lmark_left_hand, dtype=float32)
+        landmark__left_hand= landmark__left_hand.tolist()
+
+        landmark__right_hand= zeros((21, 2), dtype=float32)
         if lmark_mph.right_hand_landmarks != None:
             img= recalcDrawRightHands(img, tuple(recalc_lmark_right_hand))
+            landmark__right_hand= array(recalc_lmark_right_hand, dtype=float32)
+        landmark__right_hand= landmark__right_hand.tolist()
 
-    return img
+        landmark__face_pose_left_right_hand= []
+        landmark__face_pose_left_right_hand.extend(landmark__face)
+        landmark__face_pose_left_right_hand.extend(landmark__pose)
+        landmark__face_pose_left_right_hand.extend(landmark__left_hand)
+        landmark__face_pose_left_right_hand.extend(landmark__right_hand)
+
+    return (img, landmark__face_pose_left_right_hand)
 def getSkeletonFrames(fpath_vid: str, mpH: Any=None) -> tuple:
     def getAllImg_frames(vidpath: str) -> list:
         image_files: list= sorted(listdir(vidpath))
@@ -516,16 +539,19 @@ def getSkeletonFrames(fpath_vid: str, mpH: Any=None) -> tuple:
     allImg_human: list= getAllImg_frames(fpath_vid)
     allImg_skeleton: list= []
     allImg_skeleton_ann: list= []
+    allLandMark_ann: list= []
     oqFRAMES: int= int(len(allImg_human))
     if oqFRAMES<=0:
         raise FileExistsError(f"image folder {fpath_vid.rsplit("/")[-1]} no image file exist")
     for img in allImg_human:
         fph_lmark= mpH.process(img)
-        allImg_skeleton.append(drawFacePoseHand(
+        skeleton__image, landmark__fph= drawFacePoseHand(
             img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
             lmark_mph=fph_lmark,
             orig_shape=img.shape
-        ))
+        )
+        allImg_skeleton.append(skeleton__image)
+        allLandMark_ann.append(landmark__fph)
         allImg_skeleton_ann.append({
             'face': fph_lmark.face_landmarks != None,
             'pose': fph_lmark.face_landmarks != None,
@@ -538,7 +564,8 @@ def getSkeletonFrames(fpath_vid: str, mpH: Any=None) -> tuple:
     del oqFRAMES
     return (
         array(allImg_skeleton, dtype=uint8),
-        allImg_skeleton_ann
+        allImg_skeleton_ann,
+        allLandMark_ann
     )
 
 
@@ -552,7 +579,8 @@ if __name__=='__main__':
         wlasl_annotation= jload(f)
 
     init_dir: str= f"{PROJ_ROOT}dataset/wlasl/"
-    write_to: str= f"{init_dir}skeleton_image/"
+    write_to_skeleton: str= f"{init_dir}skeleton_image/"
+    write_to_landmark: str= f"{init_dir}landmark_numpy/"
     mpH_fph: Holistic= Holistic(
         static_image_mode=True,
         model_complexity=1,
@@ -560,10 +588,17 @@ if __name__=='__main__':
         min_tracking_confidence=0.5
     )
     TrainValTest: tuple= ("train", "val", "test")
-    if exists(init_dir) and not exists(write_to):
-        makedirs(f"{write_to}")
-        print(f"writing to {write_to}")
+    if exists(init_dir) and not exists(write_to_skeleton):
+        makedirs(f"{write_to_skeleton}")
+        print(f"writing to {write_to_skeleton}")
         skeleton_ann: dict= {
+            'train': [],
+            'val': [],
+            'test': [],
+            'label_id2gloss': wlasl_annotation['label_id2gloss'],
+            'label_gloss2id': wlasl_annotation['label_gloss2id']
+        }
+        landmark_annotation: dict= {
             'train': [],
             'val': [],
             'test': [],
@@ -578,16 +613,22 @@ if __name__=='__main__':
                     print(f"processing at {(video_idx+1)/total_qvideo}%")
                 imgFolder4singleVideo: str= f"{WLASL_raw_img}{trainValTest_ins['video_id']}"
                 if exists(imgFolder4singleVideo) and 0<len(listdir(imgFolder4singleVideo)):
-                    images, sktn_ann= getSkeletonFrames(
+                    images, sktn_ann, landmarks_on_video= getSkeletonFrames(
                         fpath_vid=imgFolder4singleVideo,
                         mpH=mpH_fph,
                     )
                     if 0<len(images):
-                        makedirs(f"{write_to}{trainValTest_ins['video_id']}")
+                        makedirs(f"{write_to_skeleton}{trainValTest_ins['video_id']}")
+                        makedirs(f"{write_to_landmark}{trainValTest_ins['video_id']}")
                         skeleton_ann[tvt].append({
                             'gloss_id': int(trainValTest_ins['gloss_id']),
                             'video_id': str(trainValTest_ins['video_id']),
                             'image': []
+                        })
+                        landmark_annotation[tvt].append({
+                            'gloss_id': int(trainValTest_ins['gloss_id']),
+                            'video_id': str(trainValTest_ins['video_id']),
+                            'landmark': []
                         })
                         for i in range(len(images)):
                             file_id: str= ''
@@ -602,7 +643,7 @@ if __name__=='__main__':
                             else:
                                 file_id= f"{i+1}"
                             imwrite(
-                                filename=f"{write_to}{trainValTest_ins['video_id']}/{file_id}.png",
+                                filename=f"{write_to_skeleton}{trainValTest_ins['video_id']}/{file_id}.png",
                                 img=images[i]
                             )
                             skeleton_ann[tvt][-1]['image'].append({
@@ -614,11 +655,20 @@ if __name__=='__main__':
                                 'width': sktn_ann[i]['width'],
                                 'height': sktn_ann[i]['height'],
                             })
+                            with open(f"{write_to_landmark}{trainValTest_ins['video_id']}/{file_id}.npy", 'wb') as f:
+                                save(f, array(landmarks_on_video[i], dtype=float32))
+                            landmark_annotation[tvt][-1]['landmark'].append({
+                                'file': f"{file_id}.npy",
+                                'face': sktn_ann[i]['face'],
+                                'pose': sktn_ann[i]['pose'],
+                                'left_hand': sktn_ann[i]['left_hand'],
+                                'right_hand': sktn_ann[i]['right_hand'],
+                            })
         with open(f"{init_dir}wlasl.annotation.skeleton_image.train_val_test.json", 'w') as f:
             dump(skeleton_ann, f, indent=4)
         print("creating skeleton images done...")
     else:
         print(f"{init_dir} doesn't\nexist, please get the dataset 1st")
-        print(f"or if do exist, please delete this\ndirectory {write_to}")
+        print(f"or if do exist, please delete this\ndirectory {write_to_skeleton}")
 
 
