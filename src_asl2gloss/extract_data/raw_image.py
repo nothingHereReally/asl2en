@@ -4,7 +4,7 @@ from json import load as jload, dump as jdump
 from cv2 import CAP_PROP_FRAME_COUNT, VideoCapture, imwrite
 
 
-from ..lmark_constant import PROJ_ROOT
+PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-3])}/"
 
 
 if __name__=='__main__':
