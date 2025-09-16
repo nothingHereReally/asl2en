@@ -648,7 +648,8 @@ g10_create_lmark4generator.py -- landmarks numpy file
                 ...
             }
         }
-g10_extract_images.py
+g10_extract_images.py -- video to images
+    raw_images/< video_id >/< 0001.png > 🍁 created
 g10_show_skeleton_images_details.py
 test_asl_vid2gloss_model.py
 test_g10_model.py
