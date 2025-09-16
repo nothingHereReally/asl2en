@@ -654,6 +654,10 @@ g10_show_skeleton_images_details.py
     shows details on images( min, max, left hand, right hand, ...)
     no data extraction
 test_asl_vid2gloss_model.py
+    test model input is raw video data
+    image extraction from video is via lmark_essential_draw.getSkeletonFrames
+    not gonna be used since raw image as input seems to have not good performance
+    compare to lanmarks as input
 test_g10_model.py
 test_g10_model_v2.py
 test_getdata.py
