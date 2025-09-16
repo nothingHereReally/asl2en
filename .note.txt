@@ -600,6 +600,27 @@ g10_create_dataset.py -- images
             }
         }
     train|val|test|label_id2gloss|label_gloss2id
+g10_create_lmark_dataset.py -- landmarks json file
+    wlasl.annotation.g10_landmarks.json 🍁 created
+        {
+            train|val|test: [{
+                gloss_id: int,
+                video_id: str,
+                landmark: [{
+                    landmark_face: [[x, y], ...468th],
+                    landmark_pose: [[x, y], ...8th],
+                    landmark_left_hand: [[x, y], ...21st],
+                    landmark_right_hand: [[x, y], ...21st],
+                }, ...per_idx_represents_an_image_from_video]
+            }, ...]
+
+            label_id2gloss: [book, drink, ...],
+            label_gloss2id: {
+                book: 0,
+                drink: 1,
+                ...
+            }
+        }
 g10_create_lmark4generator.py -- landmarks numpy file
     needed:
         wlasl.annotation.g10_landmarks.json
@@ -627,7 +648,6 @@ g10_create_lmark4generator.py -- landmarks numpy file
                 ...
             }
         }
-g10_create_lmark_dataset.py
 g10_extract_images.py
 g10_show_skeleton_images_details.py
 test_asl_vid2gloss_model.py
