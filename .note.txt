@@ -664,10 +664,21 @@ test_g10_model.py
     compare to lanmarks as input
     due to now preparing for attention based ML model
 test_g10_model_v2.py
+    testing model input is landmark numpy data
 test_getdata.py
+    test data genration via writing it to /tmp/wlasl_vid_test
+    as images
 vid2frames_img.py
+    see video to frames ( no using of getdata ) /tmp/wlasl_vid_test
+    as images
 vid2frames_img_test_CAP_PROP_FRAME_COUNT.py
+    testing CAP_PROP_FRAME_COUNT with use of
+    getSkeletonFrames my function
 video_frames_distribution.py
+    see quantity of frames on videos
+    on minimum frames
+    max frames
+    box plot q1( min ), q2, q3, q4, q5( max )
 wlasl_ready_data.py
 wlasl_train_val_test_checks.py
 
