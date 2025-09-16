@@ -659,6 +659,10 @@ test_asl_vid2gloss_model.py
     not gonna be used since raw image as input seems to have not good performance
     compare to lanmarks as input
 test_g10_model.py
+    test model input is raw video data
+    not gonna be used since raw image as input seems to have not good performance
+    compare to lanmarks as input
+    due to now preparing for attention based ML model
 test_g10_model_v2.py
 test_getdata.py
 vid2frames_img.py
