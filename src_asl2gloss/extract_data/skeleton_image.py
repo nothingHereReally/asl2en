@@ -11,7 +11,7 @@ from cv2 import (
     circle
 )
 from mediapipe.python.solutions.holistic import Holistic
-from numpy import float32, ndarray, array, save, uint8, zeros
+from numpy import float32, load, ndarray, array, save, uint8, zeros
 from json import load as jload
 
 
@@ -609,7 +609,7 @@ if __name__=='__main__':
             print(f"processing {tvt}...")
             total_qvideo: int= len(wlasl_annotation[tvt])
             for trainValTest_ins, video_idx in zip(wlasl_annotation[tvt], range(total_qvideo)):
-                if video_idx in (int(total_qvideo*.25), int(total_qvideo*.5), int(total_qvideo*.75)):
+                if video_idx in (int(total_qvideo*.1*iii) for iii in range(1, 10)):
                     print(f"processing at {(video_idx+1)/total_qvideo}%")
                 imgFolder4singleVideo: str= f"{WLASL_raw_img}{trainValTest_ins['video_id']}"
                 if exists(imgFolder4singleVideo) and 0<len(listdir(imgFolder4singleVideo)):
@@ -666,7 +666,13 @@ if __name__=='__main__':
                             })
         with open(f"{init_dir}wlasl.annotation.skeleton_image.train_val_test.json", 'w') as f:
             dump(skeleton_ann, f, indent=4)
+        with open(f"{init_dir}wlasl.annotation.landmark_numpy.train_val_test.json", 'w') as f:
+            dump(landmark_annotation, f, indent=4)
         print("creating skeleton images done...")
+        landmark_test_shape= None
+        with open(f"{write_to_landmark}23199/00032.npy", 'rb') as f:
+            landmark_test_shape= load(f)
+        print(f"landmark shape {landmark_test_shape.shape}")
     else:
         print(f"{init_dir} doesn't\nexist, please get the dataset 1st")
         print(f"or if do exist, please delete this\ndirectory {write_to_skeleton}")
