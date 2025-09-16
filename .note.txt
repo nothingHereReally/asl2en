@@ -554,7 +554,7 @@ data_out = Dense(T10_GLOSS, activation=softmax, name='batch_class')(x)
 
 files from ./src_asl2gloss/checks/ summary
 __________________________________________
-create_1st_10gloss.py
+create_1st_10gloss.py -- json
     wlasl.annotation.clean.json -- needed
     🍁wlasl.annotation.ready.1st_10.json -- created
         {
@@ -570,11 +570,12 @@ create_1st_10gloss.py
                 ...
             }
         }
-g10_create_dataset.py
+g10_create_dataset.py -- images
     needed:
         wlasl.annotation.g10_skeleton_images.json
     skeleton_images/< video_id >/< 0001.png > 🍁 created
         notice ALL png file
+        158 x 158 x 3
     wlasl.annotation.g10_skeleton_images.json 🍁 created
         {
             train|val|test: [{
