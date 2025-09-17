@@ -578,9 +578,9 @@ if __name__=='__main__':
     with open(WLASL_tvt_file, 'r') as f:
         wlasl_annotation= jload(f)
 
-    init_dir: str= f"{PROJ_ROOT}dataset/wlasl/"
-    write_to_skeleton: str= f"{init_dir}skeleton_image/"
-    write_to_landmark: str= f"{init_dir}landmark_numpy/"
+    wlasl_root: str= f"{PROJ_ROOT}dataset/wlasl/"
+    write_to_skeleton: str= f"{wlasl_root}skeleton_image/"
+    write_to_landmark: str= f"{wlasl_root}landmark_numpy/"
     mpH_fph: Holistic= Holistic(
         static_image_mode=True,
         model_complexity=1,
@@ -588,7 +588,7 @@ if __name__=='__main__':
         min_tracking_confidence=0.5
     )
     TrainValTest: tuple= ("train", "val", "test")
-    if exists(init_dir) and not exists(write_to_skeleton):
+    if exists(wlasl_root) and not exists(write_to_skeleton):
         makedirs(f"{write_to_skeleton}")
         print(f"writing to {write_to_skeleton}")
         skeleton_ann: dict= {
@@ -664,9 +664,9 @@ if __name__=='__main__':
                                 'left_hand': sktn_ann[i]['left_hand'],
                                 'right_hand': sktn_ann[i]['right_hand'],
                             })
-        with open(f"{init_dir}wlasl.annotation.skeleton_image.train_val_test.json", 'w') as f:
+        with open(f"{wlasl_root}wlasl.annotation.skeleton_image.train_val_test.json", 'w') as f:
             dump(skeleton_ann, f, indent=4)
-        with open(f"{init_dir}wlasl.annotation.landmark_numpy.train_val_test.json", 'w') as f:
+        with open(f"{wlasl_root}wlasl.annotation.landmark_numpy.train_val_test.json", 'w') as f:
             dump(landmark_annotation, f, indent=4)
         print("creating skeleton images done...")
         landmark_test_shape= None
@@ -674,7 +674,7 @@ if __name__=='__main__':
             landmark_test_shape= load(f)
         print(f"landmark shape {landmark_test_shape.shape}")
     else:
-        print(f"{init_dir} doesn't\nexist, please get the dataset 1st")
+        print(f"{wlasl_root} doesn't\nexist, please get the dataset 1st")
         print(f"or if do exist, please delete this\ndirectory {write_to_skeleton}")
 
 
