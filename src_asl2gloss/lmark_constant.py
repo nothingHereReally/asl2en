@@ -1,5 +1,5 @@
 from math import ceil
-from json import load as jload
+from json import load as loadjson
 
 
 # PROJ_ROOT: str= f"/absolute/dir/to/project/"
@@ -19,32 +19,37 @@ IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
 # or right hand )
 # ie. current is at least 12 or 20 has hand/s 20*0.6= 12
 MIN_FRAMES_HAS_HANDS: int= int(QUANTITY_FRAME*0.7)
-WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
+WLASL_SKELETON_DIR: str= f"{PROJ_ROOT}dataset/wlasl/skeleton_image/"
+WLASL_LANDMARK_DIR: str= f"{PROJ_ROOT}dataset/wlasl/landmark_numpy/"
 
 
 
 
 tmp_ready: dict= {}
-with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.ready.json", 'r') as f:
-    tmp_ready= jload(f)
-wlasl_READY: dict= tmp_ready.copy()
+with open(f"{PROJ_ROOT}dataset/wlasl/wlasl.annotation.landmark_numpy.train_val_test.json", 'r') as f:
+    tmp_ready= loadjson(f)
+wlasl_landmark: dict= tmp_ready.copy()
 del tmp_ready
-tmp_ready: dict= {}
-with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.g10_skeleton_images.json", 'r') as f:
-    tmp_ready= jload(f)
-wlasl_READY_10: dict= tmp_ready.copy()
-del tmp_ready
-T10_GLOSS: int= int(len(wlasl_READY_10['label_id2gloss']))
-T10_TRAIN: int= int(len(wlasl_READY_10['train']))
-T10_VAL: int= int(len(wlasl_READY_10['val']))
-T10_TEST: int= int(len(wlasl_READY_10['test']))
-T10_DIR_IMG: str= f"{PROJ_ROOT}dataset/wlasl_dataset/skeleton_images/"
-TRAIN_STEPS: int= int(ceil((T10_TRAIN*7)/TRAIN_BATCH))
-VAL_STEPS: int= int(ceil(T10_VAL/TRAIN_BATCH))
 
-TOTAL_GLOSS_UNIQ: int= int(len(wlasl_READY['label_id2gloss']))
-TOTAL_TRAIN_FILE: int= int(len(wlasl_READY['train']))
-TOTAL_VAL_FILE: int= int(len(wlasl_READY['val']))
+tmp_ready: dict= {}
+with open(f"{PROJ_ROOT}dataset/wlasl/wlasl.annotation.skeleton_image.train_val_test.json", 'r') as f:
+    tmp_ready= loadjson(f)
+wlasl_skeleton: dict= tmp_ready.copy()
+del tmp_ready
+
+K_TRAIN: str= 'train'
+K_VAL: str= 'val'
+K_TEST: str= 'test'
+K_ID2G: str= 'label_id2gloss'
+K_G2ID: str= 'label_gloss2id'
+
+T_TRAIN: int= int(len(wlasl_skeleton[K_TRAIN]))
+T_VAL: int= int(len(wlasl_skeleton[K_VAL]))
+T_TEST: int= int(len(wlasl_skeleton[K_TEST]))
+T_GLOSS: int= int(len(wlasl_skeleton[K_ID2G]))
+
+TRAIN_STEPS: int= int(ceil((T_TRAIN*2)/TRAIN_BATCH))
+VAL_STEPS: int= int(ceil(T_VAL/TRAIN_BATCH))
 
 
 FACE_CONNECTIONS: tuple= (
