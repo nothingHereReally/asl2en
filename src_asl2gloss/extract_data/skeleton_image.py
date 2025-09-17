@@ -591,7 +591,7 @@ if __name__=='__main__':
     if exists(wlasl_root) and not exists(write_to_skeleton):
         makedirs(f"{write_to_skeleton}")
         print(f"writing to {write_to_skeleton}")
-        skeleton_ann: dict= {
+        skeleton_annotation: dict= {
             'train': [],
             'val': [],
             'test': [],
@@ -620,7 +620,7 @@ if __name__=='__main__':
                     if 0<len(images):
                         makedirs(f"{write_to_skeleton}{trainValTest_ins['video_id']}")
                         makedirs(f"{write_to_landmark}{trainValTest_ins['video_id']}")
-                        skeleton_ann[tvt].append({
+                        skeleton_annotation[tvt].append({
                             'gloss_id': int(trainValTest_ins['gloss_id']),
                             'video_id': str(trainValTest_ins['video_id']),
                             'image': []
@@ -646,7 +646,7 @@ if __name__=='__main__':
                                 filename=f"{write_to_skeleton}{trainValTest_ins['video_id']}/{file_id}.png",
                                 img=images[i]
                             )
-                            skeleton_ann[tvt][-1]['image'].append({
+                            skeleton_annotation[tvt][-1]['image'].append({
                                 'file': f"{file_id}.png",
                                 'face': sktn_ann[i]['face'],
                                 'pose': sktn_ann[i]['pose'],
@@ -665,7 +665,7 @@ if __name__=='__main__':
                                 'right_hand': sktn_ann[i]['right_hand'],
                             })
         with open(f"{wlasl_root}wlasl.annotation.skeleton_image.train_val_test.json", 'w') as f:
-            dump(skeleton_ann, f, indent=4)
+            dump(skeleton_annotation, f, indent=4)
         with open(f"{wlasl_root}wlasl.annotation.landmark_numpy.train_val_test.json", 'w') as f:
             dump(landmark_annotation, f, indent=4)
         print("creating skeleton images done...")
