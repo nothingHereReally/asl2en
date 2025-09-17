@@ -738,4 +738,41 @@ processing val...
 
 processing test...
 ________________________________________________________________________________
+./src_asl2gloss/extract_data/raw_image.py
+started at 1:34am 2025/ 9/ 17
+done at 6:49pm 2025/ 9/ 17, took 17hours and 15minutes
+output:
+_______________________________________
+processing at 0.10000699839037021%
+processing at 0.20001399678074042%
+processing at 0.30002099517111064%
+processing at 0.40002799356148083%
+processing at 0.5000349919518511%
+processing at 0.6000419903422213%
+processing at 0.7000489887325915%
+processing at 0.8000559871229617%
+processing at 0.900062985513332%
+processing val...
+processing at 0.10010214504596528%
+processing at 0.20020429009193055%
+processing at 0.30005107252298263%
+processing at 0.4001532175689479%
+processing at 0.5002553626149132%
+processing at 0.6001021450459653%
+processing at 0.7002042900919305%
+processing at 0.8000510725229827%
+processing at 0.900153217568948%
+processing test...
+processing at 0.10006949270326616%
+processing at 0.20013898540653233%
+processing at 0.30020847810979845%
+processing at 0.40027797081306465%
+processing at 0.5003474635163307%
+processing at 0.6000694927032661%
+processing at 0.7001389854065323%
+processing at 0.8002084781097984%
+processing at 0.9002779708130646%
+creating skeleton images done...
+landmark shape (518, 2)
+_______________________________________
 
