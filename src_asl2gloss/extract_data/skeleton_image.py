@@ -11,8 +11,8 @@ from cv2 import (
     circle
 )
 from mediapipe.python.solutions.holistic import Holistic
-from numpy import float32, load, ndarray, array, save, uint8, zeros
-from json import load as jload
+from numpy import float32, load as loadnpy, ndarray, array, save, uint8, zeros
+from json import load as loadjson
 
 
 PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-3])}/"
@@ -576,7 +576,7 @@ if __name__=='__main__':
     WLASL_raw_img: str= f"{PROJ_ROOT}dataset/wlasl/raw_image/"
     wlasl_annotation: dict= {}
     with open(WLASL_tvt_file, 'r') as f:
-        wlasl_annotation= jload(f)
+        wlasl_annotation= loadjson(f)
 
     wlasl_root: str= f"{PROJ_ROOT}dataset/wlasl/"
     write_to_skeleton: str= f"{wlasl_root}skeleton_image/"
@@ -615,7 +615,7 @@ if __name__=='__main__':
                 if exists(imgFolder4singleVideo) and 0<len(listdir(imgFolder4singleVideo)):
                     images, sktn_ann, landmarks_on_video= getSkeletonFrames(
                         fpath_vid=imgFolder4singleVideo,
-                        mpH=mpH_fph,
+                        mpH=mpH_fph
                     )
                     if 0<len(images):
                         makedirs(f"{write_to_skeleton}{trainValTest_ins['video_id']}")
@@ -671,7 +671,7 @@ if __name__=='__main__':
         print("creating skeleton images done...")
         landmark_test_shape= None
         with open(f"{write_to_landmark}23199/00032.npy", 'rb') as f:
-            landmark_test_shape= load(f)
+            landmark_test_shape= loadnpy(f)
         print(f"landmark shape {landmark_test_shape.shape}")
     else:
         print(f"{wlasl_root} doesn't\nexist, please get the dataset 1st")
