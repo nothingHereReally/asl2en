@@ -610,7 +610,7 @@ if __name__=='__main__':
             total_qvideo: int= len(wlasl_annotation[tvt])
             for trainValTest_ins, video_idx in zip(wlasl_annotation[tvt], range(total_qvideo)):
                 if video_idx in (int(total_qvideo*.1*iii) for iii in range(1, 10)):
-                    print(f"processing at {(video_idx+1)/total_qvideo}%")
+                    print(f"processing at {(video_idx+1)/total_qvideo*100}%")
                 imgFolder4singleVideo: str= f"{WLASL_raw_img}{trainValTest_ins['video_id']}"
                 if exists(imgFolder4singleVideo) and 0<len(listdir(imgFolder4singleVideo)):
                     images, sktn_ann, landmarks_on_video= getSkeletonFrames(
