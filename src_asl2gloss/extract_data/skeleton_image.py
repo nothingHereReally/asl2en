@@ -588,7 +588,7 @@ if __name__=='__main__':
         min_tracking_confidence=0.5
     )
     TrainValTest: tuple= ("train", "val", "test")
-    if exists(wlasl_root) and not exists(write_to_skeleton):
+    if exists(wlasl_root) and not exists(write_to_skeleton) and not exists(write_to_landmark):
         makedirs(f"{write_to_skeleton}")
         print(f"writing to {write_to_skeleton}")
         skeleton_annotation: dict= {
@@ -676,5 +676,6 @@ if __name__=='__main__':
     else:
         print(f"{wlasl_root} doesn't\nexist, please get the dataset 1st")
         print(f"or if do exist, please delete this\ndirectory {write_to_skeleton}")
+        print(f"or if do exist, please delete this\ndirectory {write_to_landmark}")
 
 
