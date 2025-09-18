@@ -1,15 +1,33 @@
-from json import dump
-from os import listdir, makedirs
-from os.path import join as pjoin
-from random import choices, shuffle
+from random import shuffle
 from typing import Any, Generator
-from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, imread, line
-from numpy import array, float32, ndarray, uint16, uint8, zeros
-from mediapipe.python.solutions.holistic import Holistic
+from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, line
+from numpy import array, float32, ndarray, uint16, uint8, zeros, load as loadnp
 from math import ceil
 from os.path import exists
 
-from .lmark_constant import EPOCHS, FACE_CONNECTIONS, HAND_CONNECTIONS, IMG_SIZE, POSE_CONNECTIONS, PROJ_ROOT, QUANTITY_FRAME, T10_DIR_IMG, TRAIN_BATCH, TRAIN_STEPS, VAL_STEPS, WLASL_VID_DIR, WORTHY_POSE_IDX, wlasl_READY, MIN_FRAMES_HAS_HANDS, wlasl_READY_10
+from .lmark_constant import (
+    K_TRAIN,
+    LANDMARK_SHAPE,
+    T_TRAIN_TG,
+    T_VAL_TG,
+    TRAIN_BATCH,
+    IMG_SIZE,
+    QUANTITY_FRAME,
+
+    FACE_CONNECTIONS,
+    POSE_CONNECTIONS,
+    HAND_CONNECTIONS,
+    WLASL_LANDMARK_DIR,
+    WORTHY_POSE_IDX,
+
+    wlasl_landmark_TG,
+)
+
+
+
+
+
+
 
 
 def drawSkeletonImg(img_orig: ndarray, \
@@ -444,6 +462,12 @@ def drawFacePoseHand(img_orig: ndarray, lmark_mph, orig_shape: tuple) -> ndarray
     return img
 
 
+
+
+
+
+
+
 def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, initGT: int= 0, mpH: Any=None, TqFRAMES: int= QUANTITY_FRAME) -> list:
     '''
     fpath_vid: str, video file path string
@@ -509,16 +533,16 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, initGT: int= 0, m
             for ii in range(t2o_ratio):
                 if fph_lmark.left_hand_landmarks!=None or fph_lmark.right_hand_landmarks!=None:
                     qHands+= 1
-                # start checking but on 2nd be opposite
-                # if (TqFRAMES-MIN_FRAMES_HAS_HANDS)<=(i*t2o_ratio +ii) and ((i*t2o_ratio +ii) -(TqFRAMES-MIN_FRAMES_HAS_HANDS))<qHands:
-                if (TqFRAMES-MIN_FRAMES_HAS_HANDS)<=(i*t2o_ratio +ii) and qHands<=((i*t2o_ratio +ii) -(TqFRAMES-MIN_FRAMES_HAS_HANDS)):
-                    del allImg_human
-                    del allImg_skeleton
-                    del oqFRAMES
-                    del t2o_ratio
-                    del fph_lmark
-                    del qHands
-                    raise FileExistsError("video not worthy to be on training due to did not meet MIN_FRAMES_HAS_HANDS")
+                # # start checking but on 2nd be opposite
+                # # if (TqFRAMES-MIN_FRAMES_HAS_HANDS)<=(i*t2o_ratio +ii) and ((i*t2o_ratio +ii) -(TqFRAMES-MIN_FRAMES_HAS_HANDS))<qHands:
+                # if (TqFRAMES-MIN_FRAMES_HAS_HANDS)<=(i*t2o_ratio +ii) and qHands<=((i*t2o_ratio +ii) -(TqFRAMES-MIN_FRAMES_HAS_HANDS)):
+                #     del allImg_human
+                #     del allImg_skeleton
+                #     del oqFRAMES
+                #     del t2o_ratio
+                #     del fph_lmark
+                #     del qHands
+                #     raise FileExistsError("video not worthy to be on training due to did not meet MIN_FRAMES_HAS_HANDS")
                 if isSingleImg and (i*t2o_ratio +ii)<TqFRAMES:
                     allImg_skeleton.extend(drawFacePoseHand(
                         img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
@@ -536,13 +560,13 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, initGT: int= 0, m
             fph_lmark= mpH.process(allImg_human[i])
             if fph_lmark.left_hand_landmarks!=None or fph_lmark.right_hand_landmarks!=None:
                 qHands+= 1
-            if (TqFRAMES-MIN_FRAMES_HAS_HANDS)<=i and qHands<=(i -(TqFRAMES-MIN_FRAMES_HAS_HANDS)):
-                del allImg_human
-                del allImg_skeleton
-                del oqFRAMES
-                del fph_lmark
-                del qHands
-                raise FileExistsError("video not worthy to be on training due to did not meet MIN_FRAMES_HAS_HANDS")
+            # if (TqFRAMES-MIN_FRAMES_HAS_HANDS)<=i and qHands<=(i -(TqFRAMES-MIN_FRAMES_HAS_HANDS)):
+            #     del allImg_human
+            #     del allImg_skeleton
+            #     del oqFRAMES
+            #     del fph_lmark
+            #     del qHands
+            #     raise FileExistsError("video not worthy to be on training due to did not meet MIN_FRAMES_HAS_HANDS")
             if isSingleImg:
                 allImg_skeleton.extend(drawFacePoseHand(
                     img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
@@ -562,14 +586,14 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, initGT: int= 0, m
             fph_lmark= mpH.process(allImg_human[i*o2t_ratio +initGT])
             if fph_lmark.left_hand_landmarks!=None or fph_lmark.right_hand_landmarks!=None:
                 qHands+= 1
-            if (TqFRAMES-MIN_FRAMES_HAS_HANDS)<=i and qHands<=(i -(TqFRAMES-MIN_FRAMES_HAS_HANDS)):
-                del allImg_human
-                del allImg_skeleton
-                del oqFRAMES
-                del o2t_ratio
-                del fph_lmark
-                del qHands
-                raise FileExistsError("video not worthy to be on training due to did not meet MIN_FRAMES_HAS_HANDS")
+            # if (TqFRAMES-MIN_FRAMES_HAS_HANDS)<=i and qHands<=(i -(TqFRAMES-MIN_FRAMES_HAS_HANDS)):
+            #     del allImg_human
+            #     del allImg_skeleton
+            #     del oqFRAMES
+            #     del o2t_ratio
+            #     del fph_lmark
+            #     del qHands
+            #     raise FileExistsError("video not worthy to be on training due to did not meet MIN_FRAMES_HAS_HANDS")
             if isSingleImg:
                 allImg_skeleton.extend(drawFacePoseHand(
                     img_orig=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
@@ -597,331 +621,137 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, initGT: int= 0, m
     ]
 
 
-def getdata(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
+
+
+
+
+
+
+def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
     # wlasl_READY['train']
     # wlasl_READY['val']
     # wlasl_READY['test']
     # wlasl_READY['label_id2gloss']
     # wlasl_READY['label_gloss2id']
-    tmp_arrChoice= choices([2,3,1])
-    for _ in range(tmp_arrChoice[0]):
-        shuffle(wlasl_READY[TrainVal])
-    del tmp_arrChoice
-    mpH: Holistic= Holistic( # mph, midiapipe holistic
-        static_image_mode=True,
-        model_complexity=1,
-        min_detection_confidence=0.5,
-        min_tracking_confidence=0.5
-    )
+    def getLessThan_np(lmark_: dict) -> list:
+        '''
+        to be used for when len(lmark_['landmark']) < QUANTITY_FRAME
+        '''
+        lmark_numpy: list= []
+        t2o_ratio: int= int(ceil(QUANTITY_FRAME/len(lmark_['landmark'])))
+        for i in range(len(lmark_['landmark'])):
+            landmark_data_numpy= None
+            with open(f"{WLASL_LANDMARK_DIR}{lmark_['video_id']}/{lmark_['landmark'][  i  ]['file']}", 'rb') as f:
+                landmark_data_numpy= loadnp(f)
+            for ii in range(t2o_ratio):
+                if (i*t2o_ratio+ii)<QUANTITY_FRAME:
+                    lmark_numpy.append( landmark_data_numpy )
+        if len(lmark_numpy)!=QUANTITY_FRAME:
+            raise ValueError("incorrect implementation on getLessThan_np, due to len(lmark_numpy)!=QUANTITY_FRAME")
+        return lmark_numpy
+    def getEqual_np(lmark_: dict) -> list:
+        '''
+        to be used for when len(lmark_['landmark']) == QUANTITY_FRAME
+        '''
+        lmark_numpy: list= []
+        for i in range(len(lmark_['landmark'])):
+            with open(f"{WLASL_LANDMARK_DIR}{lmark_['video_id']}/{lmark_['landmark'][  i  ]['file']}", 'rb') as f:
+                lmark_numpy.append(loadnp(f))
+        if len(lmark_numpy)!=QUANTITY_FRAME:
+            raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_numpy)!=QUANTITY_FRAME")
+        return lmark_numpy
+    def getGreaterThan_np(lmark_: dict) -> list:
+        '''
+        to be used for when len(lmark_['landmark']) > QUANTITY_FRAME
+        output be of shape(__ int, QUANTITY_FRAME, 518, 2 __)
+        '''
+        lmark_numpy_MANY_VIDS: list= [[]] # be of shape(__ int, QUANTITY_FRAME, 518, 2 __)
+        o2t_ratio: float= len(lmark_['landmark'])/QUANTITY_FRAME
+
+        lmark_all: list= []
+        idx_init_has_hand: int= -1
+        for i in range(len(lmark_['landmark'])):
+            with open(f"{WLASL_LANDMARK_DIR}{lmark_['video_id']}/{lmark_['landmark'][i]['file']}", 'rb') as f:
+                lmark_all.append(loadnp(f))
+            if idx_init_has_hand==-1:
+                if lmark_['landmark'][i]['left_hand'] or lmark_['landmark'][i]['right_hand']:
+                    idx_init_has_hand= i
+
+        # part 1, floor at index level
+        for i in range(QUANTITY_FRAME):
+            lmark_numpy_MANY_VIDS[0].append(lmark_all[int(i*o2t_ratio)]) # floor
+        if len(lmark_numpy_MANY_VIDS[0])!=QUANTITY_FRAME:
+            raise ValueError("incorrect implementation on getGreaterThan_np on part 1 due to not QUANTITY_FRAME")
+        # lmark_numpy_MANY_VIDS[0] is of shape (QUANTITY_FRAME, 518, 2), but
+        # here lmark_numpy_MANY_VIDS is of shape (1, QUANTITY_FRAME, 518, 2)
+
+        # part 2, evenly spaced via mod, floor at o2t_ratio level
+        o2t_mod: int= int(o2t_ratio) # floor
+        notIncludedOn_mod: int= len(lmark_['landmark'])-(QUANTITY_FRAME*o2t_mod)
+        for i in range(notIncludedOn_mod+1):
+            for ii in range(o2t_mod):
+                lmark_numpy_MANY_VIDS.append([])
+                for iii in range(QUANTITY_FRAME):
+                    lmark_numpy_MANY_VIDS[-1].append(lmark_all[
+                        iii*o2t_mod+ii +i
+                    ])
+        del o2t_mod
+        del notIncludedOn_mod
+
+        # part 3, consecutive, mandatory initial has hand
+        q_available_images: int= len(lmark_['landmark'])-idx_init_has_hand if idx_init_has_hand!=-1 else 0
+        if idx_init_has_hand!=-1 and QUANTITY_FRAME<=q_available_images:
+            for i in range((q_available_images-QUANTITY_FRAME)+1):
+                lmark_numpy_MANY_VIDS.append([])
+                for ii in range(QUANTITY_FRAME):
+                    lmark_numpy_MANY_VIDS[-1].append(lmark_all[
+                        idx_init_has_hand+ii +i
+                    ])
+        del q_available_images
+
+        return lmark_numpy_MANY_VIDS
+
+    # each landmark numpy file is of shape (518, 2)
+    shuffle(wlasl_landmark_TG[trainVal])
     b_idxINIT: int= 0
-    shape_vidBatch: tuple= (batch, QUANTITY_FRAME*IMG_SIZE, IMG_SIZE, 3) if isSimg else (batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)
+    total_q_dataset: int= T_TRAIN_TG if trainVal==K_TRAIN else T_VAL_TG
+    pastLM_GT_QF: list= [] # pastLM_GT_QF --> past landmark on greater than QUANTITY_FRAME
     # while loop runs 1 for every epoch
     while True:
-        batch_vids: ndarray= zeros(shape_vidBatch, dtype=float32)
+        batch_vids: ndarray= zeros((batch, QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]), dtype=float32)
         batch_class: ndarray= zeros((batch), dtype=uint16)
-        i_0toBatchOrMore: int= 0
+
+        i_0toBatchOrMore: int= 0 # for wlasl_landmark_TG[TrainVal][__ b_idxINIT + i_0toBatchOrMore __]
         idx_add2batch: int= 0
-        modWhat: int= 0
-        # below( ie. while idx_add2batch<batch: ) runs 1 time per epoch
+        # for batch_vids[__ idx_add2batch __]
+        # batch_class[__ idx_add2batch __]
+        # below( ie. while idx_add2batch<batch: ) runs 1 time( 1 while loop done ) per batch,
+        # below only knows batch NOTHING MORE NOTHING LESS
+        # does ----> NOT <---- have control on train steps and epochs
         while idx_add2batch<batch:
-            curr_IDX_USE: int= (b_idxINIT+i_0toBatchOrMore) if (b_idxINIT+i_0toBatchOrMore)<len(wlasl_READY[TrainVal]) else (0 +(
-                (b_idxINIT+i_0toBatchOrMore)-len(wlasl_READY[TrainVal])
+            idx_DS: int= (b_idxINIT+i_0toBatchOrMore) if (b_idxINIT+i_0toBatchOrMore)<total_q_dataset else (0 +(
+                (b_idxINIT+i_0toBatchOrMore)-total_q_dataset
             ))
-            vidfile_dir: str= f"{WLASL_VID_DIR}{wlasl_READY[TrainVal][  curr_IDX_USE  ]['video_id']}.mp4"
-            if exists(vidfile_dir):
-                try:
-                    vidframes_data, o2tRatio= getSkeletonFrames(vidfile_dir, isSingleImg=isSimg, initGT=modWhat, mpH=mpH)
-                    batch_vids[idx_add2batch]= vidframes_data.astype(float32)/255.0
-                    batch_class[idx_add2batch]= int(wlasl_READY[TrainVal][  curr_IDX_USE  ]['gloss_id'])/1.0
-                    idx_add2batch+= 1
-                    # if true below, then worthy be balik to igbaw same vidfile_dir as previous
-                    # due to original_frames_quantity//target_frames_quantity > 1
-                    # ie. daghag original frames compare to target frames( QUANTITY_FRAME )
-                    if 1<o2tRatio:
-                        if modWhat==0:
-                            modWhat= o2tRatio
-                        # modWhat==1 meaning has just recently processed the last mod
-                        # due to modWhat==0 is already done and was the 1st 1 to be
-                        # processed
-                        if modWhat!=1:
-                            # meaning modWhat be 0, 2, 3, 4, 5, 6, 7, 8, ...
-                            # then go back, due process be 0, ..., 4, 3, 2
-                            # to go back, but on 1 since last part, then dili na due to 2nd last
-                            i_0toBatchOrMore-= 1
-                        modWhat-= 1
-                except FileExistsError as e:
-                    del e
-            i_0toBatchOrMore+= 1
-        b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<len(wlasl_READY[TrainVal]) else 0+( (b_idxINIT+batch)-int(len(wlasl_READY[TrainVal])) )
+            lmark_nplist: list= [] # at end should be of shape 22, 518, 2
+            if len(pastLM_GT_QF)!=0:
+                folder_landmark: str= f"{WLASL_LANDMARK_DIR}{wlasl_landmark_TG[trainVal][  idx_DS  ]['video_id']}"
+                if exists(folder_landmark):
+                    if len(wlasl_landmark_TG[trainVal][  idx_DS  ]['landmark'])<QUANTITY_FRAME:
+                         lmark_nplist= getLessThan_np(wlasl_landmark_TG[trainVal][  idx_DS  ])
+                    elif len(wlasl_landmark_TG[trainVal][  idx_DS  ]['landmark'])==QUANTITY_FRAME:
+                        lmark_nplist= getEqual_np(wlasl_landmark_TG[trainVal][  idx_DS  ])
+                    else: # quanity of image landmark is more than QUANTITY_FRAME
+                        pastLM_GT_QF= getGreaterThan_np(wlasl_landmark_TG[trainVal][  idx_DS  ])
+            else:
+                lmark_nplist= pastLM_GT_QF[0]
+                pastLM_GT_QF= pastLM_GT_QF[1:]
+            if len(pastLM_GT_QF)==0:
+                i_0toBatchOrMore+= 1
+            if len(lmark_nplist)==QUANTITY_FRAME:
+                batch_vids[idx_add2batch]= array(lmark_nplist, dtype=float32) # array of shape(QUANTITY_FRAME, 518, 2)
+                batch_class[idx_add2batch]= int(wlasl_landmark_TG[trainVal][  idx_DS  ]['gloss_id'])
+                idx_add2batch+= 1
+            else:
+                raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_nplist)!=QUANTITY_FRAME")
+        b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<total_q_dataset else 0+( (b_idxINIT+batch)-total_q_dataset )
         yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
-
-
-# def getdata_10(...) is for model v14, current best model
-# at 56% accuracy at testing as of 2025-8-11
-def getdata_10(isSimg: bool=False, TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
-    # wlasl_READY_10['train']
-    # wlasl_READY_10['val']
-    # wlasl_READY_10['test']
-    # wlasl_READY_10['label_id2gloss']
-    # wlasl_READY_10['label_gloss2id']
-    tmp_arrChoice= choices([2,3,1])
-    for _ in range(tmp_arrChoice[0]):
-        shuffle(wlasl_READY_10[TrainVal])
-    del tmp_arrChoice
-    b_idxINIT: int= 0
-    shape_vidBatch: tuple= (batch, QUANTITY_FRAME*IMG_SIZE, IMG_SIZE, 3) if isSimg else (batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3)
-    mpH: Holistic= Holistic( # mph, midiapipe holistic
-        static_image_mode=True,
-        model_complexity=1,
-        min_detection_confidence=0.5,
-        min_tracking_confidence=0.5
-    )
-    # while loop runs 1 for every epoch
-    while True:
-        batch_vids: ndarray= zeros(shape_vidBatch, dtype=float32)
-        batch_class: ndarray= zeros((batch), dtype=uint16)
-        i_0toBatchOrMore: int= 0
-        idx_add2batch: int= 0
-        modWhat: int= 0
-        # below( ie. while idx_add2batch<batch: ) runs 1 time per epoch
-        while idx_add2batch<batch:
-            curr_IDX_USE: int= (b_idxINIT+i_0toBatchOrMore) if (b_idxINIT+i_0toBatchOrMore)<len(wlasl_READY_10[TrainVal]) else (0 +(
-                (b_idxINIT+i_0toBatchOrMore)-len(wlasl_READY_10[TrainVal])
-            ))
-            vidfile_dir: str= f"{WLASL_VID_DIR}{wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['video_id']}.mp4"
-            if exists(vidfile_dir):
-                try:
-                    vidframes_data, o2tRatio= getSkeletonFrames(vidfile_dir, isSingleImg=isSimg, initGT=modWhat, mpH=mpH)
-                    batch_vids[idx_add2batch]= vidframes_data.astype(float32)/255.0
-                    batch_class[idx_add2batch]= int(wlasl_READY_10[TrainVal][  curr_IDX_USE  ]['gloss_id'])/1.0
-                    idx_add2batch+= 1
-                    # if true below, then worthy be balik to igbaw same vidfile_dir as previous
-                    # due to original_frames_quantity//target_frames_quantity > 1
-                    # ie. daghag original frames compare to target frames( QUANTITY_FRAME )
-                    if 1<o2tRatio:
-                        if modWhat==0:
-                            modWhat= o2tRatio
-                        # modWhat==1 meaning has just recently processed the last mod
-                        # due to modWhat==0 is already done and was the 1st 1 to be
-                        # processed
-                        if modWhat!=1:
-                            # meaning modWhat be 0, 2, 3, 4, 5, 6, 7, 8, ...
-                            # then go back, due process be 0, ..., 4, 3, 2
-                            # to go back, but on 1 since last part, then dili na due to 2nd last
-                            i_0toBatchOrMore-= 1
-                        modWhat-= 1
-                except FileExistsError as e:
-                    del e
-            i_0toBatchOrMore+= 1
-        b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<len(wlasl_READY_10[TrainVal]) else 0+( (b_idxINIT+batch)-int(len(wlasl_READY_10[TrainVal])) )
-        yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
-
-
-def getdataNotVid_10(TrainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
-    def getFramesG10_sHand(vid: dict, initGT: int=0, q_train: int=0, TqFrames: int=QUANTITY_FRAME) -> list:
-        q_minTrain2addMissing_img: int= 2
-        modWhere2empty: int= choices([3,4])[0]
-        if int(len(vid['images']))<1:
-            raise FileExistsError(f"no files exist on {vid['video_id']}")
-        imgsList: list= []
-        oqFrames: int= len(vid['images'])
-        o2t_ratio: int= int(oqFrames//TqFrames)
-        if oqFrames<TqFrames:
-            t2o_ratio: int= int(ceil(TqFrames/oqFrames))
-            for i in range(oqFrames):
-                if vid['images'][i]['left_hand'] or vid['images'][i]['right_hand']:
-                    for ii in range(t2o_ratio):
-                        if (i*t2o_ratio +ii)<TqFrames:
-                            if q_minTrain2addMissing_img<=q_train and \
-                                (((i*t2o_ratio+ii)%modWhere2empty)==(modWhere2empty-1) or \
-                                 ((i*t2o_ratio+ii)%modWhere2empty)==0):
-                                imgsList.append(zeros(
-                                    (IMG_SIZE, IMG_SIZE, 3),
-                                    dtype=uint8
-                                ))
-                            else:
-                                imgsList.append(array(
-                                    imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))),
-                                    dtype=uint8,
-                                    copy=True
-                                ))
-            while len(imgsList)<TqFrames:
-                imgsList.append(array(imgsList[-1], dtype=uint8, copy=True))
-        elif oqFrames==TqFrames:
-            for i in range(TqFrames):
-                if q_minTrain2addMissing_img<=q_train and \
-                    ((i%modWhere2empty)==(modWhere2empty-1) or \
-                     (i%modWhere2empty)==0):
-                    imgsList.append(zeros(
-                        (IMG_SIZE, IMG_SIZE, 3),
-                        dtype=uint8
-                    ))
-                else:
-                    if vid['images'][i]['left_hand'] or vid['images'][i]['right_hand']:
-                        imgsList.append(array(
-                            imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))),
-                            dtype=uint8,
-                            copy=True
-                        ))
-            while len(imgsList)<TqFrames:
-                imgsList.append(array(imgsList[-1], dtype=uint8, copy=True))
-        else: # TqFrames<oqFrames
-            initGT= initGT%o2t_ratio
-            for i in range(TqFrames):
-                i_has_hands: int= 0
-                for ii in range(o2t_ratio):
-                    if ( not vid['images'][i*o2t_ratio +i_has_hands]['left_hand'] and \
-                        not vid['images'][i*o2t_ratio +i_has_hands]['right_hand'] ) and \
-                        ( vid['images'][i*o2t_ratio +ii]['left_hand'] or \
-                        vid['images'][i*o2t_ratio +ii]['right_hand'] ):
-                        i_has_hands= ii
-                if q_minTrain2addMissing_img<=q_train and \
-                    ((i%modWhere2empty)==(modWhere2empty-1) or \
-                     (i%modWhere2empty)==0):
-                    imgsList.append(zeros(
-                        (IMG_SIZE, IMG_SIZE, 3),
-                        dtype=uint8
-                    ))
-                else:
-                    if vid['images'][i*o2t_ratio +i_has_hands]['left_hand'] or vid['images'][i*o2t_ratio +i_has_hands]['right_hand']:
-                        imgsList.append(array(
-                            imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i*o2t_ratio +i_has_hands]['file']}.png")))
-                        ))
-                    elif 0<len(imgsList):
-                        imgsList.append(array(imgsList[-1], dtype=uint8, copy=True))
-            while len(imgsList)<TqFrames:
-                imgsList.append(array(imgsList[-1], dtype=uint8, copy=True))
-        return [
-            array(imgsList, dtype=uint8, copy=True),
-            o2t_ratio if 1<o2t_ratio else 0
-        ]
-    def getFramesG10(vid: dict, initGT: int=0, TqFrames: int=QUANTITY_FRAME) -> list:
-        if int(len(vid['images']))<1:
-            raise FileExistsError(f"no files exist on {vid['video_id']}")
-        imgsList: list= []
-        oqFrames: int= len(vid['images'])
-        o2t_ratio: int= int(oqFrames//TqFrames)
-        qHandsG10: int= 0
-        if oqFrames<TqFrames:
-            t2o_ratio: int= int(ceil(TqFrames/oqFrames))
-            for i in range(oqFrames):
-                for ii in range(t2o_ratio):
-                    if (i*t2o_ratio +ii)<TqFrames:
-                        if vid['images'][i]['left_hand'] or vid['images'][i]['right_hand']:
-                            qHandsG10+= 1
-                        if (TqFrames-MIN_FRAMES_HAS_HANDS)<=(i*t2o_ratio +ii) and qHandsG10<=((i*t2o_ratio +ii) -(TqFrames-MIN_FRAMES_HAS_HANDS)):
-                            del imgsList
-                            del o2t_ratio
-                            del t2o_ratio
-                            del qHandsG10
-                            raise FileExistsError(f"frames/imgs not worthy, see MIN_FRAMES_HAS_HANDS")
-                        imgsList.append(array(
-                            imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))),
-                            dtype=uint8,
-                            copy=True
-                        ))
-        elif oqFrames==TqFrames:
-            for i in range(TqFrames):
-                if vid['images'][i]['left_hand'] or vid['images'][i]['right_hand']:
-                    qHandsG10+= 1
-                if (TqFrames-MIN_FRAMES_HAS_HANDS)<=i and qHandsG10<=(i -(TqFrames-MIN_FRAMES_HAS_HANDS)):
-                    del imgsList
-                    del o2t_ratio
-                    del qHandsG10
-                    raise FileExistsError(f"frames/imgs not worthy, see MIN_FRAMES_HAS_HANDS")
-                imgsList.append(array(
-                    imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i]['file']}.png"))),
-                    dtype=uint8,
-                    copy=True
-                ))
-        else: # TqFrames<oqFrames
-            initGT= initGT%o2t_ratio
-            for i in range(TqFrames):
-                if vid['images'][i*o2t_ratio +initGT]['left_hand'] or vid['images'][i*o2t_ratio +initGT]['right_hand']:
-                    qHandsG10+= 1
-                if (TqFrames-MIN_FRAMES_HAS_HANDS)<=i and qHandsG10<=(i -(TqFrames-MIN_FRAMES_HAS_HANDS)):
-                    del imgsList
-                    del o2t_ratio
-                    del qHandsG10
-                    raise FileExistsError(f"frames/imgs not worthy, see MIN_FRAMES_HAS_HANDS")
-                imgsList.append(array(
-                    imread(str(pjoin(T10_DIR_IMG, vid['video_id'], f"{vid['images'][i*o2t_ratio +initGT]['file']}.png")))
-                ))
-        return [
-            array(imgsList, dtype=uint8, copy=True),
-            o2t_ratio if 1<o2t_ratio else 0
-        ]
-    b_idxINIT: int= 0
-    batchWhat: int= 0
-    shuffle(wlasl_READY_10[TrainVal])
-    shuffle(wlasl_READY_10[TrainVal])
-    glossDist: dict= { i: {'quantity': 0, 'video_id': []} for i in range(len(wlasl_READY_10['label_id2gloss']))}
-    glossDist['split']= TrainVal
-    glossDist['split_size']= len(wlasl_READY_10[TrainVal])
-    # print(len(wlasl_READY_10['label_id2gloss'])) # correct, it exist
-    while True:
-        batchWhat+= 1
-        batch_vids: ndarray= zeros(
-            (batch, QUANTITY_FRAME, IMG_SIZE, IMG_SIZE, 3),
-            dtype=float32)
-        batch_class: ndarray= zeros((batch), dtype=uint16)
-        i_0toBatchOrMore: int= 0
-        idx_add2batch: int= 0
-        modWhat: int= 0
-        while idx_add2batch<batch:
-            curr_IDX_USE: int= (b_idxINIT+i_0toBatchOrMore) if (b_idxINIT+i_0toBatchOrMore)<len(wlasl_READY_10[TrainVal]) else (0 +(
-                (b_idxINIT+i_0toBatchOrMore)-len(wlasl_READY_10[TrainVal])
-            ))
-            vidcurr_ann: dict= wlasl_READY_10[TrainVal][  curr_IDX_USE  ]
-            min_q: int= 99999
-            trainThisClass: int= -1
-            for i in range(len(wlasl_READY_10['label_id2gloss'])):
-                if glossDist[i]['quantity']<min_q:
-                    min_q= glossDist[i]['quantity']
-                    trainThisClass= i
-            if exists(str(pjoin(T10_DIR_IMG, vidcurr_ann['video_id']))) and \
-                int(vidcurr_ann['gloss_id'])==trainThisClass:
-                try:
-                    vidframes_data, o2tRatio= getFramesG10_sHand(vidcurr_ann, initGT=modWhat, q_train=glossDist[
-                        vidcurr_ann['gloss_id']
-                    ]['quantity'])
-                    batch_vids[idx_add2batch]= vidframes_data.astype(float32)/255.0
-                    batch_class[idx_add2batch]= int(vidcurr_ann['gloss_id'])/1.0
-                    glossDist[int(vidcurr_ann['gloss_id'])]['quantity']+= 1
-                    glossDist[int(vidcurr_ann['gloss_id'])]['video_id'].append(
-                        vidcurr_ann['video_id']
-                    )
-                    idx_add2batch+= 1
-                    # if true below, then worthy be balik to igbaw same vidfile_dir as previous
-                    # due to original_frames_quantity//target_frames_quantity > 1
-                    # ie. daghag original frames compare to target frames( QUANTITY_FRAME )
-                    if 1<o2tRatio:
-                        if modWhat==0:
-                            modWhat= o2tRatio
-                        # modWhat==1 meaning has just recently processed the last mod
-                        # due to modWhat==0 is already done and was the 1st 1 to be
-                        # processed
-                        if modWhat!=1:
-                            # meaning modWhat be 0, 2, 3, 4, 5, 6, 7, 8, ...
-                            # then go back, due process be 0, ..., 4, 3, 2
-                            # to go back, but on 1 since last part, then dili na due to 2nd last
-                            i_0toBatchOrMore-= 1
-                        modWhat-= 1
-                except FileExistsError as e:
-                    del e
-            i_0toBatchOrMore+= 1
-            if len(wlasl_READY_10[TrainVal])<i_0toBatchOrMore:
-                i_0toBatchOrMore= 0
-        b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<len(wlasl_READY_10[TrainVal]) else 0+( (b_idxINIT+batch)-int(len(wlasl_READY_10[TrainVal])) )
-        if batchWhat==(TRAIN_STEPS*EPOCHS) or batchWhat==VAL_STEPS:
-            for i in range(len(wlasl_READY_10['label_id2gloss'])):
-                glossDist[ i ]['video_id']= list(set(
-                    glossDist[ i ]['video_id']
-                ))
-                glossDist[ i ]['vid_q_uniq']= int(len(glossDist[ i ]['video_id']))
-            if not exists(str(pjoin(PROJ_ROOT, f"training_{TrainVal}"))):
-                makedirs(str(pjoin(PROJ_ROOT, f"training_{TrainVal}")))
-            with open(str(pjoin(PROJ_ROOT, f"training_{TrainVal}", f"{TrainVal}_{batchWhat}.json")), 'w') as f:
-                dump(glossDist, f)
-        yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
-
