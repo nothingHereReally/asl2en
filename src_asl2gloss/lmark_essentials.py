@@ -2,6 +2,7 @@ from random import shuffle
 from typing import Any, Generator
 from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, line
 from numpy import array, float32, ndarray, uint16, uint8, zeros, load as loadnp
+from json import dump as dumpjson, load as loadjson
 from math import ceil
 from os.path import exists
 
@@ -717,11 +718,13 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
     total_q_dataset: int= T_TRAIN_TG if trainVal==K_TRAIN else T_VAL_TG
     pastLM_GT_QF: list= [] # pastLM_GT_QF --> past landmark on greater than QUANTITY_FRAME
     # while loop runs 1 for every epoch
+    total_q_count: int= 0
+    i_0toBatchOrMore: int= 0 # for wlasl_landmark_TG[TrainVal][__ b_idxINIT + i_0toBatchOrMore __]
     while True:
         batch_vids: ndarray= zeros((batch, QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]), dtype=float32)
         batch_class: ndarray= zeros((batch), dtype=uint16)
 
-        i_0toBatchOrMore: int= 0 # for wlasl_landmark_TG[TrainVal][__ b_idxINIT + i_0toBatchOrMore __]
+
         idx_add2batch: int= 0
         # for batch_vids[__ idx_add2batch __]
         # batch_class[__ idx_add2batch __]
@@ -736,6 +739,7 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
             if len(pastLM_GT_QF)==0:
                 folder_landmark: str= f"{WLASL_LANDMARK_DIR}{wlasl_landmark_TG[trainVal][  idx_DS  ]['video_id']}"
                 if exists(folder_landmark):
+                    total_q_count+= 1
                     if len(wlasl_landmark_TG[trainVal][  idx_DS  ]['landmark'])<QUANTITY_FRAME:
                          lmark_nplist= getLessThan_np(wlasl_landmark_TG[trainVal][  idx_DS  ])
                     elif len(wlasl_landmark_TG[trainVal][  idx_DS  ]['landmark'])==QUANTITY_FRAME:
@@ -745,6 +749,7 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                         lmark_nplist= pastLM_GT_QF[0]
                         pastLM_GT_QF= pastLM_GT_QF[1:]
             else:
+                total_q_count+= 1
                 lmark_nplist= pastLM_GT_QF[0]
                 pastLM_GT_QF= pastLM_GT_QF[1:]
             if len(pastLM_GT_QF)==0:
@@ -755,5 +760,29 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 idx_add2batch+= 1
             else:
                 raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_nplist)!=QUANTITY_FRAME")
-        b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<total_q_dataset else 0+( (b_idxINIT+batch)-total_q_dataset )
+
+            blah__: list= []
+            blah__json: str= "./something_train.json"
+            if exists(blah__json):
+                with open(blah__json, 'r') as f:
+                    blah__= loadjson(f)
+                blah__.append({
+                    'idx_DS': idx_DS,
+                    'total_q_count': total_q_count,
+                    'len__pastLM_GT_QF': len(pastLM_GT_QF)
+                })
+                with open(blah__json, 'w') as f:
+                    dumpjson(blah__, f, indent=4)
+            else:
+                blah__= [{
+                    'idx_DS': idx_DS,
+                    'total_q_count': total_q_count,
+                    'len__pastLM_GT_QF': len(pastLM_GT_QF)
+                }]
+                with open(blah__json, 'w') as f:
+                    dumpjson(blah__, f, indent=4)
+
+        if len(pastLM_GT_QF)==0:
+            b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<total_q_dataset else 0+( (b_idxINIT+batch)-total_q_dataset )
+            i_0toBatchOrMore= 0
         yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
