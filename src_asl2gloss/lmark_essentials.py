@@ -733,7 +733,7 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 (b_idxINIT+i_0toBatchOrMore)-total_q_dataset
             ))
             lmark_nplist: list= [] # at end should be of shape 22, 518, 2
-            if len(pastLM_GT_QF)!=0:
+            if len(pastLM_GT_QF)==0:
                 folder_landmark: str= f"{WLASL_LANDMARK_DIR}{wlasl_landmark_TG[trainVal][  idx_DS  ]['video_id']}"
                 if exists(folder_landmark):
                     if len(wlasl_landmark_TG[trainVal][  idx_DS  ]['landmark'])<QUANTITY_FRAME:
