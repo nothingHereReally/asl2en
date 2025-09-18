@@ -38,6 +38,11 @@ with open(f"{PROJ_ROOT}dataset/wlasl/wlasl.annotation.landmark_numpy.train_val_t
 wlasl_landmark: dict= tmp_ready.copy()
 del tmp_ready
 LANDMARK_SHAPE: tuple= (518, 2)
+# landmark is face, then pose, then left_had, then right hand
+# face is (468, 2)
+# pose is (8, 2)
+# left_hand is (21, 2)
+# right_hand is (21, 2)
 
 K_TRAIN: str= 'train'
 K_VAL: str= 'val'
