@@ -99,8 +99,11 @@ if T_GLOSS!=TRAIN_GLOSS:
     T_VAL_TG= len(wlasl_skeleton_TG[K_VAL])
     T_TEST_TG= len(wlasl_skeleton_TG[K_TEST])
 
-TRAIN_STEPS: int= int(ceil((T_TRAIN*3)/TRAIN_BATCH)) if T_TRAIN_TG==0 else int(ceil((T_TRAIN_TG*3)/TRAIN_BATCH))
-VAL_STEPS: int= int(ceil((T_VAL*3)/TRAIN_BATCH)) if T_VAL_TG==0 else int(ceil((T_VAL_TG*3)/TRAIN_BATCH))
+G10_T_TRAIN: int= 13452
+G10_T_VAL: int= 2895
+
+TRAIN_STEPS: int= int(ceil((T_TRAIN*70)/TRAIN_BATCH)) if T_TRAIN_TG==0 else int(ceil(G10_T_TRAIN/TRAIN_BATCH))
+VAL_STEPS: int= int(ceil((T_VAL*70)/TRAIN_BATCH)) if T_VAL_TG==0 else int(ceil(G10_T_VAL/TRAIN_BATCH))
 
 
 FACE_CONNECTIONS: tuple= (
