@@ -26,15 +26,15 @@ WLASL_LANDMARK_DIR: str= f"{PROJ_ROOT}dataset/wlasl/landmark_numpy/"
 
 
 tmp_ready: dict= {}
-with open(f"{PROJ_ROOT}dataset/wlasl/wlasl.annotation.landmark_numpy.train_val_test.json", 'r') as f:
-    tmp_ready= loadjson(f)
-wlasl_landmark: dict= tmp_ready.copy()
-del tmp_ready
-
-tmp_ready: dict= {}
 with open(f"{PROJ_ROOT}dataset/wlasl/wlasl.annotation.skeleton_image.train_val_test.json", 'r') as f:
     tmp_ready= loadjson(f)
 wlasl_skeleton: dict= tmp_ready.copy()
+del tmp_ready
+
+tmp_ready: dict= {}
+with open(f"{PROJ_ROOT}dataset/wlasl/wlasl.annotation.landmark_numpy.train_val_test.json", 'r') as f:
+    tmp_ready= loadjson(f)
+wlasl_landmark: dict= tmp_ready.copy()
 del tmp_ready
 
 K_TRAIN: str= 'train'
@@ -61,6 +61,30 @@ if T_GLOSS<TRAIN_GLOSS:
             'TRAIN_GLOSS': TRAIN_GLOSS
         }
     })
+# dataset that has only data according to TRAIN_GLOSS
+wlasl_skeleton_TG: dict= {}
+wlasl_landmark_TG: dict= {}
+if T_GLOSS!=TRAIN_GLOSS:
+    wlasl_skeleton_TG: dict= {
+        K_TRAIN: [],
+        K_VAL: [],
+        K_TEST: [],
+        K_ID2G: wlasl_skeleton[K_ID2G],
+        K_G2ID: wlasl_skeleton[K_G2ID]
+    }
+    wlasl_landmark_TG: dict= {
+        K_TRAIN: [],
+        K_VAL: [],
+        K_TEST: [],
+        K_ID2G: wlasl_landmark[K_ID2G],
+        K_G2ID: wlasl_landmark[K_G2ID]
+    }
+    for tvt_idv in (K_TRAIN, K_VAL, K_TEST):
+        tillWhat: int= 0
+        while wlasl_landmark[tvt_idv][tillWhat]['gloss_id']<TRAIN_GLOSS:
+            tillWhat+= 1
+        wlasl_skeleton_TG[tvt_idv]= wlasl_skeleton[tvt_idv][0:tillWhat]
+        wlasl_landmark_TG[tvt_idv]= wlasl_landmark[tvt_idv][0:tillWhat]
 
 TRAIN_STEPS: int= int(ceil((T_TRAIN*2)/TRAIN_BATCH))
 VAL_STEPS: int= int(ceil(T_VAL/TRAIN_BATCH))
