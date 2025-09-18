@@ -66,6 +66,9 @@ if T_GLOSS<TRAIN_GLOSS:
 # dataset that has only data according to TRAIN_GLOSS
 wlasl_skeleton_TG: dict= {}
 wlasl_landmark_TG: dict= {}
+T_TRAIN_TG: int= 0
+T_VAL_TG: int= 0
+T_TEST_TG: int= 0
 if T_GLOSS!=TRAIN_GLOSS:
     wlasl_skeleton_TG: dict= {
         K_TRAIN: [],
@@ -87,9 +90,12 @@ if T_GLOSS!=TRAIN_GLOSS:
             tillWhat+= 1
         wlasl_skeleton_TG[tvt_idv]= wlasl_skeleton[tvt_idv][0:tillWhat]
         wlasl_landmark_TG[tvt_idv]= wlasl_landmark[tvt_idv][0:tillWhat]
+    T_TRAIN_TG= len(wlasl_skeleton_TG[K_TRAIN])
+    T_VAL_TG= len(wlasl_skeleton_TG[K_VAL])
+    T_TEST_TG= len(wlasl_skeleton_TG[K_TEST])
 
-TRAIN_STEPS: int= int(ceil((T_TRAIN*2)/TRAIN_BATCH))
-VAL_STEPS: int= int(ceil(T_VAL/TRAIN_BATCH))
+TRAIN_STEPS: int= int(ceil((T_TRAIN*3)/TRAIN_BATCH)) if T_TRAIN_TG==0 else int(ceil((T_TRAIN_TG*3)/TRAIN_BATCH))
+VAL_STEPS: int= int(ceil((T_VAL*3)/TRAIN_BATCH)) if T_VAL_TG==0 else int(ceil((T_VAL_TG*3)/TRAIN_BATCH))
 
 
 FACE_CONNECTIONS: tuple= (
