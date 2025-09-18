@@ -47,6 +47,20 @@ T_TRAIN: int= int(len(wlasl_skeleton[K_TRAIN]))
 T_VAL: int= int(len(wlasl_skeleton[K_VAL]))
 T_TEST: int= int(len(wlasl_skeleton[K_TEST]))
 T_GLOSS: int= int(len(wlasl_skeleton[K_ID2G]))
+TRAIN_GLOSS: int= 10
+if T_GLOSS<TRAIN_GLOSS:
+    # TRAIN_GLOSS to be use as to how many gloss be
+    # on training, starting from very 1st gloss till
+    # ${TRAIN_GLOSS}th gloss classifiction on
+    # wlasl_skeleton[K_ID2G] or wlasl_skeleton[K_ID2G]
+    # due to both represent same dataset really
+    raise ValueError({
+        'TRAIN_GLOSS': 'should be less than or equal to T_GLOSS',
+        'value': {
+            'T_GLOSS': T_GLOSS,
+            'TRAIN_GLOSS': TRAIN_GLOSS
+        }
+    })
 
 TRAIN_STEPS: int= int(ceil((T_TRAIN*2)/TRAIN_BATCH))
 VAL_STEPS: int= int(ceil(T_VAL/TRAIN_BATCH))
