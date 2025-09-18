@@ -30,12 +30,14 @@ with open(f"{PROJ_ROOT}dataset/wlasl/wlasl.annotation.skeleton_image.train_val_t
     tmp_ready= loadjson(f)
 wlasl_skeleton: dict= tmp_ready.copy()
 del tmp_ready
+SKELETON_IMG_SHAPE: tuple= (158, 158, 3)
 
 tmp_ready: dict= {}
 with open(f"{PROJ_ROOT}dataset/wlasl/wlasl.annotation.landmark_numpy.train_val_test.json", 'r') as f:
     tmp_ready= loadjson(f)
 wlasl_landmark: dict= tmp_ready.copy()
 del tmp_ready
+LANDMARK_SHAPE: tuple= (518, 2)
 
 K_TRAIN: str= 'train'
 K_VAL: str= 'val'
