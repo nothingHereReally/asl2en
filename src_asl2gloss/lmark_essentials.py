@@ -762,7 +762,7 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_nplist)!=QUANTITY_FRAME")
 
             blah__: list= []
-            blah__json: str= "./something_train.json"
+            blah__json: str= f"./something_train_{trainVal}.json"
             if exists(blah__json):
                 with open(blah__json, 'r') as f:
                     blah__= loadjson(f)
