@@ -742,6 +742,8 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                         lmark_nplist= getEqual_np(wlasl_landmark_TG[trainVal][  idx_DS  ])
                     else: # quanity of image landmark is more than QUANTITY_FRAME
                         pastLM_GT_QF= getGreaterThan_np(wlasl_landmark_TG[trainVal][  idx_DS  ])
+                        lmark_nplist= pastLM_GT_QF[0]
+                        pastLM_GT_QF= pastLM_GT_QF[1:]
             else:
                 lmark_nplist= pastLM_GT_QF[0]
                 pastLM_GT_QF= pastLM_GT_QF[1:]
