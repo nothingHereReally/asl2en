@@ -728,6 +728,17 @@ def getGreaterThan_np_initHasHand(lmark_: dict) -> list:
                 lmark_numpy_MANY_VIDS[-1].append(lmark_all[
                     idx_init_has_hand+ii +i
                 ])
+    elif idx_init_has_hand!=-1 and q_available_images==QUANTITY_FRAME:
+        lmark_numpy_MANY_VIDS.append([])
+        for i in range(idx_init_has_hand, idx_init_has_hand+q_available_images):
+            lmark_numpy_MANY_VIDS[-1].append(lmark_all[  i  ])
+    elif idx_init_has_hand!=-1 and q_available_images<QUANTITY_FRAME:
+        lmark_numpy_MANY_VIDS.append([])
+        t2o_ratio: int= int(ceil(QUANTITY_FRAME/q_available_images)) # ceil
+        for i in range(idx_init_has_hand, idx_init_has_hand+q_available_images):
+            for ii in range(t2o_ratio):
+                if (i*t2o_ratio +ii)<QUANTITY_FRAME:
+                    lmark_numpy_MANY_VIDS[-1].append(lmark_all[  i  ])
     del q_available_images
 
     return lmark_numpy_MANY_VIDS
