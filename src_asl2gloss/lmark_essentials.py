@@ -748,6 +748,19 @@ def getGreaterThan_np_initHasHand(lmark_: dict) -> list:
     return lmark_numpy_MANY_VIDS
 
 
+def getEqual_np(lmark_: dict) -> list:
+    '''
+    to be used for when len(lmark_['landmark']) == QUANTITY_FRAME
+    '''
+    lmark_numpy: list= []
+    for i in range(len(lmark_['landmark'])):
+        with open(f"{WLASL_LANDMARK_DIR}{lmark_['video_id']}/{lmark_['landmark'][  i  ]['file']}", 'rb') as f:
+            lmark_numpy.append(loadnp(f))
+    if len(lmark_numpy)!=QUANTITY_FRAME:
+        raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_numpy)!=QUANTITY_FRAME")
+    return lmark_numpy
+
+
 def getLessThan_np(lmark_: dict) -> list:
     '''
     to be used for when len(lmark_['landmark']) < QUANTITY_FRAME
@@ -772,17 +785,6 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
     # wlasl_READY['test']
     # wlasl_READY['label_id2gloss']
     # wlasl_READY['label_gloss2id']
-    def getEqual_np(lmark_: dict) -> list:
-        '''
-        to be used for when len(lmark_['landmark']) == QUANTITY_FRAME
-        '''
-        lmark_numpy: list= []
-        for i in range(len(lmark_['landmark'])):
-            with open(f"{WLASL_LANDMARK_DIR}{lmark_['video_id']}/{lmark_['landmark'][  i  ]['file']}", 'rb') as f:
-                lmark_numpy.append(loadnp(f))
-        if len(lmark_numpy)!=QUANTITY_FRAME:
-            raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_numpy)!=QUANTITY_FRAME")
-        return lmark_numpy
 
     # each landmark numpy file is of shape (518, 2)
     shuffle(wlasl_landmark_TG[trainVal])
