@@ -686,7 +686,6 @@ def getGreaterThan_np_initHasHand(lmark_: dict) -> list:
     output be of shape(__ int, QUANTITY_FRAME, 518, 2 __)
     '''
     lmark_numpy_MANY_VIDS: list= [[]] # be of shape(__ int, QUANTITY_FRAME, 518, 2 __)
-    o2t_ratio: float= len(lmark_['landmark'])/QUANTITY_FRAME
 
     lmark_all: list= []
     idx_init_has_hand: int= -1
@@ -696,19 +695,23 @@ def getGreaterThan_np_initHasHand(lmark_: dict) -> list:
         if idx_init_has_hand==-1:
             if lmark_['landmark'][i]['left_hand'] or lmark_['landmark'][i]['right_hand']:
                 idx_init_has_hand= i
+    if idx_init_has_hand==-1:
+        return []
 
     # part 1, floor at index level
+    o2t_ratio: float= (len(lmark_['landmark'])-idx_init_has_hand)/QUANTITY_FRAME
     for i in range(QUANTITY_FRAME):
-        lmark_numpy_MANY_VIDS[0].append(lmark_all[int(i*o2t_ratio)]) # floor
+        lmark_numpy_MANY_VIDS[0].append(lmark_all[idx_init_has_hand+int(i*o2t_ratio)]) # floor
     if len(lmark_numpy_MANY_VIDS[0])!=QUANTITY_FRAME:
         raise ValueError("incorrect implementation on getGreaterThan_np on part 1 due to not QUANTITY_FRAME")
+    del o2t_ratio
     # lmark_numpy_MANY_VIDS[0] is of shape (QUANTITY_FRAME, 518, 2), but
     # here lmark_numpy_MANY_VIDS is of shape (1, QUANTITY_FRAME, 518, 2)
 
     q_available_images: int= len(lmark_['landmark'])-idx_init_has_hand if idx_init_has_hand!=-1 else 0
     # q_available_images, quantity of images starting from idx_init_has_hand
     if idx_init_has_hand!=-1 and QUANTITY_FRAME<=q_available_images:
-        # part 2, evenly spaced via mod, floor at o2t_ratio level
+        # part 2, evenly spaced via mod, floor at orig/target ratio level
         o2t_mod: int= int(q_available_images/QUANTITY_FRAME) # floor
         notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
         for i in range(notIncludedOn_mod+1):
@@ -844,8 +847,9 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                         lmark_nplist= getEqual_np(wlasl_landmark_TG[trainVal][  idx_DS  ])
                     else: # quanity of image landmark is more than QUANTITY_FRAME
                         pastLM_GT_QF= getGreaterThan_np_initHasHand(wlasl_landmark_TG[trainVal][  idx_DS  ])
-                        lmark_nplist= pastLM_GT_QF[0]
-                        pastLM_GT_QF= pastLM_GT_QF[1:]
+                        if 0<len(pastLM_GT_QF):
+                            lmark_nplist= pastLM_GT_QF[0]
+                            pastLM_GT_QF= pastLM_GT_QF[1:]
                     total_q_count+= 1
             else:
                 lmark_nplist= pastLM_GT_QF[0]
