@@ -773,7 +773,8 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 blah__.append({
                     'idx_DS': idx_DS,
                     'total_q_count': total_q_count,
-                    'len__pastLM_GT_QF': len(pastLM_GT_QF)
+                    'len__pastLM_GT_QF': len(pastLM_GT_QF),
+                    'total_q_dataset': total_q_dataset
                 })
                 with open(blah__json, 'w') as f:
                     dumpjson(blah__, f, indent=4)
@@ -781,7 +782,8 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 blah__= [{
                     'idx_DS': idx_DS,
                     'total_q_count': total_q_count,
-                    'len__pastLM_GT_QF': len(pastLM_GT_QF)
+                    'len__pastLM_GT_QF': len(pastLM_GT_QF),
+                    'total_q_dataset': total_q_dataset
                 }]
                 with open(blah__json, 'w') as f:
                     dumpjson(blah__, f, indent=4)
