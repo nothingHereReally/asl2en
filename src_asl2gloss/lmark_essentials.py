@@ -2,7 +2,7 @@ from random import shuffle
 from typing import Any, Generator
 from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, line
 from numpy import array, float32, ndarray, uint16, uint8, zeros, load as loadnp
-from json import dump as dumpjson, load as loadjson
+# from json import dump as dumpjson, load as loadjson
 from math import ceil
 from os.path import exists
 
@@ -832,34 +832,37 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_nplist)!=QUANTITY_FRAME")
 
 
-            blah__: list= []
-            blah__json: str= f"./something_{trainVal}.json"
-            # idx_DS, index used on wlasl_landmark_TG[trainVal][  idx_DS  ]
-            # total_q_count, counts quantity of wlasl_landmark_TG[trainVal][  idx_DS  ]
-            # ____ but at the level that it was returned on:
-            # ____ ( getLessThan_np, getEqual_np, getGreaterThan_np )
-            # pastLM_GT_QF, mainly for getGreaterThan_np data it returned, to have data even in future
-            # total_q_dataset, is really just len(wlasl_landmark_TG[trainVal])
-            if exists(blah__json):
-                with open(blah__json, 'r') as f:
-                    blah__= loadjson(f)
-                blah__.append({
-                    'idx_DS': idx_DS,
-                    'total_q_count': total_q_count,
-                    'len__pastLM_GT_QF': len(pastLM_GT_QF),
-                    'total_q_dataset': total_q_dataset
-                })
-                with open(blah__json, 'w') as f:
-                    dumpjson(blah__, f, indent=4)
-            else:
-                blah__= [{
-                    'idx_DS': idx_DS,
-                    'total_q_count': total_q_count,
-                    'len__pastLM_GT_QF': len(pastLM_GT_QF),
-                    'total_q_dataset': total_q_dataset
-                }]
-                with open(blah__json, 'w') as f:
-                    dumpjson(blah__, f, indent=4)
+            if idx_DS==(total_q_dataset-1) and 1<total_q_count:
+                print(f"________ total_q_count: {total_q_count+len(pastLM_GT_QF)} ______ {trainVal}")
+                total_q_count= 0
+            # blah__: list= []
+            # blah__json: str= f"./something_{trainVal}.json"
+            # # idx_DS, index used on wlasl_landmark_TG[trainVal][  idx_DS  ]
+            # # total_q_count, counts quantity of wlasl_landmark_TG[trainVal][  idx_DS  ]
+            # # ____ but at the level that it was returned on:
+            # # ____ ( getLessThan_np, getEqual_np, getGreaterThan_np )
+            # # pastLM_GT_QF, mainly for getGreaterThan_np data it returned, to have data even in future
+            # # total_q_dataset, is really just len(wlasl_landmark_TG[trainVal])
+            # if exists(blah__json):
+            #     with open(blah__json, 'r') as f:
+            #         blah__= loadjson(f)
+            #     blah__.append({
+            #         'idx_DS': idx_DS,
+            #         'total_q_count': total_q_count,
+            #         'len__pastLM_GT_QF': len(pastLM_GT_QF),
+            #         'total_q_dataset': total_q_dataset
+            #     })
+            #     with open(blah__json, 'w') as f:
+            #         dumpjson(blah__, f, indent=4)
+            # else:
+            #     blah__= [{
+            #         'idx_DS': idx_DS,
+            #         'total_q_count': total_q_count,
+            #         'len__pastLM_GT_QF': len(pastLM_GT_QF),
+            #         'total_q_dataset': total_q_dataset
+            #     }]
+            #     with open(blah__json, 'w') as f:
+            #         dumpjson(blah__, f, indent=4)
 
 
         if len(pastLM_GT_QF)==0:
