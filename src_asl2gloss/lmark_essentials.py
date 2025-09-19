@@ -732,13 +732,17 @@ def getGreaterThan_np_initHasHand(lmark_: dict) -> list:
         lmark_numpy_MANY_VIDS.append([])
         for i in range(idx_init_has_hand, idx_init_has_hand+q_available_images):
             lmark_numpy_MANY_VIDS[-1].append(lmark_all[  i  ])
+        if len(lmark_numpy_MANY_VIDS[-1])!=QUANTITY_FRAME:
+            raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and q_available_images==QUANTITY_FRAME")
     elif idx_init_has_hand!=-1 and q_available_images<QUANTITY_FRAME:
         lmark_numpy_MANY_VIDS.append([])
         t2o_ratio: int= int(ceil(QUANTITY_FRAME/q_available_images)) # ceil
-        for i in range(idx_init_has_hand, idx_init_has_hand+q_available_images):
+        for i, i_0to_t2o_multiplier in zip(range(idx_init_has_hand, idx_init_has_hand+q_available_images), range(q_available_images)):
             for ii in range(t2o_ratio):
-                if (i*t2o_ratio +ii)<QUANTITY_FRAME:
+                if (i_0to_t2o_multiplier*t2o_ratio +ii)<QUANTITY_FRAME:
                     lmark_numpy_MANY_VIDS[-1].append(lmark_all[  i  ])
+        if len(lmark_numpy_MANY_VIDS[-1])!=QUANTITY_FRAME:
+            raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and q_available_images<QUANTITY_FRAME")
     del q_available_images
 
     return lmark_numpy_MANY_VIDS
@@ -829,6 +833,7 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 batch_class[idx_add2batch]= int(wlasl_landmark_TG[trainVal][  idx_DS  ]['gloss_id'])
                 idx_add2batch+= 1
             else:
+                print(f"len of lmark_nplist: {len(lmark_nplist)}")
                 raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_nplist)!=QUANTITY_FRAME")
 
 
