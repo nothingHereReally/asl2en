@@ -832,7 +832,7 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_nplist)!=QUANTITY_FRAME")
 
 
-            if idx_DS==(total_q_dataset-1) and 1<total_q_count:
+            if idx_DS==(total_q_dataset-1) and len(pastLM_GT_QF)==0:
                 print(f"________ total_q_count: {total_q_count+len(pastLM_GT_QF)} ______ {trainVal}")
                 total_q_count= 0
             # blah__: list= []
