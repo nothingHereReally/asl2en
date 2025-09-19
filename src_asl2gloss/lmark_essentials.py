@@ -765,14 +765,22 @@ def getLessThan_np(lmark_: dict) -> list:
     '''
     to be used for when len(lmark_['landmark']) < QUANTITY_FRAME
     '''
+    def getIdxStartHand(lmarks: list) -> int:
+        for i in range(len(lmarks)):
+            if lmarks[i]['left_hand'] or lmarks[i]['right_hand']:
+                return i
+        return -1
+    idx_init_has_hand: int= getIdxStartHand(lmarks=lmark_['landmark'])
+    if idx_init_has_hand==-1:
+        return []
     lmark_numpy: list= []
-    t2o_ratio: int= int(ceil(QUANTITY_FRAME/len(lmark_['landmark'])))
-    for i in range(len(lmark_['landmark'])):
+    t2o_ratio: int= int(ceil(QUANTITY_FRAME/(len(lmark_['landmark'])-idx_init_has_hand)))
+    for i, i_0to_t2o_multiplier in zip(range(idx_init_has_hand, len(lmark_['landmark'])), range(len(lmark_['landmark'])-idx_init_has_hand)):
         landmark_data_numpy= None
         with open(f"{WLASL_LANDMARK_DIR}{lmark_['video_id']}/{lmark_['landmark'][  i  ]['file']}", 'rb') as f:
             landmark_data_numpy= loadnp(f)
         for ii in range(t2o_ratio):
-            if (i*t2o_ratio+ii)<QUANTITY_FRAME:
+            if (i_0to_t2o_multiplier*t2o_ratio+ii)<QUANTITY_FRAME:
                 lmark_numpy.append( landmark_data_numpy )
     if len(lmark_numpy)!=QUANTITY_FRAME:
         raise ValueError("incorrect implementation on getLessThan_np, due to len(lmark_numpy)!=QUANTITY_FRAME")
@@ -830,13 +838,13 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 lmark_nplist= pastLM_GT_QF[0]
                 pastLM_GT_QF= pastLM_GT_QF[1:]
                 total_q_count+= 1
-            if len(pastLM_GT_QF)==0:
+            if len(pastLM_GT_QF)==0 or len(lmark_nplist)==0:
                 i_0toBatchOrMore+= 1
             if len(lmark_nplist)==QUANTITY_FRAME:
                 batch_vids[idx_add2batch]= array(lmark_nplist, dtype=float32) # array of shape(QUANTITY_FRAME, 518, 2)
                 batch_class[idx_add2batch]= int(wlasl_landmark_TG[trainVal][  idx_DS  ]['gloss_id'])
                 idx_add2batch+= 1
-            else:
+            elif len(lmark_nplist)!=0 and len(lmark_nplist)!=QUANTITY_FRAME:
                 print(f"len of lmark_nplist: {len(lmark_nplist)}")
                 raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_nplist)!=QUANTITY_FRAME")
 
