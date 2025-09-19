@@ -743,7 +743,6 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
             if len(pastLM_GT_QF)==0:
                 folder_landmark: str= f"{WLASL_LANDMARK_DIR}{wlasl_landmark_TG[trainVal][  idx_DS  ]['video_id']}"
                 if exists(folder_landmark):
-                    total_q_count+= 1
                     if len(wlasl_landmark_TG[trainVal][  idx_DS  ]['landmark'])<QUANTITY_FRAME:
                          lmark_nplist= getLessThan_np(wlasl_landmark_TG[trainVal][  idx_DS  ])
                     elif len(wlasl_landmark_TG[trainVal][  idx_DS  ]['landmark'])==QUANTITY_FRAME:
@@ -752,10 +751,11 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                         pastLM_GT_QF= getGreaterThan_np(wlasl_landmark_TG[trainVal][  idx_DS  ])
                         lmark_nplist= pastLM_GT_QF[0]
                         pastLM_GT_QF= pastLM_GT_QF[1:]
+                    total_q_count+= 1
             else:
-                total_q_count+= 1
                 lmark_nplist= pastLM_GT_QF[0]
                 pastLM_GT_QF= pastLM_GT_QF[1:]
+                total_q_count+= 1
             if len(pastLM_GT_QF)==0:
                 i_0toBatchOrMore+= 1
             if len(lmark_nplist)==QUANTITY_FRAME:
