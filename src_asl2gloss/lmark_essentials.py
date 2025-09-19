@@ -718,6 +718,10 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
     total_q_dataset: int= T_TRAIN_TG if trainVal==K_TRAIN else T_VAL_TG
     pastLM_GT_QF: list= [] # pastLM_GT_QF --> past landmark on greater than QUANTITY_FRAME
     # while loop runs 1 for every epoch
+    # total_q_count, counts the quantity of video landmarks that was and is training
+    # ie. past all batch_vids on instance training, ie. `p -m src_asl2gloss.model_train`, then
+    # count wlasl_landmark_TG[trainVal][  idx_DS  ] including repeated due to greater
+    # than QUANTITY_FRAME
     total_q_count: int= 0
     i_0toBatchOrMore: int= 0 # for wlasl_landmark_TG[TrainVal][__ b_idxINIT + i_0toBatchOrMore __]
     while True:
