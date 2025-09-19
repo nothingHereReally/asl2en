@@ -765,8 +765,15 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
             else:
                 raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_nplist)!=QUANTITY_FRAME")
 
+
             blah__: list= []
-            blah__json: str= f"./something_train_{trainVal}.json"
+            blah__json: str= f"./something_{trainVal}.json"
+            # idx_DS, index used on wlasl_landmark_TG[trainVal][  idx_DS  ]
+            # total_q_count, counts quantity of wlasl_landmark_TG[trainVal][  idx_DS  ]
+            # ____ but at the level that it was returned on:
+            # ____ ( getLessThan_np, getEqual_np, getGreaterThan_np )
+            # pastLM_GT_QF, mainly for getGreaterThan_np data it returned, to have data even in future
+            # total_q_dataset, is really just len(wlasl_landmark_TG[trainVal])
             if exists(blah__json):
                 with open(blah__json, 'r') as f:
                     blah__= loadjson(f)
@@ -787,6 +794,7 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 }]
                 with open(blah__json, 'w') as f:
                     dumpjson(blah__, f, indent=4)
+
 
         if len(pastLM_GT_QF)==0:
             b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<total_q_dataset else 0+( (b_idxINIT+batch)-total_q_dataset )
