@@ -752,10 +752,23 @@ def getEqual_np(lmark_: dict) -> list:
     '''
     to be used for when len(lmark_['landmark']) == QUANTITY_FRAME
     '''
+    def getIdxStartHand(lmarks: list) -> int:
+        for i in range(len(lmarks)):
+            if lmarks[i]['left_hand'] or lmarks[i]['right_hand']:
+                return i
+        return -1
+    idx_init_has_hand: int= getIdxStartHand(lmarks=lmark_['landmark'])
+    if idx_init_has_hand==-1:
+        return []
     lmark_numpy: list= []
-    for i in range(len(lmark_['landmark'])):
+    t2o_ratio: int= int(ceil(QUANTITY_FRAME/(len(lmark_['landmark'])-idx_init_has_hand)))
+    for i, i_0to_t2o_multiplier in zip(range(idx_init_has_hand, len(lmark_['landmark'])), range(len(lmark_['landmark'])-idx_init_has_hand)):
+        landmark_data_numpy= None
         with open(f"{WLASL_LANDMARK_DIR}{lmark_['video_id']}/{lmark_['landmark'][  i  ]['file']}", 'rb') as f:
-            lmark_numpy.append(loadnp(f))
+            landmark_data_numpy= loadnp(f)
+        for ii in range(t2o_ratio):
+            if (i_0to_t2o_multiplier*t2o_ratio+ii)<QUANTITY_FRAME:
+                lmark_numpy.append( landmark_data_numpy )
     if len(lmark_numpy)!=QUANTITY_FRAME:
         raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_numpy)!=QUANTITY_FRAME")
     return lmark_numpy
