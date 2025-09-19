@@ -99,8 +99,8 @@ if T_GLOSS!=TRAIN_GLOSS:
     T_VAL_TG= len(wlasl_skeleton_TG[K_VAL])
     T_TEST_TG= len(wlasl_skeleton_TG[K_TEST])
 
-G10_T_TRAIN: int= 13452
-G10_T_VAL: int= 2895
+G10_T_TRAIN: int= 11598 # for getGreaterThan_np_initHasHand
+G10_T_VAL: int= 2989 # for getGreaterThan_np_initHasHand
 
 TRAIN_STEPS: int= int(ceil((T_TRAIN*70)/TRAIN_BATCH)) if T_TRAIN_TG==0 else int(ceil(G10_T_TRAIN/TRAIN_BATCH))
 VAL_STEPS: int= int(ceil((T_VAL*70)/TRAIN_BATCH)) if T_VAL_TG==0 else int(ceil(G10_T_VAL/TRAIN_BATCH))
