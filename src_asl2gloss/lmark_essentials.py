@@ -748,28 +748,30 @@ def getGreaterThan_np_initHasHand(lmark_: dict) -> list:
     return lmark_numpy_MANY_VIDS
 
 
+def getLessThan_np(lmark_: dict) -> list:
+    '''
+    to be used for when len(lmark_['landmark']) < QUANTITY_FRAME
+    '''
+    lmark_numpy: list= []
+    t2o_ratio: int= int(ceil(QUANTITY_FRAME/len(lmark_['landmark'])))
+    for i in range(len(lmark_['landmark'])):
+        landmark_data_numpy= None
+        with open(f"{WLASL_LANDMARK_DIR}{lmark_['video_id']}/{lmark_['landmark'][  i  ]['file']}", 'rb') as f:
+            landmark_data_numpy= loadnp(f)
+        for ii in range(t2o_ratio):
+            if (i*t2o_ratio+ii)<QUANTITY_FRAME:
+                lmark_numpy.append( landmark_data_numpy )
+    if len(lmark_numpy)!=QUANTITY_FRAME:
+        raise ValueError("incorrect implementation on getLessThan_np, due to len(lmark_numpy)!=QUANTITY_FRAME")
+    return lmark_numpy
+
+
 def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
     # wlasl_READY['train']
     # wlasl_READY['val']
     # wlasl_READY['test']
     # wlasl_READY['label_id2gloss']
     # wlasl_READY['label_gloss2id']
-    def getLessThan_np(lmark_: dict) -> list:
-        '''
-        to be used for when len(lmark_['landmark']) < QUANTITY_FRAME
-        '''
-        lmark_numpy: list= []
-        t2o_ratio: int= int(ceil(QUANTITY_FRAME/len(lmark_['landmark'])))
-        for i in range(len(lmark_['landmark'])):
-            landmark_data_numpy= None
-            with open(f"{WLASL_LANDMARK_DIR}{lmark_['video_id']}/{lmark_['landmark'][  i  ]['file']}", 'rb') as f:
-                landmark_data_numpy= loadnp(f)
-            for ii in range(t2o_ratio):
-                if (i*t2o_ratio+ii)<QUANTITY_FRAME:
-                    lmark_numpy.append( landmark_data_numpy )
-        if len(lmark_numpy)!=QUANTITY_FRAME:
-            raise ValueError("incorrect implementation on getLessThan_np, due to len(lmark_numpy)!=QUANTITY_FRAME")
-        return lmark_numpy
     def getEqual_np(lmark_: dict) -> list:
         '''
         to be used for when len(lmark_['landmark']) == QUANTITY_FRAME
