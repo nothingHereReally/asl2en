@@ -1,5 +1,5 @@
 from keras.src.activations.activations import ReLU
-from keras.src.layers import Add, Attention, Flatten, Normalization, Reshape, Dense, Input, TimeDistributed
+from keras.src.layers import Add, Attention, Conv2D, Flatten, Normalization, Reshape, Dense, Input, TimeDistributed
 from keras.src.activations import softmax
 from numpy import float32, float64
 
@@ -12,144 +12,324 @@ data_in= Input(
     dtype=float32,
     name='batch_vid',
 )
-x= Reshape(
-    target_shape=(QUANTITY_FRAME, -1),
-    dtype=float64,
-    name='reshape'
-)(data_in)
+x= data_in
 
 
 
 
 
 
-att_q_h1= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+att_q_h1= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_v_h1= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_v_h1= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_k_h1= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_k_h1= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
+    dtype=float64
+)(x)
 
-att_q_h2= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+att_q_h2= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_v_h2= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_v_h2= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_k_h2= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_k_h2= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
+    dtype=float64
+)(x)
 
-att_q_h3= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+att_q_h3= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_v_h3= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_v_h3= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_k_h3= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_k_h3= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
+    dtype=float64
+)(x)
 
-att_q_h4= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+att_q_h4= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_v_h4= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_v_h4= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_k_h4= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_k_h4= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
+    dtype=float64
+)(x)
 
-att_q_h5= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+att_q_h5= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_v_h5= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_v_h5= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_k_h5= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_k_h5= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
+    dtype=float64
+)(x)
 
-att_q_h6= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+att_q_h6= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_v_h6= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_v_h6= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_k_h6= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_k_h6= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
+    dtype=float64
+)(x)
 
-att_q_h7= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+att_q_h7= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_v_h7= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_v_h7= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_k_h7= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_k_h7= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
+    dtype=float64
+)(x)
 
-att_q_h8= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+att_q_h8= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_v_h8= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_v_h8= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
-att_k_h8= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    dtype=float64
+)(x)
+att_k_h8= Conv2D(
+    filters=1,
+    kernel_size=(1,1),
+    strides=(1,1),
+    padding='valid',
+    data_format='channels_last',
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-))(x)
+    dtype=float64
+)(x)
+
+
+att_q_h1= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_q_h1)
+att_v_h1= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_v_h1)
+att_k_h1= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_k_h1)
+
+
+att_q_h2= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_q_h2)
+att_v_h2= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_v_h2)
+att_k_h2= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_k_h2)
+
+
+att_q_h3= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_q_h3)
+att_v_h3= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_v_h3)
+att_k_h3= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_k_h3)
+
+
+att_q_h4= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_q_h4)
+att_v_h4= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_v_h4)
+att_k_h4= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_k_h4)
+
+
+att_q_h5= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_q_h5)
+att_v_h5= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_v_h5)
+att_k_h5= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_k_h5)
+
+
+att_q_h6= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_q_h6)
+att_v_h6= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_v_h6)
+att_k_h6= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_k_h6)
+
+
+att_q_h7= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_q_h7)
+att_v_h7= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_v_h7)
+att_k_h7= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_k_h7)
+
+
+att_q_h8= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_q_h8)
+att_v_h8= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_v_h8)
+att_k_h8= Reshape(
+    target_shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0])
+)(att_k_h8)
 
 
 att_h1= Attention(
