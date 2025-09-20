@@ -32,3 +32,6 @@ model/tfboard_logs.v18/validation/events.out.tfevents.1757425074.dvxvb.2121736.1
 model/aslvid2gloss_v18.keras filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/pics_others/picture_running_raw_image.py.png filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/pics_others/picture_running_skeleton_image.py.png filter=lfs diff=lfs merge=lfs -text
+model/aslvid2gloss_v19.keras filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs.v19/train/events.out.tfevents.1758338921.dvxvb.135334.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs.v19/validation/events.out.tfevents.1758339048.dvxvb.135334.1.v2 filter=lfs diff=lfs merge=lfs -text
