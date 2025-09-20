@@ -858,7 +858,7 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
             if len(pastLM_GT_QF)==0 or len(lmark_nplist)==0:
                 i_0toBatchOrMore+= 1
             if len(lmark_nplist)==QUANTITY_FRAME:
-                batch_vids[idx_add2batch]= array(lmark_nplist, dtype=float32) # array of shape(QUANTITY_FRAME, 518, 2)
+                batch_vids[idx_add2batch]= array(lmark_nplist, dtype=float32)[:, 468:, :] # array of shape(QUANTITY_FRAME, 518, 2)
                 batch_class[idx_add2batch]= int(wlasl_landmark_TG[trainVal][  idx_DS  ]['gloss_id'])
                 idx_add2batch+= 1
             elif len(lmark_nplist)!=0 and len(lmark_nplist)!=QUANTITY_FRAME:

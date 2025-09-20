@@ -37,7 +37,7 @@ with open(f"{PROJ_ROOT}dataset/wlasl/wlasl.annotation.landmark_numpy.train_val_t
     tmp_ready= loadjson(f)
 wlasl_landmark: dict= tmp_ready.copy()
 del tmp_ready
-LANDMARK_SHAPE: tuple= (518, 2)
+LANDMARK_SHAPE: tuple= (21*2+8, 2)
 # landmark is face, then pose, then left_had, then right hand
 # face is (468, 2)
 # pose is (8, 2)
@@ -100,7 +100,7 @@ if T_GLOSS!=TRAIN_GLOSS:
     T_TEST_TG= len(wlasl_skeleton_TG[K_TEST])
 
 G10_T_TRAIN: int= 11598 # for getGreaterThan_np_initHasHand
-G10_T_VAL: int= 2989 # for getGreaterThan_np_initHasHand
+G10_T_VAL: int= 2727 # for getGreaterThan_np_initHasHand
 
 TRAIN_STEPS: int= int(ceil((T_TRAIN*70)/TRAIN_BATCH)) if T_TRAIN_TG==0 else int(ceil(G10_T_TRAIN/TRAIN_BATCH))
 VAL_STEPS: int= int(ceil((T_VAL*70)/TRAIN_BATCH)) if T_VAL_TG==0 else int(ceil(G10_T_VAL/TRAIN_BATCH))
