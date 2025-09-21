@@ -9,6 +9,8 @@ from os.path import exists
 from .lmark_constant import (
     K_TRAIN,
     LANDMARK_SHAPE,
+    TRAIN_GLOSS,
+    T_GLOSS,
     T_TRAIN_TG,
     T_VAL_TG,
     TRAIN_BATCH,
@@ -22,7 +24,8 @@ from .lmark_constant import (
     WORTHY_FACE_IDX,
     WORTHY_POSE_IDX,
 
-    wlasl_landmark_TG,
+    wlasl_landmark,
+    wlasl_landmark_TG
 )
 
 
@@ -866,17 +869,22 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
     # wlasl_READY['label_gloss2id']
 
     # each landmark numpy file is of shape (518, 2)
-    shuffle(wlasl_landmark_TG[trainVal])
+    wlasl_LM: dict= {}
+    if TRAIN_GLOSS!=T_GLOSS:
+        wlasl_LM= wlasl_landmark_TG
+    else:
+        wlasl_LM= wlasl_landmark
+    shuffle(wlasl_LM[trainVal])
     b_idxINIT: int= 0
     total_q_dataset: int= T_TRAIN_TG if trainVal==K_TRAIN else T_VAL_TG
     pastLM_GT_QF: list= [] # pastLM_GT_QF --> past landmark on greater than QUANTITY_FRAME
     # while loop runs 1 for every epoch
     # total_q_count, counts the quantity of video landmarks that was and is training
     # ie. past all batch_vids on instance training, ie. `p -m src_asl2gloss.model_train`, then
-    # count wlasl_landmark_TG[trainVal][  idx_DS  ] including repeated due to greater
+    # count wlasl_LM[trainVal][  idx_DS  ] including repeated due to greater
     # than QUANTITY_FRAME
     total_q_count: int= 0
-    i_0toBatchOrMore: int= 0 # for wlasl_landmark_TG[TrainVal][__ b_idxINIT + i_0toBatchOrMore __]
+    i_0toBatchOrMore: int= 0 # for wlasl_LM[TrainVal][__ b_idxINIT + i_0toBatchOrMore __]
     while True:
         batch_vids: ndarray= zeros((batch, QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]), dtype=float32)
         batch_class: ndarray= zeros((batch), dtype=uint16)
@@ -894,14 +902,14 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
             ))
             lmark_nplist: list= [] # at end should be of shape 22, 518, 2
             if len(pastLM_GT_QF)==0:
-                folder_landmark: str= f"{WLASL_LANDMARK_DIR}{wlasl_landmark_TG[trainVal][  idx_DS  ]['video_id']}"
+                folder_landmark: str= f"{WLASL_LANDMARK_DIR}{wlasl_LM[trainVal][  idx_DS  ]['video_id']}"
                 if exists(folder_landmark):
-                    if len(wlasl_landmark_TG[trainVal][  idx_DS  ]['landmark'])<QUANTITY_FRAME:
-                         lmark_nplist= getLessThan_np(wlasl_landmark_TG[trainVal][  idx_DS  ])
-                    elif len(wlasl_landmark_TG[trainVal][  idx_DS  ]['landmark'])==QUANTITY_FRAME:
-                        lmark_nplist= getEqual_np(wlasl_landmark_TG[trainVal][  idx_DS  ])
+                    if len(wlasl_LM[trainVal][  idx_DS  ]['landmark'])<QUANTITY_FRAME:
+                         lmark_nplist= getLessThan_np(wlasl_LM[trainVal][  idx_DS  ])
+                    elif len(wlasl_LM[trainVal][  idx_DS  ]['landmark'])==QUANTITY_FRAME:
+                        lmark_nplist= getEqual_np(wlasl_LM[trainVal][  idx_DS  ])
                     else: # quanity of image landmark is more than QUANTITY_FRAME
-                        pastLM_GT_QF= getGreaterThan_np_initHasHand(wlasl_landmark_TG[trainVal][  idx_DS  ])
+                        pastLM_GT_QF= getGreaterThan_np_initHasHand(wlasl_LM[trainVal][  idx_DS  ])
                         if 0<len(pastLM_GT_QF):
                             lmark_nplist= pastLM_GT_QF[0]
                             pastLM_GT_QF= pastLM_GT_QF[1:]
@@ -914,7 +922,7 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 i_0toBatchOrMore+= 1
             if len(lmark_nplist)==QUANTITY_FRAME:
                 batch_vids[idx_add2batch]= getWorthyFacePoseHand_landmark(tuple(lmark_nplist)) # array of shape(QUANTITY_FRAME, 518, 2)
-                batch_class[idx_add2batch]= int(wlasl_landmark_TG[trainVal][  idx_DS  ]['gloss_id'])
+                batch_class[idx_add2batch]= int(wlasl_LM[trainVal][  idx_DS  ]['gloss_id'])
                 idx_add2batch+= 1
             elif len(lmark_nplist)!=0 and len(lmark_nplist)!=QUANTITY_FRAME:
                 print(f"len of lmark_nplist: {len(lmark_nplist)}")
