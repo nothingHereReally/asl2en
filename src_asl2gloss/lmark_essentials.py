@@ -1,7 +1,7 @@
 from random import shuffle
 from typing import Any, Generator
 from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, line
-from numpy import array, float32, ndarray, uint16, uint8, zeros, load as loadnp
+from numpy import array, concatenate, float32, ndarray, reshape, uint16, uint8, zeros, load as loadnp
 # from json import dump as dumpjson, load as loadjson
 from math import ceil
 from os.path import exists
@@ -19,6 +19,7 @@ from .lmark_constant import (
     POSE_CONNECTIONS,
     HAND_CONNECTIONS,
     WLASL_LANDMARK_DIR,
+    WORTHY_FACE_IDX,
     WORTHY_POSE_IDX,
 
     wlasl_landmark_TG,
@@ -628,6 +629,32 @@ def getSkeletonFrames(fpath_vid: str, isSingleImg: bool=False, initGT: int= 0, m
 
 
 
+def getWorthyFacePoseHand_landmark(lmark_: tuple) -> tuple:
+    # order be face then pose then left hand then right hand
+    lmark_np: ndarray= array(lmark_, dtype=float32)
+    if lmark_np.shape!=(QUANTITY_FRAME, 468+8+21*2, 2):
+        raise ValueError(f"incorrect use, getWorthyFacePoseHand_landmark expects input of shape ({QUANTITY_FRAME}, {468+8+21*2}, 2)")
+
+    # for face
+    lmark_video= reshape(lmark_np[:, WORTHY_FACE_IDX[0], :], shape=(QUANTITY_FRAME, 1, 2))
+    for i in WORTHY_FACE_IDX[1:]:
+        lmark_video= concatenate((
+            lmark_video,
+            reshape(lmark_np[:, i, :], shape=(QUANTITY_FRAME, 1, 2))
+        ), axis=1)
+
+    # for pose and hand
+    lmark_video= concatenate((lmark_video, lmark_np[:, 468:, :]), axis=1)
+
+    return tuple(lmark_video.tolist())
+
+
+
+
+
+
+
+
 def getGreaterThan_np(lmark_: dict) -> list:
     '''
     to be used for when len(lmark_['landmark']) > QUANTITY_FRAME
@@ -858,7 +885,7 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
             if len(pastLM_GT_QF)==0 or len(lmark_nplist)==0:
                 i_0toBatchOrMore+= 1
             if len(lmark_nplist)==QUANTITY_FRAME:
-                batch_vids[idx_add2batch]= array(lmark_nplist, dtype=float32)[:, 468:, :] # array of shape(QUANTITY_FRAME, 518, 2)
+                batch_vids[idx_add2batch]= getWorthyFacePoseHand_landmark(tuple(lmark_nplist)) # array of shape(QUANTITY_FRAME, 518, 2)
                 batch_class[idx_add2batch]= int(wlasl_landmark_TG[trainVal][  idx_DS  ]['gloss_id'])
                 idx_add2batch+= 1
             elif len(lmark_nplist)!=0 and len(lmark_nplist)!=QUANTITY_FRAME:
