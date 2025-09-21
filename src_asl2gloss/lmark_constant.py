@@ -158,6 +158,12 @@ FACE_CONNECTIONS: tuple= (
     (82, 13), (13, 312), (312, 311), (311, 310),
     (310, 415), (415, 308)
 )
+WORTHY_FACE_IDX: tuple= (
+    0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
+    105, 107, 133, 145, 152, 159, 162, 168, 172, 195,
+    263, 291, 294, 300, 323, 332, 334, 336, 362, 374,
+    386, 389, 397
+)
 
 # before use of POSE_CONNECTIONS modify landmark 1st
 # modify to use index to be used only: 11,12,13,14,15,16,23,24
