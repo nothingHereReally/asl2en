@@ -37,9 +37,10 @@ with open(f"{PROJ_ROOT}dataset/wlasl/wlasl.annotation.landmark_numpy.train_val_t
     tmp_ready= loadjson(f)
 wlasl_landmark: dict= tmp_ready.copy()
 del tmp_ready
-LANDMARK_SHAPE: tuple= (21*2+8, 2)
+LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2)
 # landmark is face, then pose, then left_had, then right hand
-# face is (468, 2)
+# face full is (468, 2)
+# face worthy is (36, 2)
 # pose is (8, 2)
 # left_hand is (21, 2)
 # right_hand is (21, 2)
