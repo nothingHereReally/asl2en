@@ -106,7 +106,7 @@ TRAIN_STEPS: int= int(ceil((T_TRAIN*70)/TRAIN_BATCH)) if T_TRAIN_TG==0 else int(
 VAL_STEPS: int= int(ceil((T_VAL*70)/TRAIN_BATCH)) if T_VAL_TG==0 else int(ceil(G10_T_VAL/TRAIN_BATCH))
 
 
-FACE_CONNECTIONS: tuple= (
+FACE_CONNECTIONS_FULL: tuple= (
     # oval face
     (10, 338), (338, 297), (297, 332), (332, 284),
     (284, 251), (251, 389), (389, 356), (356, 454),
@@ -157,6 +157,30 @@ FACE_CONNECTIONS: tuple= (
     (324, 308), (78, 191), (191, 80), (80, 81), (81, 82),
     (82, 13), (13, 312), (312, 311), (311, 310),
     (310, 415), (415, 308)
+)
+FACE_CONNECTIONS: tuple= (
+    (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
+    (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
+
+    (26, 29), (29, 30), # left eyebrow
+
+    (23, 32), (32, 31), # left eye down
+    (31, 33), (33, 23), # left eye up
+
+    (10, 13), (13, 14), # right eyebrow
+
+    (7, 16), (16, 15), # right eye down
+    (15, 18), (18, 7), # rght eye up
+
+    (20, 22), (22, 2), # nose vertical line
+    (2, 25), (25, 1), # left half nose
+    (1, 9), (9, 2), # rigth half nose
+
+    # mouth
+    (8, 6), (6, 24), # down lip edge down
+    (24, 0), (0, 8), # up lip edge up
+    (8, 5), (5, 24), # up/down lip inner a
+    (24, 4), (4, 8), # up/down lip inner b
 )
 WORTHY_FACE_IDX: tuple= (
     0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
