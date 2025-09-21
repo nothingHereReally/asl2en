@@ -728,7 +728,11 @@ def getGreaterThan_np_initHasHand(lmark_: dict) -> list:
     # part 1, floor at index level
     o2t_ratio: float= (len(lmark_['landmark'])-idx_init_has_hand)/QUANTITY_FRAME
     for i in range(QUANTITY_FRAME):
-        lmark_numpy_MANY_VIDS[0].append(lmark_all[idx_init_has_hand+int(i*o2t_ratio)]) # floor
+        if lmark_['landmark'][idx_init_has_hand+int(i*o2t_ratio)]['left_hand'] or \
+            lmark_['landmark'][idx_init_has_hand+int(i*o2t_ratio)]['right_hand']:
+            lmark_numpy_MANY_VIDS[0].append(lmark_all[idx_init_has_hand+int(i*o2t_ratio)]) # floor
+        else:
+            lmark_numpy_MANY_VIDS[0].append(lmark_numpy_MANY_VIDS[0][-1])
     if len(lmark_numpy_MANY_VIDS[0])!=QUANTITY_FRAME:
         raise ValueError("incorrect implementation on getGreaterThan_np on part 1 due to not QUANTITY_FRAME")
     del o2t_ratio
@@ -745,9 +749,15 @@ def getGreaterThan_np_initHasHand(lmark_: dict) -> list:
             for ii in range(o2t_mod):
                 lmark_numpy_MANY_VIDS.append([])
                 for iii in range(QUANTITY_FRAME):
-                    lmark_numpy_MANY_VIDS[-1].append(lmark_all[
-                        idx_init_has_hand +(iii*o2t_mod+ii) +i
-                    ])
+                    if lmark_['landmark'][idx_init_has_hand +(iii*o2t_mod+ii) +i]['left_hand'] or \
+                        lmark_['landmark'][idx_init_has_hand +(iii*o2t_mod+ii) +i]['right_hand']:
+                        lmark_numpy_MANY_VIDS[-1].append(lmark_all[
+                            idx_init_has_hand +(iii*o2t_mod+ii) +i
+                        ])
+                    elif iii==0:
+                        lmark_numpy_MANY_VIDS[-1].append(lmark_all[idx_init_has_hand])
+                    else:
+                        lmark_numpy_MANY_VIDS[-1].append(lmark_numpy_MANY_VIDS[-1][-1])
         del o2t_mod
         del notIncludedOn_mod
 
@@ -755,13 +765,22 @@ def getGreaterThan_np_initHasHand(lmark_: dict) -> list:
         for i in range((q_available_images-QUANTITY_FRAME)+1):
             lmark_numpy_MANY_VIDS.append([])
             for ii in range(QUANTITY_FRAME):
-                lmark_numpy_MANY_VIDS[-1].append(lmark_all[
-                    idx_init_has_hand+ii +i
-                ])
+                if lmark_['landmark'][idx_init_has_hand+ii +i]['left_hand'] or \
+                    lmark_['landmark'][idx_init_has_hand+ii +i]['right_hand']:
+                    lmark_numpy_MANY_VIDS[-1].append(lmark_all[
+                        idx_init_has_hand+ii +i
+                    ])
+                elif ii==0:
+                    lmark_numpy_MANY_VIDS[-1].append(lmark_all[idx_init_has_hand])
+                else:
+                    lmark_numpy_MANY_VIDS[-1].append(lmark_numpy_MANY_VIDS[-1][-1])
     elif idx_init_has_hand!=-1 and q_available_images==QUANTITY_FRAME:
         lmark_numpy_MANY_VIDS.append([])
         for i in range(idx_init_has_hand, idx_init_has_hand+q_available_images):
-            lmark_numpy_MANY_VIDS[-1].append(lmark_all[  i  ])
+            if lmark_['landmark'][i]['left_hand'] or lmark_['landmark'][i]['right_hand']:
+                lmark_numpy_MANY_VIDS[-1].append(lmark_all[  i  ])
+            else:
+                lmark_numpy_MANY_VIDS[-1].append(lmark_numpy_MANY_VIDS[-1][-1])
         if len(lmark_numpy_MANY_VIDS[-1])!=QUANTITY_FRAME:
             raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and q_available_images==QUANTITY_FRAME")
     elif idx_init_has_hand!=-1 and q_available_images<QUANTITY_FRAME:
@@ -770,7 +789,10 @@ def getGreaterThan_np_initHasHand(lmark_: dict) -> list:
         for i, i_0to_t2o_multiplier in zip(range(idx_init_has_hand, idx_init_has_hand+q_available_images), range(q_available_images)):
             for ii in range(t2o_ratio):
                 if (i_0to_t2o_multiplier*t2o_ratio +ii)<QUANTITY_FRAME:
-                    lmark_numpy_MANY_VIDS[-1].append(lmark_all[  i  ])
+                    if lmark_['landmark'][i]['left_hand'] or lmark_['landmark'][i]['right_hand']:
+                        lmark_numpy_MANY_VIDS[-1].append(lmark_all[  i  ])
+                    else:
+                        lmark_numpy_MANY_VIDS[-1].append(lmark_numpy_MANY_VIDS[-1][-1])
         if len(lmark_numpy_MANY_VIDS[-1])!=QUANTITY_FRAME:
             raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and q_available_images<QUANTITY_FRAME")
     del q_available_images
@@ -798,7 +820,10 @@ def getEqual_np(lmark_: dict) -> list:
             landmark_data_numpy= loadnp(f)
         for ii in range(t2o_ratio):
             if (i_0to_t2o_multiplier*t2o_ratio+ii)<QUANTITY_FRAME:
-                lmark_numpy.append( landmark_data_numpy )
+                if lmark_['landmark'][i]['left_hand'] or lmark_['landmark'][i]['right_hand']:
+                    lmark_numpy.append( landmark_data_numpy )
+                else:
+                    lmark_numpy.append( lmark_numpy[-1] )
     if len(lmark_numpy)!=QUANTITY_FRAME:
         raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_numpy)!=QUANTITY_FRAME")
     return lmark_numpy
@@ -824,7 +849,10 @@ def getLessThan_np(lmark_: dict) -> list:
             landmark_data_numpy= loadnp(f)
         for ii in range(t2o_ratio):
             if (i_0to_t2o_multiplier*t2o_ratio+ii)<QUANTITY_FRAME:
-                lmark_numpy.append( landmark_data_numpy )
+                if lmark_['landmark'][i]['left_hand'] or lmark_['landmark'][i]['right_hand']:
+                    lmark_numpy.append( landmark_data_numpy )
+                else:
+                    lmark_numpy.append( lmark_numpy[-1] )
     if len(lmark_numpy)!=QUANTITY_FRAME:
         raise ValueError("incorrect implementation on getLessThan_np, due to len(lmark_numpy)!=QUANTITY_FRAME")
     return lmark_numpy
