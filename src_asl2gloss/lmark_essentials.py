@@ -1,7 +1,7 @@
 from random import shuffle
 from typing import Any, Generator
-from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, line
-from numpy import array, concatenate, float32, ndarray, reshape, uint16, uint8, zeros, load as loadnp
+from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, imread, line
+from numpy import array, concatenate, float32, float64, ndarray, reshape, uint16, uint8, zeros, load as loadnp
 # from json import dump as dumpjson, load as loadjson
 from math import ceil
 from os.path import exists
@@ -9,6 +9,7 @@ from os.path import exists
 from .lmark_constant import (
     K_TRAIN,
     LANDMARK_SHAPE,
+    SKELETON_IMG_SHAPE,
     TRAIN_GLOSS,
     T_GLOSS,
     T_TRAIN_TG,
@@ -21,11 +22,14 @@ from .lmark_constant import (
     POSE_CONNECTIONS,
     HAND_CONNECTIONS,
     WLASL_LANDMARK_DIR,
+    WLASL_SKELETON_DIR,
     WORTHY_FACE_IDX,
     WORTHY_POSE_IDX,
 
     wlasl_landmark,
-    wlasl_landmark_TG
+    wlasl_landmark_TG,
+    wlasl_skeleton,
+    wlasl_skeleton_TG
 )
 
 
@@ -935,6 +939,213 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
 
 
         if len(pastLM_GT_QF)==0:
+            b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<total_q_dataset else 0+( (b_idxINIT+batch)-total_q_dataset )
+            i_0toBatchOrMore= 0
+        yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
+
+
+
+
+
+
+
+
+def getGreaterThan_skeleton(skeleton_: dict) -> list:
+    '''
+    to be used for when len(skeleton_['image']) > QUANTITY_FRAME
+    output be of shape(__ int, QUANTITY_FRAME, 158, 158, 3 __)
+    '''
+    skeleton_MANY_VIDS: list= [[]] # be of shape(__ int, QUANTITY_FRAME, 518, 2 __)
+
+    skeleton_all: list= []
+    idx_init_has_hand: int= -1
+    for i in range(len(skeleton_['image'])):
+        skeleton_image= imread(f"{WLASL_SKELETON_DIR}{skeleton_['video_id']}/{skeleton_['image'][i]['file']}")
+        skeleton_image= cvtColor(
+            src=skeleton_image,
+            code=COLOR_BGR2RGB
+        ).copy()
+        skeleton_all.append(skeleton_image)
+        if idx_init_has_hand==-1:
+            if skeleton_['image'][i]['left_hand'] or skeleton_['image'][i]['right_hand']:
+                idx_init_has_hand= i
+    if idx_init_has_hand==-1:
+        return []
+    q_available_images: int= len(skeleton_['image'])-idx_init_has_hand
+    # q_available_images, quantity of images starting from idx_init_has_hand
+
+    # part 1, floor at index level
+    o2t_ratio: float= q_available_images/QUANTITY_FRAME
+    for i in range(QUANTITY_FRAME):
+        if skeleton_['image'][idx_init_has_hand+int(i*o2t_ratio)]['left_hand'] or \
+            skeleton_['image'][idx_init_has_hand+int(i*o2t_ratio)]['right_hand']:
+            skeleton_MANY_VIDS[0].append(skeleton_all[idx_init_has_hand+int(i*o2t_ratio)]) # floor
+        else:
+            skeleton_MANY_VIDS[0].append(skeleton_MANY_VIDS[0][-1])
+    if len(skeleton_MANY_VIDS[0])!=QUANTITY_FRAME:
+        raise ValueError("incorrect implementation on getGreaterThan_np on part 1 due to not QUANTITY_FRAME")
+    del o2t_ratio
+    # skeleton_numpy_MANY_VIDS[0] is of shape (QUANTITY_FRAME, 518, 2), but
+    # here skeleton_numpy_MANY_VIDS is of shape (1, QUANTITY_FRAME, 518, 2)
+
+    if QUANTITY_FRAME<=q_available_images:
+        # part 2, evenly spaced via mod, floor at orig/target ratio level
+        o2t_mod: int= int(q_available_images/QUANTITY_FRAME) # floor
+        notIncludedOn_mod: int= len(skeleton_['image'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        for i in range(notIncludedOn_mod+1):
+            for ii in range(o2t_mod):
+                skeleton_MANY_VIDS.append([])
+                for iii in range(QUANTITY_FRAME):
+                    if skeleton_['image'][idx_init_has_hand +(iii*o2t_mod+ii) +i]['left_hand'] or \
+                        skeleton_['image'][idx_init_has_hand +(iii*o2t_mod+ii) +i]['right_hand']:
+                        skeleton_MANY_VIDS[-1].append(skeleton_all[
+                            idx_init_has_hand +(iii*o2t_mod+ii) +i
+                        ])
+                    elif iii==0:
+                        skeleton_MANY_VIDS[-1].append(skeleton_all[idx_init_has_hand])
+                    else:
+                        skeleton_MANY_VIDS[-1].append(skeleton_MANY_VIDS[-1][-1])
+        del o2t_mod
+        del notIncludedOn_mod
+
+        # part 3, consecutive, mandatory initial has hand
+        for i in range((q_available_images-QUANTITY_FRAME)+1):
+            skeleton_MANY_VIDS.append([])
+            for ii in range(QUANTITY_FRAME):
+                if skeleton_['image'][idx_init_has_hand+ii +i]['left_hand'] or \
+                    skeleton_['image'][idx_init_has_hand+ii +i]['right_hand']:
+                    skeleton_MANY_VIDS[-1].append(skeleton_all[
+                        idx_init_has_hand+ii +i
+                    ])
+                elif ii==0:
+                    skeleton_MANY_VIDS[-1].append(skeleton_all[idx_init_has_hand])
+                else:
+                    skeleton_MANY_VIDS[-1].append(skeleton_MANY_VIDS[-1][-1])
+    elif q_available_images==QUANTITY_FRAME:
+        skeleton_MANY_VIDS.append([])
+        for i in range(idx_init_has_hand, idx_init_has_hand+q_available_images):
+            if skeleton_['image'][i]['left_hand'] or skeleton_['image'][i]['right_hand']:
+                skeleton_MANY_VIDS[-1].append(skeleton_all[  i  ])
+            else:
+                skeleton_MANY_VIDS[-1].append(skeleton_MANY_VIDS[-1][-1])
+        if len(skeleton_MANY_VIDS[-1])!=QUANTITY_FRAME:
+            raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and q_available_images==QUANTITY_FRAME")
+    elif q_available_images<QUANTITY_FRAME:
+        skeleton_MANY_VIDS.append([])
+        t2o_ratio: int= int(ceil(QUANTITY_FRAME/q_available_images)) # ceiling
+        for i, i_0to_t2o_multiplier in zip(range(idx_init_has_hand, idx_init_has_hand+q_available_images), range(q_available_images)):
+            for ii in range(t2o_ratio):
+                if (i_0to_t2o_multiplier*t2o_ratio +ii)<QUANTITY_FRAME:
+                    if skeleton_['image'][i]['left_hand'] or skeleton_['image'][i]['right_hand']:
+                        skeleton_MANY_VIDS[-1].append(skeleton_all[  i  ])
+                    else:
+                        skeleton_MANY_VIDS[-1].append(skeleton_MANY_VIDS[-1][-1])
+        if len(skeleton_MANY_VIDS[-1])!=QUANTITY_FRAME:
+            raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and q_available_images<QUANTITY_FRAME")
+    del q_available_images
+
+    return skeleton_MANY_VIDS
+
+
+def getEqualOrLessThan_skeleton(skeleton_: dict) -> list:
+    '''
+    to be used for when len(skeleton_['image']) <= QUANTITY_FRAME
+    '''
+    def getIdxStartHand(image_list: list) -> int:
+        for i in range(len(image_list)):
+            if image_list[i]['left_hand'] or image_list[i]['right_hand']:
+                return i
+        return -1
+    idx_init_has_hand: int= getIdxStartHand(image_list=skeleton_['image'])
+    if idx_init_has_hand==-1:
+        return []
+    skeleton_out: list= []
+    t2o_ratio: int= int(ceil(QUANTITY_FRAME/(len(skeleton_['image'])-idx_init_has_hand)))
+    for i, i_0to_t2o_multiplier in zip(range(idx_init_has_hand, len(skeleton_['image'])), range(len(skeleton_['image'])-idx_init_has_hand)):
+        skeleton_image= imread(f"{WLASL_SKELETON_DIR}{skeleton_['video_id']}/{skeleton_['image'][  i  ]['file']}")
+        for ii in range(t2o_ratio):
+            if (i_0to_t2o_multiplier*t2o_ratio+ii)<QUANTITY_FRAME:
+                if skeleton_['image'][i]['left_hand'] or skeleton_['image'][i]['right_hand']:
+                    skeleton_out.append( skeleton_image )
+                else:
+                    skeleton_out.append( skeleton_out[-1] )
+    if len(skeleton_out)!=QUANTITY_FRAME:
+        raise ValueError("incorrect implementation on getEqualOrLessThan_skeleton, due to len(skeleton_out)!=QUANTITY_FRAME")
+    return skeleton_out
+
+
+def getdata_skeleton(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generator[tuple, None, None]:
+    # wlasl_READY['train']
+    # wlasl_READY['val']
+    # wlasl_READY['test']
+    # wlasl_READY['label_id2gloss']
+    # wlasl_READY['label_gloss2id']
+
+    # each skeleton image be of shape (158, 158, 3)
+    wlasl_SKELETON: dict= {}
+    if TRAIN_GLOSS!=T_GLOSS:
+        wlasl_SKELETON= wlasl_skeleton_TG.copy()
+    else:
+        wlasl_SKELETON= wlasl_skeleton.copy()
+    shuffle(wlasl_SKELETON[trainVal])
+    b_idxINIT: int= 0
+    total_q_dataset: int= T_TRAIN_TG if trainVal==K_TRAIN else T_VAL_TG
+    pastSKELETON_GT_QF: list= [] # pastSKELETON_GT_QF --> past skeleton videos on greater than QUANTITY_FRAME
+    # while loop runs 1 for every epoch
+    # total_q_count, counts the quantity of video skeleton that was and is training
+    # ie. past all batch_vids on instance training, ie. `p -m src_asl2gloss.model_train`, then
+    # count wlasl_SKELETON[trainVal][  idx_DS  ] including repeated due to greater
+    # than QUANTITY_FRAME
+    total_q_count: int= 0
+    i_0toBatchOrMore: int= 0 # for wlasl_SKELETON[TrainVal][__ b_idxINIT + i_0toBatchOrMore __]
+    while True:
+        batch_vids: ndarray= zeros((batch, QUANTITY_FRAME, SKELETON_IMG_SHAPE[0], SKELETON_IMG_SHAPE[1], SKELETON_IMG_SHAPE[2]), dtype=uint8)
+        batch_class: ndarray= zeros((batch), dtype=uint16)
+
+
+        idx_add2batch: int= 0
+        # for batch_vids[__ idx_add2batch __]
+        # batch_class[__ idx_add2batch __]
+        # below( ie. while idx_add2batch<batch: ) runs 1 time( 1 while loop done ) per batch,
+        # below only knows batch NOTHING MORE NOTHING LESS
+        # does ----> NOT <---- have control on train steps and epochs
+        while idx_add2batch<batch:
+            idx_DS: int= (b_idxINIT+i_0toBatchOrMore) if (b_idxINIT+i_0toBatchOrMore)<total_q_dataset else (0 +(
+                (b_idxINIT+i_0toBatchOrMore)-total_q_dataset
+            ))
+            skeleton_1vid: list= [] # at end should be of shape 22, 158, 158, 3
+            if len(pastSKELETON_GT_QF)==0:
+                folder_skeleton: str= f"{WLASL_SKELETON_DIR}{wlasl_SKELETON[trainVal][  idx_DS  ]['video_id']}"
+                if exists(folder_skeleton):
+                    if len(wlasl_SKELETON[trainVal][  idx_DS  ]['image'])<=QUANTITY_FRAME:
+                         skeleton_1vid= getEqualOrLessThan_skeleton(wlasl_SKELETON[trainVal][  idx_DS  ])
+                    else: # quanity of image skeleton is more than QUANTITY_FRAME
+                        pastSKELETON_GT_QF= getGreaterThan_skeleton(wlasl_SKELETON[trainVal][  idx_DS  ])
+                        if 0<len(pastSKELETON_GT_QF):
+                            skeleton_1vid= pastSKELETON_GT_QF[0]
+                            pastSKELETON_GT_QF= pastSKELETON_GT_QF[1:]
+                    total_q_count+= 1
+            else:
+                skeleton_1vid= pastSKELETON_GT_QF[0]
+                pastSKELETON_GT_QF= pastSKELETON_GT_QF[1:]
+                total_q_count+= 1
+            if len(pastSKELETON_GT_QF)==0 or len(skeleton_1vid)==0:
+                i_0toBatchOrMore+= 1
+            if len(skeleton_1vid)==QUANTITY_FRAME:
+                batch_vids[idx_add2batch]= array(skeleton_1vid, dtype=uint8)
+                batch_class[idx_add2batch]= wlasl_SKELETON[trainVal][  idx_DS  ]['gloss_id']
+                idx_add2batch+= 1
+            elif len(skeleton_1vid)!=0 and len(skeleton_1vid)!=QUANTITY_FRAME:
+                print(f"len of skeleton_1vid: {len(skeleton_1vid)}")
+                raise ValueError("incorrect implementation on getdata_skeleton, due to len(skeleton_1vid)!=QUANTITY_FRAME")
+
+
+            if idx_DS==(total_q_dataset-1) and len(pastSKELETON_GT_QF)==0:
+                # print(f"________ total_q_count: {total_q_count+len(pastSKELETON_GT_QF)} ______ {trainVal}")
+                total_q_count= 0
+
+
+        if len(pastSKELETON_GT_QF)==0:
             b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<total_q_dataset else 0+( (b_idxINIT+batch)-total_q_dataset )
             i_0toBatchOrMore= 0
         yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
