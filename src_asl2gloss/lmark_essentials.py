@@ -658,7 +658,7 @@ def getWorthyFacePoseHand_landmark(lmark_: tuple) -> tuple:
 
 
 
-def getGreaterThan_np(lmark_: dict) -> list:
+def getGreaterThan_lm(lmark_: dict) -> list:
     '''
     to be used for when len(lmark_['landmark']) > QUANTITY_FRAME
     output be of shape(__ int, QUANTITY_FRAME, 518, 2 __)
@@ -710,7 +710,7 @@ def getGreaterThan_np(lmark_: dict) -> list:
     return lmark_numpy_MANY_VIDS
 
 
-def getGreaterThan_np_initHasHand(lmark_: dict) -> list:
+def getGreaterThan_lm_initHasHand(lmark_: dict) -> list:
     '''
     to be used for when len(lmark_['landmark']) > QUANTITY_FRAME
     output be of shape(__ int, QUANTITY_FRAME, 518, 2 __)
@@ -803,7 +803,7 @@ def getGreaterThan_np_initHasHand(lmark_: dict) -> list:
     return lmark_numpy_MANY_VIDS
 
 
-def getEqual_np(lmark_: dict) -> list:
+def getEqual_lm(lmark_: dict) -> list:
     '''
     to be used for when len(lmark_['landmark']) == QUANTITY_FRAME
     '''
@@ -832,7 +832,7 @@ def getEqual_np(lmark_: dict) -> list:
     return lmark_numpy
 
 
-def getLessThan_np(lmark_: dict) -> list:
+def getLessThan_lm(lmark_: dict) -> list:
     '''
     to be used for when len(lmark_['landmark']) < QUANTITY_FRAME
     '''
@@ -905,11 +905,11 @@ def getdata_landmark(trainVal: str= 'train', batch: int=TRAIN_BATCH) -> Generato
                 folder_landmark: str= f"{WLASL_LANDMARK_DIR}{wlasl_LM[trainVal][  idx_DS  ]['video_id']}"
                 if exists(folder_landmark):
                     if len(wlasl_LM[trainVal][  idx_DS  ]['landmark'])<QUANTITY_FRAME:
-                         lmark_nplist= getLessThan_np(wlasl_LM[trainVal][  idx_DS  ])
+                         lmark_nplist= getLessThan_lm(wlasl_LM[trainVal][  idx_DS  ])
                     elif len(wlasl_LM[trainVal][  idx_DS  ]['landmark'])==QUANTITY_FRAME:
-                        lmark_nplist= getEqual_np(wlasl_LM[trainVal][  idx_DS  ])
+                        lmark_nplist= getEqual_lm(wlasl_LM[trainVal][  idx_DS  ])
                     else: # quanity of image landmark is more than QUANTITY_FRAME
-                        pastLM_GT_QF= getGreaterThan_np_initHasHand(wlasl_LM[trainVal][  idx_DS  ])
+                        pastLM_GT_QF= getGreaterThan_lm_initHasHand(wlasl_LM[trainVal][  idx_DS  ])
                         if 0<len(pastLM_GT_QF):
                             lmark_nplist= pastLM_GT_QF[0]
                             pastLM_GT_QF= pastLM_GT_QF[1:]
