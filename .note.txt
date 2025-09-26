@@ -545,3 +545,234 @@ x= Flatten(name='flat')(cx)
 
 data_out = Dense(T10_GLOSS, activation=softmax, name='batch_class')(x)
 
+
+
+
+
+
+
+
+files from ./src_asl2gloss/checks/ summary
+__________________________________________
+create_1st_10gloss.py -- json
+    wlasl.annotation.clean.json -- needed
+    🍁wlasl.annotation.ready.1st_10.json -- created
+        {
+            train|val|test: [{
+                gloss_id: int,
+                video_id: str
+            }, ...],
+
+            label_id2gloss: [book, drink, ...],
+            label_gloss2id: {
+                book: 0,
+                drink: 1,
+                ...
+            }
+        }
+g10_create_dataset.py -- images
+    needed:
+        wlasl.annotation.g10_skeleton_images.json
+    skeleton_images/< video_id >/< 0001.png > 🍁 created
+        notice ALL png file
+        158 x 158 x 3
+    wlasl.annotation.g10_skeleton_images.json 🍁 created
+        {
+            train|val|test: [{
+                gloss_id: int,
+                video_id: str,
+                images: [{
+                    file: str('0001'),
+                    face: bool,
+                    post: bool,
+                    left_hand: bool,
+                    right_hand: bool,
+                    width: int( 158 ),
+                    height: int( 158 ),
+                }, ...]
+            }, ...],
+
+            label_id2gloss: [book, drink, ...],
+            label_gloss2id: {
+                book: 0,
+                drink: 1,
+                ...
+            }
+        }
+    train|val|test|label_id2gloss|label_gloss2id
+g10_create_lmark_dataset.py -- landmarks json file
+    wlasl.annotation.g10_landmarks.json 🍁 created
+        {
+            train|val|test: [{
+                gloss_id: int,
+                video_id: str,
+                landmark: [{
+                    landmark_face: [[x, y], ...468th],
+                    landmark_pose: [[x, y], ...8th],
+                    landmark_left_hand: [[x, y], ...21st],
+                    landmark_right_hand: [[x, y], ...21st],
+                }, ...per_idx_represents_an_image_from_video]
+            }, ...]
+
+            label_id2gloss: [book, drink, ...],
+            label_gloss2id: {
+                book: 0,
+                drink: 1,
+                ...
+            }
+        }
+g10_create_lmark4generator.py -- landmarks numpy file
+    needed:
+        wlasl.annotation.g10_landmarks.json
+    landmark_numpy/< 057240000.npy >
+        shape(22, 518, 2)
+            face 1st
+            pose 2nd
+            left hand 3rd
+            right hand 4th
+        22 frames
+        468 landmarks on face
+        8 landmarks for pose
+        21 landmarks per hand
+    wlasl.annotation.landmark.numpy.json 🍁 created
+        {
+            train|val|test: [{
+                gloss_id: int,
+                file: str('24320232')
+            }, ...]
+
+            label_id2gloss: [book, drink, ...],
+            label_gloss2id: {
+                book: 0,
+                drink: 1,
+                ...
+            }
+        }
+g10_extract_images.py -- video to images
+    raw_images/< video_id >/< 0001.png > 🍁 created
+g10_show_skeleton_images_details.py
+    shows details on images( min, max, left hand, right hand, ...)
+    no data extraction
+test_asl_vid2gloss_model.py
+    test model input is raw video data
+    image extraction from video is via lmark_essential_draw.getSkeletonFrames
+    not gonna be used since raw image as input seems to have not good performance
+    compare to lanmarks as input
+test_g10_model.py
+    test model input is raw video data
+    not gonna be used since raw image as input seems to have not good performance
+    compare to lanmarks as input
+    due to now preparing for attention based ML model
+test_g10_model_v2.py
+    testing model input is landmark numpy data
+test_getdata.py
+    test data genration via writing it to /tmp/wlasl_vid_test
+    as images
+vid2frames_img.py
+    see video to frames ( no using of getdata ) /tmp/wlasl_vid_test
+    as images
+vid2frames_img_test_CAP_PROP_FRAME_COUNT.py
+    testing CAP_PROP_FRAME_COUNT with use of
+    getSkeletonFrames my function
+video_frames_distribution.py
+    see quantity of frames on videos
+    on minimum frames
+    max frames
+    box plot q1( min ), q2, q3, q4, q5( max )
+wlasl_ready_data.py
+    creates the wlasl.annotation.ready.json
+        {
+            train|val|test: [{
+                gloss_id: int,
+                video_id: str
+            }, ...],
+
+            label_id2gloss: [book, drink, ...],
+            label_gloss2id: {
+                book: 0,
+                drink: 1,
+                ...
+            }
+
+            label_id2gloss: [book, drink, ...],
+            label_gloss2id: {
+                book: 0,
+                drink: 1,
+                ...
+            }
+        }
+wlasl_train_val_test_checks.py
+    wlasl.annotation.clean.json -- needed
+    test if json file has correct data
+
+
+
+
+______________________________
+./src_asl2gloss/extract_data/raw_image.py
+output:
+________________________________________________________________________________
+processing train...
+
+[h264 @ 0x55f0db010f00] Invalid NAL unit size (745 > 472).
+[h264 @ 0x55f0db010f00] Error splitting the input into NAL units.
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a600a5300] stream 1, offset 0x3b468: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a600a5300] stream 1, offset 0x3b7d3: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a600a5300] stream 1, offset 0x3c9b9: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a600a5300] stream 1, offset 0x3cd00: partial file
+[NULL @ 0x55f0daf421c0] Invalid NAL unit size (71678 > 10776).
+[NULL @ 0x55f0daf421c0] missing picture in access unit with size 10780
+[h264 @ 0x55f0da27bc80] Invalid NAL unit size (71678 > 10776).
+[h264 @ 0x55f0da27bc80] Error splitting the input into NAL units.
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2a27a7: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2adc75: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2ba39c: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2c7847: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2d5d75: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2e33f9: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2f08cf: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x2fdf28: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x30aec9: partial file
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7f6a60047f40] stream 1, offset 0x31797c: partial file
+processing val...
+
+processing test...
+________________________________________________________________________________
+./src_asl2gloss/extract_data/raw_image.py
+started at 1:34am 2025/ 9/ 17
+done at 6:49pm 2025/ 9/ 17, took 17hours and 15minutes
+output:
+_______________________________________
+processing at 0.10000699839037021%
+processing at 0.20001399678074042%
+processing at 0.30002099517111064%
+processing at 0.40002799356148083%
+processing at 0.5000349919518511%
+processing at 0.6000419903422213%
+processing at 0.7000489887325915%
+processing at 0.8000559871229617%
+processing at 0.900062985513332%
+processing val...
+processing at 0.10010214504596528%
+processing at 0.20020429009193055%
+processing at 0.30005107252298263%
+processing at 0.4001532175689479%
+processing at 0.5002553626149132%
+processing at 0.6001021450459653%
+processing at 0.7002042900919305%
+processing at 0.8000510725229827%
+processing at 0.900153217568948%
+processing test...
+processing at 0.10006949270326616%
+processing at 0.20013898540653233%
+processing at 0.30020847810979845%
+processing at 0.40027797081306465%
+processing at 0.5003474635163307%
+processing at 0.6000694927032661%
+processing at 0.7001389854065323%
+processing at 0.8002084781097984%
+processing at 0.9002779708130646%
+creating skeleton images done...
+landmark shape (518, 2)
+_______________________________________
+

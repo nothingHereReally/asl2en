@@ -1,5 +1,5 @@
 from math import ceil
-from json import load as jload
+from json import load as loadjson
 
 
 # PROJ_ROOT: str= f"/absolute/dir/to/project/"
@@ -19,35 +19,95 @@ IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
 # or right hand )
 # ie. current is at least 12 or 20 has hand/s 20*0.6= 12
 MIN_FRAMES_HAS_HANDS: int= int(QUANTITY_FRAME*0.7)
-WLASL_VID_DIR: str= f"{PROJ_ROOT}dataset/wlasl_dataset/videos/"
+WLASL_SKELETON_DIR: str= f"{PROJ_ROOT}dataset/wlasl/skeleton_image/"
+WLASL_LANDMARK_DIR: str= f"{PROJ_ROOT}dataset/wlasl/landmark_numpy/"
 
 
 
 
 tmp_ready: dict= {}
-with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.ready.json", 'r') as f:
-    tmp_ready= jload(f)
-wlasl_READY: dict= tmp_ready.copy()
+with open(f"{PROJ_ROOT}dataset/wlasl/wlasl.annotation.skeleton_image.train_val_test.json", 'r') as f:
+    tmp_ready= loadjson(f)
+wlasl_skeleton: dict= tmp_ready.copy()
 del tmp_ready
+SKELETON_IMG_SHAPE: tuple= (158, 158, 3)
+
 tmp_ready: dict= {}
-with open(f"{PROJ_ROOT}dataset/wlasl_dataset/wlasl.annotation.g10_skeleton_images.json", 'r') as f:
-    tmp_ready= jload(f)
-wlasl_READY_10: dict= tmp_ready.copy()
+with open(f"{PROJ_ROOT}dataset/wlasl/wlasl.annotation.landmark_numpy.train_val_test.json", 'r') as f:
+    tmp_ready= loadjson(f)
+wlasl_landmark: dict= tmp_ready.copy()
 del tmp_ready
-T10_GLOSS: int= int(len(wlasl_READY_10['label_id2gloss']))
-T10_TRAIN: int= int(len(wlasl_READY_10['train']))
-T10_VAL: int= int(len(wlasl_READY_10['val']))
-T10_TEST: int= int(len(wlasl_READY_10['test']))
-T10_DIR_IMG: str= f"{PROJ_ROOT}dataset/wlasl_dataset/skeleton_images/"
-TRAIN_STEPS: int= int(ceil((T10_TRAIN*7)/TRAIN_BATCH))
-VAL_STEPS: int= int(ceil(T10_VAL/TRAIN_BATCH))
+LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2)
+# landmark is face, then pose, then left_had, then right hand
+# face full is (468, 2)
+# face worthy is (36, 2)
+# pose is (8, 2)
+# left_hand is (21, 2)
+# right_hand is (21, 2)
 
-TOTAL_GLOSS_UNIQ: int= int(len(wlasl_READY['label_id2gloss']))
-TOTAL_TRAIN_FILE: int= int(len(wlasl_READY['train']))
-TOTAL_VAL_FILE: int= int(len(wlasl_READY['val']))
+K_TRAIN: str= 'train'
+K_VAL: str= 'val'
+K_TEST: str= 'test'
+K_ID2G: str= 'label_id2gloss'
+K_G2ID: str= 'label_gloss2id'
+
+T_TRAIN: int= int(len(wlasl_skeleton[K_TRAIN]))
+T_VAL: int= int(len(wlasl_skeleton[K_VAL]))
+T_TEST: int= int(len(wlasl_skeleton[K_TEST]))
+T_GLOSS: int= int(len(wlasl_skeleton[K_ID2G]))
+TRAIN_GLOSS: int= 10
+if T_GLOSS<TRAIN_GLOSS:
+    # TRAIN_GLOSS to be use as to how many gloss be
+    # on training, starting from very 1st gloss till
+    # ${TRAIN_GLOSS}th gloss classifiction on
+    # wlasl_skeleton[K_ID2G] or wlasl_skeleton[K_ID2G]
+    # due to both represent same dataset really
+    raise ValueError({
+        'TRAIN_GLOSS': 'should be less than or equal to T_GLOSS',
+        'value': {
+            'T_GLOSS': T_GLOSS,
+            'TRAIN_GLOSS': TRAIN_GLOSS
+        }
+    })
+# dataset that has only data according to TRAIN_GLOSS
+wlasl_skeleton_TG: dict= {}
+wlasl_landmark_TG: dict= {}
+T_TRAIN_TG: int= 0
+T_VAL_TG: int= 0
+T_TEST_TG: int= 0
+if T_GLOSS!=TRAIN_GLOSS:
+    wlasl_skeleton_TG: dict= {
+        K_TRAIN: [],
+        K_VAL: [],
+        K_TEST: [],
+        K_ID2G: wlasl_skeleton[K_ID2G],
+        K_G2ID: wlasl_skeleton[K_G2ID]
+    }
+    wlasl_landmark_TG: dict= {
+        K_TRAIN: [],
+        K_VAL: [],
+        K_TEST: [],
+        K_ID2G: wlasl_landmark[K_ID2G],
+        K_G2ID: wlasl_landmark[K_G2ID]
+    }
+    for tvt_idv in (K_TRAIN, K_VAL, K_TEST):
+        tillWhat: int= 0
+        while wlasl_landmark[tvt_idv][tillWhat]['gloss_id']<TRAIN_GLOSS:
+            tillWhat+= 1
+        wlasl_skeleton_TG[tvt_idv]= wlasl_skeleton[tvt_idv][0:tillWhat]
+        wlasl_landmark_TG[tvt_idv]= wlasl_landmark[tvt_idv][0:tillWhat]
+    T_TRAIN_TG= len(wlasl_skeleton_TG[K_TRAIN])
+    T_VAL_TG= len(wlasl_skeleton_TG[K_VAL])
+    T_TEST_TG= len(wlasl_skeleton_TG[K_TEST])
+
+G10_T_TRAIN: int= 11598 # for getGreaterThan_np_initHasHand
+G10_T_VAL: int= 2727 # for getGreaterThan_np_initHasHand
+
+TRAIN_STEPS: int= int(ceil((T_TRAIN*70)/TRAIN_BATCH)) if T_TRAIN_TG==0 else int(ceil(G10_T_TRAIN/TRAIN_BATCH))
+VAL_STEPS: int= int(ceil((T_VAL*70)/TRAIN_BATCH)) if T_VAL_TG==0 else int(ceil(G10_T_VAL/TRAIN_BATCH))
 
 
-FACE_CONNECTIONS: tuple= (
+FACE_CONNECTIONS_FULL: tuple= (
     # oval face
     (10, 338), (338, 297), (297, 332), (332, 284),
     (284, 251), (251, 389), (389, 356), (356, 454),
@@ -98,6 +158,36 @@ FACE_CONNECTIONS: tuple= (
     (324, 308), (78, 191), (191, 80), (80, 81), (81, 82),
     (82, 13), (13, 312), (312, 311), (311, 310),
     (310, 415), (415, 308)
+)
+FACE_CONNECTIONS: tuple= (
+    (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
+    (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
+
+    (26, 29), (29, 30), # left eyebrow
+
+    (23, 32), (32, 31), # left eye down
+    (31, 33), (33, 23), # left eye up
+
+    (10, 13), (13, 14), # right eyebrow
+
+    (7, 16), (16, 15), # right eye down
+    (15, 18), (18, 7), # rght eye up
+
+    (20, 22), (22, 2), # nose vertical line
+    (2, 25), (25, 1), # left half nose
+    (1, 9), (9, 2), # rigth half nose
+
+    # mouth
+    (8, 6), (6, 24), # down lip edge down
+    (24, 0), (0, 8), # up lip edge up
+    (8, 5), (5, 24), # up/down lip inner a
+    (24, 4), (4, 8), # up/down lip inner b
+)
+WORTHY_FACE_IDX: tuple= (
+    0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
+    105, 107, 133, 145, 152, 159, 162, 168, 172, 195,
+    263, 291, 294, 300, 323, 332, 334, 336, 362, 374,
+    386, 389, 397
 )
 
 # before use of POSE_CONNECTIONS modify landmark 1st
