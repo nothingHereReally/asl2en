@@ -35,3 +35,6 @@ src_asl2gloss/pics_others/picture_running_skeleton_image.py.png filter=lfs diff=
 model/aslvid2gloss_v19.keras filter=lfs diff=lfs merge=lfs -text
 model/tfboard_logs.v19/train/events.out.tfevents.1758338921.dvxvb.135334.0.v2 filter=lfs diff=lfs merge=lfs -text
 model/tfboard_logs.v19/validation/events.out.tfevents.1758339048.dvxvb.135334.1.v2 filter=lfs diff=lfs merge=lfs -text
+model/aslvid2gloss_v20.keras filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs_v20/train/events.out.tfevents.1759233803.doxob.84243.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs_v20/validation/events.out.tfevents.1759233923.doxob.84243.1.v2 filter=lfs diff=lfs merge=lfs -text
