@@ -17,7 +17,8 @@ sTraining: EarlyStopping= EarlyStopping(
     min_delta=0.001,
     patience=2,
     verbose=1,
-    mode='min'
+    mode='min',
+    restore_best_weights=True,
 )
 tf_board: TensorBoard= TensorBoard(
     log_dir=f"{PROJ_ROOT}model/tfboard_logs",
