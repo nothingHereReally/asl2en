@@ -1,9 +1,10 @@
 # best model yet: model_v14 then model_v10 and model_v12
 # best model top 4
-# 1) model v15 (57% testing)
-# 2) model v14 (56% testing)
-# 3) model v12 (4% testing)
-# 4) model v10 (4% testing)
+# 1) model v22 (60% testing)
+# 2) model v15 (57% testing)
+# 3) model v14 (56% testing)
+# 4) model v12 (4% testing)
+# 5) model v10 (4% testing)
 # from os.path import exists
 from keras.src.losses import sparse_categorical_crossentropy
 from keras.src.models import Model

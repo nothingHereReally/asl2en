@@ -1,20 +1,18 @@
-Testing the model v14
+Testing the model v22, latest best model
 
 
 
 Clone this repo, better to use `bash` if you have it, compared to `cmd`.
 Installing git by defualt also installs bash.
 ```bash
-GIT_LFS_SKIP_SMUDGE=1 git clone --branch only_1st_10gloss https://github.com/nothingHereReally/asl2en.git
+GIT_LFS_SKIP_SMUDGE=1 git clone --branch main https://github.com/nothingHereReally/asl2en.git
 cd asl2en
-git reset --hard 522d3622fb032ea2b713259b014d48c2daabf044
 ```
 on cmd is
 ```bash
 set GIT_LFS_SKIP_SMUDGE=1
 git clone --branch only_1st_10gloss https://github.com/nothingHereReally/asl2en.git
 cd asl2en
-git reset --hard 522d3622fb032ea2b713259b014d48c2daabf044
 ```
 The `GIT_LFS_SKIP_SMUDGE=1` is to skip downloading the lfs files,
 due to this repo creator( me, nothingHereReally ) is not a pro
@@ -23,11 +21,11 @@ lfs( large files ) files can be included on clones or on
 git pull request.
 
 
-Then on github go to `asl2en/model/aslvid2gloss_v14.keras`
-or just go to this [link to model v14](https://github.com/nothingHereReally/asl2en/blob/only_1st_10gloss/model/aslvid2gloss_v14.keras)
-then manually download the aslvid2gloss_v14.keras.
-After manual download, overwrite the asl2en/model/aslvid2gloss_v14.keras
-( on MS Windows that's asl2en\model\aslvid2gloss_v14.keras ) with
+Then on github go to `asl2en/model/aslvid2gloss_v22.keras`
+or just go to this [link to model v22](https://github.com/nothingHereReally/asl2en/blob/main/model/aslvid2gloss_v22.keras)
+then manually download the aslvid2gloss_v22.keras.
+After manual download, overwrite the asl2en/model/aslvid2gloss_v22.keras
+( on MS Windows that's asl2en\model\aslvid2gloss_v22.keras ) with
 what you just manually downloaded
 
 
@@ -79,6 +77,6 @@ pip install --upgrade pip
 
 now test( please use **`bash`** to run this )
 ```bash
-python -m src_asl2gloss.checks.test_g10_model
+python -m src_asl2gloss.test_model.model_v22
 ```
 
