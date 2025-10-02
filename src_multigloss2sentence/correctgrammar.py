@@ -26,7 +26,7 @@ incorrect_gram= [
 for influent_sentence in incorrect_gram:
     corrected_sentences= gf.correct(influent_sentence, max_candidates=1)
     print("[Input] ", influent_sentence)
-    for corrected_sentence in incorrect_gram:
+    for corrected_sentence in corrected_sentences:
       print("[Correction] ",corrected_sentence)
     print("-" *50)
 
