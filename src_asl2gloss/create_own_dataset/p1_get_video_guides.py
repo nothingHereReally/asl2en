@@ -16,5 +16,5 @@ for i in range(10):
         text_out2file= f"{text_out2file}mpv ./dataset/wlasl/videos/{each_video['video_id']}.mp4\n"
     text_out2file= f"{text_out2file}\n\n"
 
-with open(f"{PROJ_ROOT}src_asl2gloss/create_own_dataset/p2_play_video_commands.sh", "w") as f:
+with open(f"{PROJ_ROOT}src_asl2gloss/create_own_dataset/p2_play_video_commands.txt", "w") as f:
     f.write(text_out2file)
