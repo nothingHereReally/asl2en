@@ -52,29 +52,29 @@ mpv ./dataset/wlasl/videos/68041.mp4
 mpv ./dataset/wlasl/videos/17725.mp4
 mpv ./dataset/wlasl/videos/17726.mp4
 mpv ./dataset/wlasl/videos/17727.mp4
-mpv ./dataset/wlasl/videos/17728.mp4
-mpv ./dataset/wlasl/videos/17710.mp4
-mpv ./dataset/wlasl/videos/17729.mp4
+mpv ./dataset/wlasl/videos/17728.mp4 ---- different
+mpv ./dataset/wlasl/videos/17710.mp4 ---- different
+mpv ./dataset/wlasl/videos/17729.mp4 ---- different
 mpv ./dataset/wlasl/videos/17730.mp4
 mpv ./dataset/wlasl/videos/17731.mp4
-mpv ./dataset/wlasl/videos/17732.mp4
-mpv ./dataset/wlasl/videos/17733.mp4
-mpv ./dataset/wlasl/videos/65540.mp4
+mpv ./dataset/wlasl/videos/17732.mp4 ---- different
+mpv ./dataset/wlasl/videos/17733.mp4 ---- different
+mpv ./dataset/wlasl/videos/65540.mp4 ---- different
 mpv ./dataset/wlasl/videos/17734.mp4
 mpv ./dataset/wlasl/videos/17711.mp4
 mpv ./dataset/wlasl/videos/17712.mp4
 mpv ./dataset/wlasl/videos/17713.mp4
 mpv ./dataset/wlasl/videos/17714.mp4
-mpv ./dataset/wlasl/videos/17715.mp4
-mpv ./dataset/wlasl/videos/17716.mp4
+mpv ./dataset/wlasl/videos/17715.mp4 ---- different
+mpv ./dataset/wlasl/videos/17716.mp4 ---- different
 mpv ./dataset/wlasl/videos/17717.mp4
-mpv ./dataset/wlasl/videos/17718.mp4
+mpv ./dataset/wlasl/videos/17718.mp4 ---- different
 mpv ./dataset/wlasl/videos/17709.mp4
 mpv ./dataset/wlasl/videos/67594.mp4
-mpv ./dataset/wlasl/videos/17719.mp4
+mpv ./dataset/wlasl/videos/17719.mp4 ---- different
 mpv ./dataset/wlasl/videos/17720.mp4
 mpv ./dataset/wlasl/videos/17721.mp4
-mpv ./dataset/wlasl/videos/17722.mp4
+mpv ./dataset/wlasl/videos/17722.mp4 ---- different
 mpv ./dataset/wlasl/videos/17723.mp4
 mpv ./dataset/wlasl/videos/17724.mp4
 
