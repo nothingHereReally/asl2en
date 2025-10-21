@@ -6,39 +6,39 @@ mpv ./dataset/wlasl/videos/68208.mp4
 mpv ./dataset/wlasl/videos/68012.mp4
 mpv ./dataset/wlasl/videos/70212.mp4
 mpv ./dataset/wlasl/videos/70266.mp4
-mpv ./dataset/wlasl/videos/07085.mp4
-mpv ./dataset/wlasl/videos/07086.mp4
-mpv ./dataset/wlasl/videos/07087.mp4
+mpv ./dataset/wlasl/videos/07085.mp4 ---- different
+mpv ./dataset/wlasl/videos/07086.mp4 ---- different
+mpv ./dataset/wlasl/videos/07087.mp4 ---- different
 mpv ./dataset/wlasl/videos/07069.mp4
-mpv ./dataset/wlasl/videos/07088.mp4
-mpv ./dataset/wlasl/videos/07089.mp4
-mpv ./dataset/wlasl/videos/07090.mp4
-mpv ./dataset/wlasl/videos/07091.mp4
-mpv ./dataset/wlasl/videos/07092.mp4
-mpv ./dataset/wlasl/videos/07093.mp4
+mpv ./dataset/wlasl/videos/07088.mp4 ---- different
+mpv ./dataset/wlasl/videos/07089.mp4 ---- different
+mpv ./dataset/wlasl/videos/07090.mp4 ---- different
+mpv ./dataset/wlasl/videos/07091.mp4 ---- different
+mpv ./dataset/wlasl/videos/07092.mp4 ---- different
+mpv ./dataset/wlasl/videos/07093.mp4 ---- different
 mpv ./dataset/wlasl/videos/07068.mp4
-mpv ./dataset/wlasl/videos/07094.mp4
-mpv ./dataset/wlasl/videos/07095.mp4
-mpv ./dataset/wlasl/videos/07096.mp4
-mpv ./dataset/wlasl/videos/07097.mp4
+mpv ./dataset/wlasl/videos/07094.mp4 ---- different
+mpv ./dataset/wlasl/videos/07095.mp4 ---- different
+mpv ./dataset/wlasl/videos/07096.mp4 ---- different
+mpv ./dataset/wlasl/videos/07097.mp4 ---- different
 mpv ./dataset/wlasl/videos/07070.mp4
-mpv ./dataset/wlasl/videos/07098.mp4
+mpv ./dataset/wlasl/videos/07098.mp4 ---- different
 mpv ./dataset/wlasl/videos/07099.mp4
 mpv ./dataset/wlasl/videos/07071.mp4
 mpv ./dataset/wlasl/videos/07072.mp4
-mpv ./dataset/wlasl/videos/07073.mp4
+mpv ./dataset/wlasl/videos/07073.mp4 ---- different
 mpv ./dataset/wlasl/videos/67424.mp4
 mpv ./dataset/wlasl/videos/07074.mp4
 mpv ./dataset/wlasl/videos/07075.mp4
 mpv ./dataset/wlasl/videos/07076.mp4
-mpv ./dataset/wlasl/videos/07077.mp4
-mpv ./dataset/wlasl/videos/07078.mp4
-mpv ./dataset/wlasl/videos/07079.mp4
-mpv ./dataset/wlasl/videos/07080.mp4
-mpv ./dataset/wlasl/videos/07081.mp4
-mpv ./dataset/wlasl/videos/07082.mp4
-mpv ./dataset/wlasl/videos/07083.mp4
-mpv ./dataset/wlasl/videos/07084.mp4
+mpv ./dataset/wlasl/videos/07077.mp4 ---- different
+mpv ./dataset/wlasl/videos/07078.mp4 ---- different
+mpv ./dataset/wlasl/videos/07079.mp4 ---- different
+mpv ./dataset/wlasl/videos/07080.mp4 ---- different
+mpv ./dataset/wlasl/videos/07081.mp4 ---- different
+mpv ./dataset/wlasl/videos/07082.mp4 ---- different
+mpv ./dataset/wlasl/videos/07083.mp4 ---- different
+mpv ./dataset/wlasl/videos/07084.mp4 ---- different
 
 
 # drink, quantity_videos( 35 ) --> 1
