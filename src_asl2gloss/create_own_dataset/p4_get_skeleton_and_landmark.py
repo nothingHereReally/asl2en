@@ -1,7 +1,7 @@
 from os.path import exists
 from os import makedirs
 from json import load as jsonload, dump as jsonsave
-from cv2 import CAP_PROP_FRAME_COUNT, VideoCapture, circle, imwrite, line
+from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, imwrite, line
 from sys import stderr
 from numpy import array, float32, ndarray, uint8, zeros, save as numpysave
 from mediapipe.python.solutions.holistic import Holistic
@@ -15,7 +15,7 @@ LANDMARK_dir: str= f"{GLASL_DIR}landmark/"
 SKELETON_dir: str= f"{GLASL_DIR}skeleton/"
 MPH_fph: Holistic= Holistic(
     static_image_mode=False,
-    model_complexity=1,
+    model_complexity=2,
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5
 )
@@ -537,7 +537,7 @@ def get_video_details(split_vid_dict: dict) -> tuple:
     allImg_skeleton: list= []
     allImg_details: list= []
     for img in allImg_human:
-        fph_lmark= MPH_fph.process(img)
+        fph_lmark= MPH_fph.process(cvtColor(src=img, code=COLOR_BGR2RGB))
         skeleton__image, landmark__fpLhRh= drawFacePoseHand(
             img_write_to=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
             lmark_mph=fph_lmark,
