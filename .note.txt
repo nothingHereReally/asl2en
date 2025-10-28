@@ -23,6 +23,12 @@ https://chuoling.github.io/mediapipe/solutions/holistic.html
 
 
 
+connections
+lN .venv/lib/python3.12/site-packages/mediapipe/python/solutions/face_mesh_connections.py
+
+
+
+
 
 
 
