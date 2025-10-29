@@ -649,6 +649,6 @@ if __name__=='__main__':
                     "height": imgs_details[i]["height"],
                 })
     with open(f"{GLASL_DIR}glasl.annotation.landmark.json", "w") as f:
-        jsonsave(glasl_SKELETON, f, indent=4)
+        jsonsave(glasl_LANDMARK, f, indent=4)
     with open(f"{GLASL_DIR}glasl.annotation.skeleton.json", "w") as f:
         jsonsave(glasl_SKELETON, f, indent=4)
