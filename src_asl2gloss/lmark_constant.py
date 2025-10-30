@@ -7,7 +7,7 @@ PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
 
 EPOCHS: int= 12
 # TRAIN_BATCH: int= 32
-TRAIN_BATCH: int= 2
+ON_TRAINING_BATCH: int= 2
 # QUANTITY_FRAME: int= 48
 QUANTITY_FRAME: int= 22
 # IMG_SIZE: int= 480
@@ -53,8 +53,33 @@ LEN_VAL: int= int(len(glasl_skeleton[KEY_VAL]))
 LEN_TEST: int= int(len(glasl_skeleton[KEY_TEST]))
 LEN_GLOSS: int= int(len(glasl_skeleton[KEY_ID2G]))
 
-TRAIN_STEPS: int= int(ceil(LEN_TRAIN/TRAIN_BATCH))
-VAL_STEPS: int= int(ceil(LEN_VAL/TRAIN_BATCH))
+def calculate_steps_needed(trainVal: str=KEY_TRAIN) -> int:
+    def getIdxStartHand(lmarks: list) -> int:
+        for i in range(len(lmarks)):
+            if lmarks[i]['left_hand'] or lmarks[i]['right_hand']:
+                return i
+        return -1
+    total_DS: int= 0
+    for video in glasl_landmark[trainVal]:
+        idx_init_has_hand: int= getIdxStartHand(video['landmark'])
+        if idx_init_has_hand!=-1:
+            if len(video['landmark'])<=QUANTITY_FRAME:
+                total_DS+= 1
+            else:
+                len_available_images: int= len(video['landmark'])-idx_init_has_hand
+                o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
+                total_DS+= 1 # for part 1
+                if QUANTITY_FRAME<len_available_images:
+                    total_DS+= (
+                        o2t_mod*(len(video['landmark'])
+                            -(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod))
+                    )*1 # for part 2
+                    total_DS+= (len_available_images-QUANTITY_FRAME)+1 # for part 3
+                else:
+                    total_DS+= 1
+    return int(ceil(total_DS/float(ON_TRAINING_BATCH)))
+TRAIN_STEPS: int= calculate_steps_needed(KEY_TRAIN)
+VAL_STEPS: int= calculate_steps_needed(KEY_VAL)
 
 
 FACE_CONNECTIONS_FULL: tuple= (
