@@ -4,7 +4,7 @@ from keras.src.activations import softmax
 from numpy import float32, float64
 
 
-from .lmark_constant import LANDMARK_SHAPE, QUANTITY_FRAME, TRAIN_GLOSS
+from .lmark_constant import LANDMARK_SHAPE, QUANTITY_FRAME, LEN_GLOSS
 
 
 data_in= Input(
@@ -541,4 +541,4 @@ x= Add()([att_h1, att_h2, att_h3, att_h4, att_h5, att_h6, att_h7, att_h8,
 ann= Flatten()(x)
 
 
-data_out = Dense(TRAIN_GLOSS, activation=softmax, name='batch_class')(ann)
+data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
