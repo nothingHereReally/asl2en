@@ -9,10 +9,10 @@
 from keras.src.losses import sparse_categorical_crossentropy
 from keras.src.models import Model
 from keras.src.optimizers import Adam
-from keras.src.saving import load_model
+# from keras.src.saving import load_model
 
 from .lmark_constant import EPOCHS, PROJ_ROOT, TRAIN_STEPS, VAL_STEPS
-from .lmark_essentials import getdata_landmark
+from .lmark_essentials import getdata_landmark_allHasHand
 from .model_layers import data_in, data_out
 from .model_callbacks import d_lr, sTraining, tf_board
 
@@ -31,10 +31,10 @@ if __name__=="__main__":
     )
     model.summary()
     model.fit(
-        x=getdata_landmark(trainVal='train'),
+        x=getdata_landmark_allHasHand(trainVal='train'),
         epochs=EPOCHS,
         callbacks=[d_lr, sTraining, tf_board],
-        validation_data=getdata_landmark(trainVal='val'),
+        validation_data=getdata_landmark_allHasHand(trainVal='val'),
         steps_per_epoch=TRAIN_STEPS,
         validation_steps=VAL_STEPS,
         validation_freq=1
