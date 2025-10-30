@@ -703,7 +703,7 @@ def getGreaterThan_landmark_allHasHand(lmark_: dict) -> list:
         # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
         #                         ^^^^^^^^^^^^^^^^^^^^^^^____ total quanitty images on video
         # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
-        #                                                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^____ subtract
+        #                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^____ subtract
         # whats to be used on forward index images
         # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
         #                                                  ^^^^^^^^^^^^^^^^^____ due below appends starts
@@ -778,14 +778,14 @@ def getGreaterThan_landmark_allHasHand(lmark_: dict) -> list:
 
 def getLessThanOrEqual_landmark_allHasHand(lmark_: dict) -> list:
     '''
-    to be used for when len(lmark_['landmark']) < QUANTITY_FRAME
+    to be used for when len(lmark_['landmark']) <= QUANTITY_FRAME
     '''
-    def getIdxStartHand(lmarks: list) -> int:
-        for i in range(len(lmarks)):
-            if lmarks[i]['left_hand'] or lmarks[i]['right_hand']:
+    def getIdxStartHand(image_list: list) -> int:
+        for i in range(len(image_list)):
+            if image_list[i]['left_hand'] or image_list[i]['right_hand']:
                 return i
         return -1
-    idx_init_has_hand: int= getIdxStartHand(lmarks=lmark_['landmark'])
+    idx_init_has_hand: int= getIdxStartHand(image_list=lmark_['landmark'])
     if idx_init_has_hand==-1:
         return []
     lmark_numpy: list= []
