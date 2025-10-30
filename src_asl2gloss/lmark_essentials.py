@@ -810,7 +810,7 @@ def getLessThanOrEqual_landmark_allHasHand(lmark_: dict) -> list:
     return lmark_numpy
 
 
-def getdata_landmark(trainVal: str= 'train', batch: int=ON_TRAINING_BATCH) -> Generator[tuple, None, None]:
+def getdata_landmark_allHasHand(trainVal: str= 'train', batch: int=ON_TRAINING_BATCH) -> Generator[tuple, None, None]:
     # glasl_READY['train']
     # glasl_READY['val']
     # glasl_READY['test']
@@ -1048,7 +1048,7 @@ def getLessThanOrEqual_skeleton_allHasHand(skeleton_: dict) -> list:
     return skeleton_images
 
 
-def getdata_skeleton(trainVal: str= 'train', batch: int=ON_TRAINING_BATCH) -> Generator[tuple, None, None]:
+def getdata_skeleton_allHasHand(trainVal: str= 'train', batch: int=ON_TRAINING_BATCH) -> Generator[tuple, None, None]:
     # wlasl_READY['train']
     # wlasl_READY['val']
     # wlasl_READY['test']
