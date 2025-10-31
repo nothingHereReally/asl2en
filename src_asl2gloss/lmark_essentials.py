@@ -1086,7 +1086,7 @@ def getdata_skeleton_allHasHand(trainVal: str= 'train', batch: int=ON_TRAINING_B
             if len(pastSKELETON_GT_QF)==0:
                 folder_skeleton: str= f"{GLASL_SKELETON_DIR}{glasl_skeleton[trainVal][  idx_DS  ]['video_id']}"
                 if exists(folder_skeleton):
-                    if len(glasl_skeleton[trainVal][  idx_DS  ]['image'])<=QUANTITY_FRAME:
+                    if len(glasl_skeleton[trainVal][  idx_DS  ]['skeleton'])<=QUANTITY_FRAME:
                          skeleton_1vid= getLessThanOrEqual_skeleton_allHasHand(glasl_skeleton[trainVal][  idx_DS  ])
                     else: # quanity of image skeleton is more than QUANTITY_FRAME
                         pastSKELETON_GT_QF= getGreaterThan_skeleton_allHasHand(glasl_skeleton[trainVal][  idx_DS  ])
