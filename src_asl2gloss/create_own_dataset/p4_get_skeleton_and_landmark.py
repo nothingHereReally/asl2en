@@ -20,9 +20,11 @@ MPH_fph: Holistic= Holistic(
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5
 )
-T_TRAIN: str= "train"
-T_VAL: str= "val"
-T_TEST: str= "test"
+KEY_TRAIN: str= "train"
+KEY_VAL: str= "val"
+KEY_TEST: str= "test"
+KEY_ID2G: str= "id2gloss"
+KEY_G2ID: str= "gloss2id"
 IMG_SIZE: int= 158
 FACE_CONNECTIONS: tuple= (
     (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
@@ -587,18 +589,18 @@ def init_vars() -> tuple:
     with open(f"{GLASL_DIR}glasl.annotation.clean.json", 'r') as f:
         glasl_clean= jsonload(f)
     glasl_LANDMARK: dict= {
-        T_TRAIN: [],
-        T_VAL: [],
-        T_TEST: [],
-        "id2gloss": [ins["gloss"] for ins in glasl_clean],
-        "gloss2id": {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))}
+        KEY_TRAIN: [],
+        KEY_VAL: [],
+        KEY_TEST: [],
+        KEY_ID2G: [ins["gloss"] for ins in glasl_clean],
+        KEY_G2ID: {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))}
     }
     glasl_SKELETON: dict= {
-        T_TRAIN: [],
-        T_VAL: [],
-        T_TEST: [],
-        "id2gloss": [ins["gloss"] for ins in glasl_clean],
-        "gloss2id": {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))}
+        KEY_TRAIN: [],
+        KEY_VAL: [],
+        KEY_TEST: [],
+        KEY_ID2G: [ins["gloss"] for ins in glasl_clean],
+        KEY_G2ID: {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))}
     }
     return (glasl_clean, glasl_LANDMARK, glasl_SKELETON)
 
@@ -615,12 +617,12 @@ if __name__=='__main__':
             makedirs(f"{LANDMARK_dir}{gloss_instance["video_file"][:-4]}")
             makedirs(f"{SKELETON_dir}{gloss_instance["video_file"][:-4]}")
             glasl_LANDMARK[ gloss_instance["split"] ].append({
-                "gloss_id": int(glasl_LANDMARK["gloss2id"][gloss_ds["gloss"]]),
+                "gloss_id": int(glasl_LANDMARK[KEY_G2ID][gloss_ds["gloss"]]),
                 "video_id": gloss_instance["video_file"][:-4],
                 "landmark": [],
             })
             glasl_SKELETON[ gloss_instance["split"] ].append({
-                "gloss_id": int(glasl_SKELETON["gloss2id"][gloss_ds["gloss"]]),
+                "gloss_id": int(glasl_SKELETON[KEY_G2ID][gloss_ds["gloss"]]),
                 "video_id": gloss_instance["video_file"][:-4],
                 "skeleton": [],
             })
