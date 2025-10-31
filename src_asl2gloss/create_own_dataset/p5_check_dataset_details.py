@@ -113,10 +113,14 @@ if __name__=='__main__':
 
     check_ds= count_dataset_is_it_correct(glasl_clean, glasl_landmark, glasl_skeleton)
     if check_ds[0]:
+        print("--> quantity dataset: train, val, test")
         for tvt in (KEY_TRAIN, KEY_VAL, KEY_TEST):
             print(f"{tvt} quantity videos: {len(glasl_landmark[tvt])}")
+        print("-------------------------------------------")
+        print("--> quantity dataset on class")
         for gloss in glasl_clean:
             print(f"{gloss[G_]}( {glasl_landmark[KEY_G2ID][gloss[G_]]} ) quantity videos: {len(gloss["instances"])}")
+        print("-------------------------------------------")
         print(f"min quantity of hands on single video: {check_ds[1]}")
         print( "<< ------------------------------------------------------------------ >>")
         print(f"-- passed: all have same quantity of video on clean/landmark/skeleton --")
