@@ -86,16 +86,28 @@ if __name__=="__main__":
     glasl_landmark: dict= {}
     with open(f"{PROJ_ROOT}dataset/glasl/glasl.annotation.landmark.json", 'r') as f:
         glasl_landmark= loadjson(f)
-    TRAIN_GLOSS: int= int(len(glasl_landmark[KEY_ID2G]))
+    TRAIN_GLOSS: int= 10
     tvt: tuple= (KEY_TRAIN, KEY_VAL, KEY_TEST)
     model: Any= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v23.keras")
 
 
     batch: int= 4
     details: dict= {
-        KEY_TRAIN: {'correct': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  'accuracy': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  'total_vid': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
-        KEY_VAL: {'correct': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  'accuracy': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  'total_vid': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
-        KEY_TEST: {'correct': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  'accuracy': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],  'total_vid': [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]},
+        KEY_TRAIN: {
+            'correct':   [0 for _ in range(TRAIN_GLOSS)],
+            'accuracy':  [0 for _ in range(TRAIN_GLOSS)],
+            'total_vid': [0 for _ in range(TRAIN_GLOSS)]
+        },
+        KEY_VAL: {
+            'correct':   [0 for _ in range(TRAIN_GLOSS)],
+            'accuracy':  [0 for _ in range(TRAIN_GLOSS)],
+            'total_vid': [0 for _ in range(TRAIN_GLOSS)]
+        },
+        KEY_TEST: {
+            'correct':   [0 for _ in range(TRAIN_GLOSS)],
+            'accuracy':  [0 for _ in range(TRAIN_GLOSS)],
+            'total_vid': [0 for _ in range(TRAIN_GLOSS)]
+        },
     }
     for tvt_idv in tvt:
         batch_vid_lm: list= []
