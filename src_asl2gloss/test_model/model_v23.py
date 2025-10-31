@@ -87,7 +87,6 @@ if __name__=="__main__":
     with open(f"{PROJ_ROOT}dataset/glasl/glasl.annotation.landmark.json", 'r') as f:
         glasl_landmark= loadjson(f)
     TRAIN_GLOSS: int= 10
-    tvt: tuple= (KEY_TRAIN, KEY_VAL, KEY_TEST)
     model: Any= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v23.keras")
 
 
@@ -109,20 +108,19 @@ if __name__=="__main__":
             'total_vid': [0 for _ in range(TRAIN_GLOSS)]
         },
     }
-    for tvt_idv in tvt:
+    for tvt_idv in (KEY_TRAIN, KEY_VAL, KEY_TEST):
         batch_vid_lm: list= []
         batch_gloss: list= []
-        for i in range(len(glasl_landmark[tvt_idv])):
+        i: int= 0
+        while i<len(glasl_landmark[tvt_idv]):
             if len(batch_vid_lm)<batch:
                 tmp= []
                 if len(glasl_landmark[tvt_idv][i]['landmark'])<=QUANTITY_FRAME:
-                    tmp= getLessThanOrEqual_landmark_allHasHand(glasl_landmark[tvt_idv][i])
+                    batch_vid_lm.append(array(getLessThanOrEqual_landmark_allHasHand(glasl_landmark[tvt_idv][i]), dtype=float32))
                 else:
-                    tmp= getGreaterThan_landmark_allHasHand(glasl_landmark[tvt_idv][i])
-                blah_tmp= array(tmp, dtype=float32)
-                if len(tmp)==QUANTITY_FRAME:
-                    batch_vid_lm.append(tuple(tmp))
-                    batch_gloss.append(int(glasl_landmark[tvt_idv][i]['gloss_id']))
+                    batch_vid_lm.append(array(getGreaterThan_landmark_allHasHand(glasl_landmark[tvt_idv][i]), dtype=float32))
+                batch_gloss.append(int(glasl_landmark[tvt_idv][i]['gloss_id']))
+                i+= 1
             else:
                 y_pred= model.predict(
                     x=array(batch_vid_lm, dtype=float32),
@@ -157,7 +155,7 @@ if __name__=="__main__":
                 details[tvt_idv]['total_vid'][y_shouldbe]+= 1
             batch_vid_lm= []
             batch_gloss= []
-    for tvt_idv in tvt:
+    for tvt_idv in (KEY_TRAIN, KEY_VAL, KEY_TEST):
         print(f"__________________________ {tvt_idv} ____")
         q_correct: int= 0
         q_vid: int= 0
