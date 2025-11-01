@@ -1,18 +1,19 @@
 # best model yet: model_v14 then model_v10 and model_v12
 # best model top 4
-# 1) model v22 (60% testing)
-# 2) model v15 (57% testing)
-# 3) model v14 (56% testing)
-# 4) model v12 (4% testing)
-# 5) model v10 (4% testing)
+# 1) model v23 (81% testing)
+# 2) model v22 (60% testing)
+# 3) model v15 (57% testing)
+# 4) model v14 (56% testing)
+# 5) model v12 (4% testing)
+# 6) model v10 (4% testing)
 # from os.path import exists
 from keras.src.losses import sparse_categorical_crossentropy
 from keras.src.models import Model
 from keras.src.optimizers import Adam
-from keras.src.saving import load_model
+# from keras.src.saving import load_model
 
 from .lmark_constant import EPOCHS, PROJ_ROOT, TRAIN_STEPS, VAL_STEPS
-from .lmark_essentials import getdata_landmark
+from .lmark_essentials import getdata_landmark_allHasHand
 from .model_layers import data_in, data_out
 from .model_callbacks import d_lr, sTraining, tf_board
 
@@ -31,14 +32,14 @@ if __name__=="__main__":
     )
     model.summary()
     model.fit(
-        x=getdata_landmark(trainVal='train'),
+        x=getdata_landmark_allHasHand(trainVal='train'),
         epochs=EPOCHS,
         callbacks=[d_lr, sTraining, tf_board],
-        validation_data=getdata_landmark(trainVal='val'),
+        validation_data=getdata_landmark_allHasHand(trainVal='val'),
         steps_per_epoch=TRAIN_STEPS,
         validation_steps=VAL_STEPS,
         validation_freq=1
     )
     print(f"proj_root {PROJ_ROOT}")
-    model.save(f"{PROJ_ROOT}model/aslvid2gloss_v22.keras")
-    # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v22.keras")
+    model.save(f"{PROJ_ROOT}model/aslvid2gloss_v25.keras")
+    # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v25.keras")
