@@ -162,10 +162,10 @@ if __name__=="__main__":
         for g_id in range(10):
             q_correct+= details[tvt_idv]['correct'][g_id]
             q_vid+= details[tvt_idv]['total_vid'][g_id]
-        #     print(f"{g_id}: {glasl_landmark[KEY_ID2G][g_id]} --> {details[tvt_idv]['correct'][g_id]}/{details[tvt_idv]['total_vid'][g_id]}")
-        #     print(f"precentage correct: {details[tvt_idv]['correct'][g_id] / details[tvt_idv]['total_vid'][g_id] *100}%")
-        #     print(f"accuracy: {details[tvt_idv]['accuracy'][g_id] *100}%")
-        #     print()
-        # print("<< ----------------------------------------------------------------- >>")
+            print(f"{g_id}: {glasl_landmark[KEY_ID2G][g_id]} --> {details[tvt_idv]['correct'][g_id]}/{details[tvt_idv]['total_vid'][g_id]}")
+            print(f"precentage correct: {details[tvt_idv]['correct'][g_id] / details[tvt_idv]['total_vid'][g_id] *100}%")
+            print(f"accuracy: {details[tvt_idv]['accuracy'][g_id] *100}%")
+            print()
+        print("<< ----------------------------------------------------------------- >>")
         print(f"____ {tvt_idv} --> {q_correct}/{q_vid} --> {q_correct/q_vid*100}%")
-        # print("<< ----------------------------------------------------------------- >>")
+        print("<< ----------------------------------------------------------------- >>")
