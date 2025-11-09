@@ -684,8 +684,6 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
                 recalc_lmark_right_hand.append((  (i[1]).x, (i[1]).y  ))
                 all_x.append( (i[1]).x )
                 all_y.append( (i[1]).y )
-        # min_x= float(min(all_x))
-        # min_y= float(min(all_y))
 
 
         ### 0) all coords be greater than|= 0.0 and less than|= 1.0
