@@ -35,10 +35,8 @@ glasl_skeleton: dict= {}
 with open(f"{PROJ_ROOT}dataset/glasl/glasl.annotation.skeleton.json", "r") as f:
     glasl_skeleton= loadjson(f)
 # landmark is face, then pose, then left_had, then right hand
-# face full is (468, 2)
-# face worthy is (36, 2)
-# pose full is (33, 2)
-# pose worthy is (8, 2)
+# face full is (468, 2) --> face worthy is (36, 2)
+# pose full is (33, 2) --> pose worthy is (8, 2)
 # left_hand is (21, 2)
 # right_hand is (21, 2)
 
