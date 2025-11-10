@@ -8,6 +8,11 @@ from cv2 import COLOR_BGR2RGB, circle, cvtColor, imread, imwrite, line
 
 PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-3])}/"
 WHOLE_BODY_FILE_STR: str= f"{PROJ_ROOT}src_asl2gloss/pics_others/human_whole_body.png"
+LANDMARK_Q_FACE_FULL: int= 468
+LANDMARK_Q_FACE_WORTHY: int= 36
+LANDMARK_Q_POSE_FULL: int= 33
+LANDMARK_Q_POSE_WORTHY: int= 8
+LANDMARK_Q_EACH_HAND: int= 21
 IMG_SIZE: int= 158
 FACE_CONNECTIONS_FULL: tuple= (
     # oval face
@@ -184,7 +189,7 @@ def drawSkeletonImg(img_orig: ndarray, \
             else:
                 raise ValueError("Has landmark_coordinate<0.0 or 1.0<landmark_coordinate which is not allowed, it should be 0.0<= landmark_coordinate <=1.0")
     return img
-def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tuple:
+def drawFacePoseHand(lmark_mph, orig_shape: tuple) -> tuple:
     def part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(
         all_x: list,
         all_y: list,
@@ -288,7 +293,7 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
         if orig_shape[0]!=orig_shape[1]: # else equal, then don't touch it
             owx: int= int(orig_shape[1])
             ohy: int= int(orig_shape[0])
-            wx_hy: int= img_write_to.shape[0]
+            wx_hy: int= 200
             if owx<ohy: # just overwrite x with respect to now on square
                 all_x= []
                 ccc: float= (wx_hy*owx/ohy)/wx_hy # rescale
@@ -530,7 +535,7 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
         )
 
 
-    def recalcDrawFace_full_connections(img_orig: ndarray, lmark_face: tuple) -> ndarray:
+    def recalcDrawFace_full_lines(img_orig: ndarray, lmark_face: tuple) -> ndarray:
         img: ndarray= img_orig.copy()
         return drawSkeletonImg(
             img_orig=img,
@@ -540,7 +545,7 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
             color_conn=(0, 153, 0), # 153/255= 0.6
             drawJoint=False
         )
-    def recalcDrawPose_full_connections(img_orig: ndarray, lmark_pose: tuple) -> ndarray:
+    def recalcDrawPose_full_lines(img_orig: ndarray, lmark_pose: tuple) -> ndarray:
         img: ndarray= img_orig.copy()
         return drawSkeletonImg(
             img_orig=img,
@@ -550,7 +555,7 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
             color_conn=(0, 0, 153), # 153/255= 0.6
             drawJoint=False
         )
-    def recalcDrawFace_worthy_connections(img_orig: ndarray, lmark_face: tuple) -> ndarray:
+    def recalcDrawFace_worthy_lines(img_orig: ndarray, lmark_face: tuple) -> ndarray:
         img: ndarray= img_orig.copy()
         return drawSkeletonImg(
             img_orig=img,
@@ -560,7 +565,7 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
             color_conn=(0, 153, 0), # 153/255= 0.6
             drawJoint=False
         )
-    def recalcDrawPose_worthy_connections(img_orig: ndarray, lmark_pose: tuple) -> ndarray:
+    def recalcDrawPose_worthy_lines(img_orig: ndarray, lmark_pose: tuple) -> ndarray:
         img: ndarray= img_orig.copy()
         return drawSkeletonImg(
             img_orig=img,
@@ -570,7 +575,7 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
             color_conn=(0, 0, 153), # 153/255= 0.6
             drawJoint=False
         )
-    def recalcDrawLeftHand_connections(img_orig: ndarray, lmark_lhand: tuple) -> ndarray:
+    def recalcDrawLeftHand_lines(img_orig: ndarray, lmark_lhand: tuple) -> ndarray:
         img: ndarray= img_orig.copy()
         return drawSkeletonImg(
             img_orig=img,
@@ -580,7 +585,7 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
             color_conn=(255, 255, 255),
             drawJoint=False
         )
-    def recalcDrawRightHand_connections(img_orig: ndarray, lmark_rhand: tuple) -> ndarray:
+    def recalcDrawRightHand_lines(img_orig: ndarray, lmark_rhand: tuple) -> ndarray:
         img: ndarray= img_orig.copy()
         return drawSkeletonImg(
             img_orig=img,
@@ -590,10 +595,87 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
             color_conn=(204, 204, 204), # 204/255= 0.8
             drawJoint=False
         )
-    img_dots_full: ndarray= img_write_to.copy()
-    img_dots_worthy: ndarray= img_write_to.copy()
-    img_connections_full: ndarray= img_write_to.copy()
-    img_connections_worthy: ndarray= img_write_to.copy()
+    # 18 main pics
+    # ---------------------------------------------------------------
+    # 1  ---- image face,pose,left_hand,right_hand full dots
+    # 2  ---- image face,pose,left_hand,right_hand full lines
+
+    # 3  ---- image face,pose,left_hand,right_hand worthy dots
+    # 4  ---- image face,pose,left_hand,right_hand worthy lines
+
+    # 5  ---- image face,pose,left_hand,right_hand worthy dots HD
+    # 6  ---- image face,pose,left_hand,right_hand worthy lines HD
+
+    # 7  ---- image face full dots
+    # 8  ---- image face full lines
+
+    # 9  ---- image face worthy dots
+    # 10 ---- image face worthy lines
+
+    # 11 ---- image pose full dots
+    # 12 ---- image pose full lines
+
+    # 13 ---- image pose worthy dots
+    # 14 ---- image pose worthy lines
+
+    # 15 ---- image left hand worthy dots
+    # 16 ---- image left hand worthy lines
+
+    # 17 ---- image right hand worthy dots
+    # 18 ---- image right hand worthy lines
+
+
+    # ---- face pose left_hand right_hand full ----
+    # 1  ---- image face,pose,left_hand,right_hand full dots
+    image__facePoseLeftHandRightHand_full_dots: ndarray= zeros((1500, 1500, 3), dtype=uint8)
+    # 2  ---- image face,pose,left_hand,right_hand full lines
+    image__facePoseLeftHandRightHand_full_lines: ndarray= zeros((1500, 1500, 3), dtype=uint8)
+
+    # ---- face pose left_hand right_hand worthy ----
+    # 3  ---- image face,pose,left_hand,right_hand worthy dots
+    image__facePoseLeftHandRightHand_dots: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    # 4  ---- image face,pose,left_hand,right_hand worthy lines
+    image__facePoseLeftHandRightHand_lines: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    # 5  ---- image face,pose,left_hand,right_hand worthy dots HD
+    image__facePoseLeftHandRightHand_dots_hd: ndarray= zeros((1500, 1500, 3), dtype=uint8)
+    # 6  ---- image face,pose,left_hand,right_hand worthy lines HD
+    image__facePoseLeftHandRightHand_lines_hd: ndarray= zeros((1500, 1500, 3), dtype=uint8)
+
+    # ---- face full ----
+    # 7  ---- image face full dots
+    image__face_solo_full_dots: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    # 8  ---- image face full lines
+    image__face_solo_full_lines: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+
+    # ---- face worthy ----
+    # 9  ---- image face worthy dots
+    image__face_solo_dots: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    # 10 ---- image face worthy lines
+    image__face_solo_lines: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+
+    # ---- pose full ----
+    # 11 ---- image pose full dots
+    image__pose_solo_full_dots: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    # 12 ---- image pose full lines
+    image__pose_solo_full_lines: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+
+    # ---- pose worthy ----
+    # 13 ---- image pose worthy dots
+    image__pose_solo_dots: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    # 14 ---- image pose worthy lines
+    image__pose_solo_lines: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+
+    # ---- left hand solo ----
+    # 15 ---- image left hand worthy dots
+    image__left_hand_solo_dots: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    # 16 ---- image left hand worthy lines
+    image__left_hand_solo_lines: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+
+    # ---- right hand solo ----
+    # 17 ---- image right hand worthy dots
+    image__right_hand_solo_dots: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    # 18 ---- image right hand worthy lines
+    image__right_hand_solo_lines: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
 
 
     # lmark_fph.face_landmarks.landmark
@@ -623,10 +705,46 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
     #         b) min_wx_hy as mn; max_wx_hy as mx
     #         c) if mn is wx, all X +( (mx-mn)/(mx*2) )
     #         d) if mn is hy, all Y +( (mx-mn)/(mx*2) )
-    landmark__face_pose_left_right_hand= zeros(((36 +8 +(21*2)), 2), dtype=float32)
-    landmark__face_pose_left_right_hand= landmark__face_pose_left_right_hand.tolist()
-    landmark__face_pose_left_right_hand_full= zeros(((468 +33 +(21*2)), 2), dtype=float32)
-    landmark__face_pose_left_right_hand_full= landmark__face_pose_left_right_hand_full.tolist()
+
+
+    # 1 ---- face pose left_hand right_hand full ----
+    landmark__facePoseLeftHandRightHand_full= zeros(((
+        LANDMARK_Q_FACE_FULL +LANDMARK_Q_POSE_FULL +(LANDMARK_Q_EACH_HAND*2)
+    ), 2), dtype=float32)
+    # 2 ---- face pose left_hand right_hand worthy ----
+    landmark__facePoseLeftHandRightHand= zeros(((
+        LANDMARK_Q_FACE_WORTHY +LANDMARK_Q_POSE_WORTHY +(LANDMARK_Q_EACH_HAND*2)
+    ), 2), dtype=float32)
+    # 3 ---- face full ----
+    landmark__face_solo_full= zeros((LANDMARK_Q_FACE_FULL, 2), dtype=float32)
+    # 4 ---- face worthy ----
+    landmark__face_solo= zeros((LANDMARK_Q_FACE_WORTHY, 2), dtype=float32)
+    # 5 ---- pose full ----
+    landmark__pose_solo_full= zeros((LANDMARK_Q_POSE_FULL, 2), dtype=float32)
+    # 6 ---- pose worthy ----
+    landmark__pose_solo= zeros((LANDMARK_Q_POSE_WORTHY, 2), dtype=float32)
+    # 7 ---- left hand solo ----
+    landmark__left_hand_solo= zeros((LANDMARK_Q_EACH_HAND, 2), dtype=float32)
+    # 8 ---- right hand solo ----
+    landmark__right_hand_solo= zeros((LANDMARK_Q_EACH_HAND, 2), dtype=float32)
+
+
+    # 1 ---- face pose left_hand right_hand full ----
+    landmark__facePoseLeftHandRightHand_full= landmark__facePoseLeftHandRightHand_full.tolist()
+    # 2 ---- face pose left_hand right_hand worthy ----
+    landmark__facePoseLeftHandRightHand= landmark__facePoseLeftHandRightHand.tolist()
+    # 3 ---- face full ----
+    landmark__face_solo_full= landmark__face_solo_full.tolist()
+    # 4 ---- face worthy ----
+    landmark__face_solo= landmark__face_solo.tolist()
+    # 5 ---- pose full ----
+    landmark__pose_solo_full= landmark__pose_solo_full.tolist()
+    # 6 ---- pose worthy ----
+    landmark__pose_solo= landmark__pose_solo.tolist()
+    # 7 ---- left hand solo ----
+    landmark__left_hand_solo= landmark__left_hand_solo.tolist()
+    # 8 ---- right hand solo ----
+    landmark__right_hand_solo= landmark__right_hand_solo.tolist()
     if lmark_mph.face_landmarks!=None \
         or lmark_mph.pose_landmarks!=None \
         or lmark_mph.left_hand_landmarks!=None \
@@ -645,6 +763,31 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
         recalc_right_hand= []
         all_x= []
         all_y= []
+
+        recalc_face_solo_full= []
+        all_x_face_solo_full= []
+        all_y_face_solo_full= []
+
+        recalc_face_solo= []
+        all_x_face_solo= []
+        all_y_face_solo= []
+
+        recalc_pose_solo_full= []
+        all_x_pose_solo_full= []
+        all_y_pose_solo_full= []
+
+        recalc_pose_solo= []
+        all_x_pose_solo= []
+        all_y_pose_solo= []
+
+        recalc_left_hand_solo= []
+        all_x_left_hand_solo= []
+        all_y_left_hand_solo= []
+
+        recalc_right_hand_solo= []
+        all_x_right_hand_solo= []
+        all_y_right_hand_solo= []
+
         # here possible -2.0<= i[1].x <=2.0, mostly on pose
         # here possible -2.0<= i[1].y <=2.0, mostly on pose
         # that's why next force be 0.0<= all <=1.0
@@ -653,39 +796,77 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
                 all_x_full.append( (i[1]).x )
                 all_y_full.append( (i[1]).y )
                 recalc_face_full.append((  (i[1]).x, (i[1]).y  ))
+
+                all_x_face_solo_full.append( (i[1]).x )
+                all_y_face_solo_full.append( (i[1]).y )
+                recalc_face_solo_full.append((  (i[1]).x, (i[1]).y  ))
+
                 if int(i[0]) in WORTHY_FACE_IDX:
-                    recalc_face.append((  (i[1]).x, (i[1]).y  ))
                     all_x.append( (i[1]).x )
                     all_y.append( (i[1]).y )
+                    recalc_face.append((  (i[1]).x, (i[1]).y  ))
+
+                    all_x_face_solo.append( (i[1]).x )
+                    all_y_face_solo.append( (i[1]).y )
+                    recalc_face_solo.append((  (i[1]).x, (i[1]).y  ))
         if lmark_mph.pose_landmarks != None:
             for i in enumerate(lmark_mph.pose_landmarks.landmark):
                 all_x_full.append( (i[1]).x )
                 all_y_full.append( (i[1]).y )
                 recalc_pose_full.append((  (i[1]).x, (i[1]).y  ))
+
+                all_x_pose_solo_full.append( (i[1]).x )
+                all_y_pose_solo_full.append( (i[1]).y )
+                recalc_pose_solo_full.append((  (i[1]).x, (i[1]).y  ))
+
                 if int(i[0]) in WORTHY_POSE_IDX:
-                    recalc_pose.append((  (i[1]).x, (i[1]).y  ))
                     all_x.append( (i[1]).x )
                     all_y.append( (i[1]).y )
+                    recalc_pose.append((  (i[1]).x, (i[1]).y  ))
+
+                    all_x_pose_solo.append( (i[1]).x )
+                    all_y_pose_solo.append( (i[1]).y )
+                    recalc_pose_solo.append((  (i[1]).x, (i[1]).y  ))
         if lmark_mph.left_hand_landmarks != None:
             for i in enumerate(lmark_mph.left_hand_landmarks.landmark):
                 all_x_full.append( (i[1]).x )
                 all_y_full.append( (i[1]).y )
                 recalc_left_hand_full.append((  (i[1]).x, (i[1]).y  ))
-                recalc_left_hand.append((  (i[1]).x, (i[1]).y  ))
+
                 all_x.append( (i[1]).x )
                 all_y.append( (i[1]).y )
+                recalc_left_hand.append((  (i[1]).x, (i[1]).y  ))
+
+                all_x_left_hand_solo.append( (i[1]).x )
+                all_y_left_hand_solo.append( (i[1]).y )
+                recalc_left_hand_solo.append((  (i[1]).x, (i[1]).y  ))
         if lmark_mph.right_hand_landmarks != None:
             for i in enumerate(lmark_mph.right_hand_landmarks.landmark):
                 all_x_full.append( (i[1]).x )
                 all_y_full.append( (i[1]).y )
                 recalc_right_hand_full.append((  (i[1]).x, (i[1]).y  ))
-                recalc_right_hand.append((  (i[1]).x, (i[1]).y  ))
+
                 all_x.append( (i[1]).x )
                 all_y.append( (i[1]).y )
+                recalc_right_hand.append((  (i[1]).x, (i[1]).y  ))
+
+                all_x_right_hand_solo.append( (i[1]).x )
+                all_y_right_hand_solo.append( (i[1]).y )
+                recalc_right_hand_solo.append((  (i[1]).x, (i[1]).y  ))
 
 
         ### 0) all coords be greater than|= 0.0 and less than|= 1.0
         # force all be greater than or = to 0.0, ie. move right/down
+        # ---- face pose left_hand right_hand full ----
+        all_x_full, all_y_full, recalc_face_full, recalc_pose_full, recalc_left_hand_full, recalc_right_hand_full= part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(
+            all_x=all_x_full,
+            all_y=all_y_full,
+            landmark_face=recalc_face_full,
+            landmark_pose=recalc_pose_full,
+            landmark_left_hand=recalc_left_hand_full,
+            landmark_right_hand=recalc_right_hand_full
+        )
+        # ---- face pose left_hand right_hand worthy ----
         all_x, all_y, recalc_face, recalc_pose, recalc_left_hand, recalc_right_hand= part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(
             all_x=all_x,
             all_y=all_y,
@@ -694,11 +875,94 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
             landmark_left_hand=recalc_left_hand,
             landmark_right_hand=recalc_right_hand
         )
+        # ---- face full ----
+        all_x_face_solo_full, all_y_face_solo_full, recalc_face_solo_full, tmp1, tmp2, tmp3= part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(
+            all_x=all_x_face_solo_full,
+            all_y=all_y_face_solo_full,
+            landmark_face=recalc_face_solo_full,
+            landmark_pose=recalc_face_solo_full,
+            landmark_left_hand=recalc_face_solo_full,
+            landmark_right_hand=recalc_face_solo_full
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- face worthy ----
+        all_x_face_solo, all_y_face_solo, recalc_face_solo, tmp1, tmp2, tmp3= part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(
+            all_x=all_x_face_solo,
+            all_y=all_y_face_solo,
+            landmark_face=recalc_face_solo,
+            landmark_pose=recalc_face_solo,
+            landmark_left_hand=recalc_face_solo,
+            landmark_right_hand=recalc_face_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- pose full ----
+        all_x_pose_solo_full, all_y_pose_solo_full, recalc_pose_solo_full, tmp1, tmp2, tmp3= part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(
+            all_x=all_x_pose_solo_full,
+            all_y=all_y_pose_solo_full,
+            landmark_face=recalc_pose_solo_full,
+            landmark_pose=recalc_pose_solo_full,
+            landmark_left_hand=recalc_pose_solo_full,
+            landmark_right_hand=recalc_pose_solo_full
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- pose worthy ----
+        all_x_pose_solo, all_y_pose_solo, recalc_pose_solo, tmp1, tmp2, tmp3= part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(
+            all_x=all_x_pose_solo,
+            all_y=all_y_pose_solo,
+            landmark_face=recalc_pose_solo,
+            landmark_pose=recalc_pose_solo,
+            landmark_left_hand=recalc_pose_solo,
+            landmark_right_hand=recalc_pose_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- left hand solo ----
+        all_x_left_hand_solo, all_y_left_hand_solo, tmp1, tmp2, recalc_left_hand_solo, tmp3= part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(
+            all_x=all_x_left_hand_solo,
+            all_y=all_y_left_hand_solo,
+            landmark_face=recalc_left_hand_solo,
+            landmark_pose=recalc_left_hand_solo,
+            landmark_left_hand=recalc_left_hand_solo,
+            landmark_right_hand=recalc_left_hand_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- right hand solo ----
+        all_x_right_hand_solo, all_y_right_hand_solo, tmp1, tmp2, tmp3, recalc_right_hand_solo= part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(
+            all_x=all_x_right_hand_solo,
+            all_y=all_y_right_hand_solo,
+            landmark_face=recalc_right_hand_solo,
+            landmark_pose=recalc_right_hand_solo,
+            landmark_left_hand=recalc_right_hand_solo,
+            landmark_right_hand=recalc_right_hand_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
 
 
         ### 1) from old img ratio to new ratio(ie. square img )
         # remap coords( x,y ) to rescale( same ratio as orig ) on square
         # and also center orig img to New img sqaure
+        # ---- face pose left_hand right_hand full ----
+        all_x_full, all_y_full, recalc_face_full, recalc_pose_full, recalc_left_hand_full, recalc_right_hand_full= part2_beSquareRatioOnImage(
+            orig_shape=orig_shape,
+            all_x=all_x_full,
+            all_y=all_y_full,
+            landmark_face=recalc_face_full,
+            landmark_pose=recalc_pose_full,
+            landmark_left_hand=recalc_left_hand_full,
+            landmark_right_hand=recalc_right_hand_full
+        )
+        # ---- face pose left_hand right_hand worthy ----
         all_x, all_y, recalc_face, recalc_pose, recalc_left_hand, recalc_right_hand= part2_beSquareRatioOnImage(
             orig_shape=orig_shape,
             all_x=all_x,
@@ -708,6 +972,84 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
             landmark_left_hand=recalc_left_hand,
             landmark_right_hand=recalc_right_hand
         )
+        # ---- face full ----
+        all_x_face_solo_full, all_y_face_solo_full, recalc_face_solo_full, tmp1, tmp2, tmp3= part2_beSquareRatioOnImage(
+            orig_shape=orig_shape,
+            all_x=all_x_face_solo_full,
+            all_y=all_y_face_solo_full,
+            landmark_face=recalc_face_solo_full,
+            landmark_pose=recalc_face_solo_full,
+            landmark_left_hand=recalc_face_solo_full,
+            landmark_right_hand=recalc_face_solo_full
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- face worthy ----
+        all_x_face_solo, all_y_face_solo, recalc_face_solo, tmp1, tmp2, tmp3= part2_beSquareRatioOnImage(
+            orig_shape=orig_shape,
+            all_x=all_x_face_solo,
+            all_y=all_y_face_solo,
+            landmark_face=recalc_face_solo,
+            landmark_pose=recalc_face_solo,
+            landmark_left_hand=recalc_face_solo,
+            landmark_right_hand=recalc_face_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- pose full ----
+        all_x_pose_solo_full, all_y_pose_solo_full, recalc_pose_solo_full, tmp1, tmp2, tmp3= part2_beSquareRatioOnImage(
+            orig_shape=orig_shape,
+            all_x=all_x_pose_solo_full,
+            all_y=all_y_pose_solo_full,
+            landmark_face=recalc_pose_solo_full,
+            landmark_pose=recalc_pose_solo_full,
+            landmark_left_hand=recalc_pose_solo_full,
+            landmark_right_hand=recalc_pose_solo_full
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- pose worthy ----
+        all_x_pose_solo, all_y_pose_solo, recalc_pose_solo, tmp1, tmp2, tmp3= part2_beSquareRatioOnImage(
+            orig_shape=orig_shape,
+            all_x=all_x_pose_solo,
+            all_y=all_y_pose_solo,
+            landmark_face=recalc_pose_solo,
+            landmark_pose=recalc_pose_solo,
+            landmark_left_hand=recalc_pose_solo,
+            landmark_right_hand=recalc_pose_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- left hand solo ----
+        all_x_left_hand_solo, all_y_left_hand_solo, tmp1, tmp2, recalc_left_hand_solo, tmp3= part2_beSquareRatioOnImage(
+            orig_shape=orig_shape,
+            all_x=all_x_left_hand_solo,
+            all_y=all_y_left_hand_solo,
+            landmark_face=recalc_left_hand_solo,
+            landmark_pose=recalc_left_hand_solo,
+            landmark_left_hand=recalc_left_hand_solo,
+            landmark_right_hand=recalc_left_hand_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- right hand solo ----
+        all_x_right_hand_solo, all_y_right_hand_solo, tmp1, tmp2, tmp3, recalc_right_hand_solo= part2_beSquareRatioOnImage(
+            orig_shape=orig_shape,
+            all_x=all_x_right_hand_solo,
+            all_y=all_y_right_hand_solo,
+            landmark_face=recalc_right_hand_solo,
+            landmark_pose=recalc_right_hand_solo,
+            landmark_left_hand=recalc_right_hand_solo,
+            landmark_right_hand=recalc_right_hand_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
 
 
         ### 2) zoom in/out with padding 0.05 each side( with respecting orig aspect ratio )
@@ -716,6 +1058,16 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
         # ---- top/bottom pad 0.02, leftSide( fromPerspectiveOfSomeoneReadingThis ) pad 0.02: if wx < hy
         # ---- top pad 0.02, leftSide/right pad 0.02: if hy < wx
         # pad: float= 0.05
+        # ---- face pose left_hand right_hand full ----
+        all_x_full, all_y_full, recalc_face_full, recalc_pose_full, recalc_left_hand_full, recalc_right_hand_full= part3_zoomInOutForPadding(
+            all_x=all_x_full,
+            all_y=all_y_full,
+            landmark_face=recalc_face_full,
+            landmark_pose=recalc_pose_full,
+            landmark_left_hand=recalc_left_hand_full,
+            landmark_right_hand=recalc_right_hand_full
+        )
+        # ---- face pose left_hand right_hand worthy ----
         all_x, all_y, recalc_face, recalc_pose, recalc_left_hand, recalc_right_hand= part3_zoomInOutForPadding(
             all_x=all_x,
             all_y=all_y,
@@ -724,11 +1076,93 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
             landmark_left_hand=recalc_left_hand,
             landmark_right_hand=recalc_right_hand
         )
+        # ---- face full ----
+        all_x_face_solo_full, all_y_face_solo_full, recalc_face_solo_full, tmp1, tmp2, tmp3= part3_zoomInOutForPadding(
+            all_x=all_x_face_solo_full,
+            all_y=all_y_face_solo_full,
+            landmark_face=recalc_face_solo_full,
+            landmark_pose=recalc_face_solo_full,
+            landmark_left_hand=recalc_face_solo_full,
+            landmark_right_hand=recalc_face_solo_full
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- face worthy ----
+        all_x_face_solo, all_y_face_solo, recalc_face_solo, tmp1, tmp2, tmp3= part3_zoomInOutForPadding(
+            all_x=all_x_face_solo,
+            all_y=all_y_face_solo,
+            landmark_face=recalc_face_solo,
+            landmark_pose=recalc_face_solo,
+            landmark_left_hand=recalc_face_solo,
+            landmark_right_hand=recalc_face_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- pose full ----
+        all_x_pose_solo_full, all_y_pose_solo_full, recalc_pose_solo_full, tmp1, tmp2, tmp3= part3_zoomInOutForPadding(
+            all_x=all_x_pose_solo_full,
+            all_y=all_y_pose_solo_full,
+            landmark_face=recalc_pose_solo_full,
+            landmark_pose=recalc_pose_solo_full,
+            landmark_left_hand=recalc_pose_solo_full,
+            landmark_right_hand=recalc_pose_solo_full
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- pose worthy ----
+        all_x_pose_solo, all_y_pose_solo, recalc_pose_solo, tmp1, tmp2, tmp3= part3_zoomInOutForPadding(
+            all_x=all_x_pose_solo,
+            all_y=all_y_pose_solo,
+            landmark_face=recalc_pose_solo,
+            landmark_pose=recalc_pose_solo,
+            landmark_left_hand=recalc_pose_solo,
+            landmark_right_hand=recalc_pose_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- left hand solo ----
+        all_x_left_hand_solo, all_y_left_hand_solo, tmp1, tmp2, recalc_left_hand_solo, tmp3= part3_zoomInOutForPadding(
+            all_x=all_x_left_hand_solo,
+            all_y=all_y_left_hand_solo,
+            landmark_face=recalc_left_hand_solo,
+            landmark_pose=recalc_left_hand_solo,
+            landmark_left_hand=recalc_left_hand_solo,
+            landmark_right_hand=recalc_left_hand_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- right hand solo ----
+        all_x_right_hand_solo, all_y_right_hand_solo, tmp1, tmp2, tmp3, recalc_right_hand_solo= part3_zoomInOutForPadding(
+            all_x=all_x_right_hand_solo,
+            all_y=all_y_right_hand_solo,
+            landmark_face=recalc_right_hand_solo,
+            landmark_pose=recalc_right_hand_solo,
+            landmark_left_hand=recalc_right_hand_solo,
+            landmark_right_hand=recalc_right_hand_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
 
 
         ### 3) center landmark with same aspect ratio as original
         # center horizontally and vertically, since done padding then just
         # move to right/down
+        # ---- face pose left_hand right_hand full ----
+        all_x_full, all_y_full, recalc_face_full, recalc_pose_full, recalc_left_hand_full, recalc_right_hand_full= part4_centerLandmarkVerticallyHorizontally(
+            all_x=all_x_full,
+            all_y=all_y_full,
+            landmark_face=recalc_face_full,
+            landmark_pose=recalc_pose_full,
+            landmark_left_hand=recalc_left_hand_full,
+            landmark_right_hand=recalc_right_hand_full
+        )
+        # ---- face pose left_hand right_hand worthy ----
         all_x, all_y, recalc_face, recalc_pose, recalc_left_hand, recalc_right_hand= part4_centerLandmarkVerticallyHorizontally(
             all_x=all_x,
             all_y=all_y,
@@ -737,95 +1171,529 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
             landmark_left_hand=recalc_left_hand,
             landmark_right_hand=recalc_right_hand
         )
+        # ---- face full ----
+        all_x_face_solo_full, all_y_face_solo_full, recalc_face_solo_full, tmp1, tmp2, tmp3= part4_centerLandmarkVerticallyHorizontally(
+            all_x=all_x_face_solo_full,
+            all_y=all_y_face_solo_full,
+            landmark_face=recalc_face_solo_full,
+            landmark_pose=recalc_face_solo_full,
+            landmark_left_hand=recalc_face_solo_full,
+            landmark_right_hand=recalc_face_solo_full
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- face worthy ----
+        all_x_face_solo, all_y_face_solo, recalc_face_solo, tmp1, tmp2, tmp3= part4_centerLandmarkVerticallyHorizontally(
+            all_x=all_x_face_solo,
+            all_y=all_y_face_solo,
+            landmark_face=recalc_face_solo,
+            landmark_pose=recalc_face_solo,
+            landmark_left_hand=recalc_face_solo,
+            landmark_right_hand=recalc_face_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- pose full ----
+        all_x_pose_solo_full, all_y_pose_solo_full, recalc_pose_solo_full, tmp1, tmp2, tmp3= part4_centerLandmarkVerticallyHorizontally(
+            all_x=all_x_pose_solo_full,
+            all_y=all_y_pose_solo_full,
+            landmark_face=recalc_pose_solo_full,
+            landmark_pose=recalc_pose_solo_full,
+            landmark_left_hand=recalc_pose_solo_full,
+            landmark_right_hand=recalc_pose_solo_full
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- pose worthy ----
+        all_x_pose_solo, all_y_pose_solo, recalc_pose_solo, tmp1, tmp2, tmp3= part4_centerLandmarkVerticallyHorizontally(
+            all_x=all_x_pose_solo,
+            all_y=all_y_pose_solo,
+            landmark_face=recalc_pose_solo,
+            landmark_pose=recalc_pose_solo,
+            landmark_left_hand=recalc_pose_solo,
+            landmark_right_hand=recalc_pose_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- left hand solo ----
+        all_x_left_hand_solo, all_y_left_hand_solo, tmp1, tmp2, recalc_left_hand_solo, tmp3= part4_centerLandmarkVerticallyHorizontally(
+            all_x=all_x_left_hand_solo,
+            all_y=all_y_left_hand_solo,
+            landmark_face=recalc_left_hand_solo,
+            landmark_pose=recalc_left_hand_solo,
+            landmark_left_hand=recalc_left_hand_solo,
+            landmark_right_hand=recalc_left_hand_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+        # ---- right hand solo ----
+        all_x_right_hand_solo, all_y_right_hand_solo, tmp1, tmp2, tmp3, recalc_right_hand_solo= part4_centerLandmarkVerticallyHorizontally(
+            all_x=all_x_right_hand_solo,
+            all_y=all_y_right_hand_solo,
+            landmark_face=recalc_right_hand_solo,
+            landmark_pose=recalc_right_hand_solo,
+            landmark_left_hand=recalc_right_hand_solo,
+            landmark_right_hand=recalc_right_hand_solo
+        )
+        del tmp1
+        del tmp2
+        del tmp3
+
+
+        # ---- face pose left_hand right_hand full ----
+        del all_x_full
+        del all_y_full
+
+        # ---- face pose left_hand right_hand worthy ----
         del all_x
         del all_y
 
+        # ---- face full ----
+        del all_x_face_solo_full
+        del all_y_face_solo_full
+
+        # ---- face worthy ----
+        del all_x_face_solo
+        del all_y_face_solo
+
+        # ---- pose full ----
+        del all_x_pose_solo_full
+        del all_y_pose_solo_full
+
+        # ---- pose worthy ----
+        del all_x_pose_solo
+        del all_y_pose_solo
+
+        # ---- left hand solo ----
+        del all_x_left_hand_solo
+        del all_y_left_hand_solo
+
+        # ---- right hand solo ----
+        del all_x_right_hand_solo
+        del all_y_right_hand_solo
+
 
         # done calcuation now mandatory all landamrks be constant
+        # ---- face pose left_hand right_hand full ----
+        recalc_face_full= tuple(tuple(i) for i in recalc_face_full)
+        recalc_pose_full= tuple(tuple(i) for i in recalc_pose_full)
+        recalc_left_hand_full= tuple(tuple(i) for i in recalc_left_hand_full)
+        recalc_right_hand_full= tuple(tuple(i) for i in recalc_right_hand_full)
+
+        # ---- face pose left_hand right_hand worthy ----
         recalc_face= tuple(tuple(i) for i in recalc_face)
         recalc_pose= tuple(tuple(i) for i in recalc_pose)
         recalc_left_hand= tuple(tuple(i) for i in recalc_left_hand)
         recalc_right_hand= tuple(tuple(i) for i in recalc_right_hand)
 
+        # ---- face full ----
+        recalc_face_solo_full= tuple(tuple(i) for i in recalc_face_solo_full)
 
-        # 4 main pics
-        # ---- image full connections
-        # ---- image full dots
-        # ---- image worthy connections
-        # ---- image worthy dots
+        # ---- face worthy ----
+        recalc_face_solo= tuple(tuple(i) for i in recalc_face_solo)
+
+        # ---- pose full ----
+        recalc_pose_solo_full= tuple(tuple(i) for i in recalc_pose_solo_full)
+
+        # ---- pose worthy ----
+        recalc_pose_solo= tuple(tuple(i) for i in recalc_pose_solo)
+
+        # ---- left hand solo ----
+        recalc_left_hand_solo= tuple(tuple(i) for i in recalc_left_hand_solo)
+
+        # ---- right hand solo ----
+        recalc_right_hand_solo= tuple(tuple(i) for i in recalc_right_hand_solo)
+
+
+        # 18 main pics
+        # ---------------------------------------------------------------
+        # 1  ---- image face,pose,left_hand,right_hand full dots
+        # 2  ---- image face,pose,left_hand,right_hand full lines
+
+        # 3  ---- image face,pose,left_hand,right_hand worthy dots
+        # 4  ---- image face,pose,left_hand,right_hand worthy lines
+
+        # 5  ---- image face,pose,left_hand,right_hand worthy dots HD
+        # 6  ---- image face,pose,left_hand,right_hand worthy lines HD
+
+        # 7  ---- image face full dots
+        # 8  ---- image face full lines
+
+        # 9  ---- image face worthy dots
+        # 10 ---- image face worthy lines
+
+        # 11 ---- image pose full dots
+        # 12 ---- image pose full lines
+
+        # 13 ---- image pose worthy dots
+        # 14 ---- image pose worthy lines
+
+        # 15 ---- image left hand worthy dots
+        # 16 ---- image left hand worthy lines
+
+        # 17 ---- image right hand worthy dots
+        # 18 ---- image right hand worthy lines
+
+
         # --------------------------------
         # -- landmarks transformation( from what to how many )
-        # 468 --> 36 on face
-        # 33  --> 8  on pose
-        # 21 --> 21 on left hand
-        # 21 --> 21 on right hand
+        # 468 --> 36 landmarks on face
+        # 33  --> 8  landmarks on pose
+        # 21  --> 21 landmarks on left hand
+        # 21  --> 21 landmarks on right hand
         # --------------------------------
-        # -- face
-        landmark__face_full= zeros((468, 2), dtype=float32)
-        landmark__face= zeros((36, 2), dtype=float32)
+
+
+        # ---- face pose left_hand right_hand full ----
+        landmark__face_full= zeros((LANDMARK_Q_FACE_FULL, 2), dtype=float32)
+        landmark__pose_full= zeros((LANDMARK_Q_POSE_FULL, 2), dtype=float32)
+        landmark__left_hand_full= zeros((LANDMARK_Q_EACH_HAND, 2), dtype=float32)
+        landmark__right_hand_full= zeros((LANDMARK_Q_EACH_HAND, 2), dtype=float32)
+
+        # ---- face pose left_hand right_hand worthy ----
+        landmark__face= zeros((LANDMARK_Q_FACE_WORTHY, 2), dtype=float32)
+        landmark__pose= zeros((LANDMARK_Q_POSE_WORTHY, 2), dtype=float32)
+        landmark__left_hand= zeros((LANDMARK_Q_EACH_HAND, 2), dtype=float32)
+        landmark__right_hand= zeros((LANDMARK_Q_EACH_HAND, 2), dtype=float32)
+
+        # ---- face full ----
+        landmark__face_solo_full= zeros((LANDMARK_Q_FACE_FULL, 2), dtype=float32)
+
+        # ---- face worthy ----
+        landmark__face_solo= zeros((LANDMARK_Q_FACE_WORTHY, 2), dtype=float32)
+
+        # ---- pose full ----
+        landmark__pose_solo_full= zeros((LANDMARK_Q_POSE_FULL, 2), dtype=float32)
+
+        # ---- pose worthy ----
+        landmark__pose_solo= zeros((LANDMARK_Q_POSE_WORTHY, 2), dtype=float32)
+
+        # ---- left hand solo ----
+        landmark__left_hand_solo= zeros((LANDMARK_Q_EACH_HAND, 2), dtype=float32)
+
+        # ---- right hand solo ----
+        landmark__right_hand_solo= zeros((LANDMARK_Q_EACH_HAND, 2), dtype=float32)
+
+
+
+
+        # ---- face pose left_hand right_hand full ----
+        landmark__face_full= tuple(landmark__face_full.tolist())
+        landmark__pose_full= tuple(landmark__pose_full.tolist())
+        landmark__left_hand_full= tuple(landmark__left_hand_full.tolist())
+        landmark__right_hand_full= tuple(landmark__right_hand_full.tolist())
+
+        # ---- face pose left_hand right_hand worthy ----
+        landmark__face= tuple(landmark__face.tolist())
+        landmark__pose= tuple(landmark__pose.tolist())
+        landmark__left_hand= tuple(landmark__left_hand.tolist())
+        landmark__right_hand= tuple(landmark__right_hand.tolist())
+
+        # ---- face full ----
+        landmark__face_solo_full= tuple(landmark__face_solo_full.tolist())
+
+        # ---- face worthy ----
+        landmark__face_solo= tuple(landmark__face_solo.tolist())
+
+        # ---- pose full ----
+        landmark__pose_solo_full= tuple(landmark__pose_solo_full.tolist())
+
+        # ---- pose worthy ----
+        landmark__pose_solo= tuple(landmark__pose_solo.tolist())
+
+        # ---- left hand solo ----
+        landmark__left_hand_solo= tuple(landmark__left_hand_solo.tolist())
+
+        # ---- right hand solo ----
+        landmark__right_hand_solo= tuple(landmark__right_hand_solo.tolist())
+
+
+        # ---- face lanmark if exist ----
         if lmark_mph.face_landmarks != None:
-            landmark__face_full= tuple(recalc_face)
-            landmark__face= tuple(landmark__face_full[i] for i in WORTHY_FACE_IDX) # shape is (36, 2)
+            landmark__face_full= tuple(recalc_face_full)
+            landmark__face= tuple(recalc_face)
+            landmark__face_solo_full= tuple(recalc_face_solo_full)
+            landmark__face_solo= tuple(recalc_face_solo)
 
-            img_dots_full= recalcDrawFace_full_dots(img_dots_full, landmark__face_full)
-            img_dots_worthy= recalcDrawFace_worthy_dots(img_dots_worthy, landmark__face)
+            # 1  ---- image face,pose,left_hand,right_hand full dots
+            image__facePoseLeftHandRightHand_full_dots= recalcDrawFace_full_dots(
+                image__facePoseLeftHandRightHand_full_dots,
+                landmark__face_full
+            )
+            # 2  ---- image face,pose,left_hand,right_hand full lines
+            image__facePoseLeftHandRightHand_full_lines= recalcDrawFace_full_lines(
+                image__facePoseLeftHandRightHand_full_lines,
+                landmark__face_full
+            )
 
-            img_connections_full= recalcDrawFace_full_connections(img_connections_full, landmark__face_full)
-            img_connections_worthy= recalcDrawFace_worthy_connections(img_connections_worthy, landmark__face)
-        # -------------------------------------------------------------------
-        # -- pose
-        landmark__pose_full= zeros((33, 2), dtype=float32)
-        landmark__pose= zeros((8, 2), dtype=float32)
+            # 3  ---- image face,pose,left_hand,right_hand worthy dots
+            image__facePoseLeftHandRightHand_dots= recalcDrawFace_worthy_dots(
+                image__facePoseLeftHandRightHand_dots,
+                landmark__face
+            )
+            # 4  ---- image face,pose,left_hand,right_hand worthy lines
+            image__facePoseLeftHandRightHand_lines= recalcDrawFace_worthy_lines(
+                image__facePoseLeftHandRightHand_lines,
+                landmark__face
+            )
+
+            # 5  ---- image face,pose,left_hand,right_hand worthy dots HD
+            image__facePoseLeftHandRightHand_dots_hd= recalcDrawFace_worthy_dots(
+                image__facePoseLeftHandRightHand_dots_hd,
+                landmark__face
+            )
+            # 6  ---- image face,pose,left_hand,right_hand worthy lines HD
+            image__facePoseLeftHandRightHand_lines_hd= recalcDrawFace_worthy_lines(
+                image__facePoseLeftHandRightHand_lines_hd,
+                landmark__face
+            )
+
+            # 7  ---- image face full dots
+            image__face_solo_full_dots= recalcDrawFace_full_dots(
+                image__face_solo_full_dots,
+                landmark__face_solo_full
+            )
+            # 8  ---- image face full lines
+            image__face_solo_full_lines= recalcDrawFace_full_lines(
+                image__face_solo_full_lines,
+                landmark__face_solo_full
+            )
+
+            # 9  ---- image face worthy dots
+            image__face_solo_dots= recalcDrawFace_worthy_dots(
+                image__face_solo_dots,
+                landmark__face_solo
+            )
+            # 10 ---- image face worthy lines
+            image__face_solo_lines= recalcDrawFace_worthy_lines(
+                image__face_solo_lines,
+                landmark__face_solo
+            )
+        # ---- pose lanmark if exist ----
         if lmark_mph.pose_landmarks != None:
-            landmark__pose_full= tuple(recalc_pose)
-            landmark__pose= tuple(landmark__pose_full[i] for i in WORTHY_POSE_IDX) # shape is (8, 2)
+            landmark__pose_full= tuple(recalc_pose_full)
+            landmark__pose= tuple(recalc_pose)
+            landmark__pose_solo_full= tuple(recalc_pose_solo_full)
+            landmark__pose_solo= tuple(recalc_pose_solo)
 
-            img_dots_full= recalcDrawPose_full_dots(img_dots_full, landmark__pose_full)
-            img_dots_worthy= recalcDrawPose_worthy_dots(img_dots_worthy, landmark__pose)
+            # 1  ---- image face,pose,left_hand,right_hand full dots
+            image__facePoseLeftHandRightHand_full_dots= recalcDrawPose_full_dots(
+                image__facePoseLeftHandRightHand_full_dots,
+                landmark__pose_full
+            )
+            # 2  ---- image face,pose,left_hand,right_hand full lines
+            image__facePoseLeftHandRightHand_full_lines= recalcDrawPose_full_lines(
+                image__facePoseLeftHandRightHand_full_lines,
+                landmark__pose_full
+            )
 
-            img_connections_full= recalcDrawPose_full_connections(img_connections_full, landmark__pose_full)
-            img_connections_worthy= recalcDrawPose_worthy_connections(img_connections_worthy, landmark__pose)
-        # -------------------------------------------------------------------
-        # -- left hand
-        landmark__left_hand= zeros((21, 2), dtype=float32)
-        landmark__left_hand= tuple(tuple(i) for i in landmark__left_hand.tolist())
+            # 3  ---- image face,pose,left_hand,right_hand worthy dots
+            image__facePoseLeftHandRightHand_dots= recalcDrawPose_worthy_dots(
+                image__facePoseLeftHandRightHand_dots,
+                landmark__pose
+            )
+            # 4  ---- image face,pose,left_hand,right_hand worthy lines
+            image__facePoseLeftHandRightHand_lines= recalcDrawPose_worthy_lines(
+                image__facePoseLeftHandRightHand_lines,
+                landmark__pose
+            )
+
+            # 5  ---- image face,pose,left_hand,right_hand worthy dots HD
+            image__facePoseLeftHandRightHand_dots_hd= recalcDrawPose_worthy_dots(
+                image__facePoseLeftHandRightHand_dots_hd,
+                landmark__pose
+            )
+            # 6  ---- image face,pose,left_hand,right_hand worthy lines HD
+            image__facePoseLeftHandRightHand_lines_hd= recalcDrawPose_worthy_lines(
+                image__facePoseLeftHandRightHand_lines_hd,
+                landmark__pose
+            )
+
+            # 11 ---- image pose full dots
+            image__pose_solo_full_dots= recalcDrawPose_full_dots(
+                image__pose_solo_full_dots,
+                landmark__pose_solo_full
+            )
+            # 12 ---- image pose full lines
+            image__pose_solo_full_lines= recalcDrawPose_full_lines(
+                image__pose_solo_full_lines,
+                landmark__pose_solo_full
+            )
+
+            # 13 ---- image pose worthy dots
+            image__pose_solo_dots= recalcDrawPose_worthy_dots(
+                image__pose_solo_dots,
+                landmark__pose_solo
+            )
+            # 14 ---- image pose worthy lines
+            image__pose_solo_lines= recalcDrawPose_worthy_lines(
+                image__pose_solo_lines,
+                landmark__pose_solo
+            )
+        # ---- left hand lanmark if exist ----
         if lmark_mph.left_hand_landmarks != None:
+            landmark__left_hand_full= tuple(recalc_left_hand_full)
             landmark__left_hand= tuple(recalc_left_hand)
+            landmark__left_hand_solo= tuple(recalc_left_hand_solo)
 
-            img_dots_full= recalcDrawLeftHand_dots(img_dots_full, landmark__left_hand)
-            img_dots_worthy= recalcDrawLeftHand_dots(img_dots_worthy, landmark__left_hand)
+            # 1  ---- image face,pose,left_hand,right_hand full dots
+            image__facePoseLeftHandRightHand_full_dots= recalcDrawLeftHand_dots(
+                image__facePoseLeftHandRightHand_full_dots,
+                landmark__left_hand_full
+            )
+            # 2  ---- image face,pose,left_hand,right_hand full lines
+            image__facePoseLeftHandRightHand_full_lines= recalcDrawLeftHand_lines(
+                image__facePoseLeftHandRightHand_full_lines,
+                landmark__left_hand_full
+            )
 
-            img_connections_full= recalcDrawLeftHand_connections(img_connections_full, landmark__left_hand)
-            img_connections_worthy= recalcDrawLeftHand_connections(img_connections_worthy, landmark__left_hand)
-        # -------------------------------------------------------------------
-        # -- right hand
-        landmark__right_hand= zeros((21, 2), dtype=float32)
-        landmark__right_hand= tuple(tuple(i) for i in landmark__right_hand.tolist())
+            # 3  ---- image face,pose,left_hand,right_hand worthy dots
+            image__facePoseLeftHandRightHand_dots= recalcDrawLeftHand_dots(
+                image__facePoseLeftHandRightHand_dots,
+                landmark__left_hand
+            )
+            # 4  ---- image face,pose,left_hand,right_hand worthy lines
+            image__facePoseLeftHandRightHand_lines= recalcDrawLeftHand_lines(
+                image__facePoseLeftHandRightHand_lines,
+                landmark__left_hand
+            )
+
+            # 5  ---- image face,pose,left_hand,right_hand worthy dots HD
+            image__facePoseLeftHandRightHand_dots_hd= recalcDrawLeftHand_dots(
+                image__facePoseLeftHandRightHand_dots_hd,
+                landmark__left_hand
+            )
+            # 6  ---- image face,pose,left_hand,right_hand worthy lines HD
+            image__facePoseLeftHandRightHand_lines_hd= recalcDrawLeftHand_lines(
+                image__facePoseLeftHandRightHand_lines_hd,
+                landmark__left_hand
+            )
+
+            # 15 ---- image left hand worthy dots
+            image__left_hand_solo_dots= recalcDrawLeftHand_dots(
+                image__left_hand_solo_dots,
+                landmark__left_hand_solo
+            )
+            # 16 ---- image left hand worthy lines
+            image__left_hand_solo_lines= recalcDrawLeftHand_lines(
+                image__left_hand_solo_lines,
+                landmark__left_hand_solo
+            )
+        # ---- right hand lanmark if exist ----
         if lmark_mph.right_hand_landmarks != None:
+            landmark__right_hand_full= tuple(recalc_right_hand_full)
             landmark__right_hand= tuple(recalc_right_hand)
+            landmark__right_hand_solo= tuple(recalc_right_hand_solo)
 
-            img_dots_full= recalcDrawRightHand_dots(img_dots_full, landmark__right_hand)
-            img_dots_worthy= recalcDrawRightHand_dots(img_dots_worthy, landmark__right_hand)
+            # 1  ---- image face,pose,left_hand,right_hand full dots
+            image__facePoseLeftHandRightHand_full_dots= recalcDrawRightHand_dots(
+                image__facePoseLeftHandRightHand_full_dots,
+                landmark__right_hand_full
+            )
+            # 2  ---- image face,pose,left_hand,right_hand full lines
+            image__facePoseLeftHandRightHand_full_lines= recalcDrawRightHand_lines(
+                image__facePoseLeftHandRightHand_full_lines,
+                landmark__right_hand_full
+            )
 
-            img_connections_full= recalcDrawRightHand_connections(img_connections_full, landmark__right_hand)
-            img_connections_worthy= recalcDrawRightHand_connections(img_connections_worthy, landmark__right_hand)
-        # -------------------------------------------------------------------
+            # 3  ---- image face,pose,left_hand,right_hand worthy dots
+            image__facePoseLeftHandRightHand_dots= recalcDrawRightHand_dots(
+                image__facePoseLeftHandRightHand_dots,
+                landmark__right_hand
+            )
+            # 4  ---- image face,pose,left_hand,right_hand worthy lines
+            image__facePoseLeftHandRightHand_lines= recalcDrawRightHand_lines(
+                image__facePoseLeftHandRightHand_lines,
+                landmark__right_hand
+            )
 
-        landmark__face_pose_left_right_hand= []
-        landmark__face_pose_left_right_hand.extend(landmark__face)
-        landmark__face_pose_left_right_hand.extend(landmark__pose)
-        landmark__face_pose_left_right_hand.extend(landmark__left_hand)
-        landmark__face_pose_left_right_hand.extend(landmark__right_hand)
-        landmark__face_pose_left_right_hand_full= []
-        landmark__face_pose_left_right_hand_full.extend(landmark__face_full)
-        landmark__face_pose_left_right_hand_full.extend(landmark__pose_full)
-        landmark__face_pose_left_right_hand_full.extend(landmark__left_hand)
-        landmark__face_pose_left_right_hand_full.extend(landmark__right_hand)
+            # 5  ---- image face,pose,left_hand,right_hand worthy dots HD
+            image__facePoseLeftHandRightHand_dots_hd= recalcDrawRightHand_dots(
+                image__facePoseLeftHandRightHand_dots_hd,
+                landmark__right_hand
+            )
+            # 6  ---- image face,pose,left_hand,right_hand worthy lines HD
+            image__facePoseLeftHandRightHand_lines_hd= recalcDrawRightHand_lines(
+                image__facePoseLeftHandRightHand_lines_hd,
+                landmark__right_hand
+            )
+
+            # 17 ---- image right hand worthy dots
+            image__right_hand_solo_dots= recalcDrawRightHand_dots(
+                image__right_hand_solo_dots,
+                landmark__right_hand_solo
+            )
+            # 18 ---- image right hand worthy lines
+            image__right_hand_solo_lines= recalcDrawRightHand_lines(
+                image__right_hand_solo_lines,
+                landmark__right_hand_solo
+            )
+
+
+        # 1 ---- face pose left_hand right_hand full ----
+        landmark__facePoseLeftHandRightHand_full= []
+        landmark__facePoseLeftHandRightHand_full.extend(landmark__face_full)
+        landmark__facePoseLeftHandRightHand_full.extend(landmark__pose_full)
+        landmark__facePoseLeftHandRightHand_full.extend(landmark__left_hand_full)
+        landmark__facePoseLeftHandRightHand_full.extend(landmark__right_hand_full)
+        # 2 ---- face pose left_hand right_hand worthy ----
+        landmark__facePoseLeftHandRightHand= []
+        landmark__facePoseLeftHandRightHand.extend(landmark__face)
+        landmark__facePoseLeftHandRightHand.extend(landmark__pose)
+        landmark__facePoseLeftHandRightHand.extend(landmark__left_hand)
+        landmark__facePoseLeftHandRightHand.extend(landmark__right_hand)
+        # 3 ---- face full ----
+        # landmark__face_solo_full, done process
+        # 4 ---- face worthy ----
+        # landmark__face_solo, done process
+        # 5 ---- pose full ----
+        # landmark__pose_solo_full, done process
+        # 6 ---- pose worthy ----
+        # landmark__pose_solo, done process
+        # 7 ---- left hand solo ----
+        # landmark__left_hand_solo, done process
+        # 8 ---- right hand solo ----
+        # landmark__right_hand_solo, done process
 
     return (
-        (img_dots_full, img_dots_worthy, img_connections_full, img_connections_worthy),
-        landmark__face_pose_left_right_hand_full,
-        landmark__face_pose_left_right_hand,
+        (
+            image__facePoseLeftHandRightHand_full_dots,  #  1
+            image__facePoseLeftHandRightHand_full_lines, #  2
+
+            image__facePoseLeftHandRightHand_dots,       #  3
+            image__facePoseLeftHandRightHand_lines,      #  4
+            image__facePoseLeftHandRightHand_dots_hd,    #  5
+            image__facePoseLeftHandRightHand_lines_hd,   #  6
+
+            image__face_solo_full_dots,                  #  7
+            image__face_solo_full_lines,                 #  8
+            image__face_solo_dots,                       #  9
+            image__face_solo_lines,                      # 10
+
+            image__pose_solo_full_dots,                  # 11
+            image__pose_solo_full_lines,                 # 12
+            image__pose_solo_dots,                       # 13
+            image__pose_solo_lines,                      # 14
+
+            image__left_hand_solo_dots,                  # 15
+            image__left_hand_solo_lines,                 # 16
+
+            image__right_hand_solo_dots,                 # 17
+            image__right_hand_solo_lines,                # 18
+        ),
+        landmark__facePoseLeftHandRightHand_full, # 1
+        landmark__facePoseLeftHandRightHand,      # 2
+        landmark__face_solo_full,                 # 3
+        landmark__face_solo,                      # 4
+        landmark__pose_solo_full,                 # 5
+        landmark__pose_solo,                      # 6
+        landmark__left_hand_solo,                 # 7
+        landmark__right_hand_solo,                # 8
     )
 
 
@@ -834,30 +1702,144 @@ if __name__=='__main__':
         image_origin= imread(WHOLE_BODY_FILE_STR)
         image_origin= cvtColor(src=image_origin, code=COLOR_BGR2RGB).copy()
         image_origin= array(image_origin, dtype=uint8)
-        (img_dots_f, img_dots_w, img_con_f, img_con_w), lm_full, lm_worthy= drawFacePoseHand(
-            img_write_to=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+        (img_fplhrh_full_dots, img_fplhrh_full_lines, \
+            img_fplhrh_dots, img_fplhrh_lines, img_fplhrh_dots_hd, img_fplhrh_lines_hd, \
+            img_face_full_dots, img_face_full_lines, img_face_dots, img_face_lines, \
+            img_pose_full_dots, img_pose_full_lines, img_pose_dots, img_pose_lines, \
+            img_left_hand_dots, img_left_hand_lines, \
+            img_right_hand_dots, img_right_hand_lines, \
+        ), lm__fplhrh_full, lm__fplhrh, \
+        lm__face_full, lm__face, \
+        lm__pose_full, lm__pose, \
+        lm__left_hand, lm__right_hand= drawFacePoseHand(
             lmark_mph=MPH_fph.process(image_origin),
             orig_shape=image_origin.shape
         )
+
+
         folder_dir: str= f"/tmp/p6_check_image_landmarks_worthy_{int(uniform(0,1)*1000)}"
         while exists(folder_dir):
             folder_dir: str= f"/tmp/p6_check_image_landmarks_worthy_{int(uniform(0,1)*1000)}"
+
+
         makedirs(folder_dir)
+        # 18 main pics
+        # ---------------------------------------------------------------
+        # 1  ---- image face,pose,left_hand,right_hand full dots
+        #        --> img_fplhrh_full_dots
         imwrite(
-            filename=f"{folder_dir}/image_dots_full.png",
-            img=img_dots_f
+            filename=f"{folder_dir}/01_image_face_pose_left_hand_right_hand_full_dots.png",
+            img=img_fplhrh_full_dots
         )
+        # 2  ---- image face,pose,left_hand,right_hand full lines
+        #        --> img_fplhrh_full_lines
         imwrite(
-            filename=f"{folder_dir}/image_dots_worthy.png",
-            img=img_dots_w
+            filename=f"{folder_dir}/02_image_face_pose_left_hand_right_hand_full_lines.png",
+            img=img_fplhrh_full_lines
         )
+
+        # 3  ---- image face,pose,left_hand,right_hand worthy dots
+        #        --> img_fplhrh_dots
         imwrite(
-            filename=f"{folder_dir}/image_connections_full.png",
-            img=img_con_f
+            filename=f"{folder_dir}/03_image_face_pose_left_hand_right_hand_worthy_dots.png",
+            img=img_fplhrh_dots
         )
+        # 4  ---- image face,pose,left_hand,right_hand worthy lines
+        #        --> img_fplhrh_lines
         imwrite(
-            filename=f"{folder_dir}/image_connections_worthy.png",
-            img=img_con_w
+            filename=f"{folder_dir}/04_image_face_pose_left_hand_right_hand_worthy_lines.png",
+            img=img_fplhrh_lines
+        )
+
+        # 5  ---- image face,pose,left_hand,right_hand worthy dots HD
+        #        --> img_fplhrh_dots_hd
+        imwrite(
+            filename=f"{folder_dir}/05_image_face_pose_left_hand_right_hand_worthy_dots_hd.png",
+            img=img_fplhrh_dots_hd
+        )
+        # 6  ---- image face,pose,left_hand,right_hand worthy lines HD
+        #        --> img_fplhrh_lines_hd
+        imwrite(
+            filename=f"{folder_dir}/06_image_face_pose_left_hand_right_hand_worthy_lines_hd.png",
+            img=img_fplhrh_lines_hd
+        )
+
+        # 7  ---- image face full dots
+        #        --> img_face_full_dots
+        imwrite(
+            filename=f"{folder_dir}/07_image_face_full_dots.png",
+            img=img_face_full_dots
+        )
+        # 8  ---- image face full lines
+        #        --> img_face_full_lines
+        imwrite(
+            filename=f"{folder_dir}/08_image_face_full_lines.png",
+            img=img_face_full_lines
+        )
+
+        # 9  ---- image face worthy dots
+        #        --> img_face_dots
+        imwrite(
+            filename=f"{folder_dir}/09_image_face_worthy_dots.png",
+            img=img_face_dots
+        )
+        # 10 ---- image face worthy lines
+        #        --> img_face_lines
+        imwrite(
+            filename=f"{folder_dir}/10_image_face_worthy_lines.png",
+            img=img_face_lines
+        )
+
+        # 11 ---- image pose full dots
+        #        --> img_pose_full_dots
+        imwrite(
+            filename=f"{folder_dir}/11_image_pose_full_dots.png",
+            img=img_pose_full_dots
+        )
+        # 12 ---- image pose full lines
+        #        --> img_pose_full_lines
+        imwrite(
+            filename=f"{folder_dir}/12_image_pose_full_lines.png",
+            img=img_pose_full_lines
+        )
+
+        # 13 ---- image pose worthy dots
+        #        --> img_pose_dots
+        imwrite(
+            filename=f"{folder_dir}/13_image_pose_worthy_dots.png",
+            img=img_pose_dots
+        )
+        # 14 ---- image pose worthy lines
+        #        --> img_pose_lines
+        imwrite(
+            filename=f"{folder_dir}/14_image_pose_worthy_lines.png",
+            img=img_pose_lines
+        )
+
+        # 15 ---- image left hand worthy dots
+        #        --> img_left_hand_dots
+        imwrite(
+            filename=f"{folder_dir}/15_image_left_hand_dots.png",
+            img=img_left_hand_dots
+        )
+        # 16 ---- image left hand worthy lines
+        #        --> img_left_hand_lines
+        imwrite(
+            filename=f"{folder_dir}/16_image_left_hand_lines.png",
+            img=img_left_hand_lines
+        )
+
+        # 17 ---- image right hand worthy dots
+        #        --> img_right_hand_dots
+        imwrite(
+            filename=f"{folder_dir}/17_image_right_hand_dots.png",
+            img=img_right_hand_dots
+        )
+        # 18 ---- image right hand worthy lines
+        #        --> img_right_hand_lines
+        imwrite(
+            filename=f"{folder_dir}/18_image_right_hand_lines.png",
+            img=img_right_hand_lines
         )
     else:
         print(f"file does not exist: {WHOLE_BODY_FILE_STR}")
