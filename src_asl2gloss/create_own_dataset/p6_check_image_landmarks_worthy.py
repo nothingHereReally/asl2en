@@ -1715,6 +1715,14 @@ if __name__=='__main__':
             lmark_mph=MPH_fph.process(image_origin),
             orig_shape=image_origin.shape
         )
+        del lm__fplhrh_full
+        del lm__fplhrh
+        del lm__face_full
+        del lm__face
+        del lm__pose_full
+        del lm__pose
+        del lm__left_hand
+        del lm__right_hand
 
 
         folder_dir: str= f"/tmp/p6_check_image_landmarks_worthy_{int(uniform(0,1)*1000)}"
