@@ -1034,7 +1034,7 @@ def getLessThanOrEqual_landmark_allHasHand(lmark_: dict) -> list:
     return lmark_numpy
 
 
-def getdata_landmark_allHasHand(trainVal: str= 'train', batch: int=ON_TRAINING_BATCH) -> Generator[tuple, None, None]:
+def getdata_landmark(trainVal: str= 'train', batch: int=ON_TRAINING_BATCH) -> Generator[tuple, None, None]:
     # glasl_READY['train']
     # glasl_READY['val']
     # glasl_READY['test']
@@ -1045,7 +1045,7 @@ def getdata_landmark_allHasHand(trainVal: str= 'train', batch: int=ON_TRAINING_B
     shuffle(glasl_landmark[trainVal])
     b_idxINIT: int= 0
     total_q_dataset: int= LEN_TRAIN if trainVal==KEY_TRAIN else LEN_VAL
-    pastLM_GT_QF: list= [] # pastLM_GT_QF --> past landmark on greater than QUANTITY_FRAME
+    past_landmarks: list= [] # to hold for past landmark
     # `while True:` loop runs int(TRAIN_STEPS) for every epoch
     # total_q_count, counts the quantity of video landmarks that was and is training
     # ie. past all batch_vids on instance training, ie. `p -m src_asl2gloss.model_train`, then
@@ -1069,23 +1069,22 @@ def getdata_landmark_allHasHand(trainVal: str= 'train', batch: int=ON_TRAINING_B
             idx_DS: int= (b_idxINIT+i_0toBatchOrMore) if (b_idxINIT+i_0toBatchOrMore)<total_q_dataset else (0 +(
                 (b_idxINIT+i_0toBatchOrMore)-total_q_dataset
             ))
-            lmark_nplist: list= [] # at end should be of shape 22, 518, 2
-            if len(pastLM_GT_QF)==0:
+            lmark_nplist: list= [] # at end should be of shape 22, 86, 2
+            if len(past_landmarks)==0:
                 folder_landmark: str= f"{GLASL_LANDMARK_DIR}{glasl_landmark[trainVal][  idx_DS  ]['video_id']}"
                 if exists(folder_landmark):
                     if len(glasl_landmark[trainVal][  idx_DS  ]['landmark'])<=QUANTITY_FRAME:
-                         lmark_nplist= getLessThanOrEqual_landmark_allHasHand(glasl_landmark[trainVal][  idx_DS  ])
+                        past_landmarks.append([getLessThanOrEqual_landmark_allHasHand(glasl_landmark[trainVal][  idx_DS  ])])
+                        past_landmarks.append([getLessThanOrEqual_landmark_initHand(glasl_landmark[trainVal][  idx_DS  ])])
                     else: # quanity of image landmark is more than QUANTITY_FRAME
-                        pastLM_GT_QF= getGreaterThan_landmark_allHasHand(glasl_landmark[trainVal][  idx_DS  ])
-                        if 0<len(pastLM_GT_QF):
-                            lmark_nplist= pastLM_GT_QF[0]
-                            pastLM_GT_QF= pastLM_GT_QF[1:]
-                    total_q_count+= 1
-            else:
-                lmark_nplist= pastLM_GT_QF[0]
-                pastLM_GT_QF= pastLM_GT_QF[1:]
+                        past_landmarks= getGreaterThan_landmark_allHasHand(glasl_landmark[trainVal][  idx_DS  ])
+                        past_landmarks.extend(getGreaterThan_landmark_initHand(glasl_landmark[trainVal][  idx_DS  ]))
+                        past_landmarks.extend(getGreaterThan_landmark(glasl_landmark[trainVal][  idx_DS  ]))
+            if 0<len(past_landmarks):
+                lmark_nplist= past_landmarks[0]
+                past_landmarks= past_landmarks[1:]
                 total_q_count+= 1
-            if len(pastLM_GT_QF)==0 or len(lmark_nplist)==0:
+            if len(past_landmarks)==0 or len(lmark_nplist)==0:
                 i_0toBatchOrMore+= 1
             if len(lmark_nplist)==QUANTITY_FRAME:
                 batch_vids[idx_add2batch]= tuple(lmark_nplist) # array of shape(QUANTITY_FRAME, 86, 2)
@@ -1096,12 +1095,12 @@ def getdata_landmark_allHasHand(trainVal: str= 'train', batch: int=ON_TRAINING_B
                 raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_nplist)!=QUANTITY_FRAME and len(lmark_nplist)!=QUANTITY_FRAME")
 
 
-            if idx_DS==(total_q_dataset-1) and len(pastLM_GT_QF)==0:
-                # print(f"________ total_q_count: {total_q_count+len(pastLM_GT_QF)} ______ {trainVal}")
+            if idx_DS==(total_q_dataset-1) and len(past_landmarks)==0:
+                # print(f"________ total_q_count: {total_q_count+len(past_landmarks)} ______ {trainVal}")
                 total_q_count= 0
 
 
-        if len(pastLM_GT_QF)==0:
+        if len(past_landmarks)==0:
             b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<total_q_dataset else 0+( (b_idxINIT+batch)-total_q_dataset )
             i_0toBatchOrMore= 0
         yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
