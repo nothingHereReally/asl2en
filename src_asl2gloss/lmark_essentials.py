@@ -662,7 +662,7 @@ def getGreaterThan_landmark(lmark_: dict) -> list:
     '''
     to be used for when len(lmark_['landmark']) > QUANTITY_FRAME
     output be of shape(____ int, QUANTITY_FRAME, 86, 2 ____)
-    start always has hands but forward may or maynot has hands
+    start may or maynot has hands, also forward may or maynot has hands
     '''
     lmark_numpy_MANY_VIDS: list= [[]] # be of shape(__ int, QUANTITY_FRAME, 86, 2 __)
 
