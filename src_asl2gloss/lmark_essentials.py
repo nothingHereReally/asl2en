@@ -786,10 +786,7 @@ def getLessThanOrEqual_landmark_initHand(lmark_: dict) -> list:
                 # multiple/( or 1 time if equal and idx 0 has hand ) times ie. int(t2o_ratio) times
                 # then +ii, due to current be added mod of from int(t2o_ratio),
                 # thus i_0to_t2o_multiplier*t2o_ratio+ii
-                if lmark_['landmark'][i]['left_hand'] or lmark_['landmark'][i]['right_hand']:
-                    lmark_numpy.append( landmark_data_numpy )
-                else:
-                    lmark_numpy.append( lmark_numpy[-1] )
+                lmark_numpy.append( landmark_data_numpy )
     if len(lmark_numpy)!=QUANTITY_FRAME:
         raise ValueError("incorrect implementation on getLessThanOrEqual_landmark_allHasHand, due to len(lmark_numpy)!=QUANTITY_FRAME")
     return lmark_numpy
