@@ -1074,8 +1074,8 @@ def getdata_landmark(trainVal: str= 'train', batch: int=ON_TRAINING_BATCH) -> Ge
                 folder_landmark: str= f"{GLASL_LANDMARK_DIR}{glasl_landmark[trainVal][  idx_DS  ]['video_id']}"
                 if exists(folder_landmark):
                     if len(glasl_landmark[trainVal][  idx_DS  ]['landmark'])<=QUANTITY_FRAME:
-                        past_landmarks.append([getLessThanOrEqual_landmark_allHasHand(glasl_landmark[trainVal][  idx_DS  ])])
-                        # past_landmarks.append([getLessThanOrEqual_landmark_initHand(glasl_landmark[trainVal][  idx_DS  ])])
+                        past_landmarks.append(getLessThanOrEqual_landmark_allHasHand(glasl_landmark[trainVal][  idx_DS  ]))
+                        # past_landmarks.append(getLessThanOrEqual_landmark_initHand(glasl_landmark[trainVal][  idx_DS  ]))
                     else: # quanity of image landmark is more than QUANTITY_FRAME
                         past_landmarks= getGreaterThan_landmark_allHasHand(glasl_landmark[trainVal][  idx_DS  ])
                         # past_landmarks.extend(getGreaterThan_landmark_initHand(glasl_landmark[trainVal][  idx_DS  ]))
