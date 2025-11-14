@@ -62,19 +62,24 @@ def calculate_steps_needed(trainVal: str=KEY_TRAIN) -> int:
         idx_init_has_hand: int= getIdxStartHand(video['landmark'])
         if idx_init_has_hand!=-1:
             if len(video['landmark'])<=QUANTITY_FRAME:
-                total_DS+= 1*2 # be times 2
+                total_DS+= 1
+                # total_DS+= 1*2 # be times 2
             else:
                 len_available_images: int= len(video['landmark'])-idx_init_has_hand
                 o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
-                total_DS+= 1*3 # for part 1, be times 3
+                total_DS+= 1
+                # total_DS+= 1*3 # for part 1, be times 3
                 if QUANTITY_FRAME<len_available_images:
                     total_DS+= (
                         o2t_mod*(len(video['landmark'])
                             -(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod))
-                    )*3 # for part 2, be times 3
-                    total_DS+= ((len_available_images-QUANTITY_FRAME)+1)*3 # for part 3, be times 3
+                    )
+                    # )*3 # for part 2, be times 3
+                    total_DS+= ((len_available_images-QUANTITY_FRAME)+1)
+                    # total_DS+= ((len_available_images-QUANTITY_FRAME)+1)*3 # for part 3, be times 3
                 else:
-                    total_DS+= 1*3 # be times 3
+                    total_DS+= 1
+                    # total_DS+= 1*3 # be times 3
     return int(ceil(total_DS/float(ON_TRAINING_BATCH)))
 TRAIN_STEPS: int= calculate_steps_needed(KEY_TRAIN)
 VAL_STEPS: int= calculate_steps_needed(KEY_VAL)
