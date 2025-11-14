@@ -67,15 +67,15 @@ def calculate_steps_needed(trainVal: str=KEY_TRAIN) -> int:
             else:
                 len_available_images: int= len(video['landmark'])-idx_init_has_hand
                 o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
-                total_DS+= 1
+                total_DS+= 1 # for part 1
                 # total_DS+= 1*3 # for part 1, be times 3
                 if QUANTITY_FRAME<len_available_images:
                     total_DS+= (
                         o2t_mod*(len(video['landmark'])
                             -(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod))
-                    )
+                    )*1 # for part 2
                     # )*3 # for part 2, be times 3
-                    total_DS+= ((len_available_images-QUANTITY_FRAME)+1)
+                    total_DS+= (len_available_images-QUANTITY_FRAME)+1 # for part 3
                     # total_DS+= ((len_available_images-QUANTITY_FRAME)+1)*3 # for part 3, be times 3
                 else:
                     total_DS+= 1
