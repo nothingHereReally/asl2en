@@ -41,5 +41,5 @@ if __name__=="__main__":
         validation_freq=1
     )
     print(f"proj_root {PROJ_ROOT}")
-    model.save(f"{PROJ_ROOT}model/aslvid2gloss_v26.keras")
-    # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v26.keras")
+    model.save(f"{PROJ_ROOT}model/aslvid2gloss_v27.keras")
+    # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v27.keras")
