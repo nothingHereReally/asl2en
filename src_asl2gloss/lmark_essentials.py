@@ -1080,10 +1080,11 @@ def getdata_landmark(trainVal: str= 'train', batch: int=ON_TRAINING_BATCH) -> Ge
                         past_landmarks= getGreaterThan_landmark_allHasHand(glasl_landmark[trainVal][  idx_DS  ])
                         # past_landmarks.extend(getGreaterThan_landmark_initHand(glasl_landmark[trainVal][  idx_DS  ]))
                         # past_landmarks.extend(getGreaterThan_landmark(glasl_landmark[trainVal][  idx_DS  ]))
-            if 0<len(past_landmarks):
-                lmark_nplist= past_landmarks[0]
-                past_landmarks= past_landmarks[1:]
-                total_q_count+= 1
+            # if 0<len(past_landmarks):
+            lmark_nplist= past_landmarks[0]
+            past_landmarks= past_landmarks[1:]
+            total_q_count+= 1
+
             if len(past_landmarks)==0 or len(lmark_nplist)==0:
                 i_0toBatchOrMore+= 1
             if len(lmark_nplist)==QUANTITY_FRAME:
