@@ -683,7 +683,7 @@ def getGreaterThan_landmark(lmark_: dict) -> list:
         to_append: int= idx_init_has_hand+int(i*o2t_ratio)
         lmark_numpy_MANY_VIDS[0].append(lmark_all[to_append]) # floor
     if len(lmark_numpy_MANY_VIDS[0])!=QUANTITY_FRAME:
-        raise ValueError("incorrect implementation on getGreaterThan_landmark_allHasHand on part 1 due to NOT QUANTITY_FRAME, when should be QUANTITY_FRAME")
+        raise ValueError("incorrect implementation on getGreaterThan_landmark on part 1 due to NOT QUANTITY_FRAME, when should be QUANTITY_FRAME")
     del o2t_ratio
     # lmark_numpy_MANY_VIDS[0] is of shape (QUANTITY_FRAME, 518, 2), but
     # here lmark_numpy_MANY_VIDS is of shape (1, QUANTITY_FRAME, 518, 2)
@@ -742,7 +742,7 @@ def getGreaterThan_landmark(lmark_: dict) -> list:
                     # thus i_0to_t2o_multiplier*t2o_ratio+ii
                     lmark_numpy_MANY_VIDS[-1].append(lmark_all[  i  ])
         if len(lmark_numpy_MANY_VIDS[-1])!=QUANTITY_FRAME:
-            raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and len_available_images<QUANTITY_FRAME")
+            raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and len_available_images<QUANTITY_FRAME, getGreaterThan_landmark")
     del len_available_images
 
     return lmark_numpy_MANY_VIDS
@@ -773,7 +773,7 @@ def getGreaterThan_landmark_initHand(lmark_: dict) -> list:
         to_append: int= idx_init_has_hand+int(i*o2t_ratio)
         lmark_numpy_MANY_VIDS[0].append(lmark_all[to_append]) # floor
     if len(lmark_numpy_MANY_VIDS[0])!=QUANTITY_FRAME:
-        raise ValueError("incorrect implementation on getGreaterThan_landmark_allHasHand on part 1 due to NOT QUANTITY_FRAME, when should be QUANTITY_FRAME")
+        raise ValueError("incorrect implementation on getGreaterThan_landmark_initHand on part 1 due to NOT QUANTITY_FRAME, when should be QUANTITY_FRAME")
     del o2t_ratio
     # lmark_numpy_MANY_VIDS[0] is of shape (QUANTITY_FRAME, 518, 2), but
     # here lmark_numpy_MANY_VIDS is of shape (1, QUANTITY_FRAME, 518, 2)
@@ -844,7 +844,7 @@ def getGreaterThan_landmark_initHand(lmark_: dict) -> list:
                     # thus i_0to_t2o_multiplier*t2o_ratio+ii
                     lmark_numpy_MANY_VIDS[-1].append(lmark_all[  i  ])
         if len(lmark_numpy_MANY_VIDS[-1])!=QUANTITY_FRAME:
-            raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and len_available_images<QUANTITY_FRAME")
+            raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and len_available_images<QUANTITY_FRAME, getGreaterThan_landmark_initHand")
     del len_available_images
 
     return lmark_numpy_MANY_VIDS
@@ -878,7 +878,7 @@ def getLessThanOrEqual_landmark_initHand(lmark_: dict) -> list:
                 # thus i_0to_t2o_multiplier*t2o_ratio+ii
                 lmark_numpy.append( landmark_data_numpy )
     if len(lmark_numpy)!=QUANTITY_FRAME:
-        raise ValueError("incorrect implementation on getLessThanOrEqual_landmark_allHasHand, due to len(lmark_numpy)!=QUANTITY_FRAME")
+        raise ValueError("incorrect implementation on getLessThanOrEqual_landmark_initHand, due to len(lmark_numpy)!=QUANTITY_FRAME")
     return lmark_numpy
 
 
@@ -994,7 +994,7 @@ def getGreaterThan_landmark_allHasHand(lmark_: dict) -> list:
                     else:
                         lmark_numpy_MANY_VIDS[-1].append(lmark_numpy_MANY_VIDS[-1][-1])
         if len(lmark_numpy_MANY_VIDS[-1])!=QUANTITY_FRAME:
-            raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and len_available_images<QUANTITY_FRAME")
+            raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and len_available_images<QUANTITY_FRAME, getGreaterThan_landmark_allHasHand")
     del len_available_images
 
     return lmark_numpy_MANY_VIDS
