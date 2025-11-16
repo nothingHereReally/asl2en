@@ -54,3 +54,9 @@ model/aslvid2gloss_v25.keras filter=lfs diff=lfs merge=lfs -text
 model/tfboard_logs_v25_glasl/train/events.out.tfevents.1761923356.doxob.604474.0.v2 filter=lfs diff=lfs merge=lfs -text
 model/tfboard_logs_v25_glasl/validation/events.out.tfevents.1761923579.doxob.604474.1.v2 filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/pics_others/human_whole_body.png filter=lfs diff=lfs merge=lfs -text
+model/aslvid2gloss_v26.keras filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs_v26_glasl/train/events.out.tfevents.1763188075.doxob.394841.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs_v26_glasl/validation/events.out.tfevents.1763188336.doxob.394841.1.v2 filter=lfs diff=lfs merge=lfs -text
+model/aslvid2gloss_v27.keras filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs_v27_glasl/train/events.out.tfevents.1763259424.doxob.121531.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs_v27_glasl/validation/events.out.tfevents.1763259757.doxob.121531.1.v2 filter=lfs diff=lfs merge=lfs -text
