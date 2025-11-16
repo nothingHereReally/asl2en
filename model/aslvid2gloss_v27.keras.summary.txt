@@ -1,0 +1,978 @@
+------------------------------
+-- model v27
+landmarks is used with glasl dataset
+
+
+
+
+-------------------------------------
+-- result
+__________________________ train ____
+____ train --> 377/400 --> 94.25%
+__________________________ val ____
+____ val --> 27/30 --> 90.0%
+__________________________ test ____
+____ test --> 16/20 --> 80.0%
+_____________________________________
+__________________________ total ____
+____ test --> 420/450 --> 93.333%
+
+
+23653/23653 ━━━━━━━━━━━━━━━━━━━━ 348s 13ms/step - accuracy: 0.8458 - loss: 0.7112 - val_accuracy: 0.4017 - val_loss: 2.4070 - learning_rate: 1.0000e-04
+Epoch 2/12
+23653/23653 ━━━━━━━━━━━━━━━━━━━━ 310s 13ms/step - accuracy: 0.9084 - loss: 0.3484 - val_accuracy: 0.5126 - val_loss: 1.8761 - learning_rate: 1.0000e-04
+Epoch 3/12
+23650/23653 ━━━━━━━━━━━━━━━━━━━━ 0s 14ms/step - accuracy: 0.9206 - loss: 0.3070
+Epoch 3: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+23653/23653 ━━━━━━━━━━━━━━━━━━━━ 345s 15ms/step - accuracy: 0.9206 - loss: 0.3070 - val_accuracy: 0.4679 - val_loss: 8.1745 - learning_rate: 1.0000e-04
+Epoch 4/12
+23653/23653 ━━━━━━━━━━━━━━━━━━━━ 353s 15ms/step - accuracy: 0.8231 - loss: 0.4888 - val_accuracy: 0.7636 - val_loss: 1.2940 - learning_rate: 1.0000e-05
+Epoch 5/12
+23653/23653 ━━━━━━━━━━━━━━━━━━━━ 343s 15ms/step - accuracy: 0.9173 - loss: 0.2454 - val_accuracy: 0.7649 - val_loss: 1.0658 - learning_rate: 1.0000e-05
+Epoch 6/12
+23651/23653 ━━━━━━━━━━━━━━━━━━━━ 0s 14ms/step - accuracy: 0.9560 - loss: 0.1382
+Epoch 6: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+23653/23653 ━━━━━━━━━━━━━━━━━━━━ 343s 15ms/step - accuracy: 0.9560 - loss: 0.1382 - val_accuracy: 0.7610 - val_loss: 1.0673 - learning_rate: 1.0000e-05
+Epoch 7/12
+23653/23653 ━━━━━━━━━━━━━━━━━━━━ 361s 15ms/step - accuracy: 0.9194 - loss: 0.2500 - val_accuracy: 0.8940 - val_loss: 0.6554 - learning_rate: 1.0000e-06
+Epoch 8/12
+23652/23653 ━━━━━━━━━━━━━━━━━━━━ 0s 14ms/step - accuracy: 0.9481 - loss: 0.1807
+Epoch 8: ReduceLROnPlateau reducing learning rate to 9.999999974752428e-08.
+23653/23653 ━━━━━━━━━━━━━━━━━━━━ 344s 15ms/step - accuracy: 0.9481 - loss: 0.1807 - val_accuracy: 0.8753 - val_loss: 0.5733 - learning_rate: 1.0000e-06
+Epoch 9/12
+23652/23653 ━━━━━━━━━━━━━━━━━━━━ 0s 17ms/step - accuracy: 0.9423 - loss: 0.1780
+Epoch 9: ReduceLROnPlateau reducing learning rate to 1.0000000116860975e-08.
+23653/23653 ━━━━━━━━━━━━━━━━━━━━ 416s 18ms/step - accuracy: 0.9423 - loss: 0.1780 - val_accuracy: 0.8783 - val_loss: 0.5525 - learning_rate: 1.0000e-07
+Epoch 10/12
+23653/23653 ━━━━━━━━━━━━━━━━━━━━ 400s 17ms/step - accuracy: 0.9491 - loss: 0.1571 - val_accuracy: 0.8801 - val_loss: 0.5246 - learning_rate: 1.0000e-08
+Epoch 11/12
+23653/23653 ━━━━━━━━━━━━━━━━━━━━ 401s 17ms/step - accuracy: 0.9553 - loss: 0.1433 - val_accuracy: 0.8853 - val_loss: 0.4906 - learning_rate: 1.0000e-08
+Epoch 12/12
+23653/23653 ━━━━━━━━━━━━━━━━━━━━ 388s 16ms/step - accuracy: 0.9597 - loss: 0.1390 - val_accuracy: 0.8368 - val_loss: 0.6907 - learning_rate: 1.0000e-08
+Restoring model weights from the end of the best epoch: 11.
+
+
+
+
+
+
+
+
+EPOCHS: int= 12
+ON_TRAINING_BATCH: int= 2
+
+QUANTITY_FRAME: int= 22
+LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2) # ie. (86, 2)
+
+KEY_TRAIN: str= 'train'
+KEY_VAL: str= 'val'
+KEY_TEST: str= 'test'
+KEY_ID2G: str= 'id2gloss'
+KEY_G2ID: str= 'gloss2id'
+
+LEN_TRAIN: int= int(len(glasl_skeleton[KEY_TRAIN]))
+LEN_VAL: int= int(len(glasl_skeleton[KEY_VAL]))
+LEN_TEST: int= int(len(glasl_skeleton[KEY_TEST]))
+LEN_GLOSS: int= int(len(glasl_skeleton[KEY_ID2G]))
+
+
+
+
+
+
+
+
+---------------------------------------------
+-- layers
+from keras.src.activations.activations import ReLU
+from keras.src.layers import Add, Attention, Flatten, Reshape, Dense, Input, TimeDistributed
+from keras.src.activations import softmax
+from numpy import float32, float64
+
+
+from .lmark_constant import LANDMARK_SHAPE, QUANTITY_FRAME, LEN_GLOSS
+
+
+data_in= Input(
+    shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]),
+    dtype=float32,
+    name='batch_vid',
+)
+x= Reshape(
+    target_shape=(QUANTITY_FRAME, -1),
+)(data_in) # now shape be (22, 86*2) or (22, 172)
+
+
+
+
+att_q_h1= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h1= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h1= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_q_h2= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h2= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h2= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_q_h3= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h3= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h3= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_q_h4= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h4= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h4= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_q_h5= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h5= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h5= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_q_h6= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h6= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h6= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_q_h7= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h7= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h7= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_q_h8= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h8= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h8= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_h1= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_1",
+)([att_q_h1, att_v_h1, att_k_h1])
+att_h2= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_2",
+)([att_q_h2, att_v_h2, att_k_h2])
+att_h3= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_3",
+)([att_q_h3, att_v_h3, att_k_h3])
+att_h4= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_4",
+)([att_q_h4, att_v_h4, att_k_h4])
+att_h5= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_5",
+)([att_q_h5, att_v_h5, att_k_h5])
+att_h6= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_6",
+)([att_q_h6, att_v_h6, att_k_h6])
+att_h7= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_7",
+)([att_q_h7, att_v_h7, att_k_h7])
+att_h8= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_8",
+)([att_q_h8, att_v_h8, att_k_h8])
+
+x= Add()([att_h1, att_h2, att_h3, att_h4, att_h5, att_h6, att_h7, att_h8])
+
+
+
+
+ann= Flatten()(x)
+ann= Dense(
+    units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//2),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+)(ann)
+ann= Dense(
+    units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//5),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+)(ann)
+ann= Dense(
+    units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//10),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+)(ann)
+
+
+data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------
+-- generator used
+from random import shuffle
+from typing import Generator
+from numpy import float32, ndarray, uint16, zeros, load as loadnp
+from math import ceil
+from os.path import exists
+
+def getGreaterThan_landmark(lmark_: dict) -> list:
+    '''
+    to be used for when len(lmark_['landmark']) > QUANTITY_FRAME
+    output be of shape(____ int, QUANTITY_FRAME, 86, 2 ____)
+    start may or maynot has hands, also forward may or maynot has hands
+    '''
+    lmark_numpy_MANY_VIDS: list= [[]] # be of shape(__ int, QUANTITY_FRAME, 86, 2 __)
+
+    lmark_all: list= []
+    idx_init_has_hand: int= -1
+    for i in range(len(lmark_['landmark'])):
+        with open(f"{GLASL_LANDMARK_DIR}{lmark_['video_id']}/{lmark_['landmark'][i]['file']}", 'rb') as f:
+            lmark_all.append(loadnp(f))
+        if idx_init_has_hand==-1:
+            if lmark_['landmark'][i]['left_hand'] or lmark_['landmark'][i]['right_hand']:
+                idx_init_has_hand= i
+    if idx_init_has_hand==-1:
+        return []
+
+    # part 1, floor at index level, still idx_init_has_hand
+    o2t_ratio: float= (len(lmark_['landmark'])-idx_init_has_hand)/QUANTITY_FRAME
+    for i in range(QUANTITY_FRAME):
+        to_append: int= idx_init_has_hand+int(i*o2t_ratio)
+        lmark_numpy_MANY_VIDS[0].append(lmark_all[to_append]) # floor
+    if len(lmark_numpy_MANY_VIDS[0])!=QUANTITY_FRAME:
+        raise ValueError("incorrect implementation on getGreaterThan_landmark on part 1 due to NOT QUANTITY_FRAME, when should be QUANTITY_FRAME")
+    del o2t_ratio
+    # lmark_numpy_MANY_VIDS[0] is of shape (QUANTITY_FRAME, 518, 2), but
+    # here lmark_numpy_MANY_VIDS is of shape (1, QUANTITY_FRAME, 518, 2)
+
+    len_available_images: int= len(lmark_['landmark'])-idx_init_has_hand
+    # len_available_images, quantity of images starting from idx_init_has_hand
+    if QUANTITY_FRAME<len_available_images:
+        # part 2, evenly spaced via mod, floor at orig/target ratio level
+        o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
+        notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        # notIncludedOn_mod, due to on a single video has quantity of images( ie. len(lmark_['landmark']) )
+        # then mandatory idx_init_has_hand till last has enough images for QUANTITY_FRAME
+        # ie. above --> QUANTITY_FRAME<=len_available_images,
+        # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        #                         ^^^^^^^^^^^^^^^^^^^^^^^____ total quanitty images on video
+        # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        #                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^____ subtract
+        # whats to be used on forward index images
+        # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        #                                                  ^^^^^^^^^^^^^^^^^____ due below appends starts
+        # at idx_init_has_hand
+        # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        #                                                                     ^^^^^^^^^^^^^^^^^^^^^^____ due to
+        # index below `ii`( represents mod ie. o2t_mod, ie. int(len_available_images/QUANTITY_FRAME) # floor,
+        # ie. 0, 1, 2, ..., o2t_mod-1 ) and `iii`( represents 0, 1, 2, ..., QUANTITY_FRAME-1 ), ie.
+        # for combo o2t_mod*`iii` on last part of images as (QUANTITY_FRAME, 86, 2)
+        for i in range(notIncludedOn_mod+1):
+            for ii in range(o2t_mod):
+                lmark_numpy_MANY_VIDS.append([])
+                for iii in range(QUANTITY_FRAME):
+                    to_append: int= idx_init_has_hand +(iii*o2t_mod+ii) +i
+                    lmark_numpy_MANY_VIDS[-1].append(lmark_all[ to_append ])
+        del o2t_mod
+        del notIncludedOn_mod
+
+        # part 3, consecutive, mandatory initial has hand
+        for i in range((len_available_images-QUANTITY_FRAME)+1):
+            lmark_numpy_MANY_VIDS.append([])
+            # due to below appends shape (QUANTITY_FRAME, 86, 2)
+            for ii in range(QUANTITY_FRAME):
+                to_append: int= idx_init_has_hand+ii +i
+                lmark_numpy_MANY_VIDS[-1].append(lmark_all[ to_append ])
+    elif len_available_images<=QUANTITY_FRAME:
+        lmark_numpy_MANY_VIDS.append([])
+        t2o_ratio: int= int(ceil(QUANTITY_FRAME/len_available_images)) # ceiling2make QUANTITY_FRAME possible
+        for i, i_0to_t2o_multiplier in zip(range(idx_init_has_hand, idx_init_has_hand+len_available_images), range(len_available_images)):
+            # i_0to_t2o_multiplier, for counting later due to target is (QUANTITY_FRAME, 86, 2)
+            # i_0to_t2o_multiplier, ie. 0, 1, 2, ..., int(len_available_images-1)
+            # i_0to_t2o_multiplier<QUANTITY_FRAME, due to len_available_images<=QUANTITY_FRAME
+            for ii in range(t2o_ratio):
+                if (i_0to_t2o_multiplier*t2o_ratio +ii)<QUANTITY_FRAME:
+                    # i_0to_t2o_multiplier*t2o_ratio, due to since: len_available_images<=QUANTITY_FRAME,
+                    # then mandatory be each image/frame/landmark/pose_face_lefthand_righthand be used
+                    # multiple times ie. int(t2o_ratio) times
+                    # then +ii, due to current be added mod of from int(t2o_ratio),
+                    # thus i_0to_t2o_multiplier*t2o_ratio+ii
+                    lmark_numpy_MANY_VIDS[-1].append(lmark_all[  i  ])
+        if len(lmark_numpy_MANY_VIDS[-1])!=QUANTITY_FRAME:
+            raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and len_available_images<QUANTITY_FRAME, getGreaterThan_landmark")
+    del len_available_images
+
+    return lmark_numpy_MANY_VIDS
+
+
+def getGreaterThan_landmark_initHand(lmark_: dict) -> list:
+    '''
+    to be used for when len(lmark_['landmark']) > QUANTITY_FRAME
+    output be of shape(____ int, QUANTITY_FRAME, 86, 2 ____)
+    start always has hands but forward may or maynot has hands
+    '''
+    lmark_numpy_MANY_VIDS: list= [[]] # be of shape(__ int, QUANTITY_FRAME, 86, 2 __)
+
+    lmark_all: list= []
+    idx_init_has_hand: int= -1
+    for i in range(len(lmark_['landmark'])):
+        with open(f"{GLASL_LANDMARK_DIR}{lmark_['video_id']}/{lmark_['landmark'][i]['file']}", 'rb') as f:
+            lmark_all.append(loadnp(f))
+        if idx_init_has_hand==-1:
+            if lmark_['landmark'][i]['left_hand'] or lmark_['landmark'][i]['right_hand']:
+                idx_init_has_hand= i
+    if idx_init_has_hand==-1:
+        return []
+
+    # part 1, floor at index level, still idx_init_has_hand
+    o2t_ratio: float= (len(lmark_['landmark'])-idx_init_has_hand)/QUANTITY_FRAME
+    for i in range(QUANTITY_FRAME):
+        to_append: int= idx_init_has_hand+int(i*o2t_ratio)
+        lmark_numpy_MANY_VIDS[0].append(lmark_all[to_append]) # floor
+    if len(lmark_numpy_MANY_VIDS[0])!=QUANTITY_FRAME:
+        raise ValueError("incorrect implementation on getGreaterThan_landmark_initHand on part 1 due to NOT QUANTITY_FRAME, when should be QUANTITY_FRAME")
+    del o2t_ratio
+    # lmark_numpy_MANY_VIDS[0] is of shape (QUANTITY_FRAME, 518, 2), but
+    # here lmark_numpy_MANY_VIDS is of shape (1, QUANTITY_FRAME, 518, 2)
+
+    len_available_images: int= len(lmark_['landmark'])-idx_init_has_hand
+    # len_available_images, quantity of images starting from idx_init_has_hand
+    if QUANTITY_FRAME<len_available_images:
+        # part 2, evenly spaced via mod, floor at orig/target ratio level
+        o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
+        notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        # notIncludedOn_mod, due to on a single video has quantity of images( ie. len(lmark_['landmark']) )
+        # then mandatory idx_init_has_hand till last has enough images for QUANTITY_FRAME
+        # ie. above --> QUANTITY_FRAME<=len_available_images,
+        # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        #                         ^^^^^^^^^^^^^^^^^^^^^^^____ total quanitty images on video
+        # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        #                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^____ subtract
+        # whats to be used on forward index images
+        # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        #                                                  ^^^^^^^^^^^^^^^^^____ due below appends starts
+        # at idx_init_has_hand
+        # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        #                                                                     ^^^^^^^^^^^^^^^^^^^^^^____ due to
+        # index below `ii`( represents mod ie. o2t_mod, ie. int(len_available_images/QUANTITY_FRAME) # floor,
+        # ie. 0, 1, 2, ..., o2t_mod-1 ) and `iii`( represents 0, 1, 2, ..., QUANTITY_FRAME-1 ), ie.
+        # for combo o2t_mod*`iii` on last part of images as (QUANTITY_FRAME, 86, 2)
+        for i in range(notIncludedOn_mod+1):
+            for ii in range(o2t_mod):
+                lmark_numpy_MANY_VIDS.append([])
+                for iii in range(QUANTITY_FRAME):
+                    to_append: int= idx_init_has_hand +(iii*o2t_mod+ii) +i
+                    if iii==0 and (lmark_['landmark'][to_append]['left_hand']==False or \
+                        lmark_['landmark'][to_append]['right_hand']==False):
+                        lmark_numpy_MANY_VIDS[-1].append(lmark_all[idx_init_has_hand])
+                    else:
+                        lmark_numpy_MANY_VIDS[-1].append(lmark_all[
+                            to_append
+                        ])
+        del o2t_mod
+        del notIncludedOn_mod
+
+        # part 3, consecutive, mandatory initial has hand
+        for i in range((len_available_images-QUANTITY_FRAME)+1):
+            lmark_numpy_MANY_VIDS.append([])
+            # due to below appends shape (QUANTITY_FRAME, 86, 2)
+            for ii in range(QUANTITY_FRAME):
+                to_append: int= idx_init_has_hand+ii +i
+                if ii==0 and (lmark_['landmark'][to_append]['left_hand']==False or \
+                    lmark_['landmark'][to_append]['right_hand']==False):
+                    lmark_numpy_MANY_VIDS[-1].append(lmark_all[idx_init_has_hand])
+                else:
+                    lmark_numpy_MANY_VIDS[-1].append(lmark_all[
+                        to_append
+                    ])
+    elif len_available_images<=QUANTITY_FRAME:
+        lmark_numpy_MANY_VIDS.append([])
+        t2o_ratio: int= int(ceil(QUANTITY_FRAME/len_available_images)) # ceiling2make QUANTITY_FRAME possible
+        for i, i_0to_t2o_multiplier in zip(range(idx_init_has_hand, idx_init_has_hand+len_available_images), range(len_available_images)):
+            # i_0to_t2o_multiplier, for counting later due to target is (QUANTITY_FRAME, 86, 2)
+            # i_0to_t2o_multiplier, ie. 0, 1, 2, ..., int(len_available_images-1)
+            # i_0to_t2o_multiplier<QUANTITY_FRAME, due to len_available_images<=QUANTITY_FRAME
+            for ii in range(t2o_ratio):
+                if (i_0to_t2o_multiplier*t2o_ratio +ii)<QUANTITY_FRAME:
+                    # i_0to_t2o_multiplier*t2o_ratio, due to since: len_available_images<=QUANTITY_FRAME,
+                    # then mandatory be each image/frame/landmark/pose_face_lefthand_righthand be used
+                    # multiple times ie. int(t2o_ratio) times
+                    # then +ii, due to current be added mod of from int(t2o_ratio),
+                    # thus i_0to_t2o_multiplier*t2o_ratio+ii
+                    lmark_numpy_MANY_VIDS[-1].append(lmark_all[  i  ])
+        if len(lmark_numpy_MANY_VIDS[-1])!=QUANTITY_FRAME:
+            raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and len_available_images<QUANTITY_FRAME, getGreaterThan_landmark_initHand")
+    del len_available_images
+
+    return lmark_numpy_MANY_VIDS
+
+
+def getLessThanOrEqual_landmark_initHand(lmark_: dict) -> list:
+    '''
+    to be used for when len(lmark_['landmark']) <= QUANTITY_FRAME
+    start always has hands but forward may or maynot has hands
+    '''
+    def getIdxStartHand(image_list: list) -> int:
+        for i in range(len(image_list)):
+            if image_list[i]['left_hand'] or image_list[i]['right_hand']:
+                return i
+        return -1
+    idx_init_has_hand: int= getIdxStartHand(image_list=lmark_['landmark'])
+    if idx_init_has_hand==-1:
+        return []
+    lmark_numpy: list= []
+    t2o_ratio: int= int(ceil(QUANTITY_FRAME/(len(lmark_['landmark'])-idx_init_has_hand)))
+    for i, i_0to_t2o_multiplier in zip(range(idx_init_has_hand, len(lmark_['landmark'])), range(len(lmark_['landmark'])-idx_init_has_hand)):
+        landmark_data_numpy= None
+        with open(f"{GLASL_LANDMARK_DIR}{lmark_['video_id']}/{lmark_['landmark'][  i  ]['file']}", 'rb') as f:
+            landmark_data_numpy= loadnp(f)
+        for ii in range(t2o_ratio):
+            if (i_0to_t2o_multiplier*t2o_ratio+ii)<QUANTITY_FRAME:
+                # i_0to_t2o_multiplier*t2o_ratio, due to since: getLessThanOrEqual_landmark,
+                # then mandatory be each image/frame/landmark/pose_face_lefthand_righthand be used
+                # multiple/( or 1 time if equal and idx 0 has hand ) times ie. int(t2o_ratio) times
+                # then +ii, due to current be added mod of from int(t2o_ratio),
+                # thus i_0to_t2o_multiplier*t2o_ratio+ii
+                lmark_numpy.append( landmark_data_numpy )
+    if len(lmark_numpy)!=QUANTITY_FRAME:
+        raise ValueError("incorrect implementation on getLessThanOrEqual_landmark_initHand, due to len(lmark_numpy)!=QUANTITY_FRAME")
+    return lmark_numpy
+
+
+def getGreaterThan_landmark_allHasHand(lmark_: dict) -> list:
+    '''
+    to be used for when len(lmark_['landmark']) > QUANTITY_FRAME
+    output be of shape(____ int, QUANTITY_FRAME, 86, 2 ____)
+    '''
+    lmark_numpy_MANY_VIDS: list= [[]] # be of shape(__ int, QUANTITY_FRAME, 86, 2 __)
+
+    lmark_all: list= []
+    idx_init_has_hand: int= -1
+    for i in range(len(lmark_['landmark'])):
+        with open(f"{GLASL_LANDMARK_DIR}{lmark_['video_id']}/{lmark_['landmark'][i]['file']}", 'rb') as f:
+            lmark_all.append(loadnp(f))
+        if idx_init_has_hand==-1:
+            if lmark_['landmark'][i]['left_hand'] or lmark_['landmark'][i]['right_hand']:
+                idx_init_has_hand= i
+    if idx_init_has_hand==-1:
+        return []
+
+    # part 1, floor at index level, still idx_init_has_hand
+    o2t_ratio: float= (len(lmark_['landmark'])-idx_init_has_hand)/QUANTITY_FRAME
+    for i in range(QUANTITY_FRAME):
+        append_if_valid: int= idx_init_has_hand+int(i*o2t_ratio)
+        if lmark_['landmark'][append_if_valid]['left_hand'] or \
+            lmark_['landmark'][append_if_valid]['right_hand']:
+            lmark_numpy_MANY_VIDS[0].append(lmark_all[append_if_valid]) # floor
+        else:
+            lmark_numpy_MANY_VIDS[0].append(lmark_numpy_MANY_VIDS[0][-1])
+    if len(lmark_numpy_MANY_VIDS[0])!=QUANTITY_FRAME:
+        raise ValueError("incorrect implementation on getGreaterThan_landmark_allHasHand on part 1 due to NOT QUANTITY_FRAME, when should be QUANTITY_FRAME")
+    del o2t_ratio
+    # lmark_numpy_MANY_VIDS[0] is of shape (QUANTITY_FRAME, 518, 2), but
+    # here lmark_numpy_MANY_VIDS is of shape (1, QUANTITY_FRAME, 518, 2)
+
+    len_available_images: int= len(lmark_['landmark'])-idx_init_has_hand
+    # len_available_images, quantity of images starting from idx_init_has_hand
+    if QUANTITY_FRAME<len_available_images:
+        # part 2, evenly spaced via mod, floor at orig/target ratio level
+        o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
+        notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        # notIncludedOn_mod, due to on a single video has quantity of images( ie. len(lmark_['landmark']) )
+        # then mandatory idx_init_has_hand till last has enough images for QUANTITY_FRAME
+        # ie. above --> QUANTITY_FRAME<=len_available_images,
+        # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        #                         ^^^^^^^^^^^^^^^^^^^^^^^____ total quanitty images on video
+        # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        #                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^____ subtract
+        # whats to be used on forward index images
+        # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        #                                                  ^^^^^^^^^^^^^^^^^____ due below appends starts
+        # at idx_init_has_hand
+        # notIncludedOn_mod: int= len(lmark_['landmark'])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod)
+        #                                                                     ^^^^^^^^^^^^^^^^^^^^^^____ due to
+        # index below `ii`( represents mod ie. o2t_mod, ie. int(len_available_images/QUANTITY_FRAME) # floor,
+        # ie. 0, 1, 2, ..., o2t_mod-1 ) and `iii`( represents 0, 1, 2, ..., QUANTITY_FRAME-1 ), ie.
+        # for combo o2t_mod*`iii` on last part of images as (QUANTITY_FRAME, 86, 2)
+        for i in range(notIncludedOn_mod+1):
+            for ii in range(o2t_mod):
+                lmark_numpy_MANY_VIDS.append([])
+                for iii in range(QUANTITY_FRAME):
+                    append_if_valid: int= idx_init_has_hand +(iii*o2t_mod+ii) +i
+                    if lmark_['landmark'][append_if_valid]['left_hand'] or \
+                        lmark_['landmark'][append_if_valid]['right_hand']:
+                        lmark_numpy_MANY_VIDS[-1].append(lmark_all[
+                            append_if_valid
+                        ])
+                    elif iii==0:
+                        # due to since iii==0 then lmark_numpy_MANY_VIDS[-1][-1] does not exist,
+                        # ie. len(lmark_numpy_MANY_VIDS[-1])==0 True, due to prev at
+                        # lmark_numpy_MANY_VIDS.append([]) above
+                        lmark_numpy_MANY_VIDS[-1].append(lmark_all[idx_init_has_hand])
+                    else:
+                        lmark_numpy_MANY_VIDS[-1].append(lmark_numpy_MANY_VIDS[-1][-1])
+        del o2t_mod
+        del notIncludedOn_mod
+
+        # part 3, consecutive, mandatory initial has hand
+        for i in range((len_available_images-QUANTITY_FRAME)+1):
+            lmark_numpy_MANY_VIDS.append([])
+            # due to below appends shape (QUANTITY_FRAME, 86, 2)
+            for ii in range(QUANTITY_FRAME):
+                append_if_valid: int= idx_init_has_hand+ii +i
+                if lmark_['landmark'][append_if_valid]['left_hand'] or \
+                    lmark_['landmark'][append_if_valid]['right_hand']:
+                    lmark_numpy_MANY_VIDS[-1].append(lmark_all[
+                        append_if_valid
+                    ])
+                elif ii==0:
+                    # due to since ii==0 then lmark_numpy_MANY_VIDS[-1][-1] does not exist,
+                    # ie. len(lmark_numpy_MANY_VIDS[-1])==0 True, due to prev at
+                    # lmark_numpy_MANY_VIDS.append([]) above
+                    lmark_numpy_MANY_VIDS[-1].append(lmark_all[idx_init_has_hand])
+                else:
+                    lmark_numpy_MANY_VIDS[-1].append(lmark_numpy_MANY_VIDS[-1][-1])
+    elif len_available_images<=QUANTITY_FRAME:
+        lmark_numpy_MANY_VIDS.append([])
+        t2o_ratio: int= int(ceil(QUANTITY_FRAME/len_available_images)) # ceiling2make QUANTITY_FRAME possible
+        for i, i_0to_t2o_multiplier in zip(range(idx_init_has_hand, idx_init_has_hand+len_available_images), range(len_available_images)):
+            # i_0to_t2o_multiplier, for counting later due to target is (QUANTITY_FRAME, 86, 2)
+            # i_0to_t2o_multiplier, ie. 0, 1, 2, ..., int(len_available_images-1)
+            # i_0to_t2o_multiplier<QUANTITY_FRAME, due to len_available_images<=QUANTITY_FRAME
+            for ii in range(t2o_ratio):
+                if (i_0to_t2o_multiplier*t2o_ratio +ii)<QUANTITY_FRAME:
+                    # i_0to_t2o_multiplier*t2o_ratio, due to since: len_available_images<=QUANTITY_FRAME,
+                    # then mandatory be each image/frame/landmark/pose_face_lefthand_righthand be used
+                    # multiple times ie. int(t2o_ratio) times
+                    # then +ii, due to current be added mod of from int(t2o_ratio),
+                    # thus i_0to_t2o_multiplier*t2o_ratio+ii
+                    if lmark_['landmark'][i]['left_hand'] or lmark_['landmark'][i]['right_hand']:
+                        lmark_numpy_MANY_VIDS[-1].append(lmark_all[  i  ])
+                    else:
+                        lmark_numpy_MANY_VIDS[-1].append(lmark_numpy_MANY_VIDS[-1][-1])
+        if len(lmark_numpy_MANY_VIDS[-1])!=QUANTITY_FRAME:
+            raise ValueError("incorrect implementation on idx idx_init_has_hand!=-1 and len_available_images<QUANTITY_FRAME, getGreaterThan_landmark_allHasHand")
+    del len_available_images
+
+    return lmark_numpy_MANY_VIDS
+
+
+def getLessThanOrEqual_landmark_allHasHand(lmark_: dict) -> list:
+    '''
+    to be used for when len(lmark_['landmark']) <= QUANTITY_FRAME
+    '''
+    def getIdxStartHand(image_list: list) -> int:
+        for i in range(len(image_list)):
+            if image_list[i]['left_hand'] or image_list[i]['right_hand']:
+                return i
+        return -1
+    idx_init_has_hand: int= getIdxStartHand(image_list=lmark_['landmark'])
+    if idx_init_has_hand==-1:
+        return []
+    lmark_numpy: list= []
+    t2o_ratio: int= int(ceil(QUANTITY_FRAME/(len(lmark_['landmark'])-idx_init_has_hand)))
+    for i, i_0to_t2o_multiplier in zip(range(idx_init_has_hand, len(lmark_['landmark'])), range(len(lmark_['landmark'])-idx_init_has_hand)):
+        landmark_data_numpy= None
+        with open(f"{GLASL_LANDMARK_DIR}{lmark_['video_id']}/{lmark_['landmark'][  i  ]['file']}", 'rb') as f:
+            landmark_data_numpy= loadnp(f)
+        for ii in range(t2o_ratio):
+            if (i_0to_t2o_multiplier*t2o_ratio+ii)<QUANTITY_FRAME:
+                # i_0to_t2o_multiplier*t2o_ratio, due to since: getLessThanOrEqual_landmark,
+                # then mandatory be each image/frame/landmark/pose_face_lefthand_righthand be used
+                # multiple/( or 1 time if equal and idx 0 has hand ) times ie. int(t2o_ratio) times
+                # then +ii, due to current be added mod of from int(t2o_ratio),
+                # thus i_0to_t2o_multiplier*t2o_ratio+ii
+                if lmark_['landmark'][i]['left_hand'] or lmark_['landmark'][i]['right_hand']:
+                    lmark_numpy.append( landmark_data_numpy )
+                else:
+                    lmark_numpy.append( lmark_numpy[-1] )
+    if len(lmark_numpy)!=QUANTITY_FRAME:
+        raise ValueError("incorrect implementation on getLessThanOrEqual_landmark_allHasHand, due to len(lmark_numpy)!=QUANTITY_FRAME")
+    return lmark_numpy
+
+
+def getdata_landmark(trainVal: str= 'train', batch: int=ON_TRAINING_BATCH) -> Generator[tuple, None, None]:
+    # glasl_READY['train']
+    # glasl_READY['val']
+    # glasl_READY['test']
+    # glasl_READY['id2gloss']
+    # glasl_READY['gloss2id']
+
+    # each landmark numpy file is of shape (518, 2)
+    shuffle(glasl_landmark[trainVal])
+    b_idxINIT: int= 0
+    total_q_dataset: int= LEN_TRAIN if trainVal==KEY_TRAIN else LEN_VAL
+    past_landmarks: list= [] # to hold for past landmark
+    # `while True:` loop runs int(TRAIN_STEPS) for every epoch
+    # total_q_count, counts the quantity of video landmarks that was and is training
+    # ie. past all batch_vids on instance training, ie. `p -m src_asl2gloss.model_train`, then
+    # count glasl_LM[trainVal][  idx_DS  ] including repeated( video but different
+    # images, due to video has many images ) due to greater
+    # than QUANTITY_FRAME
+    total_q_count: int= 0
+    i_0toBatchOrMore: int= 0 # for glasl_LM[TrainVal][__ b_idxINIT + i_0toBatchOrMore __]
+    while True:
+        batch_vids: ndarray= zeros((batch, QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]), dtype=float32)
+        batch_class: ndarray= zeros((batch), dtype=uint16)
+
+
+        idx_add2batch: int= 0
+        # for batch_vids[__ idx_add2batch __]
+        # batch_class[__ idx_add2batch __]
+        # below( ie. while idx_add2batch<batch: ) runs 1 time( 1 while loop done ) per batch,
+        # below only knows batch NOTHING MORE NOTHING LESS
+        # does ----> NOT <---- have control on train steps and epochs
+        while idx_add2batch<batch:
+            idx_DS: int= (b_idxINIT+i_0toBatchOrMore) if (b_idxINIT+i_0toBatchOrMore)<total_q_dataset else (0 +(
+                (b_idxINIT+i_0toBatchOrMore)-total_q_dataset
+            ))
+            lmark_nplist: list= [] # at end should be of shape 22, 86, 2
+            if len(past_landmarks)==0:
+                folder_landmark: str= f"{GLASL_LANDMARK_DIR}{glasl_landmark[trainVal][  idx_DS  ]['video_id']}"
+                if exists(folder_landmark):
+                    if len(glasl_landmark[trainVal][  idx_DS  ]['landmark'])<=QUANTITY_FRAME:
+                        past_landmarks.append(getLessThanOrEqual_landmark_allHasHand(glasl_landmark[trainVal][  idx_DS  ]))
+                        # past_landmarks.append(getLessThanOrEqual_landmark_initHand(glasl_landmark[trainVal][  idx_DS  ]))
+                    else: # quanity of image landmark is more than QUANTITY_FRAME
+                        past_landmarks= getGreaterThan_landmark_allHasHand(glasl_landmark[trainVal][  idx_DS  ])
+                        # past_landmarks.extend(getGreaterThan_landmark_initHand(glasl_landmark[trainVal][  idx_DS  ]))
+                        # past_landmarks.extend(getGreaterThan_landmark(glasl_landmark[trainVal][  idx_DS  ]))
+            # if 0<len(past_landmarks):
+            lmark_nplist= past_landmarks[0]
+            past_landmarks= past_landmarks[1:]
+            total_q_count+= 1
+
+            if len(past_landmarks)==0 or len(lmark_nplist)==0:
+                i_0toBatchOrMore+= 1
+            if len(lmark_nplist)==QUANTITY_FRAME:
+                batch_vids[idx_add2batch]= tuple(lmark_nplist) # array of shape(QUANTITY_FRAME, 86, 2)
+                batch_class[idx_add2batch]= int(glasl_landmark[trainVal][  idx_DS  ]['gloss_id'])
+                idx_add2batch+= 1
+            elif len(lmark_nplist)!=0 and len(lmark_nplist)!=QUANTITY_FRAME:
+                print(f"len of lmark_nplist: {len(lmark_nplist)}")
+                raise ValueError("incorrect implementation on getdata_landmark, due to len(lmark_nplist)!=QUANTITY_FRAME and len(lmark_nplist)!=QUANTITY_FRAME")
+
+
+            if idx_DS==(total_q_dataset-1) and len(past_landmarks)==0:
+                # print(f"________ total_q_count: {total_q_count+len(past_landmarks)} ______ {trainVal}")
+                total_q_count= 0
+
+
+        if len(past_landmarks)==0:
+            b_idxINIT= (b_idxINIT+batch) if (b_idxINIT+batch)<total_q_dataset else 0+( (b_idxINIT+batch)-total_q_dataset )
+            i_0toBatchOrMore= 0
+        yield (batch_vids.astype(float32), batch_class.astype(dtype=uint16))
+---------------------------------------------------------------------------
+
+
+
+
+---------------------------------------------------------------------------
+-- lmark_constant.py used
+from math import ceil
+from json import load as loadjson
+
+
+# PROJ_ROOT: str= f"/absolute/dir/to/project/"
+PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
+
+EPOCHS: int= 12
+# TRAIN_BATCH: int= 32
+ON_TRAINING_BATCH: int= 2
+# QUANTITY_FRAME: int= 48
+QUANTITY_FRAME: int= 22
+# IMG_SIZE: int= 480
+LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2) # ie. (86, 2)
+SKELETON_SHAPE: tuple= (158, 158, 3)
+IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
+# MIN_FRAMES_HAS_HANDS, meaning on a single video file
+# where only QUANTITY_FRAME img will be included, then
+# mandatory that atleast MIN_FRAMES_HAS_HANDS out of
+# QUANTITY_FRAME has at least 1 hand( ie. either left
+# or right hand )
+# ie. current is at least 12 or 20 has hand/s 20*0.6= 12
+# MIN_FRAMES_HAS_HANDS: int= int(QUANTITY_FRAME*0.7)
+GLASL_LANDMARK_DIR: str= f"{PROJ_ROOT}dataset/glasl/landmark/"
+GLASL_SKELETON_DIR: str= f"{PROJ_ROOT}dataset/glasl/skeleton/"
+
+
+
+
+glasl_landmark: dict= {}
+with open(f"{PROJ_ROOT}dataset/glasl/glasl.annotation.landmark.json", "r") as f:
+    glasl_landmark= loadjson(f)
+
+glasl_skeleton: dict= {}
+with open(f"{PROJ_ROOT}dataset/glasl/glasl.annotation.skeleton.json", "r") as f:
+    glasl_skeleton= loadjson(f)
+# landmark is face, then pose, then left_had, then right hand
+# face full is (468, 2) --> face worthy is (36, 2)
+# pose full is (33, 2) --> pose worthy is (8, 2)
+# left_hand is (21, 2)
+# right_hand is (21, 2)
+
+KEY_TRAIN: str= 'train'
+KEY_VAL: str= 'val'
+KEY_TEST: str= 'test'
+KEY_ID2G: str= 'id2gloss'
+KEY_G2ID: str= 'gloss2id'
+
+LEN_TRAIN: int= int(len(glasl_skeleton[KEY_TRAIN]))
+LEN_VAL: int= int(len(glasl_skeleton[KEY_VAL]))
+LEN_TEST: int= int(len(glasl_skeleton[KEY_TEST]))
+LEN_GLOSS: int= int(len(glasl_skeleton[KEY_ID2G]))
+
+def calculate_steps_needed(trainVal: str=KEY_TRAIN) -> int:
+    def getIdxStartHand(lmarks: list) -> int:
+        for i in range(len(lmarks)):
+            if lmarks[i]['left_hand'] or lmarks[i]['right_hand']:
+                return i
+        return -1
+    total_DS: int= 0
+    for video in glasl_landmark[trainVal]:
+        idx_init_has_hand: int= getIdxStartHand(video['landmark'])
+        if idx_init_has_hand!=-1:
+            if len(video['landmark'])<=QUANTITY_FRAME:
+                total_DS+= 1
+                # total_DS+= 1*2 # be times 2
+            else:
+                len_available_images: int= len(video['landmark'])-idx_init_has_hand
+                o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
+                total_DS+= 1 # for part 1
+                # total_DS+= 1*3 # for part 1, be times 3
+                if QUANTITY_FRAME<len_available_images:
+                    total_DS+= (
+                        o2t_mod*(len(video['landmark'])
+                            -(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod))
+                    )*1 # for part 2
+                    # )*3 # for part 2, be times 3
+                    total_DS+= (len_available_images-QUANTITY_FRAME)+1 # for part 3
+                    # total_DS+= ((len_available_images-QUANTITY_FRAME)+1)*3 # for part 3, be times 3
+                else:
+                    total_DS+= 1
+                    # total_DS+= 1*3 # be times 3
+    return int(ceil(total_DS/float(ON_TRAINING_BATCH)))
+TRAIN_STEPS: int= calculate_steps_needed(KEY_TRAIN)
+VAL_STEPS: int= calculate_steps_needed(KEY_VAL)
+
+
+FACE_CONNECTIONS_FULL: tuple= (
+    # oval face
+    (10, 338), (338, 297), (297, 332), (332, 284),
+    (284, 251), (251, 389), (389, 356), (356, 454),
+    (454, 323), (323, 361), (361, 288), (288, 397),
+    (397, 365), (365, 379), (379, 378), (378, 400),
+    (400, 377), (377, 152), (152, 148), (148, 176),
+    (176, 149), (149, 150), (150, 136), (136, 172),
+    (172, 58), (58, 132), (132, 93), (93, 234),
+    (234, 127), (127, 162), (162, 21), (21, 54),
+    (54, 103), (103, 67), (67, 109), (109, 10),
+
+    # left eyebrow
+    (276, 283), (283, 282), (282, 295),
+    (295, 285), (300, 293), (293, 334),
+    (334, 296), (296, 336),
+    (276, 300), (285, 336),
+    # left eye
+    (263, 249), (249, 390), (390, 373), (373, 374),
+    (374, 380), (380, 381), (381, 382), (382, 362),
+    (263, 466), (466, 388), (388, 387), (387, 386),
+    (386, 385), (385, 384), (384, 398), (398, 362),
+    # right eyebrow
+    (46, 53), (53, 52), (52, 65),
+    (65, 55), (70, 63), (63, 105),
+    (105, 66), (66, 107),
+    (46, 70), (55, 107),
+    # right eye
+    (33, 7), (7, 163), (163, 144), (144, 145),
+    (145, 153), (153, 154), (154, 155), (155, 133),
+    (33, 246), (246, 161), (161, 160), (160, 159),
+    (159, 158), (158, 157), (157, 173), (173, 133),
+
+    # nose
+    (168, 6), (6, 197), (197, 195), (195, 5),
+    (5, 4), (4, 1), (1, 19), (19, 94), (94, 2), (98, 97),
+    (97, 2), (2, 326), (326, 327), (327, 294),
+    (294, 278), (278, 344), (344, 440), (440, 275),
+    (275, 4), (4, 45), (45, 220), (220, 115), (115, 48),
+    (48, 64), (64, 98),
+    # lips
+    (61, 146), (146, 91), (91, 181), (181, 84), (84, 17),
+    (17, 314), (314, 405), (405, 321), (321, 375),
+    (375, 291), (61, 185), (185, 40), (40, 39), (39, 37),
+    (37, 0), (0, 267),
+    (267, 269), (269, 270), (270, 409), (409, 291),
+    (78, 95), (95, 88), (88, 178), (178, 87), (87, 14),
+    (14, 317), (317, 402), (402, 318), (318, 324),
+    (324, 308), (78, 191), (191, 80), (80, 81), (81, 82),
+    (82, 13), (13, 312), (312, 311), (311, 310),
+    (310, 415), (415, 308)
+)
+FACE_CONNECTIONS: tuple= (
+    (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
+    (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
+
+    (26, 29), (29, 30), # left eyebrow
+
+    (23, 32), (32, 31), # left eye down
+    (31, 33), (33, 23), # left eye up
+
+    (10, 13), (13, 14), # right eyebrow
+
+    (7, 16), (16, 15), # right eye down
+    (15, 18), (18, 7), # rght eye up
+
+    (20, 22), (22, 2), # nose vertical line
+    (2, 25), (25, 1), # left half nose
+    (1, 9), (9, 2), # rigth half nose
+
+    # mouth
+    (8, 6), (6, 24), # down lip edge down
+    (24, 0), (0, 8), # up lip edge up
+    (8, 5), (5, 24), # up/down lip inner a
+    (24, 4), (4, 8), # up/down lip inner b
+)
+WORTHY_FACE_IDX: tuple= (
+    0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
+    105, 107, 133, 145, 152, 159, 162, 168, 172, 195,
+    263, 291, 294, 300, 323, 332, 334, 336, 362, 374,
+    386, 389, 397
+)
+
+# before use of POSE_CONNECTIONS modify landmark 1st
+# modify to use index to be used only: 11,12,13,14,15,16,23,24
+# so new index: 0,1,2,3,4,5,6,7
+POSE_CONNECTIONS_FULL: tuple= ((0, 1), (1, 2), (2, 3), (3, 7), (0, 4), (4, 5),
+                              (5, 6), (6, 8), (9, 10), (11, 12), (11, 13),
+                              (13, 15), (15, 17), (15, 19), (15, 21), (17, 19),
+                              (12, 14), (14, 16), (16, 18), (16, 20), (16, 22),
+                              (18, 20), (11, 23), (12, 24), (23, 24), (23, 25),
+                              (24, 26), (25, 27), (26, 28), (27, 29), (28, 30),
+                              (29, 31), (30, 32), (27, 31), (28, 32))
+POSE_CONNECTIONS: tuple= ((0, 1), (0, 2), (1, 3), (2, 4), (3, 5), (6, 7), (0, 6), (1, 7))
+WORTHY_POSE_IDX: tuple= (11,12,13,14,15,16,23,24)
+
+HAND_CONNECTIONS: tuple= (
+    (0, 1), (0, 5), (9, 13), (13, 17), (5, 9), (0, 17), # palm connections
+    (1, 2), (2, 3), (3, 4),           # thumb finger connections
+    (5, 6), (6, 7), (7, 8),           # index finger connections
+    (9, 10), (10, 11), (11, 12),      # middle finger connections
+    (13, 14), (14, 15), (15, 16),     # ring finger connections
+    (17, 18), (18, 19), (19, 20)      # pinky finger connections
+)
+---------------------------------------------------------------------------
