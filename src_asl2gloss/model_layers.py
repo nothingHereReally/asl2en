@@ -151,41 +151,49 @@ att_h1= Attention(
     use_scale=True,
     dropout=0.1,
     dtype=float64,
+    name="att_1",
 )([att_q_h1, att_v_h1, att_k_h1])
 att_h2= Attention(
     use_scale=True,
     dropout=0.1,
     dtype=float64,
+    name="att_2",
 )([att_q_h2, att_v_h2, att_k_h2])
 att_h3= Attention(
     use_scale=True,
     dropout=0.1,
     dtype=float64,
+    name="att_3",
 )([att_q_h3, att_v_h3, att_k_h3])
 att_h4= Attention(
     use_scale=True,
     dropout=0.1,
     dtype=float64,
+    name="att_4",
 )([att_q_h4, att_v_h4, att_k_h4])
 att_h5= Attention(
     use_scale=True,
     dropout=0.1,
     dtype=float64,
+    name="att_5",
 )([att_q_h5, att_v_h5, att_k_h5])
 att_h6= Attention(
     use_scale=True,
     dropout=0.1,
     dtype=float64,
+    name="att_6",
 )([att_q_h6, att_v_h6, att_k_h6])
 att_h7= Attention(
     use_scale=True,
     dropout=0.1,
     dtype=float64,
+    name="att_7",
 )([att_q_h7, att_v_h7, att_k_h7])
 att_h8= Attention(
     use_scale=True,
     dropout=0.1,
     dtype=float64,
+    name="att_8",
 )([att_q_h8, att_v_h8, att_k_h8])
 
 x= Add()([att_h1, att_h2, att_h3, att_h4, att_h5, att_h6, att_h7, att_h8])
@@ -194,6 +202,21 @@ x= Add()([att_h1, att_h2, att_h3, att_h4, att_h5, att_h6, att_h7, att_h8])
 
 
 ann= Flatten()(x)
+ann= Dense(
+    units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//2),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+)(ann)
+ann= Dense(
+    units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//5),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+)(ann)
+ann= Dense(
+    units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//10),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+)(ann)
 
 
 data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
