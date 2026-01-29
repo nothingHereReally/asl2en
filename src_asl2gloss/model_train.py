@@ -41,5 +41,6 @@ if __name__=="__main__":
         validation_freq=1
     )
     print(f"proj_root {PROJ_ROOT}")
+    print(f"model quantity of outputs {model.output_shape[-1]}")
     model.save(f"{PROJ_ROOT}model/aslvid2gloss_v28.keras")
     # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v28.keras")
