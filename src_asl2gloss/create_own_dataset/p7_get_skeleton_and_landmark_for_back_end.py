@@ -291,7 +291,8 @@ if __name__=='__main__':
                     numpysave(file=f, arr=npload(f"{Path(LANDMARK_origin) / gloss_video['video_id'] / gloss_video['landmark'][i]['file']}"))
                 imwrite(filename=filename_abs_skeleton_w, img=imgs_skeleton[i])
                 glasl_LANDMARK[ data_split ][-1]["landmark"].append({
-                    "file": f"{file2create}.npy",
+                    "numpy_file": f"{file2create}.npy",
+                    "skeleton_file": f"{file2create}.png",
                     "face": gloss_video['landmark'][i]['face'],
                     "pose": gloss_video['landmark'][i]['pose'],
                     "left_hand": gloss_video['landmark'][i]['left_hand'],
