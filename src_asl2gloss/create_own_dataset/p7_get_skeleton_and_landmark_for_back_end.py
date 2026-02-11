@@ -23,6 +23,7 @@ IMG_SIZE: int= 240
 KEY_G_ID: str= 'gloss_id'
 KEY_V_ID: str= 'video_id'
 KEY_V_IMGs_ID_origin: str= 'landmark'
+KEY_V_IMGs_ID: str= 'image'
 FACE_CONNECTIONS: tuple= (
     (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
     (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
@@ -286,7 +287,7 @@ if __name__=='__main__':
             glasl_LANDMARK[ data_split ].append({
                 KEY_G_ID: gloss_video[KEY_G_ID],
                 KEY_V_ID: gloss_video[KEY_V_ID],
-                "landmark": [],
+                KEY_V_IMGs_ID: [],
             })
             for i in range(imgs_skeleton.shape[0]): # each video has many images, now for each images
                 file2create: str= f"{gloss_video[KEY_V_ID]}_{gloss_video[KEY_V_IMGs_ID_origin][i]['file'][:-4]}"
@@ -295,7 +296,7 @@ if __name__=='__main__':
                 with open(filename_abs_landmark_w, "wb") as f:
                     numpysave(file=f, arr=npload(f"{Path(LANDMARK_origin) / gloss_video[KEY_V_ID] / gloss_video[KEY_V_IMGs_ID_origin][i]['file']}"))
                 imwrite(filename=filename_abs_skeleton_w, img=imgs_skeleton[i])
-                glasl_LANDMARK[ data_split ][-1]["landmark"].append({
+                glasl_LANDMARK[ data_split ][-1][KEY_V_IMGs_ID].append({
                     "numpy_file": f"{file2create}.npy",
                     "skeleton_file": f"{file2create}.png",
                     "face": gloss_video[KEY_V_IMGs_ID_origin][i]['face'],
