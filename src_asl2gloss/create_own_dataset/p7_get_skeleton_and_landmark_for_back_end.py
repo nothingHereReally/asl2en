@@ -1,16 +1,17 @@
-from os.path import exists
-from os import makedirs
-from json import load as jsonload, dump as jsonsave
 from cv2 import circle, imwrite, line
-from sys import stderr
+from json import load as jsonload, dump as jsonsave
 from numpy import array, load as npload, ndarray, uint8, zeros, save as numpysave
+from os import makedirs
+from os.path import exists
+from pathlib import Path
+from sys import stderr
 
 
-PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-3])}/"
-GLASL_DIR: str= f"{PROJ_ROOT}dataset/glasl/"
-LANDMARK_origin: str= f"{GLASL_DIR}landmark/"
-LANDMARK_dir: str= f"{GLASL_DIR}image_landmark/"
-SKELETON_dir: str= f"{GLASL_DIR}image_skeleton/"
+PROJ_ROOT: str= str(Path(__file__).parent.parent.parent)
+GLASL_DIR: str= str(Path(PROJ_ROOT)/"dataset"/"glasl")
+LANDMARK_origin: str= str(Path(GLASL_DIR)/"landmark")
+LANDMARK_dir: str= str(Path(GLASL_DIR)/"image_landmark")
+SKELETON_dir: str= str(Path(GLASL_DIR)/"image_skeleton")
 KEY_TRAIN: str= "train"
 KEY_VAL: str= "val"
 KEY_TEST: str= "test"
@@ -221,7 +222,7 @@ def get_video_skeletons(gloss_video_lmark: dict) -> ndarray:
     for lmark_np in gloss_video_lmark['landmark']:
         skeleton__image= drawFacePoseHand(
             img_write_to=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-            landmark_numpy=npload(f"{LANDMARK_origin}{gloss_video_lmark['video_id']}/{lmark_np['file']}"),
+            landmark_numpy=npload(f"{Path(LANDMARK_origin) / gloss_video_lmark['video_id'] / lmark_np['file']}"),
             has_face=lmark_np['face'],
             has_pose=lmark_np['pose'],
             has_left_hand=lmark_np['left_hand'],
@@ -248,7 +249,7 @@ def mandatory_all_2_notExist() -> None:
 
 def init_vars() -> tuple:
     glasl_clean_landmark: list= []
-    with open(f"{GLASL_DIR}glasl.annotation.landmark.json", 'r') as f:
+    with open(f"{Path(GLASL_DIR)/"glasl.annotation.landmark.json"}", 'r') as f:
         glasl_clean_landmark= jsonload(f)
     glasl_LANDMARK: dict= {
         KEY_TRAIN: [],
@@ -296,10 +297,10 @@ if __name__=='__main__':
             })
             for i in range(imgs_skeleton.shape[0]): # each video has many images, now for each images
                 file2create: str= f"{gloss_video['video_id']}_{gloss_video['landmark'][i]['file'][:-4]}"
-                filename_abs_landmark_w: str= f"{LANDMARK_dir}{file2create}.npy"
-                filename_abs_skeleton_w: str= f"{SKELETON_dir}{file2create}.png"
+                filename_abs_landmark_w: str= f"{Path(LANDMARK_dir) / file2create}.npy"
+                filename_abs_skeleton_w: str= f"{Path(SKELETON_dir) / file2create}.png"
                 with open(filename_abs_landmark_w, "wb") as f:
-                    numpysave(file=f, arr=npload(f"{LANDMARK_origin}{gloss_video['video_id']}/{gloss_video['landmark'][i]['file']}"))
+                    numpysave(file=f, arr=npload(f"{Path(LANDMARK_origin) / gloss_video['video_id'] / gloss_video['landmark'][i]['file']}"))
                 imwrite(filename=filename_abs_skeleton_w, img=imgs_skeleton[i])
                 glasl_LANDMARK[ data_split ][-1]["landmark"].append({
                     "file": f"{file2create}.npy",
@@ -317,7 +318,7 @@ if __name__=='__main__':
                     "width": IMG_SIZE,
                     "height": IMG_SIZE,
                 })
-    with open(f"{GLASL_DIR}glasl.annotation.image_landmark.json", "w") as f:
+    with open(f"{Path(GLASL_DIR)/"glasl.annotation.image_landmark.json"}", 'w') as f:
         jsonsave(glasl_LANDMARK, f, indent=4)
-    with open(f"{GLASL_DIR}glasl.annotation.image_skeleton.json", "w") as f:
+    with open(f"{Path(GLASL_DIR)/"glasl.annotation.image_skeleton.json"}", 'w') as f:
         jsonsave(glasl_SKELETON, f, indent=4)
