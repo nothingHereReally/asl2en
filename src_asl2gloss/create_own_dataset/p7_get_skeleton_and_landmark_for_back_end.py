@@ -258,19 +258,12 @@ def init_vars() -> tuple:
         KEY_ID2G: [ins for ins in glasl_clean_landmark[KEY_ID2G]],
         KEY_G2ID: {glasl_clean_landmark[KEY_ID2G][i]: i for i in range(len(glasl_clean_landmark[KEY_ID2G]))},
     }
-    glasl_SKELETON: dict= {
-        KEY_TRAIN: [],
-        KEY_VAL: [],
-        KEY_TEST: [],
-        KEY_ID2G: [ins for ins in glasl_clean_landmark[KEY_ID2G]],
-        KEY_G2ID: {glasl_clean_landmark[KEY_ID2G][i]: i for i in range(len(glasl_clean_landmark[KEY_ID2G]))},
-    }
-    return (glasl_clean_landmark, glasl_LANDMARK, glasl_SKELETON)
+    return (glasl_clean_landmark, glasl_LANDMARK)
 
 
 if __name__=='__main__':
     mandatory_all_2_notExist()
-    glasl_c_landmark, glasl_LANDMARK, glasl_SKELETON= init_vars()
+    glasl_c_landmark, glasl_LANDMARK= init_vars()
 
 
     for data_split in (KEY_TRAIN, KEY_VAL, KEY_TEST):
@@ -290,11 +283,6 @@ if __name__=='__main__':
                 "video_id": gloss_video['video_id'],
                 "landmark": [],
             })
-            glasl_SKELETON[ data_split ].append({
-                "gloss_id": gloss_video['gloss_id'],
-                "video_id": gloss_video['video_id'],
-                "skeleton": [],
-            })
             for i in range(imgs_skeleton.shape[0]): # each video has many images, now for each images
                 file2create: str= f"{gloss_video['video_id']}_{gloss_video['landmark'][i]['file'][:-4]}"
                 filename_abs_landmark_w: str= f"{Path(LANDMARK_dir) / file2create}.npy"
@@ -309,16 +297,5 @@ if __name__=='__main__':
                     "left_hand": gloss_video['landmark'][i]['left_hand'],
                     "right_hand": gloss_video['landmark'][i]['right_hand'],
                 })
-                glasl_SKELETON[ data_split ][-1]["skeleton"].append({
-                    "file": f"{file2create}.png",
-                    "face": gloss_video['landmark'][i]['face'],
-                    "pose": gloss_video['landmark'][i]['pose'],
-                    "left_hand": gloss_video['landmark'][i]['left_hand'],
-                    "right_hand": gloss_video['landmark'][i]['right_hand'],
-                    "width": IMG_SIZE,
-                    "height": IMG_SIZE,
-                })
     with open(f"{Path(GLASL_DIR)/"glasl.annotation.image_landmark.json"}", 'w') as f:
         jsonsave(glasl_LANDMARK, f, indent=4)
-    with open(f"{Path(GLASL_DIR)/"glasl.annotation.image_skeleton.json"}", 'w') as f:
-        jsonsave(glasl_SKELETON, f, indent=4)
