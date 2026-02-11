@@ -8,6 +8,8 @@ from sys import stderr
 
 
 PROJ_ROOT: str= str(Path(__file__).parent.parent.parent)
+MODEL_DIR: str= str(Path(PROJ_ROOT)/"model")
+MODEL_FILE_LIST: tuple= ("aslvid2gloss_v25.keras",)
 GLASL_DIR: str= str(Path(PROJ_ROOT)/"dataset"/"glasl")
 LANDMARK_origin: str= str(Path(GLASL_DIR)/"landmark")
 LANDMARK_dir: str= str(Path(GLASL_DIR)/"image_landmark")
@@ -18,6 +20,9 @@ KEY_TEST: str= "test"
 KEY_ID2G: str= "id2gloss"
 KEY_G2ID: str= "gloss2id"
 IMG_SIZE: int= 240
+KEY_G_ID: str= 'gloss_id'
+KEY_V_ID: str= 'video_id'
+KEY_V_IMGs_ID_origin: str= 'landmark'
 FACE_CONNECTIONS: tuple= (
     (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
     (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
@@ -219,10 +224,10 @@ def drawFacePoseHand(
 
 def get_video_skeletons(gloss_video_lmark: dict) -> ndarray:
     allImg_skeleton: list= []
-    for lmark_np in gloss_video_lmark['landmark']:
+    for lmark_np in gloss_video_lmark[KEY_V_IMGs_ID_origin]:
         skeleton__image= drawFacePoseHand(
             img_write_to=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-            landmark_numpy=npload(f"{Path(LANDMARK_origin) / gloss_video_lmark['video_id'] / lmark_np['file']}"),
+            landmark_numpy=npload(f"{Path(LANDMARK_origin) / gloss_video_lmark[KEY_V_ID] / lmark_np['file']}"),
             has_face=lmark_np['face'],
             has_pose=lmark_np['pose'],
             has_left_hand=lmark_np['left_hand'],
@@ -230,8 +235,8 @@ def get_video_skeletons(gloss_video_lmark: dict) -> ndarray:
         )
         allImg_skeleton.append(skeleton__image)
 
-    if len(gloss_video_lmark['landmark'])!=len(allImg_skeleton):
-        print(f"len gloss_video_lmark['landmark'] --> {len(gloss_video_lmark['landmark'])}", file=stderr)
+    if len(gloss_video_lmark[KEY_V_IMGs_ID_origin])!=len(allImg_skeleton):
+        print(f"len gloss_video_lmark[{KEY_V_IMGs_ID_origin}] --> {len(gloss_video_lmark[KEY_V_IMGs_ID_origin])}", file=stderr)
         print(f"len allImg_skeleton --> {len(allImg_skeleton)}", file=stderr)
         raise NotImplementedError("Incorrect implementation due to mandatory all 4 be having same quantity of elements")
     return array(allImg_skeleton, dtype=uint8)
@@ -279,24 +284,24 @@ if __name__=='__main__':
             # -------- gloss_video['landmark'][...]['right_hand']
             imgs_skeleton= get_video_skeletons(gloss_video)
             glasl_LANDMARK[ data_split ].append({
-                "gloss_id": gloss_video['gloss_id'],
-                "video_id": gloss_video['video_id'],
+                KEY_G_ID: gloss_video[KEY_G_ID],
+                KEY_V_ID: gloss_video[KEY_V_ID],
                 "landmark": [],
             })
             for i in range(imgs_skeleton.shape[0]): # each video has many images, now for each images
-                file2create: str= f"{gloss_video['video_id']}_{gloss_video['landmark'][i]['file'][:-4]}"
+                file2create: str= f"{gloss_video[KEY_V_ID]}_{gloss_video[KEY_V_IMGs_ID_origin][i]['file'][:-4]}"
                 filename_abs_landmark_w: str= f"{Path(LANDMARK_dir) / file2create}.npy"
                 filename_abs_skeleton_w: str= f"{Path(SKELETON_dir) / file2create}.png"
                 with open(filename_abs_landmark_w, "wb") as f:
-                    numpysave(file=f, arr=npload(f"{Path(LANDMARK_origin) / gloss_video['video_id'] / gloss_video['landmark'][i]['file']}"))
+                    numpysave(file=f, arr=npload(f"{Path(LANDMARK_origin) / gloss_video[KEY_V_ID] / gloss_video[KEY_V_IMGs_ID_origin][i]['file']}"))
                 imwrite(filename=filename_abs_skeleton_w, img=imgs_skeleton[i])
                 glasl_LANDMARK[ data_split ][-1]["landmark"].append({
                     "numpy_file": f"{file2create}.npy",
                     "skeleton_file": f"{file2create}.png",
-                    "face": gloss_video['landmark'][i]['face'],
-                    "pose": gloss_video['landmark'][i]['pose'],
-                    "left_hand": gloss_video['landmark'][i]['left_hand'],
-                    "right_hand": gloss_video['landmark'][i]['right_hand'],
+                    "face": gloss_video[KEY_V_IMGs_ID_origin][i]['face'],
+                    "pose": gloss_video[KEY_V_IMGs_ID_origin][i]['pose'],
+                    "left_hand": gloss_video[KEY_V_IMGs_ID_origin][i]['left_hand'],
+                    "right_hand": gloss_video[KEY_V_IMGs_ID_origin][i]['right_hand'],
                 })
     with open(f"{Path(GLASL_DIR)/"glasl.annotation.image_landmark.json"}", 'w') as f:
         jsonsave(glasl_LANDMARK, f, indent=4)
