@@ -423,6 +423,7 @@ def init_vars() -> tuple:
         KEY_TEST: [],
         KEY_ID2G: [ins for ins in glasl_clean_landmark[KEY_ID2G]],
         KEY_G2ID: {glasl_clean_landmark[KEY_ID2G][i]: i for i in range(len(glasl_clean_landmark[KEY_ID2G]))},
+        KEY_MODEL_ACC: MODEL_FILE_LIST,
     }
     return (glasl_clean_landmark, glasl_LANDMARK)
 
