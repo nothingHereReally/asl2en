@@ -505,6 +505,8 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
         landmark__right_hand= landmark__right_hand.tolist()
 
         landmark__face_pose_left_right_hand= []
+        # HERE ORDER OF LANDMARKS
+        # order of landmarks [...face..., ...pose..., ...left_hand..., ...right_hand...]
         landmark__face_pose_left_right_hand.extend(landmark__face)
         landmark__face_pose_left_right_hand.extend(landmark__pose)
         landmark__face_pose_left_right_hand.extend(landmark__left_hand)
@@ -633,6 +635,8 @@ if __name__=='__main__':
                 filename_abs_skeleton: str= f"{SKELETON_dir}{gloss_instance["video_file"][:-4]}/{file2create}.png"
                 imwrite(filename=filename_abs_human, img=imgs_human_rgb[i])
                 with open(filename_abs_landmark, "wb") as f:
+                    # lanmarks order is face, then pose, then left hand, then right hand
+                    # see `HERE ORDER OF LANDMARKS`
                     numpysave(file=f, arr=imgs_landmark[i])
                 imwrite(filename=filename_abs_skeleton, img=imgs_skeleton[i])
                 glasl_LANDMARK[ gloss_instance["split"] ][-1]["landmark"].append({
