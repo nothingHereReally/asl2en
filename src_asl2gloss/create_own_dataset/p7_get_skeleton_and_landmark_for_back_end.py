@@ -471,7 +471,7 @@ if __name__=='__main__':
                 modelPredict= npsum(modelPredict, axis=0) / quantity_of_elements
                 glasl_LANDMARK[ data_split ][-1][KEY_MODEL_ACC].append({
                     'model_file': MODEL_FILE_LIST[model_idx],
-                    'accuracy': float(  array(modelPredict)[a_gloss_video[KEY_G_ID]]  )
+                    'accuracy': tuple(modelPredict.tolist())
                 })
             for i in range(imgs_skeleton.shape[0]): # each video has many images, now for each images
                 file2create: str= f"{a_gloss_video[KEY_V_ID]}_{a_gloss_video[KEY_V_IMGs_ID_origin][i]['file'][:-4]}"
