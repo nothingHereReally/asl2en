@@ -592,33 +592,9 @@ def mandatory_all_3_notExist() -> None:
     makedirs(SKELETON_dir)
 
 
-def init_vars() -> tuple:
-    glasl_clean: list= []
-    with open(f"{GLASL_DIR}glasl.annotation.clean.json", 'r') as f:
-        glasl_clean= jsonload(f)
-    glasl_LANDMARK: dict= {
-        KEY_TRAIN: [],
-        KEY_VAL: [],
-        KEY_TEST: [],
-        KEY_ID2G: [ins["gloss"] for ins in glasl_clean],
-        KEY_G2ID: {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))}
-    }
-    glasl_SKELETON: dict= {
-        KEY_TRAIN: [],
-        KEY_VAL: [],
-        KEY_TEST: [],
-        KEY_ID2G: [ins["gloss"] for ins in glasl_clean],
-        KEY_G2ID: {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))}
-    }
-    return (glasl_clean, glasl_LANDMARK, glasl_SKELETON)
-
-
-def main() -> None:
-    mandatory_all_3_notExist()
-    glasl_clean, glasl_LANDMARK, glasl_SKELETON= init_vars()
-
-
-    for gloss_ds in glasl_clean: # for each gloss ie. book, drink, computer, ...
+def processDataForTrainingLater(glasl_clean: list, glasl_LANDMARK: dict, glasl_SKELETON: dict) -> tuple:
+    for idxGloss, gloss_ds in enumerate(glasl_clean): # for each gloss ie. book, drink, computer, ...
+        print(f"currently processing( {gloss_ds['gloss']} ) completed: {round(idxGloss/len(glasl_clean), 3)*100}%")
         for gloss_instance in gloss_ds["instances"]: # on each gloss has many videos, now for each videos
             imgs_human_rgb, imgs_landmark, imgs_skeleton, imgs_details= get_video_details(gloss_instance)
             makedirs(f"{IMAGE_dir}{gloss_instance["video_file"][:-4]}")
@@ -661,6 +637,36 @@ def main() -> None:
                     "width": imgs_details[i]["width"],
                     "height": imgs_details[i]["height"],
                 })
+    return (glasl_LANDMARK, glasl_SKELETON)
+
+
+def init_vars() -> tuple:
+    glasl_clean: list= []
+    with open(f"{GLASL_DIR}glasl.annotation.clean.json", 'r') as f:
+        glasl_clean= jsonload(f)
+    glasl_LANDMARK: dict= {
+        KEY_TRAIN: [],
+        KEY_VAL: [],
+        KEY_TEST: [],
+        KEY_ID2G: [ins["gloss"] for ins in glasl_clean],
+        KEY_G2ID: {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))}
+    }
+    glasl_SKELETON: dict= {
+        KEY_TRAIN: [],
+        KEY_VAL: [],
+        KEY_TEST: [],
+        KEY_ID2G: [ins["gloss"] for ins in glasl_clean],
+        KEY_G2ID: {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))}
+    }
+    return (glasl_clean, glasl_LANDMARK, glasl_SKELETON)
+
+
+def main() -> None:
+    mandatory_all_3_notExist()
+    glasl_clean, glasl_LANDMARK, glasl_SKELETON= init_vars()
+
+
+    glasl_LANDMARK, glasl_SKELETON= processDataForTrainingLater(glasl_clean, glasl_LANDMARK, glasl_SKELETON)
     with open(f"{GLASL_DIR}glasl.annotation.landmark.json", "w") as f:
         jsonsave(glasl_LANDMARK, f, indent=4)
     with open(f"{GLASL_DIR}glasl.annotation.skeleton.json", "w") as f:
