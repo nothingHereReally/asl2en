@@ -414,7 +414,7 @@ def mandatory_all_2_notExist() -> None:
 
 
 def init_vars() -> tuple:
-    glasl_clean_landmark: list= []
+    glasl_clean_landmark: dict= {}
     with open(f"{Path(GLASL_DIR)/"glasl.annotation.landmark.json"}", 'r') as f:
         glasl_clean_landmark= jsonload(f)
     glasl_LANDMARK: dict= {
