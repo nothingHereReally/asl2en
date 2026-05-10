@@ -8,6 +8,9 @@ from numpy import array, float32, ndarray, uint8, zeros, save as numpysave
 from mediapipe.python.solutions.holistic import Holistic
 
 
+# ------------------------
+# ------------------------
+# ---- contants start ----
 PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-3])}/"
 GLASL_DIR: str= f"{PROJ_ROOT}dataset/glasl/"
 VIDEO_DIR: str= f"{GLASL_DIR}video/"
@@ -71,6 +74,9 @@ HAND_CONNECTIONS: tuple= (
     (13, 14), (14, 15), (15, 16),     # ring finger connections
     (17, 18), (18, 19), (19, 20)      # pinky finger connections
 )
+# ---- contants end ------
+# ------------------------
+# ------------------------
 
 
 
@@ -607,7 +613,7 @@ def init_vars() -> tuple:
     return (glasl_clean, glasl_LANDMARK, glasl_SKELETON)
 
 
-if __name__=='__main__':
+def main() -> None:
     mandatory_all_3_notExist()
     glasl_clean, glasl_LANDMARK, glasl_SKELETON= init_vars()
 
@@ -659,3 +665,7 @@ if __name__=='__main__':
         jsonsave(glasl_LANDMARK, f, indent=4)
     with open(f"{GLASL_DIR}glasl.annotation.skeleton.json", "w") as f:
         jsonsave(glasl_SKELETON, f, indent=4)
+
+
+if __name__=='__main__':
+    main()
