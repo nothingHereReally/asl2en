@@ -12,7 +12,7 @@ from sys import stderr
 PROJ_ROOT: str= str(Path(__file__).parent.parent.parent)
 
 MODEL_DIR: str= str(Path(PROJ_ROOT)/"model")
-MODEL_FILE_LIST: tuple= ("aslvid2gloss_v25.keras",)
+MODEL_FILE_LIST: tuple= ("aslvid2gloss_v30.keras",)
 ASL2GLOSS_MODEL_LIST: tuple= tuple(load_model(Path(MODEL_DIR)/el) for el in MODEL_FILE_LIST)
 
 GLASL_DIR: str= str(Path(PROJ_ROOT)/"dataset"/"glasl")
