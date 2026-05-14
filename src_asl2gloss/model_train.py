@@ -1,11 +1,12 @@
 # best model yet: model_v14 then model_v10 and model_v12
-# best model top 4
-# 1) model v23 (81% testing)
-# 2) model v22 (60% testing)
-# 3) model v15 (57% testing)
-# 4) model v14 (56% testing)
-# 5) model v12 (4% testing)
-# 6) model v10 (4% testing)
+# best model
+# 1) model v30 (83.8% train/val/test g22)
+# 2) model v23 (81% testing g10)
+# 3) model v22 (60% testing g10)
+# 4) model v15 (57% testing g10)
+# 5) model v14 (56% testing g10)
+# 6) model v12 (4% testing)
+# 7) model v10 (4% testing)
 # from os.path import exists
 from keras.src.losses import sparse_categorical_crossentropy
 from keras.src.models import Model
@@ -42,5 +43,5 @@ if __name__=="__main__":
     )
     print(f"proj_root {PROJ_ROOT}")
     print(f"model quantity of outputs {model.output_shape[-1]}")
-    model.save(f"{PROJ_ROOT}model/aslvid2gloss_v28.keras")
-    # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v28.keras")
+    model.save(f"{PROJ_ROOT}model/aslvid2gloss_v29.keras")
+    # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v29.keras")

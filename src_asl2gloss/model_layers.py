@@ -202,21 +202,21 @@ x= Add()([att_h1, att_h2, att_h3, att_h4, att_h5, att_h6, att_h7, att_h8])
 
 
 ann= Flatten()(x)
-ann= Dense(
-    units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//2),
-    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-)(ann)
-ann= Dense(
-    units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//5),
-    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-)(ann)
-ann= Dense(
-    units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//10),
-    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
-)(ann)
+# ann= Dense(
+#     units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//2),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# )(ann)
+# ann= Dense(
+#     units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//5),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# )(ann)
+# ann= Dense(
+#     units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//10),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# )(ann)
 
 
 data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
