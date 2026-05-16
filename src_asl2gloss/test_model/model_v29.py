@@ -86,8 +86,8 @@ if __name__=="__main__":
     glasl_landmark: dict= {}
     with open(f"{PROJ_ROOT}dataset/glasl/glasl.annotation.landmark.json", 'r') as f:
         glasl_landmark= loadjson(f)
-    TRAIN_GLOSS: int= 22
     model: Any= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v29.keras")
+    TRAIN_GLOSS: int= model.output_shape[-1] # 22 categories
 
 
     batch: int= 4
@@ -112,7 +112,7 @@ if __name__=="__main__":
         batch_vid_lm: list= []
         batch_gloss: list= []
         i: int= 0
-        while i<len(glasl_landmark[tvt_idv]):
+        while i<len(glasl_landmark[tvt_idv]) and glasl_landmark[tvt_idv][i]['gloss_id']<TRAIN_GLOSS:
             if len(batch_vid_lm)<batch:
                 tmp= []
                 if len(glasl_landmark[tvt_idv][i]['landmark'])<=QUANTITY_FRAME:

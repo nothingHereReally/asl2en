@@ -12,7 +12,7 @@ from sys import stderr
 PROJ_ROOT: str= str(Path(__file__).parent.parent.parent)
 
 MODEL_DIR: str= str(Path(PROJ_ROOT)/"model")
-MODEL_FILE_LIST: tuple= ("aslvid2gloss_v30.keras",)
+MODEL_FILE_LIST: tuple= ("aslvid2gloss_v25.keras", "aslvid2gloss_v30.keras",)
 ASL2GLOSS_MODEL_LIST: tuple= tuple(load_model(Path(MODEL_DIR)/el) for el in MODEL_FILE_LIST)
 
 GLASL_DIR: str= str(Path(PROJ_ROOT)/"dataset"/"glasl")
@@ -452,27 +452,28 @@ if __name__=='__main__':
                 KEY_V_IMGs_ID: [],
             })
             for model_idx in range(len(MODEL_FILE_LIST)):
-                landmark_dataset_elements: list= []
-                if len(a_gloss_video[KEY_V_IMGs_ID_origin])<=QUANTITY_FRAME:
-                    landmark_dataset_elements.append(getLessThanOrEqual_landmark_allHasHand(
-                        lmark_=a_gloss_video,
-                        landmark_directory=LANDMARK_origin,
-                    ))
-                else:
-                    landmark_dataset_elements= getGreaterThan_landmark_allHasHand(
-                        lmark_=a_gloss_video,
-                        landmark_directory=LANDMARK_origin,
+                if a_gloss_video[KEY_G_ID]<ASL2GLOSS_MODEL_LIST[model_idx].output_shape[-1]:
+                    landmark_dataset_elements: list= []
+                    if len(a_gloss_video[KEY_V_IMGs_ID_origin])<=QUANTITY_FRAME:
+                        landmark_dataset_elements.append(getLessThanOrEqual_landmark_allHasHand(
+                            lmark_=a_gloss_video,
+                            landmark_directory=LANDMARK_origin,
+                        ))
+                    else:
+                        landmark_dataset_elements= getGreaterThan_landmark_allHasHand(
+                            lmark_=a_gloss_video,
+                            landmark_directory=LANDMARK_origin,
+                        )
+                    quantity_of_elements: int= array(landmark_dataset_elements).shape[0]
+                    modelPredict= ASL2GLOSS_MODEL_LIST[model_idx].predict(
+                        x=array(landmark_dataset_elements, dtype=float32),
+                        batch_size=quantity_of_elements,
                     )
-                quantity_of_elements: int= array(landmark_dataset_elements).shape[0]
-                modelPredict= ASL2GLOSS_MODEL_LIST[model_idx].predict(
-                    x=array(landmark_dataset_elements, dtype=float32),
-                    batch_size=quantity_of_elements,
-                )
-                modelPredict= npsum(modelPredict, axis=0) / quantity_of_elements
-                glasl_LANDMARK[ data_split ][-1][KEY_MODEL_ACC].append({
-                    'model_file': MODEL_FILE_LIST[model_idx],
-                    'accuracy': tuple(modelPredict.tolist())
-                })
+                    modelPredict= npsum(modelPredict, axis=0) / quantity_of_elements
+                    glasl_LANDMARK[ data_split ][-1][KEY_MODEL_ACC].append({
+                        'model_file': MODEL_FILE_LIST[model_idx],
+                        'accuracy': tuple(modelPredict.tolist())
+                    })
             for i in range(imgs_skeleton.shape[0]): # each video has many images, now for each images
                 file2create: str= f"{a_gloss_video[KEY_V_ID]}_{a_gloss_video[KEY_V_IMGs_ID_origin][i]['file'][:-4]}"
                 filename_abs_landmark_w: str= f"{Path(LANDMARK_dir) / file2create}.npy"
