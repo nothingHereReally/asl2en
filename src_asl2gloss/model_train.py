@@ -27,7 +27,7 @@ if __name__=="__main__":
         outputs=data_out
     )
     model.compile(
-        optimizer=Adam(learning_rate=0.0001),
+        optimizer=Adam(learning_rate=0.00001),
         loss=sparse_categorical_crossentropy,
         metrics=['accuracy']
     )
@@ -43,5 +43,5 @@ if __name__=="__main__":
     )
     print(f"proj_root {PROJ_ROOT}")
     print(f"model quantity of outputs {model.output_shape[-1]}")
-    model.save(f"{PROJ_ROOT}model/aslvid2gloss_v29.keras")
-    # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v29.keras")
+    model.save(f"{PROJ_ROOT}model/aslvid2gloss_v31.keras")
+    # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v31.keras")
