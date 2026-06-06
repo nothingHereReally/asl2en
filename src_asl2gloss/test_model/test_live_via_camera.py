@@ -182,6 +182,126 @@ def extractWorthyLandmarks(lmark_facePoseLeftRightHand) -> tuple:
         numpy.array(outLandmarksWorthy, dtype=numpy.float32),
         lmarkExist
     )
+def isOKplt(coord: tuple) -> bool:
+    # x and y coordinates
+    # mandatory be greater than or equal to Zero
+    # and less than or equal to One
+    return 0.0<=coord[0] and coord[0]<=1.0 and \
+           0.0<=coord[1] and coord[1]<=1.0
+def drawSkeletonOnImage(imageSource: numpy.ndarray, \
+                    landmarkCoordinates: tuple, \
+                    connections_list_idxs: tuple, \
+                    thickness: int=2, \
+                    color_lines: tuple=(255,0,255), \
+                    color_dots: tuple=(255,255,0), \
+                    drawJoint: bool=True) -> numpy.ndarray:
+    img_wh: dict= {
+        'height_y': imageSource.shape[0],
+        'width_x':  imageSource.shape[1]
+    }
+    # drawing the lines between 2 landmark connections
+    for lmark_idx in connections_list_idxs:
+        pA: tuple= (
+            landmarkCoordinates[  lmark_idx[0]  ][0], # x
+            landmarkCoordinates[  lmark_idx[0]  ][1]  # y
+        )
+        pB: tuple= (
+            landmarkCoordinates[  lmark_idx[1]  ][0], # x
+            landmarkCoordinates[  lmark_idx[1]  ][1]  # y
+        )
+        okPlotPointA: bool= isOKplt(pA)
+        okPlotPointB: bool= isOKplt(pB)
+        if okPlotPointA and okPlotPointB:
+            cv2.line(
+                img=imageSource,
+                pt1=(int(pA[0]*img_wh['width_x']), int(pA[1]*img_wh['height_y'])),
+                pt2=(int(pB[0]*img_wh['width_x']), int(pB[1]*img_wh['height_y'])),
+                color=color_lines,
+                thickness=thickness
+            )
+        if drawJoint:
+            if okPlotPointA:
+                cv2.circle(
+                    img=imageSource,
+                    center=(int(pA[0]*img_wh['width_x']), int(pA[1]*img_wh['height_y'])),
+                    radius=0,
+                    color=color_dots,
+                    thickness=thickness*2
+                )
+            if okPlotPointB:
+                cv2.circle(
+                    img=imageSource,
+                    center=(int(pB[0]*img_wh['width_x']), int(pB[1]*img_wh['height_y'])),
+                    radius=0,
+                    color=color_dots,
+                    thickness=thickness*2
+                )
+    return imageSource
+def drawLandmarksAndLines(imageSource: numpy.ndarray, lmark_facePoseLeftRightHand: numpy.ndarray, lmarkExist: dict) -> numpy.ndarray:
+    assert WORTHY_FACE_IDX is not None and isinstance(WORTHY_FACE_IDX, tuple)
+    assert FACE_CONNECTIONS is not None and isinstance(FACE_CONNECTIONS, tuple)
+    assert WORTHY_POSE_IDX is not None and isinstance(WORTHY_POSE_IDX, tuple)
+    assert POSE_CONNECTIONS is not None and isinstance(POSE_CONNECTIONS, tuple)
+    assert HAND_CONNECTIONS is not None and isinstance(HAND_CONNECTIONS, tuple)
+    # def drawSkeletonOnImage(imageSource: numpy.ndarray, \
+    #                     landmarkCoordinates: tuple, \
+    #                     connections_list_idxs: tuple, \
+    #                     thickness: int=2, \
+    #                     color_lines: tuple=(255,0,255), \
+    #                     color_dots: tuple=(255,255,0), \
+    #                     drawJoint: bool=True) -> numpy.ndarray:
+    idxStartPose: int= len(WORTHY_FACE_IDX)
+    idxStartLeftHand: int= idxStartPose      +len(WORTHY_POSE_IDX)
+    idxStartRightHand: int= idxStartLeftHand +WORTHY_HANDS_QUANTITY
+    if lmarkExist['face']:
+        imageSource= drawSkeletonOnImage(
+            imageSource=imageSource,
+            landmarkCoordinates=tuple(lmark_facePoseLeftRightHand[:idxStartPose].tolist()),
+            connections_list_idxs=FACE_CONNECTIONS,
+            thickness=5,
+            color_lines=(0, 153, 0),
+            color_dots=(0, 153, 0),
+            drawJoint=True
+        )
+    if lmarkExist['pose']:
+        imageSource= drawSkeletonOnImage(
+            imageSource=imageSource,
+            landmarkCoordinates=tuple(lmark_facePoseLeftRightHand[
+                idxStartPose: idxStartLeftHand
+            ].tolist()),
+            connections_list_idxs=POSE_CONNECTIONS,
+            thickness=5,
+            color_lines=(0, 0, 153),
+            color_dots=(0, 0, 153),
+            drawJoint=True
+        )
+    if lmarkExist['left_hand']:
+        imageSource= drawSkeletonOnImage(
+            imageSource=imageSource,
+            landmarkCoordinates=tuple(lmark_facePoseLeftRightHand[
+                idxStartLeftHand: idxStartRightHand
+            ].tolist()),
+            connections_list_idxs=HAND_CONNECTIONS,
+            thickness=5,
+            color_lines=(255, 255, 255),
+            color_dots=(255, 255, 255),
+            drawJoint=True
+        )
+    if lmarkExist['right_hand']:
+        imageSource= drawSkeletonOnImage(
+            imageSource=imageSource,
+            landmarkCoordinates=tuple(lmark_facePoseLeftRightHand[
+                idxStartRightHand:
+            ].tolist()),
+            connections_list_idxs=HAND_CONNECTIONS,
+            thickness=5,
+            color_lines=(204, 204, 14),
+            color_dots=(204, 204, 14),
+            drawJoint=True
+        )
+
+
+    return imageSource
 
 
 
@@ -200,12 +320,11 @@ def main() -> None:
         frame= cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
         lmark_facePoseLeftRightHand= MPH_fph.process(frame)
         lmark_facePoseLeftRightHand, lmarkExist= extractWorthyLandmarks(lmark_facePoseLeftRightHand)
-        print(f"face: --> {lmarkExist['face']}")
-        print(f"pose: --> {lmarkExist['pose']}")
-        print(f"left_hand: --> {lmarkExist['left_hand']}")
-        print(f"right_hand: --> {lmarkExist['right_hand']}")
-        print(f"shape landmark: {lmark_facePoseLeftRightHand.shape}")
-        print(f"val[37]: --> {lmark_facePoseLeftRightHand[37]}\n\n")
+        frame= drawLandmarksAndLines(
+            imageSource=frame,
+            lmark_facePoseLeftRightHand=lmark_facePoseLeftRightHand,
+            lmarkExist=lmarkExist
+        )
         updateImgDisplay(frame)
     # due to if exception occurs still be able to do clean up
     cleanGlobal()
