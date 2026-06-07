@@ -1,7 +1,12 @@
+from concurrent.futures import ProcessPoolExecutor
 import cv2
+from json import load as loadJson
+from keras.models import load_model as loadModelKerasFile
 from mediapipe.python.solutions.holistic import Holistic
 import numpy
+from pathlib import Path
 import pygame
+from typing import Any
 
 
 
@@ -19,17 +24,26 @@ import pygame
 #       4 - right hand
 VIDEO_IN: cv2.VideoCapture|None= None
 SCREEN: pygame.Surface|None= None
+WINDOW_HIGHT: int|None= None
+WINDOW_WIDTH: int|None= None
+
 MPH_fph: Holistic|None= None
+ASL2EN: Any|None= None
+ASL_GLOSS: tuple[str]|None= None
+
 FACE_CONNECTIONS: tuple|None= None
 POSE_CONNECTIONS: tuple|None= None
 HAND_CONNECTIONS: tuple|None= None
 WORTHY_FACE_IDX: tuple|None= None
 WORTHY_POSE_IDX: tuple|None= None
 WORTHY_HANDS_QUANTITY: int= 21
+
 def configs() -> None:
     global VIDEO_IN, SCREEN, MPH_fph
     global FACE_CONNECTIONS, POSE_CONNECTIONS, HAND_CONNECTIONS
     global WORTHY_FACE_IDX, WORTHY_POSE_IDX
+    global WINDOW_HIGHT, WINDOW_WIDTH
+    global ASL2EN, ASL_GLOSS
 
     VIDEO_IN= cv2.VideoCapture(0) #, cv2.CAP_V4L2)
     # cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG')) # Force MJPG format
@@ -37,6 +51,7 @@ def configs() -> None:
     if not ok:
         raise RuntimeError("can't access camera")
     pygame.init()
+    projectDirectory: Path= Path(__file__).parent.parent.parent
 
 
     # _, desktop_h= pygame.display.get_desktop_sizes()[0]
@@ -45,8 +60,8 @@ def configs() -> None:
     # WINDOW_WIDTH: int= int(math.ceil((WINDOW_HIGHT/frame.shape[0]) *frame.shape[1]))
 
 
-    WINDOW_HIGHT: int= frame.shape[0]
-    WINDOW_WIDTH: int= frame.shape[1]
+    WINDOW_HIGHT= int(frame.shape[0])
+    WINDOW_WIDTH= int(frame.shape[1])
     SCREEN= pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HIGHT))
     MPH_fph= Holistic(
         static_image_mode=False,
@@ -54,6 +69,13 @@ def configs() -> None:
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5
     )
+    ASL2EN= loadModelKerasFile(Path(projectDirectory/"model"/"aslvid2gloss_v31.keras"))
+    with open(Path(projectDirectory/"dataset"/"glasl"/"glasl.annotation.landmark.json"), 'r') as f:
+        assert ASL2EN is not None
+        tmpdata= loadJson(f)
+        ASL_GLOSS= tuple(tmpdata['id2gloss'])
+        if len(ASL_GLOSS)!=ASL2EN.output_shape[-1]:
+            raise NotImplementedError('Incorrect implementation, len(ASL_GLOSS) should be equals to ASL2EN.output_shape[-1]')
 
 
     WORTHY_FACE_IDX= (
@@ -179,7 +201,7 @@ def extractWorthyLandmarks(lmark_facePoseLeftRightHand) -> tuple:
 
 
     return (
-        numpy.array(outLandmarksWorthy, dtype=numpy.float32),
+        [tuple(el) for el in outLandmarksWorthy],
         lmarkExist
     )
 def isOKplt(coord: tuple) -> bool:
@@ -237,7 +259,10 @@ def drawSkeletonOnImage(imageSource: numpy.ndarray, \
                     thickness=thickness*2
                 )
     return imageSource
-def drawLandmarksAndLines(imageSource: numpy.ndarray, lmark_facePoseLeftRightHand: numpy.ndarray, lmarkExist: dict) -> numpy.ndarray:
+def drawLandmarksAndLines(dataIn: tuple) -> numpy.ndarray:
+    imageSource: numpy.ndarray= dataIn[0]
+    lmark_facePoseLeftRightHand: list= dataIn[1]
+    lmarkExist: dict= dataIn[2]
     assert WORTHY_FACE_IDX is not None and isinstance(WORTHY_FACE_IDX, tuple)
     assert FACE_CONNECTIONS is not None and isinstance(FACE_CONNECTIONS, tuple)
     assert WORTHY_POSE_IDX is not None and isinstance(WORTHY_POSE_IDX, tuple)
@@ -256,7 +281,7 @@ def drawLandmarksAndLines(imageSource: numpy.ndarray, lmark_facePoseLeftRightHan
     if lmarkExist['face']:
         imageSource= drawSkeletonOnImage(
             imageSource=imageSource,
-            landmarkCoordinates=tuple(lmark_facePoseLeftRightHand[:idxStartPose].tolist()),
+            landmarkCoordinates=tuple(lmark_facePoseLeftRightHand[:idxStartPose]),
             connections_list_idxs=FACE_CONNECTIONS,
             thickness=5,
             color_lines=(0, 153, 0),
@@ -268,7 +293,7 @@ def drawLandmarksAndLines(imageSource: numpy.ndarray, lmark_facePoseLeftRightHan
             imageSource=imageSource,
             landmarkCoordinates=tuple(lmark_facePoseLeftRightHand[
                 idxStartPose: idxStartLeftHand
-            ].tolist()),
+            ]),
             connections_list_idxs=POSE_CONNECTIONS,
             thickness=5,
             color_lines=(0, 0, 153),
@@ -280,7 +305,7 @@ def drawLandmarksAndLines(imageSource: numpy.ndarray, lmark_facePoseLeftRightHan
             imageSource=imageSource,
             landmarkCoordinates=tuple(lmark_facePoseLeftRightHand[
                 idxStartLeftHand: idxStartRightHand
-            ].tolist()),
+            ]),
             connections_list_idxs=HAND_CONNECTIONS,
             thickness=5,
             color_lines=(255, 255, 255),
@@ -292,7 +317,7 @@ def drawLandmarksAndLines(imageSource: numpy.ndarray, lmark_facePoseLeftRightHan
             imageSource=imageSource,
             landmarkCoordinates=tuple(lmark_facePoseLeftRightHand[
                 idxStartRightHand:
-            ].tolist()),
+            ]),
             connections_list_idxs=HAND_CONNECTIONS,
             thickness=5,
             color_lines=(204, 204, 14),
@@ -302,8 +327,150 @@ def drawLandmarksAndLines(imageSource: numpy.ndarray, lmark_facePoseLeftRightHan
 
 
     return imageSource
+def part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    if not landmarks:
+        return landmarks
+
+    xs, ys= zip(*landmarks)
+    min_x, min_y= min(xs), min(ys)
+    xNeedForward: bool= min_x<0.0
+    yNeedForward: bool= min_y<0.0
+    if xNeedForward or yNeedForward:
+        landmarks= [(
+            x -min_x    if xNeedForward    else x,
+            y -min_y    if yNeedForward    else y
+        ) for x, y in landmarks]
+    del xs, ys, min_x, min_y, xNeedForward, yNeedForward
+
+    max_xy: float= max(
+        max(x for x, _ in landmarks),
+        max(y for _, y in landmarks)
+    )
+    if max_xy>1:
+        landmarks= [(
+            x/max_xy,
+            y/max_xy
+        ) for x, y in landmarks]
+
+    return landmarks
+def part2_beSquareRatioOnImage(landmarks: list, original_shape: tuple) -> list:
+    height, width= original_shape
+    if height==width or not landmarks:
+        return landmarks
+
+    if width<height: # portrait, change2withRespect2Height
+        scale: float= width/height
+        return [(
+            x*scale,
+            y
+        ) for x, y in landmarks]
+    # landscape, change2withRespect2Width
+    scale: float= height/width
+    return [(
+        x,
+        y*scale
+    ) for x, y in landmarks]
+def part3_zoomInOutForPadding(landmarks: list) -> list:
+    if not landmarks:
+        return landmarks
+
+    ### 2) zoom in/out with padding 0.05 each side( with respecting orig aspect ratio )
+    # zoom in/out for padding be 10% each side with respect to original aspect ratio
+    # ie.:
+    # ---- top/bottom pad 0.02, leftSide( fromPerspectiveOfSomeoneReadingThis ) pad 0.02: if wx < hy
+    # ---- top pad 0.02, leftSide/right pad 0.02: if hy < wx
+    # pad: float= 0.05
+    pad: float= 4.0/158.0
+    xs, ys = zip(*landmarks)
+    min_x, min_y=    min(xs), min(ys)
+    max_x, max_y=    max(xs), max(ys)
+    scale: float= (1  -2*pad)/max(
+        max_x -min_x,
+        max_y -min_y
+    )
+    return [(
+        (x -min_x)    *scale    +pad,
+        (y -min_y)    *scale    +pad
+    ) for x, y in landmarks]
+def part4_centerLandmarkVerticallyHorizontally(landmarks: list) -> list:
+    if not landmarks:
+        return landmarks
+
+    ### 3) center landmark with same aspect ratio as original
+    # center horizontally and vertically, since done padding then just
+    # move to right/down
+    xs, ys = zip(*landmarks)
+    shift_x: float=  0.5    -(min(xs) +max(xs))  /2
+    shift_y: float=  0.5    -(min(ys) +max(ys))  /2
+
+    return [(
+        x +shift_x,
+        y +shift_y
+    ) for x, y in landmarks]
+def normalizeLandmarks(dataIn: tuple) -> list:
+    landmarks: list= dataIn[0]
+    original_shape= dataIn[1]
+    landmarks= part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(landmarks)
+    landmarks= part2_beSquareRatioOnImage(
+        landmarks,
+        (original_shape[0], original_shape[1])
+    )
+    landmarks= part3_zoomInOutForPadding(landmarks)
+    landmarks= part4_centerLandmarkVerticallyHorizontally(landmarks)
 
 
+    return landmarks
+def doRecognitionAslAlgorithm(tmpLandmarks: dict, anImageLandmarks: list|None) -> dict:
+    assert ASL2EN is not None
+    assert ASL_GLOSS is not None and isinstance(ASL_GLOSS, tuple)
+    GAP_BE_HOW_MANY_THEN_APPEND: int= 4
+    MAX_LAST_HAS_HAND: int= 9
+    assert MAX_LAST_HAS_HAND < ASL2EN.input_shape[1]
+    # tmpLandmarks: dict= {
+    #     'lastAnImageLandmarks': [],
+    #     'landmarksPredictLater': [],
+    #     'lastHasHand': 0,
+    #     'skippedBy': 0
+    # }
+    if anImageLandmarks is not None:
+        tmpLandmarks['lastAnImageLandmarks']= anImageLandmarks
+    if MAX_LAST_HAS_HAND < tmpLandmarks['lastHasHand'] and \
+        0 < len(tmpLandmarks['landmarksPredictLater']):
+        # ------------------------------------------------------------
+        tmpLandmarks['landmarksPredictLater']= []
+        tmpLandmarks['lastAnImageLandmarks']= []
+        tmpLandmarks['skippedBy']= 0
+    elif tmpLandmarks['skippedBy']%GAP_BE_HOW_MANY_THEN_APPEND==0:
+        if anImageLandmarks is not None:
+            tmpLandmarks['landmarksPredictLater'].append(anImageLandmarks)
+            tmpLandmarks['lastAnImageLandmarks']= []
+            tmpLandmarks['skippedBy']= 0
+        elif anImageLandmarks is None and \
+            0 < len(tmpLandmarks['lastAnImageLandmarks']):
+            # ------------------------------------------------------------
+            tmpLandmarks['landmarksPredictLater'].append(tmpLandmarks['lastAnImageLandmarks'])
+            tmpLandmarks['lastAnImageLandmarks']= []
+            tmpLandmarks['skippedBy']= 0
+        # ------------------------------------------------------------
+        if len(tmpLandmarks['landmarksPredictLater'])==ASL2EN.input_shape[1]:
+            # TODO: do prediction asl2en
+            manyImages2predictAsl2en: numpy.ndarray= numpy.array(
+                tmpLandmarks['landmarksPredictLater'],
+                dtype=numpy.float32
+            )
+            assert tuple(manyImages2predictAsl2en.shape)==tuple(ASL2EN.input_shape[1:])
+            predictedAsl= ASL2EN.predict(
+                x=manyImages2predictAsl2en.reshape((1, *manyImages2predictAsl2en.shape)),
+                batch_size=1
+            )[0]
+            asl2enIdx: int= numpy.argmax(predictedAsl, axis=-1)
+            print(f"accuracy: {predictedAsl[asl2enIdx]}")
+            print(f"idx --> {asl2enIdx}")
+            print(f"gloss: --> {ASL_GLOSS[asl2enIdx]}")
+            tmpLandmarks['landmarksPredictLater']= tmpLandmarks['landmarksPredictLater'][MAX_LAST_HAS_HAND:]
+
+
+    return tmpLandmarks
 
 
 
@@ -313,20 +480,58 @@ def main() -> None:
     assert VIDEO_IN is not None and isinstance(VIDEO_IN, cv2.VideoCapture)
     assert SCREEN is not None and isinstance(SCREEN, pygame.Surface)
     assert MPH_fph is not None and isinstance(MPH_fph, Holistic)
-    while not wantExit():
-        ok, frame= VIDEO_IN.read()
-        if not ok:
-            break
-        frame= cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        lmark_facePoseLeftRightHand= MPH_fph.process(frame)
-        lmark_facePoseLeftRightHand, lmarkExist= extractWorthyLandmarks(lmark_facePoseLeftRightHand)
-        frame= drawLandmarksAndLines(
-            imageSource=frame,
-            lmark_facePoseLeftRightHand=lmark_facePoseLeftRightHand,
-            lmarkExist=lmarkExist
-        )
-        updateImgDisplay(frame)
-    # due to if exception occurs still be able to do clean up
-    cleanGlobal()
+    assert ASL2EN is not None
+    assert ASL_GLOSS is not None and isinstance(ASL_GLOSS, tuple)
+
+
+    tmpLandmarks: dict= {
+        'lastAnImageLandmarks': [],
+        'landmarksPredictLater': [],
+        'lastHasHand': 0,
+        'skippedBy': 0
+    }
+    try:
+        while not wantExit():
+            ok, an_image= VIDEO_IN.read()
+            if not ok:
+                break
+            an_image= cv2.cvtColor(an_image, cv2.COLOR_BGR2RGB)
+            lmark_facePoseLeftRightHand= MPH_fph.process(an_image)
+            landmarks_worthy, lmarkExist= extractWorthyLandmarks(lmark_facePoseLeftRightHand)
+            results: list|None= None
+            if lmarkExist['left_hand'] or lmarkExist['right_hand']:
+                with ProcessPoolExecutor() as exec:
+                    futures= [
+                        exec.submit(
+                            drawLandmarksAndLines,
+                            (
+                                an_image,
+                                landmarks_worthy,
+                                lmarkExist
+                            )
+                        ),
+                        exec.submit(
+                            normalizeLandmarks,
+                            (
+                                landmarks_worthy,
+                                an_image.shape
+                            )
+                        )
+                    ]
+                results= [f.result() for f in futures]
+            tmpLandmarks['skippedBy']+= 1
+            tmpLandmarks= doRecognitionAslAlgorithm(
+                tmpLandmarks=tmpLandmarks,
+                anImageLandmarks=None if results is None else results[1]
+            )
+            if results is not None:
+                an_image= results[0]
+                tmpLandmarks['lastHasHand']= 0
+            else:
+                tmpLandmarks['lastHasHand']+= 1
+            updateImgDisplay(an_image)
+    finally:
+        # due to if exception occurs still be able to do clean up
+        cleanGlobal()
 if __name__=="__main__":
     main()
