@@ -1,3 +1,4 @@
+from math import ceil
 from keras.src.activations.activations import ReLU
 from keras.src.layers import Add, Attention, Flatten, Reshape, Dense, Input, TimeDistributed
 from keras.src.activations import softmax
@@ -20,129 +21,129 @@ x= Reshape(
 
 
 att_q_h1= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_v_h1= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_k_h1= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 
 att_q_h2= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_v_h2= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_k_h2= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 
 att_q_h3= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_v_h3= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_k_h3= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 
 att_q_h4= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_v_h4= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_k_h4= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 
 att_q_h5= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_v_h5= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_k_h5= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 
 att_q_h6= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_v_h6= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_k_h6= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 
 att_q_h7= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_v_h7= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_k_h7= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 
 att_q_h8= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_v_h8= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
 att_k_h8= TimeDistributed(Dense(
-    units=LANDMARK_SHAPE[0],
+    units=ceil(LANDMARK_SHAPE[0]),
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
     dtype=float64,
 ))(x)
