@@ -73,6 +73,10 @@ def configs() -> None:
     ASL2EN= loadModelKerasFile(Path(projectDirectory/"model"/"aslvid2gloss_v31.keras"))
     with open(Path(projectDirectory/"dataset"/"glasl"/"glasl.annotation.landmark.json"), 'r') as f:
         assert ASL2EN is not None
+        ASL2EN.predict(
+            x=numpy.zeros((1, *ASL2EN.input_shape[1:])),
+            batch_size=1
+        )
         tmpdata= loadJson(f)
         ASL_GLOSS= tuple(tmpdata['id2gloss'])
         if len(ASL_GLOSS)!=ASL2EN.output_shape[-1]:
