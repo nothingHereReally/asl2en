@@ -453,7 +453,7 @@ def doRecognitionAslAlgorithm(tmpLandmarks: dict, anImageLandmarks: list|None) -
             tmpLandmarks['skippedBy']= 0
         # ------------------------------------------------------------
         if len(tmpLandmarks['landmarksPredictLater'])==ASL2EN.input_shape[1]:
-            # TODO: do prediction asl2en
+            # DONE: do prediction asl2en
             manyImages2predictAsl2en: numpy.ndarray= numpy.array(
                 tmpLandmarks['landmarksPredictLater'],
                 dtype=numpy.float32
