@@ -6,6 +6,7 @@ from mediapipe.python.solutions.holistic import Holistic
 import numpy
 from pathlib import Path
 import pygame
+# from time import sleep
 from typing import Any
 
 
@@ -46,7 +47,7 @@ def configs() -> None:
     global ASL2EN, ASL_GLOSS
 
     VIDEO_IN= cv2.VideoCapture(0) #, cv2.CAP_V4L2)
-    # cap.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG')) # Force MJPG format
+    # VIDEO_IN.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG')) # Force MJPG format
     ok, frame= VIDEO_IN.read()
     if not ok:
         raise RuntimeError("can't access camera")
@@ -493,6 +494,7 @@ def main() -> None:
     try:
         while not wantExit():
             ok, an_image= VIDEO_IN.read()
+            # sleep(0.2)
             if not ok:
                 break
             an_image= cv2.cvtColor(an_image, cv2.COLOR_BGR2RGB)
