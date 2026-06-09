@@ -1,5 +1,5 @@
 from mediapipe.python.solutions.holistic import Holistic
-from numpy import array, float32, ndarray, uint8, zeros
+from numpy import array, float32, full, ndarray, uint8, zeros
 from os.path import exists
 from os import makedirs
 from random import uniform
@@ -13,7 +13,8 @@ LANDMARK_Q_FACE_WORTHY: int= 36
 LANDMARK_Q_POSE_FULL: int= 33
 LANDMARK_Q_POSE_WORTHY: int= 8
 LANDMARK_Q_EACH_HAND: int= 21
-IMG_SIZE: int= 158
+# IMG_SIZE: int= 158
+IMG_SIZE: int= 1500
 FACE_CONNECTIONS_FULL: tuple= (
     # oval face
     (10, 338), (338, 297), (297, 332), (332, 284),
@@ -627,55 +628,55 @@ def drawFacePoseHand(lmark_mph, orig_shape: tuple) -> tuple:
 
     # ---- face pose left_hand right_hand full ----
     # 1  ---- image face,pose,left_hand,right_hand full dots
-    image__facePoseLeftHandRightHand_full_dots: ndarray= zeros((1500, 1500, 3), dtype=uint8)
+    image__facePoseLeftHandRightHand_full_dots: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
     # 2  ---- image face,pose,left_hand,right_hand full lines
-    image__facePoseLeftHandRightHand_full_lines: ndarray= zeros((1500, 1500, 3), dtype=uint8)
+    image__facePoseLeftHandRightHand_full_lines: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
 
     # ---- face pose left_hand right_hand worthy ----
     # 3  ---- image face,pose,left_hand,right_hand worthy dots
-    image__facePoseLeftHandRightHand_dots: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    image__facePoseLeftHandRightHand_dots: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
     # 4  ---- image face,pose,left_hand,right_hand worthy lines
-    image__facePoseLeftHandRightHand_lines: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    image__facePoseLeftHandRightHand_lines: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
     # 5  ---- image face,pose,left_hand,right_hand worthy dots HD
-    image__facePoseLeftHandRightHand_dots_hd: ndarray= zeros((1500, 1500, 3), dtype=uint8)
+    image__facePoseLeftHandRightHand_dots_hd: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
     # 6  ---- image face,pose,left_hand,right_hand worthy lines HD
-    image__facePoseLeftHandRightHand_lines_hd: ndarray= zeros((1500, 1500, 3), dtype=uint8)
+    image__facePoseLeftHandRightHand_lines_hd: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
 
     # ---- face full ----
     # 7  ---- image face full dots
-    image__face_solo_full_dots: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    image__face_solo_full_dots: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
     # 8  ---- image face full lines
-    image__face_solo_full_lines: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    image__face_solo_full_lines: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
 
     # ---- face worthy ----
     # 9  ---- image face worthy dots
-    image__face_solo_dots: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    image__face_solo_dots: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
     # 10 ---- image face worthy lines
-    image__face_solo_lines: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    image__face_solo_lines: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
 
     # ---- pose full ----
     # 11 ---- image pose full dots
-    image__pose_solo_full_dots: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    image__pose_solo_full_dots: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
     # 12 ---- image pose full lines
-    image__pose_solo_full_lines: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    image__pose_solo_full_lines: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
 
     # ---- pose worthy ----
     # 13 ---- image pose worthy dots
-    image__pose_solo_dots: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    image__pose_solo_dots: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
     # 14 ---- image pose worthy lines
-    image__pose_solo_lines: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    image__pose_solo_lines: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
 
     # ---- left hand solo ----
     # 15 ---- image left hand worthy dots
-    image__left_hand_solo_dots: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    image__left_hand_solo_dots: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
     # 16 ---- image left hand worthy lines
-    image__left_hand_solo_lines: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    image__left_hand_solo_lines: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
 
     # ---- right hand solo ----
     # 17 ---- image right hand worthy dots
-    image__right_hand_solo_dots: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    image__right_hand_solo_dots: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
     # 18 ---- image right hand worthy lines
-    image__right_hand_solo_lines: ndarray= zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8)
+    image__right_hand_solo_lines: ndarray= full((IMG_SIZE, IMG_SIZE, 3), 255, dtype=uint8)
 
 
     # lmark_fph.face_landmarks.landmark
