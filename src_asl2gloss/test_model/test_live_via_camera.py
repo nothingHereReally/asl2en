@@ -495,18 +495,18 @@ def main() -> None:
         'lastHasHand': 0,
         'skippedBy': 0
     }
-    try:
-        while not wantExit():
-            ok, an_image= VIDEO_IN.read()
-            # sleep(0.2)
-            if not ok:
-                break
-            an_image= cv2.cvtColor(an_image, cv2.COLOR_BGR2RGB)
-            lmark_facePoseLeftRightHand= MPH_fph.process(an_image)
-            landmarks_worthy, lmarkExist= extractWorthyLandmarks(lmark_facePoseLeftRightHand)
-            results: list|None= None
-            if lmarkExist['left_hand'] or lmarkExist['right_hand']:
-                with ProcessPoolExecutor() as exec:
+    with ProcessPoolExecutor() as exec:
+        try:
+            while not wantExit():
+                ok, an_image= VIDEO_IN.read()
+                # sleep(0.2)
+                if not ok:
+                    break
+                an_image= cv2.cvtColor(an_image, cv2.COLOR_BGR2RGB)
+                lmark_facePoseLeftRightHand= MPH_fph.process(an_image)
+                landmarks_worthy, lmarkExist= extractWorthyLandmarks(lmark_facePoseLeftRightHand)
+                results: list|None= None
+                if lmarkExist['left_hand'] or lmarkExist['right_hand']:
                     futures= [
                         exec.submit(
                             drawLandmarksAndLines,
@@ -524,20 +524,20 @@ def main() -> None:
                             )
                         )
                     ]
-                results= [f.result() for f in futures]
-            tmpLandmarks['skippedBy']+= 1
-            tmpLandmarks= doRecognitionAslAlgorithm(
-                tmpLandmarks=tmpLandmarks,
-                anImageLandmarks=None if results is None else results[1]
-            )
-            if results is not None:
-                an_image= results[0]
-                tmpLandmarks['lastHasHand']= 0
-            else:
-                tmpLandmarks['lastHasHand']+= 1
-            updateImgDisplay(an_image)
-    finally:
-        # due to if exception occurs still be able to do clean up
-        cleanGlobal()
+                    results= [f.result() for f in futures]
+                tmpLandmarks['skippedBy']+= 1
+                tmpLandmarks= doRecognitionAslAlgorithm(
+                    tmpLandmarks=tmpLandmarks,
+                    anImageLandmarks=None if results is None else results[1]
+                )
+                if results is not None:
+                    an_image= results[0]
+                    tmpLandmarks['lastHasHand']= 0
+                else:
+                    tmpLandmarks['lastHasHand']+= 1
+                updateImgDisplay(an_image)
+        finally:
+            # due to if exception occurs still be able to do clean up
+            cleanGlobal()
 if __name__=="__main__":
     main()
