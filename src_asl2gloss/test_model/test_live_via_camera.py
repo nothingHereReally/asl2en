@@ -46,13 +46,27 @@ def configs() -> None:
     global WINDOW_HIGHT, WINDOW_WIDTH
     global ASL2EN, ASL_GLOSS
 
+
+    projectDirectory: Path= Path(__file__).parent.parent.parent
+    ASL2EN= loadModelKerasFile(Path(projectDirectory/"model"/"aslvid2gloss_v31.keras"))
+    with open(Path(projectDirectory/"dataset"/"glasl"/"glasl.annotation.landmark.json"), 'r') as f:
+        assert ASL2EN is not None
+        ASL2EN.predict(
+            x=numpy.zeros((1, *ASL2EN.input_shape[1:])),
+            batch_size=1
+        )
+        tmpdata= loadJson(f)
+        ASL_GLOSS= tuple(tmpdata['id2gloss'])
+        if len(ASL_GLOSS)!=ASL2EN.output_shape[-1]:
+            raise NotImplementedError('Incorrect implementation, len(ASL_GLOSS) should be equals to ASL2EN.output_shape[-1]')
+
+
     VIDEO_IN= cv2.VideoCapture(0) #, cv2.CAP_V4L2)
     # VIDEO_IN.set(cv2.CAP_PROP_FOURCC, cv2.VideoWriter_fourcc(*'MJPG')) # Force MJPG format
     ok, frame= VIDEO_IN.read()
     if not ok:
         raise RuntimeError("can't access camera")
     pygame.init()
-    projectDirectory: Path= Path(__file__).parent.parent.parent
 
 
     # _, desktop_h= pygame.display.get_desktop_sizes()[0]
@@ -70,17 +84,6 @@ def configs() -> None:
         min_detection_confidence=0.5,
         min_tracking_confidence=0.5
     )
-    ASL2EN= loadModelKerasFile(Path(projectDirectory/"model"/"aslvid2gloss_v31.keras"))
-    with open(Path(projectDirectory/"dataset"/"glasl"/"glasl.annotation.landmark.json"), 'r') as f:
-        assert ASL2EN is not None
-        ASL2EN.predict(
-            x=numpy.zeros((1, *ASL2EN.input_shape[1:])),
-            batch_size=1
-        )
-        tmpdata= loadJson(f)
-        ASL_GLOSS= tuple(tmpdata['id2gloss'])
-        if len(ASL_GLOSS)!=ASL2EN.output_shape[-1]:
-            raise NotImplementedError('Incorrect implementation, len(ASL_GLOSS) should be equals to ASL2EN.output_shape[-1]')
 
 
     WORTHY_FACE_IDX= (
@@ -495,18 +498,18 @@ def main() -> None:
         'lastHasHand': 0,
         'skippedBy': 0
     }
-    try:
-        while not wantExit():
-            ok, an_image= VIDEO_IN.read()
-            # sleep(0.2)
-            if not ok:
-                break
-            an_image= cv2.cvtColor(an_image, cv2.COLOR_BGR2RGB)
-            lmark_facePoseLeftRightHand= MPH_fph.process(an_image)
-            landmarks_worthy, lmarkExist= extractWorthyLandmarks(lmark_facePoseLeftRightHand)
-            results: list|None= None
-            if lmarkExist['left_hand'] or lmarkExist['right_hand']:
-                with ProcessPoolExecutor() as exec:
+    with ProcessPoolExecutor() as exec:
+        try:
+            while not wantExit():
+                ok, an_image= VIDEO_IN.read()
+                # sleep(0.2)
+                if not ok:
+                    break
+                an_image= cv2.cvtColor(an_image, cv2.COLOR_BGR2RGB)
+                lmark_facePoseLeftRightHand= MPH_fph.process(an_image)
+                landmarks_worthy, lmarkExist= extractWorthyLandmarks(lmark_facePoseLeftRightHand)
+                results: list|None= None
+                if lmarkExist['left_hand'] or lmarkExist['right_hand']:
                     futures= [
                         exec.submit(
                             drawLandmarksAndLines,
@@ -524,20 +527,20 @@ def main() -> None:
                             )
                         )
                     ]
-                results= [f.result() for f in futures]
-            tmpLandmarks['skippedBy']+= 1
-            tmpLandmarks= doRecognitionAslAlgorithm(
-                tmpLandmarks=tmpLandmarks,
-                anImageLandmarks=None if results is None else results[1]
-            )
-            if results is not None:
-                an_image= results[0]
-                tmpLandmarks['lastHasHand']= 0
-            else:
-                tmpLandmarks['lastHasHand']+= 1
-            updateImgDisplay(an_image)
-    finally:
-        # due to if exception occurs still be able to do clean up
-        cleanGlobal()
+                    results= [f.result() for f in futures]
+                tmpLandmarks['skippedBy']+= 1
+                tmpLandmarks= doRecognitionAslAlgorithm(
+                    tmpLandmarks=tmpLandmarks,
+                    anImageLandmarks=None if results is None else results[1]
+                )
+                if results is not None:
+                    an_image= results[0]
+                    tmpLandmarks['lastHasHand']= 0
+                else:
+                    tmpLandmarks['lastHasHand']+= 1
+                updateImgDisplay(an_image)
+        finally:
+            # due to if exception occurs still be able to do clean up
+            cleanGlobal()
 if __name__=="__main__":
     main()
