@@ -472,7 +472,7 @@ def doRecognitionAslAlgorithm(tmpLandmarks: dict, anImageLandmarks: list|None) -
                 batch_size=1
             )[0]
             asl2enIdx: int= numpy.argmax(predictedAsl, axis=-1)
-            print(f"accuracy: {predictedAsl[asl2enIdx]}")
+            print(f"accuracy: {predictedAsl[asl2enIdx]*100.0 : .3f}%")
             print(f"idx --> {asl2enIdx}")
             print(f"gloss: --> {ASL_GLOSS[asl2enIdx]}")
             tmpLandmarks['landmarksPredictLater']= tmpLandmarks['landmarksPredictLater'][MAX_LAST_HAS_HAND:]
