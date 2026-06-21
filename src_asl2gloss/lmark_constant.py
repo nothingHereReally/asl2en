@@ -1,9 +1,10 @@
 from math import ceil
 from json import load as loadjson
+from pathlib import Path
 
 
 # PROJ_ROOT: str= f"/absolute/dir/to/project/"
-PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
+PROJ_ROOT: Path= Path(__file__).resolve().parent.parent
 
 EPOCHS: int= 12
 # TRAIN_BATCH: int= 32
@@ -21,18 +22,18 @@ IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
 # or right hand )
 # ie. current is at least 12 or 20 has hand/s 20*0.6= 12
 # MIN_FRAMES_HAS_HANDS: int= int(QUANTITY_FRAME*0.7)
-GLASL_LANDMARK_DIR: str= f"{PROJ_ROOT}dataset/glasl/landmark/"
-GLASL_SKELETON_DIR: str= f"{PROJ_ROOT}dataset/glasl/skeleton/"
+GLASL_LANDMARK_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"landmark"
+GLASL_SKELETON_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"skeleton"
 
 
 
 
 glasl_landmark: dict= {}
-with open(f"{PROJ_ROOT}dataset/glasl/glasl.annotation.landmark.json", "r") as f:
+with open(f"{PROJ_ROOT /"dataset" /"glasl" /"glasl.annotation.landmark.json"}", "r") as f:
     glasl_landmark= loadjson(f)
 
 glasl_skeleton: dict= {}
-with open(f"{PROJ_ROOT}dataset/glasl/glasl.annotation.skeleton.json", "r") as f:
+with open(f"{PROJ_ROOT /"dataset" /"glasl" /"glasl.annotation.skeleton.json"}", "r") as f:
     glasl_skeleton= loadjson(f)
 # landmark is face, then pose, then left_had, then right hand
 # face full is (468, 2) --> face worthy is (36, 2)
@@ -45,6 +46,13 @@ KEY_VAL: str= 'val'
 KEY_TEST: str= 'test'
 KEY_ID2G: str= 'id2gloss'
 KEY_G2ID: str= 'gloss2id'
+# ------------------------
+KEY_GLOSS: str= 'gloss_id'
+KEY_VIDEO: str= 'video_id'
+KEY_LMARK: str= 'landmark'
+KEY_FILE: str= 'file'
+KEY_LHAND: str= 'left_hand'
+KEY_RHAND: str= 'right_hand'
 
 LEN_TRAIN: int= int(len(glasl_skeleton[KEY_TRAIN]))
 LEN_VAL: int= int(len(glasl_skeleton[KEY_VAL]))
@@ -59,19 +67,19 @@ def calculate_steps_needed(trainVal: str=KEY_TRAIN) -> int:
         return -1
     total_DS: int= 0
     for video in glasl_landmark[trainVal]:
-        idx_init_has_hand: int= getIdxStartHand(video['landmark'])
+        idx_init_has_hand: int= getIdxStartHand(video[KEY_LMARK])
         if idx_init_has_hand!=-1:
-            if len(video['landmark'])<=QUANTITY_FRAME:
+            if len(video[KEY_LMARK])<=QUANTITY_FRAME:
                 total_DS+= 1
                 # total_DS+= 1*2 # be times 2
             else:
-                len_available_images: int= len(video['landmark'])-idx_init_has_hand
+                len_available_images: int= len(video[KEY_LMARK])-idx_init_has_hand
                 o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
                 total_DS+= 1 # for part 1
                 # total_DS+= 1*3 # for part 1, be times 3
                 if QUANTITY_FRAME<len_available_images:
                     total_DS+= (
-                        o2t_mod*(len(video['landmark'])
+                        o2t_mod*(len(video[KEY_LMARK])
                             -(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod))
                     )*1 # for part 2
                     # )*3 # for part 2, be times 3
