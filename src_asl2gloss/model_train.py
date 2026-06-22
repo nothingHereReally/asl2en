@@ -13,8 +13,8 @@ from keras.src.models import Model
 from keras.src.optimizers import Adam
 # from keras.src.saving import load_model
 
-from .lmark_constant import EPOCHS, PROJ_ROOT, TRAIN_STEPS, VAL_STEPS
-from .lmark_essentials import getdata_landmark
+from .lmark_constant import EPOCHS, KEY_TRAIN, KEY_VAL, PROJ_ROOT
+from .lmark_essentials import get_data_landmark, STEPS_TRAIN, STEPS_VAL
 from .model_layers import data_in, data_out
 from .model_callbacks import d_lr, sTraining, tf_board
 
@@ -33,15 +33,15 @@ if __name__=="__main__":
     )
     model.summary()
     model.fit(
-        x=getdata_landmark(trainVal='train'),
+        x=get_data_landmark(train_val=KEY_TRAIN),
         epochs=EPOCHS,
         callbacks=[d_lr, sTraining, tf_board],
-        validation_data=getdata_landmark(trainVal='val'),
-        steps_per_epoch=TRAIN_STEPS,
-        validation_steps=VAL_STEPS,
+        validation_data=get_data_landmark(train_val=KEY_VAL),
+        steps_per_epoch=STEPS_TRAIN,
+        validation_steps=STEPS_VAL,
         validation_freq=1
     )
     print(f"proj_root {PROJ_ROOT}")
     print(f"model quantity of outputs {model.output_shape[-1]}")
-    model.save(f"{PROJ_ROOT}model/aslvid2gloss_v32.keras")
+    model.save(f"{PROJ_ROOT /"model" /"aslvid2gloss_v32.keras"}")
     # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v32.keras")
