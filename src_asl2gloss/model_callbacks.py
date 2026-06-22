@@ -21,7 +21,7 @@ sTraining: EarlyStopping= EarlyStopping(
     restore_best_weights=True,
 )
 tf_board: TensorBoard= TensorBoard(
-    log_dir=f"{PROJ_ROOT}model/tfboard_logs",
+    log_dir=f"{PROJ_ROOT /"model" /"tfboard_logs"}",
     histogram_freq=1,
     write_graph=False,
     write_images=False,
