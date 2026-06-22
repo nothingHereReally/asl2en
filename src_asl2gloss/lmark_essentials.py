@@ -44,7 +44,7 @@ def calculate_steps_needed(train_val: str=KEY_TRAIN) -> int:
                     total_DS+= int(
                         o2t_mod *(len(a_video[KEY_LMARK]) -(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod))
                     ) # for part 2
-                    total_DS+= (len_available_images-QUANTITY_FRAME)+1 # for part 3
+                    # total_DS+= (len_available_images-QUANTITY_FRAME)+1 # for part 3
                     total_DS+= (len_available_images//5) -QUANTITY_FRAME +1 # for part 4
                 else:
                     total_DS+= 1
@@ -162,24 +162,24 @@ def landmarks_get_greater(a_raw_video: dict) -> list:
                         lmark_numpy_out__MANY_VIDS[-1].append(lmark_numpy_out__MANY_VIDS[-1][-1])
         del notIncludedOn_mod
 
-        # part 3, consecutive, mandatory initial has hand
-        for start_where in range((len_available_images-QUANTITY_FRAME)+1):
-            lmark_numpy_out__MANY_VIDS.append([])
-            # due to below appends shape (QUANTITY_FRAME, 86, 2)
-            for idx in range(QUANTITY_FRAME):
-                append_if_valid: int= idx_init_has_hand+idx +start_where
-                if a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
-                    a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
-                    lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[
-                        append_if_valid
-                    ])
-                elif idx==0:
-                    # due to since ii==0 then lmark_numpy_out__MANY_VIDS[-1][-1] does not exist,
-                    # ie. len(lmark_numpy_out__MANY_VIDS[-1])==0 True, due to prev at
-                    # lmark_numpy_out__MANY_VIDS.append([]) above
-                    lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[idx_init_has_hand])
-                else:
-                    lmark_numpy_out__MANY_VIDS[-1].append(lmark_numpy_out__MANY_VIDS[-1][-1])
+        # # part 3, consecutive, mandatory initial has hand
+        # for start_where in range((len_available_images-QUANTITY_FRAME)+1):
+        #     lmark_numpy_out__MANY_VIDS.append([])
+        #     # due to below appends shape (QUANTITY_FRAME, 86, 2)
+        #     for idx in range(QUANTITY_FRAME):
+        #         append_if_valid: int= idx_init_has_hand+idx +start_where
+        #         if a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
+        #             a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+        #             lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[
+        #                 append_if_valid
+        #             ])
+        #         elif idx==0:
+        #             # due to since ii==0 then lmark_numpy_out__MANY_VIDS[-1][-1] does not exist,
+        #             # ie. len(lmark_numpy_out__MANY_VIDS[-1])==0 True, due to prev at
+        #             # lmark_numpy_out__MANY_VIDS.append([]) above
+        #             lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[idx_init_has_hand])
+        #         else:
+        #             lmark_numpy_out__MANY_VIDS[-1].append(lmark_numpy_out__MANY_VIDS[-1][-1])
 
         # part 4, all has hand and use past if current no hand
         init_hand_idxs: tuple= tuple(range(idx_init_has_hand, len(a_raw_video[KEY_LMARK])))
