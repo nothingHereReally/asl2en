@@ -59,7 +59,7 @@ STEPS_TRAIN: int= calculate_steps_needed(KEY_TRAIN)
 STEPS_VAL: int= calculate_steps_needed(KEY_VAL)
 
 
-def landmarks_get_less_or_equal(a_raw_video: dict, idx_init_has_hand: int|None=None) -> list:
+def get_landmark4less_or_equal(a_raw_video: dict, idx_init_has_hand: int|None=None) -> list:
     '''
     on a raw video the quantity of images is less than or
     equal to the target frames which is `QUANTITY_FRAME: int`
@@ -84,14 +84,14 @@ def landmarks_get_less_or_equal(a_raw_video: dict, idx_init_has_hand: int|None=N
     check_shape: ndarray= array(lmark_numpy_out, dtype=float32)
     if check_shape.shape!=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
         raise NotImplementedError(
-            f"incorrect implementation on get_less_or_equal(), due to lmark_numpy_out should be of shape {
+            f"incorrect implementation on get_landmark4less_or_equal(), due to lmark_numpy_out should be of shape {
             tuple((QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]))
             }, but got {check_shape.shape}"
         )
     return lmark_numpy_out
 
 
-def landmarks_get_greater(a_raw_video: dict) -> list:
+def get_landmark4greater(a_raw_video: dict) -> list:
     '''
     to be used for when len(a_raw_video[KEY_LMARK]) > QUANTITY_FRAME
     output be of shape(____ int, QUANTITY_FRAME, 86, 2 ____)
@@ -221,10 +221,10 @@ def landmarks_get_greater(a_raw_video: dict) -> list:
             KEY_VIDEO: a_raw_video[KEY_VIDEO],
             KEY_LMARK: a_raw_video[KEY_LMARK][idx_init_has_hand:]
         }
-        lmark_numpy_out__MANY_VIDS.append(landmarks_get_less_or_equal(copy_a_raw_video, 0))
+        lmark_numpy_out__MANY_VIDS.append(get_landmark4less_or_equal(copy_a_raw_video, 0))
     check_shape: ndarray= array(lmark_numpy_out__MANY_VIDS, dtype=float32)
     if check_shape.shape[-3:]!=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
-        raise NotImplementedError(f"incorrect implementation landmarks_get_greater(), lmark_numpy_out__MANY_VIDS should of shape {
+        raise NotImplementedError(f"incorrect implementation get_landmark4greater(), lmark_numpy_out__MANY_VIDS should of shape {
         (QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1])
         } but got {tuple(check_shape.shape[-3:])}")
 
@@ -245,14 +245,14 @@ def get_data_landmark(
         for idx_ds in dataset_idxs:
             a_raw_video: dict= GLASL_LM_DS[train_val][idx_ds]
             if QUANTITY_FRAME<len(a_raw_video[KEY_LMARK]):
-                tmp: list= landmarks_get_greater(a_raw_video)
+                tmp: list= get_landmark4greater(a_raw_video)
                 if 0<len(tmp):
                     batch_videos.extend(tmp)
                     batch_class.extend(
                         [a_raw_video[KEY_GLOSS]] *len(tmp)
                     )
             else:
-                tmp: list= landmarks_get_less_or_equal(a_raw_video)
+                tmp: list= get_landmark4less_or_equal(a_raw_video)
                 if 0<len(tmp):
                     batch_videos.append(tmp)
                     batch_class.append(a_raw_video[KEY_GLOSS])
