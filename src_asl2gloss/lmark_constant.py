@@ -33,9 +33,6 @@ KEY_FILE: str= 'file'
 KEY_LHAND: str= 'left_hand'
 KEY_RHAND: str= 'right_hand'
 
-LEN_TRAIN: int= int(len(glasl_skeleton[KEY_TRAIN]))
-LEN_VAL: int= int(len(glasl_skeleton[KEY_VAL]))
-LEN_TEST: int= int(len(glasl_skeleton[KEY_TEST]))
 LEN_GLOSS: int= int(len(glasl_skeleton[KEY_ID2G]))
 
 
