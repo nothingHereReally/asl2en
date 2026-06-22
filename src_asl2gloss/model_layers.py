@@ -148,6 +148,70 @@ att_k_h8= TimeDistributed(Dense(
     dtype=float64,
 ))(x)
 
+# att_q_h9= TimeDistributed(Dense(
+#     units=ceil(LANDMARK_SHAPE[0]),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# ))(x)
+# att_v_h9= TimeDistributed(Dense(
+#     units=ceil(LANDMARK_SHAPE[0]),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# ))(x)
+# att_k_h9= TimeDistributed(Dense(
+#     units=ceil(LANDMARK_SHAPE[0]),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# ))(x)
+#
+# att_q_h10= TimeDistributed(Dense(
+#     units=ceil(LANDMARK_SHAPE[0]),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# ))(x)
+# att_v_h10= TimeDistributed(Dense(
+#     units=ceil(LANDMARK_SHAPE[0]),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# ))(x)
+# att_k_h10= TimeDistributed(Dense(
+#     units=ceil(LANDMARK_SHAPE[0]),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# ))(x)
+#
+# att_q_h11= TimeDistributed(Dense(
+#     units=ceil(LANDMARK_SHAPE[0]),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# ))(x)
+# att_v_h11= TimeDistributed(Dense(
+#     units=ceil(LANDMARK_SHAPE[0]),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# ))(x)
+# att_k_h11= TimeDistributed(Dense(
+#     units=ceil(LANDMARK_SHAPE[0]),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# ))(x)
+#
+# att_q_h12= TimeDistributed(Dense(
+#     units=ceil(LANDMARK_SHAPE[0]),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# ))(x)
+# att_v_h12= TimeDistributed(Dense(
+#     units=ceil(LANDMARK_SHAPE[0]),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# ))(x)
+# att_k_h12= TimeDistributed(Dense(
+#     units=ceil(LANDMARK_SHAPE[0]),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# ))(x)
+
 att_h1= Attention(
     use_scale=True,
     dropout=0.1,
@@ -196,8 +260,33 @@ att_h8= Attention(
     dtype=float64,
     name="att_8",
 )([att_q_h8, att_v_h8, att_k_h8])
+# att_h9= Attention(
+#     use_scale=True,
+#     dropout=0.1,
+#     dtype=float64,
+#     name="att_9",
+# )([att_q_h9, att_v_h9, att_k_h9])
+# att_h10= Attention(
+#     use_scale=True,
+#     dropout=0.1,
+#     dtype=float64,
+#     name="att_10",
+# )([att_q_h10, att_v_h10, att_k_h10])
+# att_h11= Attention(
+#     use_scale=True,
+#     dropout=0.1,
+#     dtype=float64,
+#     name="att_11",
+# )([att_q_h11, att_v_h11, att_k_h11])
+# att_h12= Attention(
+#     use_scale=True,
+#     dropout=0.1,
+#     dtype=float64,
+#     name="att_12",
+# )([att_q_h12, att_v_h12, att_k_h12])
 
 x= Add()([att_h1, att_h2, att_h3, att_h4, att_h5, att_h6, att_h7, att_h8])
+# x= Add()([att_h1, att_h2, att_h3, att_h4, att_h5, att_h6, att_h7, att_h8, att_h9, att_h10, att_h11, att_h12])
 
 
 
