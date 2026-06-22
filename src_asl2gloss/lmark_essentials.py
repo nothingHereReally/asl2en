@@ -197,19 +197,6 @@ def landmarks_get_greater(a_raw_video: dict) -> list:
                 past_img_has_hand= lmark_load_ALL[idx]
         for idx_start_at in range(len(tmp_part4)-QUANTITY_FRAME +1):
             lmark_numpy_out__MANY_VIDS.append(tmp_part4[idx_start_at:idx_start_at+QUANTITY_FRAME])
-        # for check_mod_init_0, idx in zip(range(len_available_images), init_hand_idxs):
-        #     if len(lmark_numpy_out__MANY_VIDS[-1])<QUANTITY_FRAME:
-        #         if check_mod_init_0%o2t_ratio == o2t_ratio-1:
-        #             if a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
-        #                 a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
-        #                 lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[idx])
-        #             else:
-        #                 lmark_numpy_out__MANY_VIDS[-1].append(past_img_has_hand)
-        #         elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
-        #             a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
-        #             past_img_has_hand= lmark_load_ALL[idx]
-        #     else:
-        #         break
     else: # len_available_images <= QUANTITY_FRAME
         copy_a_raw_video: dict= {
             KEY_GLOSS: a_raw_video[KEY_GLOSS],
