@@ -9,6 +9,7 @@ ON_TRAINING_BATCH: int= 8
 QUANTITY_FRAME: int= 22
 LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2) # ie. (86, 2)
 # SKELETON_SHAPE: tuple= (158, 158, 3)
+PART4_MOD2USE: tuple= (3,4,5,6,7,8,9)
 IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
 GLASL_LANDMARK_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"landmark"
 GLASL_SKELETON_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"skeleton"

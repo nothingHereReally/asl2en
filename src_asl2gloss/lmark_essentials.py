@@ -12,6 +12,7 @@ from .lmark_constant import (
     KEY_VAL,
     KEY_VIDEO,
     LANDMARK_SHAPE,
+    PART4_MOD2USE,
     glasl_landmark as GLASL_LM_DS,
     KEY_LHAND,
     KEY_LMARK,
@@ -45,7 +46,11 @@ def calculate_steps_needed(train_val: str=KEY_TRAIN) -> int:
                         o2t_mod *(len(a_video[KEY_LMARK]) -(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod))
                     ) # for part 2
                     # total_DS+= (len_available_images-QUANTITY_FRAME)+1 # for part 3
-                    total_DS+= (len_available_images//5) -QUANTITY_FRAME +1 # for part 4
+                    for work4mod_what in PART4_MOD2USE: # for part 4
+                        if 0<int(len_available_images//work4mod_what):
+                            total_DS+= (len_available_images//work4mod_what) -QUANTITY_FRAME +1
+                        else:
+                            total_DS+= 1
                 else:
                     total_DS+= 1
                     # total_DS+= 1*3 # be times 3
@@ -184,17 +189,30 @@ def landmarks_get_greater(a_raw_video: dict) -> list:
         # part 4, all has hand and use past if current no hand
         init_hand_idxs: tuple= tuple(range(idx_init_has_hand, len(a_raw_video[KEY_LMARK])))
         past_img_has_hand: ndarray= lmark_load_ALL[idx_init_has_hand]
-        tmp_part4: list= []
+        tmp_part4: dict= {i: [] for i in PART4_MOD2USE}
         for check_mod_init_0, idx in zip(range(len_available_images), init_hand_idxs):
-            if check_mod_init_0%5 == 4:
-                if a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
-                    a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
-                    tmp_part4.append(lmark_load_ALL[idx])
-                else:
-                    tmp_part4.append(past_img_has_hand)
-            elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
+            for work4mod_what in PART4_MOD2USE:
+                if check_mod_init_0%work4mod_what == work4mod_what-1:
+                    if a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
+                        a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                        tmp_part4[work4mod_what].append(lmark_load_ALL[idx])
+                    else:
+                        tmp_part4[work4mod_what].append(past_img_has_hand)
+            if a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
                 a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
                 past_img_has_hand= lmark_load_ALL[idx]
+        for work4mod_what in PART4_MOD2USE:
+            if QUANTITY_FRAME<len(tmp_part4[work4mod_what]):
+                for idx_start_at in range(len(tmp_part4[work4mod_what])-QUANTITY_FRAME +1):
+                    lmark_numpy_out__MANY_VIDS.append(tmp_part4[work4mod_what][
+                        idx_start_at:idx_start_at+QUANTITY_FRAME
+                    ])
+            else:
+                lmark_numpy_out__MANY_VIDS.append([])
+                ratio4mod_part4: int= int(ceil(QUANTITY_FRAME/len(tmp_part4[work4mod_what])))
+                for an_image_landmarks in tmp_part4[work4mod_what]:
+                    lmark_numpy_out__MANY_VIDS[-1].extend(list([an_image_landmarks]) *ratio4mod_part4)
+                lmark_numpy_out__MANY_VIDS[-1]= lmark_numpy_out__MANY_VIDS[-1][:QUANTITY_FRAME]
         for idx_start_at in range(len(tmp_part4)-QUANTITY_FRAME +1):
             lmark_numpy_out__MANY_VIDS.append(tmp_part4[idx_start_at:idx_start_at+QUANTITY_FRAME])
     else: # len_available_images <= QUANTITY_FRAME
