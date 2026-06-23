@@ -180,11 +180,39 @@ Model: "functional"
 ├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
 │ batch_class (Dense)           │ (None, 22)                │          41,646 │ flatten[0][0]              │
 └───────────────────────────────┴───────────────────────────┴─────────────────┴────────────────────────────┘
- Total params: 1,731,800 (12.74 MB)
+ Total params: 577,266 (4.25 MB)
  Trainable params: 577,266 (4.25 MB)
  Non-trainable params: 0 (0.00 B)
- Optimizer params: 1,154,534 (8.49 MB)
+Epoch 1/12
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1782119757.168553 4093031 service.cc:152] XLA service 0x7f3aa404ac60 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1782119757.168573 4093031 service.cc:160]   StreamExecutor device (0): NVIDIA GeForce RTX 3050 Ti Laptop GPU, Compute Capability 8.6
+2026-06-22 17:15:58.019701: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:269] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+I0000 00:00:1782119766.723948 4093031 cuda_dnn.cc:529] Loaded cuDNN version 90501
+2026-06-22 17:16:15.173372: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_25943', 24 bytes spill stores, 24 bytes spill loads
 
+I0000 00:00:1782119802.633478 4093031 device_compiler.h:188] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+19306/19306 ━━━━━━━━━━━━━━━━━━━━ 279s 11ms/step - accuracy: 0.7167 - loss: 1.5776 - val_accuracy: 0.3426 - val_loss: 3.2947 - learning_rate: 1.0000e-04
+Epoch 2/12
+19306/19306 ━━━━━━━━━━━━━━━━━━━━ 196s 10ms/step - accuracy: 0.8453 - loss: 0.6640 - val_accuracy: 0.4591 - val_loss: 2.6396 - learning_rate: 1.0000e-04
+Epoch 3/12
+19303/19306 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step - accuracy: 0.8591 - loss: 0.5628
+Epoch 3: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+19306/19306 ━━━━━━━━━━━━━━━━━━━━ 200s 10ms/step - accuracy: 0.8591 - loss: 0.5628 - val_accuracy: 0.4112 - val_loss: 2.9818 - learning_rate: 1.0000e-04
+Epoch 4/12
+19306/19306 ━━━━━━━━━━━━━━━━━━━━ 201s 10ms/step - accuracy: 0.7645 - loss: 0.7831 - val_accuracy: 0.6721 - val_loss: 0.9649 - learning_rate: 1.0000e-05
+Epoch 5/12
+19306/19306 ━━━━━━━━━━━━━━━━━━━━ 196s 10ms/step - accuracy: 0.8541 - loss: 0.4738 - val_accuracy: 0.7444 - val_loss: 0.8071 - learning_rate: 1.0000e-05
+Epoch 6/12
+19306/19306 ━━━━━━━━━━━━━━━━━━━━ 229s 12ms/step - accuracy: 0.8937 - loss: 0.3264 - val_accuracy: 0.7813 - val_loss: 0.9982 - learning_rate: 1.0000e-05
+Epoch 7/12
+19304/19306 ━━━━━━━━━━━━━━━━━━━━ 0s 11ms/step - accuracy: 0.9007 - loss: 0.3206
+Epoch 7: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+19306/19306 ━━━━━━━━━━━━━━━━━━━━ 227s 12ms/step - accuracy: 0.9007 - loss: 0.3206 - val_accuracy: 0.7270 - val_loss: 1.0893 - learning_rate: 1.0000e-05
+Epoch 7: early stopping
+Restoring model weights from the end of the best epoch: 5.
+proj_root /home/o_o/JDrv/myProperty/usjr/thesis.hearo/asl2en
+model quantity of outputs 22
 
 
 
