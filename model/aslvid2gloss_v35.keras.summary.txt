@@ -171,7 +171,6 @@ Epoch 11: ReduceLROnPlateau reducing learning rate to 1.0000000116860975e-08.
 Epoch 12/12
 58812/58812 ━━━━━━━━━━━━━━━━━━━━ 489s 8ms/step - accuracy: 0.8315 - loss: 0.5555 - val_accuracy: 0.6819 - val_loss: 0.9728 - learning_rate: 1.0000e-08
 Restoring model weights from the end of the best epoch: 11.
-proj_root /home/o_o/JDrv/myProperty/usjr/thesis.hearo/asl2en
 model quantity of outputs 22
 
 
