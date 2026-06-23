@@ -9,7 +9,6 @@ from .lmark_constant import (
     GLASL_LANDMARK_DIR,
     KEY_FILE,
     KEY_GLOSS,
-    KEY_VAL,
     KEY_VIDEO,
     LANDMARK_SHAPE,
     PART4_MOD2USE,
@@ -30,7 +29,7 @@ def get_idx_start_hand(annotated_images: list) -> int:
     return -1
 
 
-def calculate_steps_needed(train_val: str=KEY_TRAIN) -> int:
+def calculate_steps_needed(train_val: str=KEY_TRAIN, batch: int=ON_TRAINING_BATCH) -> int:
     total_DS: int= 0
     for a_video in GLASL_LM_DS[train_val]:
         idx_init_has_hand: int= get_idx_start_hand(a_video[KEY_LMARK])
@@ -54,9 +53,7 @@ def calculate_steps_needed(train_val: str=KEY_TRAIN) -> int:
                 else:
                     total_DS+= 1
                     # total_DS+= 1*3 # be times 3
-    return int(ceil(total_DS/float(ON_TRAINING_BATCH)))
-STEPS_TRAIN: int= calculate_steps_needed(KEY_TRAIN)
-STEPS_VAL: int= calculate_steps_needed(KEY_VAL)
+    return int(ceil(total_DS/float(batch)))
 
 
 def get_landmark4less_or_equal(a_raw_video: dict, idx_init_has_hand: int|None=None) -> list:
