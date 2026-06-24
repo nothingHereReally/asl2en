@@ -1,5 +1,6 @@
-from os.path import exists
 from json import load as jsonload
+from os.path import exists
+from pathlib import Path
 
 
 KEY_TRAIN: str= "train"
@@ -10,8 +11,8 @@ V_ID: str= "video_id"
 G_: str= "gloss"
 KEY_ID2G: str= "id2gloss"
 KEY_G2ID: str= "gloss2id"
-PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-3])}/"
-GLASL_DIR: str= f"{PROJ_ROOT}dataset/glasl/"
+PROJ_ROOT= Path(__file__).resolve().parent.parent.parent
+GLASL_DIR: Path= PROJ_ROOT /"dataset" /"glasl"
 
 
 
@@ -82,7 +83,7 @@ def count_dataset_is_it_correct(gl_clean: dict, gl_landmark: dict, gl_skeleton: 
     return (True, MIN_hands_quantity)
 
 
-def mandatory3exist(clean_file: str, landmark_file: str, skeleton_file: str) -> None:
+def mandatory3exist(clean_file: Path, landmark_file: Path, skeleton_file: Path) -> None:
     if not exists(clean_file):
         raise FileNotFoundError(f"file doesn't exist {clean_file}")
     if not exists(landmark_file):
@@ -95,9 +96,9 @@ if __name__=='__main__':
     glasl_clean: dict= {}
     glasl_landmark: dict= {}
     glasl_skeleton: dict= {}
-    glasl_clean_file_str: str= f"{GLASL_DIR}glasl.annotation.clean.json"
-    glasl_landmark_file_str: str= f"{GLASL_DIR}glasl.annotation.landmark.json"
-    glasl_skeleton_file_str: str= f"{GLASL_DIR}glasl.annotation.skeleton.json"
+    glasl_clean_file_str: Path= GLASL_DIR /"glasl.annotation.clean.json"
+    glasl_landmark_file_str: Path= GLASL_DIR /"glasl.annotation.landmark.json"
+    glasl_skeleton_file_str: Path= GLASL_DIR /"glasl.annotation.skeleton.json"
     mandatory3exist(
         clean_file=glasl_clean_file_str,
         landmark_file=glasl_landmark_file_str,
