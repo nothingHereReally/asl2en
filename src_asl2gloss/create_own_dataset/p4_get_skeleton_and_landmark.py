@@ -6,17 +6,18 @@ from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtCo
 from sys import stderr
 from numpy import array, float32, ndarray, uint8, zeros, save as numpysave
 from mediapipe.python.solutions.holistic import Holistic
+from pathlib import Path
 
 
 # ------------------------
 # ------------------------
 # ---- contants start ----
-PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-3])}/"
-GLASL_DIR: str= f"{PROJ_ROOT}dataset/glasl/"
-VIDEO_DIR: str= f"{GLASL_DIR}video/"
-IMAGE_dir: str= f"{GLASL_DIR}image/"
-LANDMARK_dir: str= f"{GLASL_DIR}landmark/"
-SKELETON_dir: str= f"{GLASL_DIR}skeleton/"
+PROJ_ROOT= Path(__file__).resolve().parent.parent.parent
+GLASL_DIR: Path= PROJ_ROOT /"dataset" /"glasl"
+VIDEO_DIR: Path= GLASL_DIR /"video"
+IMAGE_dir: Path= GLASL_DIR /"image"
+LANDMARK_dir: Path= GLASL_DIR /"landmark"
+SKELETON_dir: Path= GLASL_DIR /"skeleton"
 MPH_fph: Holistic= Holistic(
     static_image_mode=False,
     model_complexity=2,
@@ -522,10 +523,10 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
 
 
 def get_images_from_video(split_vid_dict: dict) -> ndarray:
-    video_abs_file_dir: str= f"{VIDEO_DIR}{split_vid_dict["video_file"]}"
+    video_abs_file_dir: Path= VIDEO_DIR /split_vid_dict["video_file"]
     if exists(video_abs_file_dir):
         try:
-            video_ocv: VideoCapture= VideoCapture(video_abs_file_dir)
+            video_ocv: VideoCapture= VideoCapture(str(video_abs_file_dir))
             frames_on_video: list= []
             if video_ocv.isOpened():
                 for _ in range(  int(video_ocv.get(CAP_PROP_FRAME_COUNT))  ):
@@ -533,12 +534,12 @@ def get_images_from_video(split_vid_dict: dict) -> ndarray:
                     if isNotEmpty and 0<len(obj_image):
                         frames_on_video.append(array(obj_image, dtype=uint8))
                 if len(frames_on_video)<1:
-                    raise ValueError(f"Video {split_vid_dict["video_file"]} has No images exist.")
+                    raise ValueError(f"Video {VIDEO_DIR /split_vid_dict["video_file"]} has No images exist.")
                 return array(frames_on_video, dtype=uint8)
 
 
         except Exception as e:
-            print(f"error at video {split_vid_dict['video_file']}: {e}", file=stderr)
+            print(f"error at video {VIDEO_DIR /split_vid_dict['video_file']}: {e}", file=stderr)
     raise FileNotFoundError(f"Video {split_vid_dict["video_file"]} Does Not Exist --> No such file {video_abs_file_dir}")
 
 
@@ -597,9 +598,10 @@ def processDataForTrainingLater(glasl_clean: list, glasl_LANDMARK: dict, glasl_S
         print(f"currently processing( {gloss_ds['gloss']} ) completed: {round(idxGloss/len(glasl_clean), 3)*100}%")
         for gloss_instance in gloss_ds["instances"]: # on each gloss has many videos, now for each videos
             imgs_human_rgb, imgs_landmark, imgs_skeleton, imgs_details= get_video_details(gloss_instance)
-            makedirs(f"{IMAGE_dir}{gloss_instance["video_file"][:-4]}")
-            makedirs(f"{LANDMARK_dir}{gloss_instance["video_file"][:-4]}")
-            makedirs(f"{SKELETON_dir}{gloss_instance["video_file"][:-4]}")
+            # don't extract images due to takes too much space, ie. 10gloss about 46GiB
+            # makedirs(f"{IMAGE_dir /gloss_instance["video_file"][:-4]}")
+            makedirs(f"{LANDMARK_dir /gloss_instance["video_file"][:-4]}")
+            makedirs(f"{SKELETON_dir /gloss_instance["video_file"][:-4]}")
             glasl_LANDMARK[ gloss_instance["split"] ].append({
                 "gloss_id": int(glasl_LANDMARK[KEY_G2ID][gloss_ds["gloss"]]),
                 "video_id": gloss_instance["video_file"][:-4],
@@ -612,15 +614,15 @@ def processDataForTrainingLater(glasl_clean: list, glasl_LANDMARK: dict, glasl_S
             })
             for i in range(len(imgs_human_rgb)): # each video has many images, now for each images
                 file2create: str= str(i+1).zfill(5)
-                filename_abs_human: str= f"{IMAGE_dir}{gloss_instance["video_file"][:-4]}/{file2create}.png"
-                filename_abs_landmark: str= f"{LANDMARK_dir}{gloss_instance["video_file"][:-4]}/{file2create}.npy"
-                filename_abs_skeleton: str= f"{SKELETON_dir}{gloss_instance["video_file"][:-4]}/{file2create}.png"
-                imwrite(filename=filename_abs_human, img=imgs_human_rgb[i])
-                with open(filename_abs_landmark, "wb") as f:
+                # filename_abs_human: Path= IMAGE_dir /gloss_instance["video_file"][:-4] /f"{file2create}.png"
+                filename_abs_landmark: Path= LANDMARK_dir /gloss_instance["video_file"][:-4] /f"{file2create}.npy"
+                filename_abs_skeleton: Path= SKELETON_dir /gloss_instance["video_file"][:-4] /f"{file2create}.png"
+                # imwrite(filename=str(filename_abs_human), img=imgs_human_rgb[i])
+                with open(str(filename_abs_landmark), "wb") as f:
                     # lanmarks order is face, then pose, then left hand, then right hand
                     # see `HERE ORDER OF LANDMARKS`
                     numpysave(file=f, arr=imgs_landmark[i])
-                imwrite(filename=filename_abs_skeleton, img=imgs_skeleton[i])
+                imwrite(filename=str(filename_abs_skeleton), img=imgs_skeleton[i])
                 glasl_LANDMARK[ gloss_instance["split"] ][-1]["landmark"].append({
                     "file": f"{file2create}.npy",
                     "face": imgs_details[i]["face"],
@@ -642,7 +644,7 @@ def processDataForTrainingLater(glasl_clean: list, glasl_LANDMARK: dict, glasl_S
 
 def init_vars() -> tuple:
     glasl_clean: list= []
-    with open(f"{GLASL_DIR}glasl.annotation.clean.json", 'r') as f:
+    with open(f"{GLASL_DIR /"glasl.annotation.clean.json"}", 'r') as f:
         glasl_clean= jsonload(f)
     glasl_LANDMARK: dict= {
         KEY_TRAIN: [],
@@ -667,9 +669,9 @@ def main() -> None:
 
 
     glasl_LANDMARK, glasl_SKELETON= processDataForTrainingLater(glasl_clean, glasl_LANDMARK, glasl_SKELETON)
-    with open(f"{GLASL_DIR}glasl.annotation.landmark.json", "w") as f:
+    with open(f"{GLASL_DIR /"glasl.annotation.landmark.json"}", "w") as f:
         jsonsave(glasl_LANDMARK, f, indent=4)
-    with open(f"{GLASL_DIR}glasl.annotation.skeleton.json", "w") as f:
+    with open(f"{GLASL_DIR /"glasl.annotation.skeleton.json"}", "w") as f:
         jsonsave(glasl_SKELETON, f, indent=4)
 
 
