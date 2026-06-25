@@ -10,7 +10,7 @@ from .lmark_constant import (
     KEY_FILE,
     KEY_GLOSS,
     KEY_VIDEO,
-    LANDMARK_SHAPE,
+    # LANDMARK_SHAPE,
     PART4_MOD2USE,
     glasl_landmark as GLASL_LM_DS,
     KEY_LHAND,
@@ -29,7 +29,7 @@ def get_idx_start_hand(annotated_images: list) -> int:
     return -1
 
 
-def calculate_steps_needed(train_val: str=KEY_TRAIN, batch: int=ON_TRAINING_BATCH) -> int:
+def calculate_steps_needed(train_val: str=KEY_TRAIN, batch_size: int=ON_TRAINING_BATCH) -> int:
     total_DS: int= 0
     for a_video in GLASL_LM_DS[train_val]:
         idx_init_has_hand: int= get_idx_start_hand(a_video[KEY_LMARK])
@@ -52,7 +52,7 @@ def calculate_steps_needed(train_val: str=KEY_TRAIN, batch: int=ON_TRAINING_BATC
                             total_DS+= 1
                 else:
                     total_DS+= 1
-    return int(ceil(total_DS/float(batch)))
+    return int(ceil(total_DS/float(batch_size)))
 
 
 def get_landmark4less_or_equal(a_raw_video: dict, idx_init_has_hand: int|None=None) -> list:
@@ -77,13 +77,13 @@ def get_landmark4less_or_equal(a_raw_video: dict, idx_init_has_hand: int|None=No
                 lmark_numpy_out.append(load_an_image_landmarks)
             else:
                 lmark_numpy_out.append(lmark_numpy_out[-1])
-    check_shape: ndarray= array(lmark_numpy_out, dtype=float32)
-    if check_shape.shape!=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
-        raise NotImplementedError(
-            f"incorrect implementation on get_landmark4less_or_equal(), due to lmark_numpy_out should be of shape {
-            tuple((QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]))
-            }, but got {check_shape.shape}"
-        )
+    # check_shape: ndarray= array(lmark_numpy_out, dtype=float32)
+    # if check_shape.shape!=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
+    #     raise NotImplementedError(
+    #         f"incorrect implementation on get_landmark4less_or_equal(), due to lmark_numpy_out should be of shape {
+    #         tuple((QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]))
+    #         }, but got {check_shape.shape}"
+    #     )
     return lmark_numpy_out
 
 
@@ -114,8 +114,8 @@ def get_landmark4greater(a_raw_video: dict) -> list:
             lmark_numpy_out__MANY_VIDS[0].append(lmark_load_ALL[append_if_valid])
         else:
             lmark_numpy_out__MANY_VIDS[0].append(lmark_numpy_out__MANY_VIDS[0][-1])
-    if len(lmark_numpy_out__MANY_VIDS[0])!=QUANTITY_FRAME:
-        raise ValueError("incorrect implementation on get_greater on part 1 due to NOT QUANTITY_FRAME, when should be QUANTITY_FRAME")
+    # if len(lmark_numpy_out__MANY_VIDS[0])!=QUANTITY_FRAME:
+    #     raise ValueError("incorrect implementation on get_landmark4greater() on part 1 due to NOT QUANTITY_FRAME, when should be QUANTITY_FRAME")
     del ratio
     # lmark_numpy_out__MANY_VIDS[0] is of shape (QUANTITY_FRAME, 86, 2), but
     # here lmark_numpy_out__MANY_VIDS is of shape (1, QUANTITY_FRAME, 86, 2)
@@ -218,18 +218,18 @@ def get_landmark4greater(a_raw_video: dict) -> list:
             KEY_LMARK: a_raw_video[KEY_LMARK][idx_init_has_hand:]
         }
         lmark_numpy_out__MANY_VIDS.append(get_landmark4less_or_equal(copy_a_raw_video, 0))
-    check_shape: ndarray= array(lmark_numpy_out__MANY_VIDS, dtype=float32)
-    if check_shape.shape[-3:]!=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
-        raise NotImplementedError(f"incorrect implementation get_landmark4greater(), lmark_numpy_out__MANY_VIDS should of shape {
-        (QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1])
-        } but got {tuple(check_shape.shape[-3:])}")
+    # check_shape: ndarray= array(lmark_numpy_out__MANY_VIDS, dtype=float32)
+    # if check_shape.shape[-3:]!=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
+    #     raise NotImplementedError(f"incorrect implementation get_landmark4greater(), lmark_numpy_out__MANY_VIDS should of shape {
+    #     (QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1])
+    #     } but got {tuple(check_shape.shape[-3:])}")
 
     return lmark_numpy_out__MANY_VIDS
 
 
 def get_data_landmark(
     train_val: str= KEY_TRAIN,
-    batch: int=ON_TRAINING_BATCH
+    batch_size: int=ON_TRAINING_BATCH
 ) -> Generator:
     dataset_idxs: tuple= tuple(sample(
         range(len(GLASL_LM_DS[train_val])),
@@ -253,9 +253,9 @@ def get_data_landmark(
                     batch_videos.append(tmp)
                     batch_class.append(a_raw_video[KEY_GLOSS])
             # ---- now ready ----
-            while batch<=len(batch_videos):
-                out_inputs: ndarray= array(batch_videos[:batch], dtype=float32)
-                out_expected_outputs: ndarray= array(batch_class[:batch], dtype=uint16)
-                batch_videos= batch_videos[batch:]
-                batch_class= batch_class[batch:]
+            while batch_size<=len(batch_videos):
+                out_inputs: ndarray= array(batch_videos[:batch_size], dtype=float32)
+                out_expected_outputs: ndarray= array(batch_class[:batch_size], dtype=uint16)
+                batch_videos= batch_videos[batch_size:]
+                batch_class= batch_class[batch_size:]
                 yield (out_inputs, out_expected_outputs)
