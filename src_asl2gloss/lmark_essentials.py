@@ -73,11 +73,6 @@ def get_landmark4less_or_equal(a_raw_video: dict, idx_init_has_hand: int|None=No
         with open(f"{GLASL_LANDMARK_DIR /a_raw_video[KEY_VIDEO] /a_raw_video[KEY_LMARK][idx][KEY_FILE]}", 'rb') as f:
             load_an_image_landmarks= loadnp(f)
         lmark_numpy_out.extend([load_an_image_landmarks] *ratio_what)
-        # for _ in range(min(ratio_what, QUANTITY_FRAME-len(lmark_numpy_out))):
-        #     if a_raw_video[KEY_LMARK][idx][KEY_LHAND] or a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
-        #         lmark_numpy_out.append(load_an_image_landmarks)
-        #     else:
-        #         lmark_numpy_out.append(lmark_numpy_out[-1])
     lmark_numpy_out= lmark_numpy_out[:QUANTITY_FRAME]
     # check_shape: ndarray= array(lmark_numpy_out, dtype=float32)
     # if check_shape.shape!=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
