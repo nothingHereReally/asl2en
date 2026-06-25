@@ -13,7 +13,6 @@
 from keras.src.losses import sparse_categorical_crossentropy
 from keras.src.models import Model
 from keras.src.optimizers import Adam
-# from keras.src.saving import load_model
 
 from .lmark_constant import EPOCHS, KEY_TRAIN, KEY_VAL, PROJ_ROOT
 from .lmark_essentials import calculate_steps_needed, get_data_landmark
@@ -46,11 +45,3 @@ if __name__=="__main__":
     print(f"proj_root {PROJ_ROOT}")
     print(f"model quantity of outputs {model.output_shape[-1]}")
     model.save(f"{PROJ_ROOT /"model" /"aslvid2gloss_v37.keras"}")
-    # loadModel: Any= load_model(f"{PROJ_ROOT /"model" /"aslvid2gloss_v34.keras"}")
-    # out: dict= loadModel.evaluate(
-    #     x=get_data_landmark(train_val=KEY_TEST),
-    #     steps=STEPS_TEST,
-    #     return_dict=True
-    # )
-    # for k in out.keys():
-    #     print(f"{k} --> {out[k]}")
