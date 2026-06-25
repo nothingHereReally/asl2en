@@ -206,8 +206,6 @@ def get_landmark4greater(a_raw_video: dict) -> list:
                 for an_image_landmarks in tmp_part4[work4mod_what]:
                     lmark_numpy_out__MANY_VIDS[-1].extend(list([an_image_landmarks]) *ratio4mod_part4)
                 lmark_numpy_out__MANY_VIDS[-1]= lmark_numpy_out__MANY_VIDS[-1][:QUANTITY_FRAME]
-        for idx_start_at in range(len(tmp_part4)-QUANTITY_FRAME +1):
-            lmark_numpy_out__MANY_VIDS.append(tmp_part4[idx_start_at:idx_start_at+QUANTITY_FRAME])
     else: # len_available_images <= QUANTITY_FRAME
         copy_a_raw_video: dict= {
             KEY_GLOSS: a_raw_video[KEY_GLOSS],
