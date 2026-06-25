@@ -1,0 +1,1188 @@
+------------------------------
+-- model v32
+landmarks is used
+
+
+
+
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                  ┃ Output Shape              ┃         Param # ┃ Connected to               ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)        │ (None, 22, 86, 2)         │               0 │ -                          │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ reshape (Reshape)             │ (None, 22, 172)           │               0 │ batch_vid[0][0]            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed              │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_1            │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_2            │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_3            │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_4            │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_5            │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_6            │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_7            │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_8            │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_9            │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_10           │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_11           │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_12           │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_13           │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_14           │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_15           │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_16           │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_17           │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_18           │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_19           │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_20           │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_21           │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_22           │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_23           │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_1 (Attention)             │ (None, 22, 86)            │               1 │ time_distributed[0][0],    │
+│                               │                           │                 │ time_distributed_1[0][0],  │
+│                               │                           │                 │ time_distributed_2[0][0]   │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_2 (Attention)             │ (None, 22, 86)            │               1 │ time_distributed_3[0][0],  │
+│                               │                           │                 │ time_distributed_4[0][0],  │
+│                               │                           │                 │ time_distributed_5[0][0]   │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_3 (Attention)             │ (None, 22, 86)            │               1 │ time_distributed_6[0][0],  │
+│                               │                           │                 │ time_distributed_7[0][0],  │
+│                               │                           │                 │ time_distributed_8[0][0]   │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_4 (Attention)             │ (None, 22, 86)            │               1 │ time_distributed_9[0][0],  │
+│                               │                           │                 │ time_distributed_10[0][0], │
+│                               │                           │                 │ time_distributed_11[0][0]  │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_5 (Attention)             │ (None, 22, 86)            │               1 │ time_distributed_12[0][0], │
+│                               │                           │                 │ time_distributed_13[0][0], │
+│                               │                           │                 │ time_distributed_14[0][0]  │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_6 (Attention)             │ (None, 22, 86)            │               1 │ time_distributed_15[0][0], │
+│                               │                           │                 │ time_distributed_16[0][0], │
+│                               │                           │                 │ time_distributed_17[0][0]  │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_7 (Attention)             │ (None, 22, 86)            │               1 │ time_distributed_18[0][0], │
+│                               │                           │                 │ time_distributed_19[0][0], │
+│                               │                           │                 │ time_distributed_20[0][0]  │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_8 (Attention)             │ (None, 22, 86)            │               1 │ time_distributed_21[0][0], │
+│                               │                           │                 │ time_distributed_22[0][0], │
+│                               │                           │                 │ time_distributed_23[0][0]  │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ add (Add)                     │ (None, 22, 86)            │               0 │ att_1[0][0], att_2[0][0],  │
+│                               │                           │                 │ att_3[0][0], att_4[0][0],  │
+│                               │                           │                 │ att_5[0][0], att_6[0][0],  │
+│                               │                           │                 │ att_7[0][0], att_8[0][0]   │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ flatten (Flatten)             │ (None, 1892)              │               0 │ add[0][0]                  │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ batch_class (Dense)           │ (None, 22)                │          41,646 │ flatten[0][0]              │
+└───────────────────────────────┴───────────────────────────┴─────────────────┴────────────────────────────┘
+ Total params: 398,726 (2.88 MB)
+ Trainable params: 398,726 (2.88 MB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/12
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1782102237.440368 2069864 service.cc:152] XLA service 0x7fcb10033bc0 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1782102237.440403 2069864 service.cc:160]   StreamExecutor device (0): NVIDIA GeForce RTX 3050 Ti Laptop GPU, Compute Capability 8.6
+2026-06-22 12:23:57.985112: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:269] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+I0000 00:00:1782102243.693555 2069864 cuda_dnn.cc:529] Loaded cuDNN version 90501
+2026-06-22 12:24:07.649532: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_17359', 24 bytes spill stores, 24 bytes spill loads
+
+I0000 00:00:1782102265.206325 2069864 device_compiler.h:188] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+5200/5200 ━━━━━━━━━━━━━━━━━━━━ 105s 12ms/step - accuracy: 0.3115 - loss: 2.6456 - val_accuracy: 0.4177 - val_loss: 1.4565 - learning_rate: 1.0000e-04
+Epoch 2/12
+5200/5200 ━━━━━━━━━━━━━━━━━━━━ 54s 10ms/step - accuracy: 0.5993 - loss: 1.1534 - val_accuracy: 0.5652 - val_loss: 1.2155 - learning_rate: 1.0000e-04
+Epoch 3/12
+5200/5200 ━━━━━━━━━━━━━━━━━━━━ 54s 10ms/step - accuracy: 0.7028 - loss: 0.8678 - val_accuracy: 0.6330 - val_loss: 0.9147 - learning_rate: 1.0000e-04
+Epoch 4/12
+5199/5200 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step - accuracy: 0.7641 - loss: 0.6852
+Epoch 4: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+5200/5200 ━━━━━━━━━━━━━━━━━━━━ 52s 10ms/step - accuracy: 0.7642 - loss: 0.6852 - val_accuracy: 0.5823 - val_loss: 1.0831 - learning_rate: 1.0000e-04
+Epoch 5/12
+5200/5200 ━━━━━━━━━━━━━━━━━━━━ 51s 10ms/step - accuracy: 0.8164 - loss: 0.5322 - val_accuracy: 0.7447 - val_loss: 0.5767 - learning_rate: 1.0000e-05
+Epoch 6/12
+5200/5200 ━━━━━━━━━━━━━━━━━━━━ 51s 10ms/step - accuracy: 0.8808 - loss: 0.3631 - val_accuracy: 0.7690 - val_loss: 0.4707 - learning_rate: 1.0000e-05
+Epoch 7/12
+5200/5200 ━━━━━━━━━━━━━━━━━━━━ 51s 10ms/step - accuracy: 0.8912 - loss: 0.3416 - val_accuracy: 0.8001 - val_loss: 0.5148 - learning_rate: 1.0000e-05
+Epoch 8/12
+5198/5200 ━━━━━━━━━━━━━━━━━━━━ 0s 9ms/step - accuracy: 0.8970 - loss: 0.3209
+Epoch 8: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+5200/5200 ━━━━━━━━━━━━━━━━━━━━ 51s 10ms/step - accuracy: 0.8970 - loss: 0.3209 - val_accuracy: 0.7900 - val_loss: 0.4290 - learning_rate: 1.0000e-05
+Epoch 9/12
+5200/5200 ━━━━━━━━━━━━━━━━━━━━ 51s 10ms/step - accuracy: 0.8922 - loss: 0.3076 - val_accuracy: 0.8113 - val_loss: 0.3611 - learning_rate: 1.0000e-06
+Epoch 10/12
+5199/5200 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step - accuracy: 0.9251 - loss: 0.2608
+Epoch 10: ReduceLROnPlateau reducing learning rate to 9.999999974752428e-08.
+5200/5200 ━━━━━━━━━━━━━━━━━━━━ 51s 10ms/step - accuracy: 0.9251 - loss: 0.2608 - val_accuracy: 0.7719 - val_loss: 0.4014 - learning_rate: 1.0000e-06
+Epoch 11/12
+5198/5200 ━━━━━━━━━━━━━━━━━━━━ 0s 10ms/step - accuracy: 0.9002 - loss: 0.3095
+Epoch 11: ReduceLROnPlateau reducing learning rate to 1.0000000116860975e-08.
+5200/5200 ━━━━━━━━━━━━━━━━━━━━ 55s 11ms/step - accuracy: 0.9002 - loss: 0.3095 - val_accuracy: 0.7571 - val_loss: 0.4233 - learning_rate: 1.0000e-07
+Epoch 11: early stopping
+model quantity of outputs 22
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+-------------------------------------
+-- result -- average: 81.09848484848483%
+-----------------------------------------------------------------
+____ train --> 797/880 --> 90.56818181818181%
+____ overall accuracy train --> 81.16963958740234%
+-----------------------------------------------------------------
+____ val --> 53/66 --> 80.3030303030303%
+____ overall accuracy val --> 80.85506439208984%
+-----------------------------------------------------------------
+____ test --> 33/44 --> 75.0%
+____ overall accuracy test --> 78.9143295288086%
+-----------------------------------------------------------------
+____ percentage correct --> 883 / 990 --> 89.19191919191918%
+____ hardmax accuracy --> 81.9570707070707%
+____ softmax accuracy --> 80.31301879882812%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------
+-- lmark_constant.py
+from json import load as loadjson
+from pathlib import Path
+
+
+PROJ_ROOT: Path= Path(__file__).resolve().parent.parent
+
+EPOCHS: int= 12
+ON_TRAINING_BATCH: int= 8
+QUANTITY_FRAME: int= 22
+LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2) # ie. (86, 2)
+# SKELETON_SHAPE: tuple= (158, 158, 3)
+IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
+GLASL_LANDMARK_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"landmark"
+GLASL_SKELETON_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"skeleton"
+
+glasl_landmark: dict= {}
+with open(f"{PROJ_ROOT /"dataset" /"glasl" /"glasl.annotation.landmark.json"}", "r") as f:
+    glasl_landmark= loadjson(f)
+
+glasl_skeleton: dict= {}
+with open(f"{PROJ_ROOT /"dataset" /"glasl" /"glasl.annotation.skeleton.json"}", "r") as f:
+    glasl_skeleton= loadjson(f)
+
+KEY_TRAIN: str= 'train'   # landmark is face, then pose, then left_had, then right hand
+KEY_VAL: str= 'val'       # face full is (468, 2) --> face worthy is (36, 2)
+KEY_TEST: str= 'test'     # pose full is (33, 2) --> pose worthy is (8, 2)
+KEY_ID2G: str= 'id2gloss' # left_hand is (21, 2)
+KEY_G2ID: str= 'gloss2id' # right_hand is (21, 2)
+KEY_GLOSS: str= 'gloss_id'
+KEY_VIDEO: str= 'video_id'
+KEY_LMARK: str= 'landmark'
+KEY_FILE: str= 'file'
+KEY_LHAND: str= 'left_hand'
+KEY_RHAND: str= 'right_hand'
+
+LEN_GLOSS: int= int(len(glasl_skeleton[KEY_ID2G]))
+
+
+FACE_CONNECTIONS_FULL: tuple= (
+    # oval face
+    (10, 338), (338, 297), (297, 332), (332, 284),
+    (284, 251), (251, 389), (389, 356), (356, 454),
+    (454, 323), (323, 361), (361, 288), (288, 397),
+    (397, 365), (365, 379), (379, 378), (378, 400),
+    (400, 377), (377, 152), (152, 148), (148, 176),
+    (176, 149), (149, 150), (150, 136), (136, 172),
+    (172, 58), (58, 132), (132, 93), (93, 234),
+    (234, 127), (127, 162), (162, 21), (21, 54),
+    (54, 103), (103, 67), (67, 109), (109, 10),
+
+    # left eyebrow
+    (276, 283), (283, 282), (282, 295),
+    (295, 285), (300, 293), (293, 334),
+    (334, 296), (296, 336),
+    (276, 300), (285, 336),
+    # left eye
+    (263, 249), (249, 390), (390, 373), (373, 374),
+    (374, 380), (380, 381), (381, 382), (382, 362),
+    (263, 466), (466, 388), (388, 387), (387, 386),
+    (386, 385), (385, 384), (384, 398), (398, 362),
+    # right eyebrow
+    (46, 53), (53, 52), (52, 65),
+    (65, 55), (70, 63), (63, 105),
+    (105, 66), (66, 107),
+    (46, 70), (55, 107),
+    # right eye
+    (33, 7), (7, 163), (163, 144), (144, 145),
+    (145, 153), (153, 154), (154, 155), (155, 133),
+    (33, 246), (246, 161), (161, 160), (160, 159),
+    (159, 158), (158, 157), (157, 173), (173, 133),
+
+    # nose
+    (168, 6), (6, 197), (197, 195), (195, 5),
+    (5, 4), (4, 1), (1, 19), (19, 94), (94, 2), (98, 97),
+    (97, 2), (2, 326), (326, 327), (327, 294),
+    (294, 278), (278, 344), (344, 440), (440, 275),
+    (275, 4), (4, 45), (45, 220), (220, 115), (115, 48),
+    (48, 64), (64, 98),
+    # lips
+    (61, 146), (146, 91), (91, 181), (181, 84), (84, 17),
+    (17, 314), (314, 405), (405, 321), (321, 375),
+    (375, 291), (61, 185), (185, 40), (40, 39), (39, 37),
+    (37, 0), (0, 267),
+    (267, 269), (269, 270), (270, 409), (409, 291),
+    (78, 95), (95, 88), (88, 178), (178, 87), (87, 14),
+    (14, 317), (317, 402), (402, 318), (318, 324),
+    (324, 308), (78, 191), (191, 80), (80, 81), (81, 82),
+    (82, 13), (13, 312), (312, 311), (311, 310),
+    (310, 415), (415, 308)
+)
+FACE_CONNECTIONS: tuple= (
+    (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
+    (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
+
+    (26, 29), (29, 30), # left eyebrow
+
+    (23, 32), (32, 31), # left eye down
+    (31, 33), (33, 23), # left eye up
+
+    (10, 13), (13, 14), # right eyebrow
+
+    (7, 16), (16, 15), # right eye down
+    (15, 18), (18, 7), # rght eye up
+
+    (20, 22), (22, 2), # nose vertical line
+    (2, 25), (25, 1), # left half nose
+    (1, 9), (9, 2), # rigth half nose
+
+    # mouth
+    (8, 6), (6, 24), # down lip edge down
+    (24, 0), (0, 8), # up lip edge up
+    (8, 5), (5, 24), # up/down lip inner a
+    (24, 4), (4, 8), # up/down lip inner b
+)
+WORTHY_FACE_IDX: tuple= (
+    0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
+    105, 107, 133, 145, 152, 159, 162, 168, 172, 195,
+    263, 291, 294, 300, 323, 332, 334, 336, 362, 374,
+    386, 389, 397
+)
+
+# before use of POSE_CONNECTIONS modify landmark 1st
+# modify to use index to be used only: 11,12,13,14,15,16,23,24
+# so new index: 0,1,2,3,4,5,6,7
+POSE_CONNECTIONS_FULL: tuple= ((0, 1), (1, 2), (2, 3), (3, 7), (0, 4), (4, 5),
+                              (5, 6), (6, 8), (9, 10), (11, 12), (11, 13),
+                              (13, 15), (15, 17), (15, 19), (15, 21), (17, 19),
+                              (12, 14), (14, 16), (16, 18), (16, 20), (16, 22),
+                              (18, 20), (11, 23), (12, 24), (23, 24), (23, 25),
+                              (24, 26), (25, 27), (26, 28), (27, 29), (28, 30),
+                              (29, 31), (30, 32), (27, 31), (28, 32))
+POSE_CONNECTIONS: tuple= ((0, 1), (0, 2), (1, 3), (2, 4), (3, 5), (6, 7), (0, 6), (1, 7))
+WORTHY_POSE_IDX: tuple= (11,12,13,14,15,16,23,24)
+
+HAND_CONNECTIONS: tuple= (
+    (0, 1), (0, 5), (9, 13), (13, 17), (5, 9), (0, 17), # palm connections
+    (1, 2), (2, 3), (3, 4),           # thumb finger connections
+    (5, 6), (6, 7), (7, 8),           # index finger connections
+    (9, 10), (10, 11), (11, 12),      # middle finger connections
+    (13, 14), (14, 15), (15, 16),     # ring finger connections
+    (17, 18), (18, 19), (19, 20)      # pinky finger connections
+)
+---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------
+-- model_layers.py
+from math import ceil
+from keras.src.activations.activations import ReLU
+from keras.src.layers import Add, Attention, Flatten, Reshape, Dense, Input, TimeDistributed
+from keras.src.activations import softmax
+from numpy import float32, float64
+
+
+from .lmark_constant import LANDMARK_SHAPE, QUANTITY_FRAME, LEN_GLOSS
+
+
+data_in= Input(
+    shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]),
+    dtype=float32,
+    name='batch_vid',
+)
+x= Reshape(
+    target_shape=(QUANTITY_FRAME, -1),
+)(data_in) # now shape be (22, 86*2) or (22, 172)
+
+
+
+
+att_q_h1= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h1= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h1= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_q_h2= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h2= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h2= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_q_h3= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h3= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h3= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_q_h4= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h4= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h4= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_q_h5= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h5= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h5= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_q_h6= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h6= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h6= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_q_h7= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h7= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h7= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_q_h8= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_v_h8= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+att_k_h8= TimeDistributed(Dense(
+    units=ceil(LANDMARK_SHAPE[0]),
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(x)
+
+att_h1= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_1",
+)([att_q_h1, att_v_h1, att_k_h1])
+att_h2= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_2",
+)([att_q_h2, att_v_h2, att_k_h2])
+att_h3= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_3",
+)([att_q_h3, att_v_h3, att_k_h3])
+att_h4= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_4",
+)([att_q_h4, att_v_h4, att_k_h4])
+att_h5= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_5",
+)([att_q_h5, att_v_h5, att_k_h5])
+att_h6= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_6",
+)([att_q_h6, att_v_h6, att_k_h6])
+att_h7= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_7",
+)([att_q_h7, att_v_h7, att_k_h7])
+att_h8= Attention(
+    use_scale=True,
+    dropout=0.1,
+    dtype=float64,
+    name="att_8",
+)([att_q_h8, att_v_h8, att_k_h8])
+
+x= Add()([att_h1, att_h2, att_h3, att_h4, att_h5, att_h6, att_h7, att_h8])
+
+
+
+
+ann= Flatten()(x)
+# ann= Dense(
+#     units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//2),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# )(ann)
+# ann= Dense(
+#     units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//5),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# )(ann)
+# ann= Dense(
+#     units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//10),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# )(ann)
+
+
+data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
+---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------
+-- model_train.py
+# from os.path import exists
+from keras.src.losses import sparse_categorical_crossentropy
+from keras.src.models import Model
+from keras.src.optimizers import Adam
+# from keras.src.saving import load_model
+
+from .lmark_constant import EPOCHS, KEY_TRAIN, KEY_VAL, PROJ_ROOT
+from .lmark_essentials import get_data_landmark, STEPS_TRAIN, STEPS_VAL
+from .model_layers import data_in, data_out
+from .model_callbacks import d_lr, sTraining, tf_board
+
+
+
+
+if __name__=="__main__":
+    model: Model= Model(
+        inputs=data_in,
+        outputs=data_out
+    )
+    model.compile(
+        optimizer=Adam(learning_rate=0.0001),
+        loss=sparse_categorical_crossentropy,
+        metrics=['accuracy']
+    )
+    model.summary()
+    model.fit(
+        x=get_data_landmark(train_val=KEY_TRAIN),
+        epochs=EPOCHS,
+        callbacks=[d_lr, sTraining, tf_board],
+        validation_data=get_data_landmark(train_val=KEY_VAL),
+        steps_per_epoch=STEPS_TRAIN,
+        validation_steps=STEPS_VAL,
+        validation_freq=1
+    )
+    print(f"proj_root {PROJ_ROOT}")
+    print(f"model quantity of outputs {model.output_shape[-1]}")
+    model.save(f"{PROJ_ROOT /"model" /"aslvid2gloss_v32.keras"}")
+    # loadModel= load_model(f"{PROJ_ROOT}model/aslvid2gloss_v32.keras")
+---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------
+-- model_callbacks.py
+from keras.src.callbacks import ReduceLROnPlateau, EarlyStopping, TensorBoard
+from .lmark_constant import PROJ_ROOT
+
+
+d_lr: ReduceLROnPlateau= ReduceLROnPlateau(
+    monitor='val_accuracy',
+    factor=0.1,
+    patience=1,
+    verbose=1,
+    mode='max',
+    min_delta=0.001,
+    cooldown=1,
+    min_lr=1.0e-8
+)
+sTraining: EarlyStopping= EarlyStopping(
+    monitor='val_loss',
+    min_delta=0.001,
+    patience=2,
+    verbose=1,
+    mode='min',
+    restore_best_weights=False,
+)
+tf_board: TensorBoard= TensorBoard(
+    log_dir=f"{PROJ_ROOT /"model" /"tfboard_logs"}",
+    histogram_freq=1,
+    write_graph=False,
+    write_images=False,
+    write_steps_per_second=False,
+    update_freq='epoch'
+)
+
+---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------
+-- lmark_essentials.py
+from math import ceil
+from numpy import load as loadnp
+from typing import Generator
+from random import sample
+from numpy import array, float32, ndarray, uint16
+
+
+from .lmark_constant import (
+    GLASL_LANDMARK_DIR,
+    KEY_FILE,
+    KEY_GLOSS,
+    KEY_VAL,
+    KEY_VIDEO,
+    LANDMARK_SHAPE,
+    glasl_landmark as GLASL_LM_DS,
+    KEY_LHAND,
+    KEY_LMARK,
+    KEY_RHAND,
+    KEY_TRAIN,
+    ON_TRAINING_BATCH,
+    QUANTITY_FRAME,
+)
+
+
+def get_idx_start_hand(annotated_images: list) -> int:
+    for idx in range(len(annotated_images)):
+        if annotated_images[idx][KEY_LHAND] or annotated_images[idx][KEY_RHAND]:
+            return idx
+    return -1
+
+
+def calculate_steps_needed(train_val: str=KEY_TRAIN) -> int:
+    total_DS: int= 0
+    for a_video in GLASL_LM_DS[train_val]:
+        idx_init_has_hand: int= get_idx_start_hand(a_video[KEY_LMARK])
+        if idx_init_has_hand!=-1:
+            if len(a_video[KEY_LMARK])<=QUANTITY_FRAME:
+                total_DS+= 1
+            else:
+                len_available_images: int= len(a_video[KEY_LMARK])-idx_init_has_hand
+                o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
+                total_DS+= 1 # for part 1
+                if QUANTITY_FRAME<len_available_images:
+                    total_DS+= int(
+                        o2t_mod *(len(a_video[KEY_LMARK]) -(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod))
+                    ) # for part 2
+                    # total_DS+= (len_available_images-QUANTITY_FRAME)+1 # for part 3
+                    total_DS+= (len_available_images//5) -QUANTITY_FRAME +1 # for part 4
+                else:
+                    total_DS+= 1
+                    # total_DS+= 1*3 # be times 3
+    return int(ceil(total_DS/float(ON_TRAINING_BATCH)))
+STEPS_TRAIN: int= calculate_steps_needed(KEY_TRAIN)
+STEPS_VAL: int= calculate_steps_needed(KEY_VAL)
+
+
+def landmarks_get_less_or_equal(a_raw_video: dict, idx_init_has_hand: int|None=None) -> list:
+    '''
+    on a raw video the quantity of images is less than or
+    equal to the target frames which is `QUANTITY_FRAME: int`
+    '''
+    if idx_init_has_hand is None:
+        idx_init_has_hand= get_idx_start_hand(a_raw_video[KEY_LMARK])
+    if idx_init_has_hand==-1:
+        return list()
+
+    lmark_numpy_out: list= []
+    ratio_what: int= int(ceil(
+        QUANTITY_FRAME  /  (len(a_raw_video[KEY_LMARK])-idx_init_has_hand)
+    ))
+    for idx in range(idx_init_has_hand, len(a_raw_video[KEY_LMARK])):
+        with open(f"{GLASL_LANDMARK_DIR /a_raw_video[KEY_VIDEO] /a_raw_video[KEY_LMARK][idx][KEY_FILE]}", 'rb') as f:
+            load_an_image_landmarks= loadnp(f)
+        for _ in range(min(ratio_what, QUANTITY_FRAME-len(lmark_numpy_out))):
+            if a_raw_video[KEY_LMARK][idx][KEY_LHAND] or a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                lmark_numpy_out.append(load_an_image_landmarks)
+            else:
+                lmark_numpy_out.append(lmark_numpy_out[-1])
+    check_shape: ndarray= array(lmark_numpy_out, dtype=float32)
+    if check_shape.shape!=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
+        raise NotImplementedError(
+            f"incorrect implementation on get_less_or_equal(), due to lmark_numpy_out should be of shape {
+            tuple((QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]))
+            }, but got {check_shape.shape}"
+        )
+    return lmark_numpy_out
+
+
+def landmarks_get_greater(a_raw_video: dict) -> list:
+    '''
+    to be used for when len(a_raw_video[KEY_LMARK]) > QUANTITY_FRAME
+    output be of shape(____ int, QUANTITY_FRAME, 86, 2 ____)
+    '''
+    lmark_numpy_out__MANY_VIDS: list= [[]] # be of shape(__ int, QUANTITY_FRAME, 86, 2 __)
+
+    lmark_load_ALL: list= []
+    idx_init_has_hand: int= -1
+    for idx in range(len(a_raw_video[KEY_LMARK])):
+        with open(f"{GLASL_LANDMARK_DIR /a_raw_video[KEY_VIDEO] /a_raw_video[KEY_LMARK][idx][KEY_FILE]}", 'rb') as f:
+            lmark_load_ALL.append(loadnp(f))
+        if idx_init_has_hand==-1:
+            if a_raw_video[KEY_LMARK][idx][KEY_LHAND] or a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                idx_init_has_hand= idx
+    if idx_init_has_hand==-1:
+        return list()
+
+    # part 1, floor at index level, still idx_init_has_hand
+    ratio: float= (len(a_raw_video[KEY_LMARK]) -idx_init_has_hand) /QUANTITY_FRAME
+    for idx in range(QUANTITY_FRAME):
+        append_if_valid: int= idx_init_has_hand +int(idx*ratio) # floor
+        if a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
+            a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+            lmark_numpy_out__MANY_VIDS[0].append(lmark_load_ALL[append_if_valid])
+        else:
+            lmark_numpy_out__MANY_VIDS[0].append(lmark_numpy_out__MANY_VIDS[0][-1])
+    if len(lmark_numpy_out__MANY_VIDS[0])!=QUANTITY_FRAME:
+        raise ValueError("incorrect implementation on get_greater on part 1 due to NOT QUANTITY_FRAME, when should be QUANTITY_FRAME")
+    del ratio
+    # lmark_numpy_out__MANY_VIDS[0] is of shape (QUANTITY_FRAME, 86, 2), but
+    # here lmark_numpy_out__MANY_VIDS is of shape (1, QUANTITY_FRAME, 86, 2)
+
+    len_available_images: int= len(a_raw_video[KEY_LMARK])-idx_init_has_hand
+    # len_available_images, quantity of images starting from idx_init_has_hand till end
+    if QUANTITY_FRAME<len_available_images:
+        # part 2, evenly spaced via mod, floor at orig/target ratio level
+        o2t_ratio: int= int(len_available_images/QUANTITY_FRAME) # floor >= 1
+        notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        # '''
+        # notIncludedOn_mod, due to on a single video has quantity of images( ie. len(a_raw_video[KEY_LMARK]) )
+        # then mandatory idx_init_has_hand till last has enough images for QUANTITY_FRAME
+        # ie. above --> QUANTITY_FRAME<=len_available_images,
+        # notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        #                         ^^^^^^^^^^^^^^^^^^^^^^^____ total quanitty images on video
+        # notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        #                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^____ subtract
+        # whats to be used on forward index images
+        # notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        #                                                  ^^^^^^^^^^^^^^^^^____ due below appends starts
+        # at idx_init_has_hand
+        # notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        #                                                                     ^^^^^^^^^^^^^^^^^^^^^^____ due to
+        # index below `ii`( represents mod ie. o2t_ratio, ie. int(len_available_images/QUANTITY_FRAME) --> floor,
+        # ie. 0, 1, 2, ..., o2t_ratio-1 ) and `iii`( represents 0, 1, 2, ..., QUANTITY_FRAME-1 ), ie.
+        # for combo o2t_ratio*`iii` on last part of images as (QUANTITY_FRAME, 86, 2)
+        # '''
+        for shift_right in range(notIncludedOn_mod+1):
+            for idx_mod in range(o2t_ratio):
+                lmark_numpy_out__MANY_VIDS.append([])
+                for idx_img2target in range(QUANTITY_FRAME):
+                    append_if_valid: int= idx_init_has_hand +(idx_img2target*o2t_ratio+idx_mod) +shift_right
+                    if a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
+                        a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+                        lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[
+                            append_if_valid
+                        ])
+                    elif idx_img2target==0:
+                        # due to since idx_img2target==0 then lmark_numpy_out__MANY_VIDS[-1][-1] does not exist,
+                        # ie. len(lmark_numpy_out__MANY_VIDS[-1])==0 True, due to prev at
+                        # lmark_numpy_out__MANY_VIDS.append([]) above
+                        lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[idx_init_has_hand])
+                    else:
+                        lmark_numpy_out__MANY_VIDS[-1].append(lmark_numpy_out__MANY_VIDS[-1][-1])
+        del notIncludedOn_mod
+
+        # # part 3, consecutive, mandatory initial has hand
+        # for start_where in range((len_available_images-QUANTITY_FRAME)+1):
+        #     lmark_numpy_out__MANY_VIDS.append([])
+        #     # due to below appends shape (QUANTITY_FRAME, 86, 2)
+        #     for idx in range(QUANTITY_FRAME):
+        #         append_if_valid: int= idx_init_has_hand+idx +start_where
+        #         if a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
+        #             a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+        #             lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[
+        #                 append_if_valid
+        #             ])
+        #         elif idx==0:
+        #             # due to since ii==0 then lmark_numpy_out__MANY_VIDS[-1][-1] does not exist,
+        #             # ie. len(lmark_numpy_out__MANY_VIDS[-1])==0 True, due to prev at
+        #             # lmark_numpy_out__MANY_VIDS.append([]) above
+        #             lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[idx_init_has_hand])
+        #         else:
+        #             lmark_numpy_out__MANY_VIDS[-1].append(lmark_numpy_out__MANY_VIDS[-1][-1])
+
+        # part 4, all has hand and use past if current no hand
+        init_hand_idxs: tuple= tuple(range(idx_init_has_hand, len(a_raw_video[KEY_LMARK])))
+        past_img_has_hand: ndarray= lmark_load_ALL[idx_init_has_hand]
+        tmp_part4: list= []
+        for check_mod_init_0, idx in zip(range(len_available_images), init_hand_idxs):
+            if check_mod_init_0%5 == 4:
+                if a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
+                    a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                    tmp_part4.append(lmark_load_ALL[idx])
+                else:
+                    tmp_part4.append(past_img_has_hand)
+            elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
+                a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                past_img_has_hand= lmark_load_ALL[idx]
+        for idx_start_at in range(len(tmp_part4)-QUANTITY_FRAME +1):
+            lmark_numpy_out__MANY_VIDS.append(tmp_part4[idx_start_at:idx_start_at+QUANTITY_FRAME])
+    else: # len_available_images <= QUANTITY_FRAME
+        copy_a_raw_video: dict= {
+            KEY_GLOSS: a_raw_video[KEY_GLOSS],
+            KEY_VIDEO: a_raw_video[KEY_VIDEO],
+            KEY_LMARK: a_raw_video[KEY_LMARK][idx_init_has_hand:]
+        }
+        lmark_numpy_out__MANY_VIDS.append(landmarks_get_less_or_equal(copy_a_raw_video, 0))
+    check_shape: ndarray= array(lmark_numpy_out__MANY_VIDS, dtype=float32)
+    if check_shape.shape[-3:]!=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
+        raise NotImplementedError(f"incorrect implementation landmarks_get_greater(), lmark_numpy_out__MANY_VIDS should of shape {
+        (QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1])
+        } but got {tuple(check_shape.shape[-3:])}")
+
+    return lmark_numpy_out__MANY_VIDS
+
+
+def get_data_landmark(
+    train_val: str= KEY_TRAIN,
+    batch: int=ON_TRAINING_BATCH
+) -> Generator:
+    dataset_idxs: tuple= tuple(sample(
+        range(len(GLASL_LM_DS[train_val])),
+        len(GLASL_LM_DS[train_val])
+    ))
+    batch_videos: list= []
+    batch_class: list= []
+    while True:
+        for idx_ds in dataset_idxs:
+            a_raw_video: dict= GLASL_LM_DS[train_val][idx_ds]
+            if QUANTITY_FRAME<len(a_raw_video[KEY_LMARK]):
+                tmp: list= landmarks_get_greater(a_raw_video)
+                if 0<len(tmp):
+                    batch_videos.extend(tmp)
+                    batch_class.extend(
+                        [a_raw_video[KEY_GLOSS]] *len(tmp)
+                    )
+            else:
+                tmp: list= landmarks_get_less_or_equal(a_raw_video)
+                if 0<len(tmp):
+                    batch_videos.append(tmp)
+                    batch_class.append(a_raw_video[KEY_GLOSS])
+            # ---- now ready ----
+            while batch<=len(batch_videos):
+                out_inputs: ndarray= array(batch_videos[:batch], dtype=float32)
+                out_expected_outputs: ndarray= array(batch_class[:batch], dtype=uint16)
+                batch_videos= batch_videos[batch:]
+                batch_class= batch_class[batch:]
+                yield (out_inputs, out_expected_outputs)
+---------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+---------------------------------------------------------------------------
+-- lmark_constant.py used
+from math import ceil
+from json import load as loadjson
+
+
+# PROJ_ROOT: str= f"/absolute/dir/to/project/"
+PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
+
+EPOCHS: int= 12
+# TRAIN_BATCH: int= 32
+ON_TRAINING_BATCH: int= 2
+# QUANTITY_FRAME: int= 48
+QUANTITY_FRAME: int= 22
+# IMG_SIZE: int= 480
+LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2) # ie. (86, 2)
+SKELETON_SHAPE: tuple= (158, 158, 3)
+IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
+# MIN_FRAMES_HAS_HANDS, meaning on a single video file
+# where only QUANTITY_FRAME img will be included, then
+# mandatory that atleast MIN_FRAMES_HAS_HANDS out of
+# QUANTITY_FRAME has at least 1 hand( ie. either left
+# or right hand )
+# ie. current is at least 12 or 20 has hand/s 20*0.6= 12
+# MIN_FRAMES_HAS_HANDS: int= int(QUANTITY_FRAME*0.7)
+GLASL_LANDMARK_DIR: str= f"{PROJ_ROOT}dataset/glasl/landmark/"
+GLASL_SKELETON_DIR: str= f"{PROJ_ROOT}dataset/glasl/skeleton/"
+
+
+
+
+glasl_landmark: dict= {}
+with open(f"{PROJ_ROOT}dataset/glasl/glasl.annotation.landmark.json", "r") as f:
+    glasl_landmark= loadjson(f)
+
+glasl_skeleton: dict= {}
+with open(f"{PROJ_ROOT}dataset/glasl/glasl.annotation.skeleton.json", "r") as f:
+    glasl_skeleton= loadjson(f)
+# landmark is face, then pose, then left_had, then right hand
+# face full is (468, 2) --> face worthy is (36, 2)
+# pose full is (33, 2) --> pose worthy is (8, 2)
+# left_hand is (21, 2)
+# right_hand is (21, 2)
+
+KEY_TRAIN: str= 'train'
+KEY_VAL: str= 'val'
+KEY_TEST: str= 'test'
+KEY_ID2G: str= 'id2gloss'
+KEY_G2ID: str= 'gloss2id'
+
+LEN_TRAIN: int= int(len(glasl_skeleton[KEY_TRAIN]))
+LEN_VAL: int= int(len(glasl_skeleton[KEY_VAL]))
+LEN_TEST: int= int(len(glasl_skeleton[KEY_TEST]))
+LEN_GLOSS: int= int(len(glasl_skeleton[KEY_ID2G]))
+
+def calculate_steps_needed(trainVal: str=KEY_TRAIN) -> int:
+    def getIdxStartHand(lmarks: list) -> int:
+        for i in range(len(lmarks)):
+            if lmarks[i]['left_hand'] or lmarks[i]['right_hand']:
+                return i
+        return -1
+    total_DS: int= 0
+    for video in glasl_landmark[trainVal]:
+        idx_init_has_hand: int= getIdxStartHand(video['landmark'])
+        if idx_init_has_hand!=-1:
+            if len(video['landmark'])<=QUANTITY_FRAME:
+                total_DS+= 1
+                # total_DS+= 1*2 # be times 2
+            else:
+                len_available_images: int= len(video['landmark'])-idx_init_has_hand
+                o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
+                total_DS+= 1 # for part 1
+                # total_DS+= 1*3 # for part 1, be times 3
+                if QUANTITY_FRAME<len_available_images:
+                    total_DS+= (
+                        o2t_mod*(len(video['landmark'])
+                            -(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod))
+                    )*1 # for part 2
+                    # )*3 # for part 2, be times 3
+                    total_DS+= (len_available_images-QUANTITY_FRAME)+1 # for part 3
+                    # total_DS+= ((len_available_images-QUANTITY_FRAME)+1)*3 # for part 3, be times 3
+                else:
+                    total_DS+= 1
+                    # total_DS+= 1*3 # be times 3
+    return int(ceil(total_DS/float(ON_TRAINING_BATCH)))
+TRAIN_STEPS: int= calculate_steps_needed(KEY_TRAIN)
+VAL_STEPS: int= calculate_steps_needed(KEY_VAL)
+
+
+FACE_CONNECTIONS_FULL: tuple= (
+    # oval face
+    (10, 338), (338, 297), (297, 332), (332, 284),
+    (284, 251), (251, 389), (389, 356), (356, 454),
+    (454, 323), (323, 361), (361, 288), (288, 397),
+    (397, 365), (365, 379), (379, 378), (378, 400),
+    (400, 377), (377, 152), (152, 148), (148, 176),
+    (176, 149), (149, 150), (150, 136), (136, 172),
+    (172, 58), (58, 132), (132, 93), (93, 234),
+    (234, 127), (127, 162), (162, 21), (21, 54),
+    (54, 103), (103, 67), (67, 109), (109, 10),
+
+    # left eyebrow
+    (276, 283), (283, 282), (282, 295),
+    (295, 285), (300, 293), (293, 334),
+    (334, 296), (296, 336),
+    (276, 300), (285, 336),
+    # left eye
+    (263, 249), (249, 390), (390, 373), (373, 374),
+    (374, 380), (380, 381), (381, 382), (382, 362),
+    (263, 466), (466, 388), (388, 387), (387, 386),
+    (386, 385), (385, 384), (384, 398), (398, 362),
+    # right eyebrow
+    (46, 53), (53, 52), (52, 65),
+    (65, 55), (70, 63), (63, 105),
+    (105, 66), (66, 107),
+    (46, 70), (55, 107),
+    # right eye
+    (33, 7), (7, 163), (163, 144), (144, 145),
+    (145, 153), (153, 154), (154, 155), (155, 133),
+    (33, 246), (246, 161), (161, 160), (160, 159),
+    (159, 158), (158, 157), (157, 173), (173, 133),
+
+    # nose
+    (168, 6), (6, 197), (197, 195), (195, 5),
+    (5, 4), (4, 1), (1, 19), (19, 94), (94, 2), (98, 97),
+    (97, 2), (2, 326), (326, 327), (327, 294),
+    (294, 278), (278, 344), (344, 440), (440, 275),
+    (275, 4), (4, 45), (45, 220), (220, 115), (115, 48),
+    (48, 64), (64, 98),
+    # lips
+    (61, 146), (146, 91), (91, 181), (181, 84), (84, 17),
+    (17, 314), (314, 405), (405, 321), (321, 375),
+    (375, 291), (61, 185), (185, 40), (40, 39), (39, 37),
+    (37, 0), (0, 267),
+    (267, 269), (269, 270), (270, 409), (409, 291),
+    (78, 95), (95, 88), (88, 178), (178, 87), (87, 14),
+    (14, 317), (317, 402), (402, 318), (318, 324),
+    (324, 308), (78, 191), (191, 80), (80, 81), (81, 82),
+    (82, 13), (13, 312), (312, 311), (311, 310),
+    (310, 415), (415, 308)
+)
+FACE_CONNECTIONS: tuple= (
+    (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
+    (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
+
+    (26, 29), (29, 30), # left eyebrow
+
+    (23, 32), (32, 31), # left eye down
+    (31, 33), (33, 23), # left eye up
+
+    (10, 13), (13, 14), # right eyebrow
+
+    (7, 16), (16, 15), # right eye down
+    (15, 18), (18, 7), # rght eye up
+
+    (20, 22), (22, 2), # nose vertical line
+    (2, 25), (25, 1), # left half nose
+    (1, 9), (9, 2), # rigth half nose
+
+    # mouth
+    (8, 6), (6, 24), # down lip edge down
+    (24, 0), (0, 8), # up lip edge up
+    (8, 5), (5, 24), # up/down lip inner a
+    (24, 4), (4, 8), # up/down lip inner b
+)
+WORTHY_FACE_IDX: tuple= (
+    0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
+    105, 107, 133, 145, 152, 159, 162, 168, 172, 195,
+    263, 291, 294, 300, 323, 332, 334, 336, 362, 374,
+    386, 389, 397
+)
+
+# before use of POSE_CONNECTIONS modify landmark 1st
+# modify to use index to be used only: 11,12,13,14,15,16,23,24
+# so new index: 0,1,2,3,4,5,6,7
+POSE_CONNECTIONS_FULL: tuple= ((0, 1), (1, 2), (2, 3), (3, 7), (0, 4), (4, 5),
+                              (5, 6), (6, 8), (9, 10), (11, 12), (11, 13),
+                              (13, 15), (15, 17), (15, 19), (15, 21), (17, 19),
+                              (12, 14), (14, 16), (16, 18), (16, 20), (16, 22),
+                              (18, 20), (11, 23), (12, 24), (23, 24), (23, 25),
+                              (24, 26), (25, 27), (26, 28), (27, 29), (28, 30),
+                              (29, 31), (30, 32), (27, 31), (28, 32))
+POSE_CONNECTIONS: tuple= ((0, 1), (0, 2), (1, 3), (2, 4), (3, 5), (6, 7), (0, 6), (1, 7))
+WORTHY_POSE_IDX: tuple= (11,12,13,14,15,16,23,24)
+
+HAND_CONNECTIONS: tuple= (
+    (0, 1), (0, 5), (9, 13), (13, 17), (5, 9), (0, 17), # palm connections
+    (1, 2), (2, 3), (3, 4),           # thumb finger connections
+    (5, 6), (6, 7), (7, 8),           # index finger connections
+    (9, 10), (10, 11), (11, 12),      # middle finger connections
+    (13, 14), (14, 15), (15, 16),     # ring finger connections
+    (17, 18), (18, 19), (19, 20)      # pinky finger connections
+)
+---------------------------------------------------------------------------

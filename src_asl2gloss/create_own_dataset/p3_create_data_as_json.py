@@ -1,9 +1,10 @@
 from json import dump as savejson
 from os.path import exists
+from pathlib import Path
 
 
-PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-3])}/"
-VIDEO_DIR: str= f"{PROJ_ROOT}dataset/glasl/video/"
+PROJ_ROOT= Path(__file__).resolve().parent.parent.parent
+VIDEO_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"video"
 T_TRAIN: str= "train"
 T_VAL: str= "val"
 T_TEST: str= "test"
@@ -34,12 +35,10 @@ GLOSS_IN_ORDER: list[str]= [
 
 
 def main() -> None:
-    glasl: list[dict]= [
-        {
-            "gloss": glossWord,
-            "instances": []
-        } for glossWord in GLOSS_IN_ORDER
-    ]
+    glasl: list[dict]= [{
+        "gloss": glossWord,
+        "instances": []
+    } for glossWord in GLOSS_IN_ORDER]
     LEN_CLASS: int= len(glasl)
     for i in range(1,46):
         if i<41:
@@ -67,12 +66,12 @@ def main() -> None:
 
     for idxVideo in range(45):
         for idxCat in range(LEN_CLASS):
-            if not exists(f"{VIDEO_DIR}{glasl[idxCat]["instances"][idxVideo]["video_file"]}"):
-                raise FileNotFoundError(f"video {glasl[idxCat]["instances"][idxVideo]["video_file"]} Does Not Exist.")
+            if not exists(f"{VIDEO_DIR /glasl[idxCat]["instances"][idxVideo]["video_file"]}"):
+                raise FileNotFoundError(f"video {VIDEO_DIR /glasl[idxCat]["instances"][idxVideo]["video_file"]} Does Not Exist.")
     print("all videos on dataset glasl Exists")
 
 
-    with open(f"{PROJ_ROOT}src_asl2gloss/create_own_dataset/glasl.annotation.clean.json", "w") as f:
+    with open(f"{PROJ_ROOT /"src_asl2gloss" /"create_own_dataset" /"glasl.annotation.clean.json"}", "w") as f:
         savejson(glasl, f, indent=4)
 
 

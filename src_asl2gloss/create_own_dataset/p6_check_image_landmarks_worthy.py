@@ -1,13 +1,15 @@
+from cv2 import COLOR_BGR2RGB, circle, cvtColor, imread, imwrite, line
 from mediapipe.python.solutions.holistic import Holistic
 from numpy import array, full, ndarray, uint8
-from os.path import exists
 from os import makedirs
+from os.path import exists
+from pathlib import Path
 from random import uniform
-from cv2 import COLOR_BGR2RGB, circle, cvtColor, imread, imwrite, line
+from tempfile import gettempdir
 
 
-PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-3])}/"
-WHOLE_BODY_FILE_STR: str= f"{PROJ_ROOT}src_asl2gloss/pics_others/human_whole_body.png"
+PROJ_ROOT: Path= Path(__file__).resolve().parent.parent.parent
+WHOLE_BODY_FILE_PATH: Path= PROJ_ROOT /"src_asl2gloss" /"pics_others" /"human_whole_body.png"
 LANDMARK_Q_FACE_FULL: int= 468
 LANDMARK_Q_FACE_WORTHY: int= 36
 LANDMARK_Q_POSE_FULL: int= 33
@@ -910,8 +912,8 @@ def drawFacePoseHand(lmark_mph, original_shape: tuple) -> tuple:
 
 
 if __name__=='__main__':
-    if exists(WHOLE_BODY_FILE_STR):
-        image_origin= imread(WHOLE_BODY_FILE_STR)
+    if exists(WHOLE_BODY_FILE_PATH):
+        image_origin= imread(str(WHOLE_BODY_FILE_PATH))
         image_origin= cvtColor(src=image_origin, code=COLOR_BGR2RGB).copy()
         image_origin= array(image_origin, dtype=uint8)
         img_fplhrh_full_dots, img_fplhrh_full_lines, \
@@ -925,9 +927,10 @@ if __name__=='__main__':
         )
 
 
-        folder_dir: str= f"/tmp/p6_check_image_landmarks_worthy_{int(uniform(0,1)*1000)}"
+        folder_dir: Path= Path(gettempdir()).resolve() /f"p6_check_image_landmarks_worthy_{int(uniform(0,1)*1000)}"
+        # f"/tmp/p6_check_image_landmarks_worthy_{int(uniform(0,1)*1000)}"
         while exists(folder_dir):
-            folder_dir: str= f"/tmp/p6_check_image_landmarks_worthy_{int(uniform(0,1)*1000)}"
+            folder_dir= Path(gettempdir()).resolve() /f"p6_check_image_landmarks_worthy_{int(uniform(0,1)*1000)}"
 
 
         makedirs(folder_dir)
@@ -936,105 +939,106 @@ if __name__=='__main__':
         # 1  ---- image face,pose,left_hand,right_hand full dots
         #        --> img_fplhrh_full_dots
         imwrite(
-            filename=f"{folder_dir}/01_image_face_pose_left_hand_right_hand_full_dots.png",
+            filename=f"{folder_dir /"01_image_face_pose_left_hand_right_hand_full_dots.png"}",
             img=img_fplhrh_full_dots
         )
         # 2  ---- image face,pose,left_hand,right_hand full lines
         #        --> img_fplhrh_full_lines
         imwrite(
-            filename=f"{folder_dir}/02_image_face_pose_left_hand_right_hand_full_lines.png",
+            filename=f"{folder_dir /"02_image_face_pose_left_hand_right_hand_full_lines.png"}",
             img=img_fplhrh_full_lines
         )
 
         # 3  ---- image face,pose,left_hand,right_hand worthy dots
         #        --> img_fplhrh_dots
         imwrite(
-            filename=f"{folder_dir}/03_image_face_pose_left_hand_right_hand_worthy_dots.png",
+            filename=f"{folder_dir /"03_image_face_pose_left_hand_right_hand_worthy_dots.png"}",
             img=img_fplhrh_worthy_dots
         )
         # 4  ---- image face,pose,left_hand,right_hand worthy lines
         #        --> img_fplhrh_lines
         imwrite(
-            filename=f"{folder_dir}/04_image_face_pose_left_hand_right_hand_worthy_lines.png",
+            filename=f"{folder_dir /"04_image_face_pose_left_hand_right_hand_worthy_lines.png"}",
             img=img_fplhrh_worthy_lines
         )
 
         # 5  ---- image face full dots
         #        --> img_face_full_dots
         imwrite(
-            filename=f"{folder_dir}/05_image_face_full_dots.png",
+            filename=f"{folder_dir /"05_image_face_full_dots.png"}",
             img=img_face_full_dots
         )
         # 6  ---- image face full lines
         #        --> img_face_full_lines
         imwrite(
-            filename=f"{folder_dir}/06_image_face_full_lines.png",
+            filename=f"{folder_dir /"06_image_face_full_lines.png"}",
             img=img_face_full_lines
         )
 
         # 9  ---- image face worthy dots
         #        --> img_face_dots
         imwrite(
-            filename=f"{folder_dir}/07_image_face_worthy_dots.png",
+            filename=f"{folder_dir /"07_image_face_worthy_dots.png"}",
             img=img_face_worthy_dots
         )
         # 10 ---- image face worthy lines
         #        --> img_face_lines
         imwrite(
-            filename=f"{folder_dir}/08_image_face_worthy_lines.png",
+            filename=f"{folder_dir /"08_image_face_worthy_lines.png"}",
             img=img_face_worthy_lines
         )
 
         # 11 ---- image pose full dots
         #        --> img_pose_full_dots
         imwrite(
-            filename=f"{folder_dir}/09_image_pose_full_dots.png",
+            filename=f"{folder_dir /"09_image_pose_full_dots.png"}",
             img=img_pose_full_dots
         )
         # 12 ---- image pose full lines
         #        --> img_pose_full_lines
         imwrite(
-            filename=f"{folder_dir}/10_image_pose_full_lines.png",
+            filename=f"{folder_dir /"10_image_pose_full_lines.png"}",
             img=img_pose_full_lines
         )
 
         # 13 ---- image pose worthy dots
         #        --> img_pose_dots
         imwrite(
-            filename=f"{folder_dir}/11_image_pose_worthy_dots.png",
+            filename=f"{folder_dir /"11_image_pose_worthy_dots.png"}",
             img=img_pose_worthy_dots
         )
         # 14 ---- image pose worthy lines
         #        --> img_pose_lines
         imwrite(
-            filename=f"{folder_dir}/12_image_pose_worthy_lines.png",
+            filename=f"{folder_dir /"12_image_pose_worthy_lines.png"}",
             img=img_pose_worthy_lines
         )
 
         # 15 ---- image left hand worthy dots
         #        --> img_left_hand_dots
         imwrite(
-            filename=f"{folder_dir}/13_image_left_hand_dots.png",
+            filename=f"{folder_dir /"13_image_left_hand_dots.png"}",
             img=img_left_hand_dots
         )
         # 16 ---- image left hand worthy lines
         #        --> img_left_hand_lines
         imwrite(
-            filename=f"{folder_dir}/14_image_left_hand_lines.png",
+            filename=f"{folder_dir /"14_image_left_hand_lines.png"}",
             img=img_left_hand_lines
         )
 
         # 17 ---- image right hand worthy dots
         #        --> img_right_hand_dots
         imwrite(
-            filename=f"{folder_dir}/15_image_right_hand_dots.png",
+            filename=f"{folder_dir /"15_image_right_hand_dots.png"}",
             img=img_right_hand_dots
         )
         # 18 ---- image right hand worthy lines
         #        --> img_right_hand_lines
         imwrite(
-            filename=f"{folder_dir}/16_image_right_hand_lines.png",
+            filename=f"{folder_dir /"16_image_right_hand_lines.png"}",
             img=img_right_hand_lines
         )
+        print(f"images at {folder_dir}")
     else:
-        print(f"file does not exist: {WHOLE_BODY_FILE_STR}")
+        print(f"file does not exist: {WHOLE_BODY_FILE_PATH}")

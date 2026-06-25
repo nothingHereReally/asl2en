@@ -1,88 +1,42 @@
-from math import ceil
 from json import load as loadjson
+from pathlib import Path
 
 
-# PROJ_ROOT: str= f"/absolute/dir/to/project/"
-PROJ_ROOT: str= f"{"/".join(__file__.rsplit("/")[:-2])}/"
+PROJ_ROOT: Path= Path(__file__).resolve().parent.parent
 
 EPOCHS: int= 12
-# TRAIN_BATCH: int= 32
 ON_TRAINING_BATCH: int= 2
-# QUANTITY_FRAME: int= 48
 QUANTITY_FRAME: int= 22
-# IMG_SIZE: int= 480
 LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2) # ie. (86, 2)
-SKELETON_SHAPE: tuple= (158, 158, 3)
+# SKELETON_SHAPE: tuple= (158, 158, 3)
+PART4_MOD2USE: tuple= (3,4,5,6,7,8,9)                 # 1st try
+# PART4_MOD2USE: tuple= (4,5,6,7,8,9,10,11,12,13,14,15) # 2nd try
+# PART4_MOD2USE: tuple= (3,5,7,9)                       # 3rd try
 IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
-# MIN_FRAMES_HAS_HANDS, meaning on a single video file
-# where only QUANTITY_FRAME img will be included, then
-# mandatory that atleast MIN_FRAMES_HAS_HANDS out of
-# QUANTITY_FRAME has at least 1 hand( ie. either left
-# or right hand )
-# ie. current is at least 12 or 20 has hand/s 20*0.6= 12
-# MIN_FRAMES_HAS_HANDS: int= int(QUANTITY_FRAME*0.7)
-GLASL_LANDMARK_DIR: str= f"{PROJ_ROOT}dataset/glasl/landmark/"
-GLASL_SKELETON_DIR: str= f"{PROJ_ROOT}dataset/glasl/skeleton/"
-
-
-
+GLASL_LANDMARK_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"landmark"
+GLASL_SKELETON_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"skeleton"
 
 glasl_landmark: dict= {}
-with open(f"{PROJ_ROOT}dataset/glasl/glasl.annotation.landmark.json", "r") as f:
+with open(f"{PROJ_ROOT /"dataset" /"glasl" /"glasl.annotation.landmark.json"}", "r") as f:
     glasl_landmark= loadjson(f)
 
 glasl_skeleton: dict= {}
-with open(f"{PROJ_ROOT}dataset/glasl/glasl.annotation.skeleton.json", "r") as f:
+with open(f"{PROJ_ROOT /"dataset" /"glasl" /"glasl.annotation.skeleton.json"}", "r") as f:
     glasl_skeleton= loadjson(f)
-# landmark is face, then pose, then left_had, then right hand
-# face full is (468, 2) --> face worthy is (36, 2)
-# pose full is (33, 2) --> pose worthy is (8, 2)
-# left_hand is (21, 2)
-# right_hand is (21, 2)
 
-KEY_TRAIN: str= 'train'
-KEY_VAL: str= 'val'
-KEY_TEST: str= 'test'
-KEY_ID2G: str= 'id2gloss'
-KEY_G2ID: str= 'gloss2id'
+KEY_TRAIN: str= 'train'   # landmark is face, then pose, then left_had, then right hand
+KEY_VAL: str= 'val'       # face full is (468, 2) --> face worthy is (36, 2)
+KEY_TEST: str= 'test'     # pose full is (33, 2) --> pose worthy is (8, 2)
+KEY_ID2G: str= 'id2gloss' # left_hand is (21, 2)
+KEY_G2ID: str= 'gloss2id' # right_hand is (21, 2)
+KEY_GLOSS: str= 'gloss_id'
+KEY_VIDEO: str= 'video_id'
+KEY_LMARK: str= 'landmark'
+KEY_FILE: str= 'file'
+KEY_LHAND: str= 'left_hand'
+KEY_RHAND: str= 'right_hand'
 
-LEN_TRAIN: int= int(len(glasl_skeleton[KEY_TRAIN]))
-LEN_VAL: int= int(len(glasl_skeleton[KEY_VAL]))
-LEN_TEST: int= int(len(glasl_skeleton[KEY_TEST]))
 LEN_GLOSS: int= int(len(glasl_skeleton[KEY_ID2G]))
-
-def calculate_steps_needed(trainVal: str=KEY_TRAIN) -> int:
-    def getIdxStartHand(lmarks: list) -> int:
-        for i in range(len(lmarks)):
-            if lmarks[i]['left_hand'] or lmarks[i]['right_hand']:
-                return i
-        return -1
-    total_DS: int= 0
-    for video in glasl_landmark[trainVal]:
-        idx_init_has_hand: int= getIdxStartHand(video['landmark'])
-        if idx_init_has_hand!=-1:
-            if len(video['landmark'])<=QUANTITY_FRAME:
-                total_DS+= 1
-                # total_DS+= 1*2 # be times 2
-            else:
-                len_available_images: int= len(video['landmark'])-idx_init_has_hand
-                o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
-                total_DS+= 1 # for part 1
-                # total_DS+= 1*3 # for part 1, be times 3
-                if QUANTITY_FRAME<len_available_images:
-                    total_DS+= (
-                        o2t_mod*(len(video['landmark'])
-                            -(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod))
-                    )*1 # for part 2
-                    # )*3 # for part 2, be times 3
-                    total_DS+= (len_available_images-QUANTITY_FRAME)+1 # for part 3
-                    # total_DS+= ((len_available_images-QUANTITY_FRAME)+1)*3 # for part 3, be times 3
-                else:
-                    total_DS+= 1
-                    # total_DS+= 1*3 # be times 3
-    return int(ceil(total_DS/float(ON_TRAINING_BATCH)))
-TRAIN_STEPS: int= calculate_steps_needed(KEY_TRAIN)
-VAL_STEPS: int= calculate_steps_needed(KEY_VAL)
 
 
 FACE_CONNECTIONS_FULL: tuple= (
