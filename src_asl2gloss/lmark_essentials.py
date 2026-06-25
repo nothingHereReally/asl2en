@@ -52,7 +52,6 @@ def calculate_steps_needed(train_val: str=KEY_TRAIN, batch: int=ON_TRAINING_BATC
                             total_DS+= 1
                 else:
                     total_DS+= 1
-                    # total_DS+= 1*3 # be times 3
     return int(ceil(total_DS/float(batch)))
 
 
