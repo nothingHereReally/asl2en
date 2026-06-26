@@ -1,7 +1,3 @@
-Testing the model v22, latest best model
-
-
-
 Clone this repo, better to use `bash` if you have it, compared to `cmd`.
 Installing git by defualt also installs bash.
 ```bash
@@ -11,7 +7,7 @@ cd asl2en
 on cmd is
 ```bash
 set GIT_LFS_SKIP_SMUDGE=1
-git clone --branch only_1st_10gloss https://github.com/nothingHereReally/asl2en.git
+git clone --branch main https://github.com/nothingHereReally/asl2en.git
 cd asl2en
 ```
 The `GIT_LFS_SKIP_SMUDGE=1` is to skip downloading the lfs files,
@@ -21,17 +17,21 @@ lfs( large files ) files can be included on clones or on
 git pull request.
 
 
-Then on github go to `asl2en/model/aslvid2gloss_v22.keras`
-or just go to this [link to model v22](https://github.com/nothingHereReally/asl2en/blob/main/model/aslvid2gloss_v22.keras)
-then manually download the aslvid2gloss_v22.keras.
-After manual download, overwrite the asl2en/model/aslvid2gloss_v22.keras
-( on MS Windows that's asl2en\model\aslvid2gloss_v22.keras ) with
+Then on github go to `asl2en/model/aslvid2gloss_v30.keras`
+or just go to this [link to model v30](https://github.com/nothingHereReally/asl2en/blob/main/model/aslvid2gloss_v30.keras)
+then manually download the aslvid2gloss_v30.keras.
+After manual download, overwrite the asl2en/model/aslvid2gloss_v30.keras
+( on MS Windows that's asl2en\model\aslvid2gloss_v30.keras ) with
 what you just manually downloaded
 
 
+<!--
 The [WLASL](https://github.com/dxli94/WLASL) dataset is also needed move it to asl2en/dataset,
 where inside it has wlasl_dataset, or simply has this structure
 asl2en/dataset/wlasl_dataset
+-->
+The `GLASL` dataset get it and put it on `C:\path\to\asl2en\dataset\glasl` or
+on `/path/to/asl2en/dataset/glasl`.
 
 
 create a python environment
@@ -67,6 +67,10 @@ pip install tensorflow
 pip install opencv-python
 pip install mediapipe
 ```
+then do
+```bash
+pip install -r .requirements.txt
+```
 
 
 to get the latest pip version
@@ -75,8 +79,18 @@ pip install --upgrade pip
 ```
 
 
+---
+Testing the model v30, latest best model
 now test( please use **`bash`** to run this )
 ```bash
-python -m src_asl2gloss.test_model.model_v22
+python -m src_asl2gloss.test_model.model_v30
 ```
+<br><br><br>
 
+
+---
+do live test
+
+```bash
+python -m src_asl2gloss.test_model.test_live_via_camera
+```
