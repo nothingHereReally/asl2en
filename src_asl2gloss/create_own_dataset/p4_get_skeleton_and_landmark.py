@@ -140,8 +140,8 @@ def part3_zoomInOutForPadding(landmarks: list[tuple[float, float]]) -> list[tupl
     # pad: float= 0.05
     pad: float= 4.0/158.0
     # xs, ys = zip(*landmarks)
-    xs= list(map(lambda el: el[0], landmarks))
-    ys= list(map(lambda el: el[1], landmarks))
+    xs: list= list(map(lambda el: el[0], landmarks))
+    ys: list= list(map(lambda el: el[1], landmarks))
     xs= list(filter(lambda el: el!=0, xs))
     ys= list(filter(lambda el: el!=0, ys))
     min_x, min_y=    min(xs), min(ys)
@@ -159,8 +159,8 @@ def part4_centerLandmarkVerticallyHorizontally(landmarks: list[tuple[float, floa
     # center horizontally and vertically, since done padding then just
     # move to right/down
     # xs, ys = zip(*landmarks)
-    xs= list(map(lambda el: el[0], landmarks))
-    ys= list(map(lambda el: el[1], landmarks))
+    xs: list= list(map(lambda el: el[0], landmarks))
+    ys: list= list(map(lambda el: el[1], landmarks))
     xs= list(filter(lambda el: el!=0, xs))
     ys= list(filter(lambda el: el!=0, ys))
     shift_x: float=  0.5    -(min(xs) +max(xs))  /2
@@ -270,11 +270,10 @@ def drawSkeletonImg(image: ndarray, \
             del pB
     return image
 def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tuple:
-    landmark__face_pose_left_right_hand: ndarray|list= zeros((
+    landmark__face_pose_left_right_hand: list= zeros((
         len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +(QUANTITY_HAND_LMARK*2),
         2
-    ), dtype=float32)
-    landmark__face_pose_left_right_hand= landmark__face_pose_left_right_hand.tolist()
+    ), dtype=float32).tolist()
     if lmark_mph.face_landmarks!=None \
         or lmark_mph.pose_landmarks!=None \
         or lmark_mph.left_hand_landmarks!=None \
