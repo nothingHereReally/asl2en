@@ -3,8 +3,9 @@ from os.path import exists
 from pathlib import Path
 
 
-PROJ_ROOT= Path(__file__).resolve().parent.parent.parent
-VIDEO_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"video"
+PROJ_ROOT: Path= Path(__file__).resolve().parent.parent.parent
+GLASL_DIR: Path= PROJ_ROOT /"dataset" /"glasl"
+VIDEO_DIR: Path= GLASL_DIR /"video"
 T_TRAIN: str= "train"
 T_VAL: str= "val"
 T_TEST: str= "test"
@@ -71,7 +72,7 @@ def main() -> None:
     print("all videos on dataset glasl Exists")
 
 
-    with open(f"{PROJ_ROOT /"src_asl2gloss" /"create_own_dataset" /"glasl.annotation.clean.json"}", "w") as f:
+    with open(f"{GLASL_DIR /"glasl.annotation.clean.json"}", "w") as f:
         savejson(glasl, f, indent=4)
 
 if __name__=="__main__":
