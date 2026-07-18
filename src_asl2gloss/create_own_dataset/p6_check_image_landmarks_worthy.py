@@ -135,7 +135,7 @@ MPH_fph: Holistic= Holistic(
 
 
 
-def isOKplt(coord: tuple[float, float]) -> bool:
+def isOkPlot(coord: tuple[float, float]) -> bool:
     '''
     x and y coordinates
     mandatory be greater than or equal to Zero
@@ -162,7 +162,7 @@ def drawSkeletonImg(image: ndarray, \
                 lmark_coordinates[  lmark_idx_pair[1]  ][0], # x
                 lmark_coordinates[  lmark_idx_pair[1]  ][1]  # y
             )
-            if isOKplt(pA) and isOKplt(pB):
+            if isOkPlot(pA) and isOkPlot(pB):
                 if color_dot!=None:
                     circle(
                         img=image,
