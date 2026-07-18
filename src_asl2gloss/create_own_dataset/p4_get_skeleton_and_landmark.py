@@ -279,7 +279,7 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
         or lmark_mph.pose_landmarks!=None \
         or lmark_mph.left_hand_landmarks!=None \
         or lmark_mph.right_hand_landmarks!=None:
-        landmark__face_pose_left_right_hand= []
+        landmark__face_pose_left_right_hand= list()
         # here possible -2.0<= i[1].x <=2.0, mostly on pose
         # here possible -2.0<= i[1].y <=2.0, mostly on pose
         # that's why next force be 0.0<= all <=1.0
