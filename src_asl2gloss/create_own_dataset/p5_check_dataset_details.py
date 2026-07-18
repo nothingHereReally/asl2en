@@ -98,7 +98,7 @@ def mandatory3exist(clean_file: Path, landmark_file: Path, skeleton_file: Path) 
         raise FileNotFoundError(f"file doesn't exist {skeleton_file}")
 
 
-if __name__=='__main__':
+def main():
     glasl_clean: dict= {}
     glasl_landmark: dict= {}
     glasl_skeleton: dict= {}
@@ -133,3 +133,7 @@ if __name__=='__main__':
         print( "<< ------------------------------------------------------------------ >>")
         print(f"-- passed: all have same quantity of video on clean/landmark/skeleton --")
         print( "<< ------------------------------------------------------------------ >>")
+
+
+if __name__=='__main__':
+    main()
