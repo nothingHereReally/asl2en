@@ -253,6 +253,8 @@ def part3_zoomInOutForPadding(landmarks: list[tuple[float, float]]) -> list[tupl
     ys: list= list(map(lambda el: el[1], landmarks))
     xs= list(filter(lambda el: el!=0, xs))
     ys= list(filter(lambda el: el!=0, ys))
+    if len(xs)==0 or len(ys)==0:
+        return landmarks
     min_x, min_y=    min(xs), min(ys)
     max_x, max_y=    max(xs), max(ys)
     scale: float= (1  -2*pad)/max(
@@ -272,6 +274,8 @@ def part4_centerLandmarkVerticallyHorizontally(landmarks: list[tuple[float, floa
     ys: list= list(map(lambda el: el[1], landmarks))
     xs= list(filter(lambda el: el!=0, xs))
     ys= list(filter(lambda el: el!=0, ys))
+    if len(xs)==0 or len(ys)==0:
+        return landmarks
     shift_x: float=  0.5    -(min(xs) +max(xs))  /2
     shift_y: float=  0.5    -(min(ys) +max(ys))  /2
 
