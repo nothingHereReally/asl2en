@@ -181,63 +181,66 @@ def get_landmark4greater(a_raw_video: dict) -> list:
     return get_landmark4less_or_equal(copy_a_raw_video, 0)
 
 
-def drawSkeletonImg(img_orig: ndarray, \
-                    lmark_cords: tuple, \
-                    conn_idxs_list: tuple, \
+def isOkPlot(coord: tuple) -> bool:
+    # x and y coordinates
+    # mandatory be greater than or equal to Zero
+    # and less than or equal to One
+    return coord[0]<=1.0 and coord[1]<=1.0 and 0.0<=coord[0] and 0.0<=coord[1]
+def drawSkeletonImg(image: ndarray, \
+                    lmark_coordinates: tuple, \
+                    connections_idxs: tuple, \
                     thick: int=2, \
-                    color_conn: tuple=(255,0,255), \
-                    color_lmark: tuple=(255,255,0), \
-                    drawJoint: bool=True) -> ndarray:
-    def isOKplt(coord: tuple) -> bool:
-        # x and y coordinates
-        # mandatory be greater than or equal to Zero
-        # and less than or equal to One
-        return coord[0]<=1.0 and coord[1]<=1.0 and 0.0<=coord[0] and 0.0<=coord[1]
-    img: ndarray= img_orig.copy()
-    img_wh: dict= {"wx": img.shape[1], "hy": img.shape[0]}
+                    color_line: tuple|None=None, \
+                    color_dot: tuple|None=None) -> ndarray:
+    img_wh: dict= {"wx": image.shape[1], "hy": image.shape[0]}
 
 
     # drawing the lines between 2 landmark connections
-    for l in conn_idxs_list:
-        pA: tuple= (
-            lmark_cords[  l[0]  ][0], # x
-            lmark_cords[  l[0]  ][1]  # y
-        )
-        pB: tuple= (
-            lmark_cords[  l[1]  ][0], # x
-            lmark_cords[  l[1]  ][1]  # y
-        )
-        if isOKplt(pA) and isOKplt(pB):
-            line(
-                img=img,
-                pt1=(int(pA[0]*img_wh['wx']), int(pA[1]*img_wh['hy'])),
-                pt2=(int(pB[0]*img_wh['wx']), int(pB[1]*img_wh['hy'])),
-                color=color_conn,
-                thickness=thick
+    if color_line!=None or color_dot!=None:
+        for lmark_idx_pair in connections_idxs:
+            pA: tuple= (
+                lmark_coordinates[  lmark_idx_pair[0]  ][0], # x
+                lmark_coordinates[  lmark_idx_pair[0]  ][1]  # y
             )
-        else:
-            raise ValueError("Has landmark_coordinate<0.0 or 1.0<landmark_coordinate which is not allowed, it should be 0.0<= landmark_coordinate <=1.0")
-        del pA
-        del pB
-
-
-    # drawing joints as cricles
-    if drawJoint:
-        for o in lmark_cords:
-            if isOKplt(o):
-                circle(
-                    img=img,
-                    center=(
-                        int(o[0]*img_wh['wx']),
-                        int(o[1]*img_wh['hy'])
-                    ),
-                    radius=0,
-                    color=color_lmark,
-                    thickness=thick*2
-                )
+            pB: tuple= (
+                lmark_coordinates[  lmark_idx_pair[1]  ][0], # x
+                lmark_coordinates[  lmark_idx_pair[1]  ][1]  # y
+            )
+            if isOkPlot(pA) and isOkPlot(pB):
+                if color_dot!=None:
+                    circle(
+                        img=image,
+                        center=(
+                            int(pA[0]*img_wh['wx']),
+                            int(pA[1]*img_wh['hy'])
+                        ),
+                        radius=0,
+                        color=color_dot,
+                        thickness=thick*2
+                    )
+                    circle(
+                        img=image,
+                        center=(
+                            int(pB[0]*img_wh['wx']),
+                            int(pB[1]*img_wh['hy'])
+                        ),
+                        radius=0,
+                        color=color_dot,
+                        thickness=thick*2
+                    )
+                if color_line!=None:
+                    line(
+                        img=image,
+                        pt1=(int(pA[0]*img_wh['wx']), int(pA[1]*img_wh['hy'])),
+                        pt2=(int(pB[0]*img_wh['wx']), int(pB[1]*img_wh['hy'])),
+                        color=color_line,
+                        thickness=thick
+                    )
             else:
-                raise ValueError("Has landmark_coordinate<0.0 or 1.0<landmark_coordinate which is not allowed, it should be 0.0<= landmark_coordinate <=1.0")
-    return img
+                raise NotImplementedError("Has landmark_coordinate<0.0 or 1.0<landmark_coordinate which is not allowed, it should be 0.0<= landmark_coordinate <=1.0, on both x and y coordinates")
+            del pA
+            del pB
+    return image
 def drawFacePoseHand(
         img_write_to: ndarray,
         landmark_numpy: ndarray,
@@ -246,46 +249,6 @@ def drawFacePoseHand(
         has_left_hand: bool,
         has_right_hand: bool
     ) -> ndarray:
-    def recalcDrawFace(img_orig: ndarray, lmark_face: tuple) -> ndarray:
-        img: ndarray= img_orig.copy()
-        return drawSkeletonImg(
-            img_orig=img,
-            lmark_cords=lmark_face,
-            conn_idxs_list=FACE_CONNECTIONS,
-            thick=1,
-            color_conn=(0, 153, 0), # 153/255= 0.6
-            drawJoint=False
-        )
-    def recalcDrawPose(img_orig: ndarray, lmark_pose: tuple) -> ndarray:
-        img: ndarray= img_orig.copy()
-        return drawSkeletonImg(
-            img_orig=img,
-            lmark_cords=lmark_pose,
-            conn_idxs_list=POSE_CONNECTIONS,
-            thick=1,
-            color_conn=(0, 0, 153), # 153/255= 0.6
-            drawJoint=False
-        )
-    def recalcDrawLeftHands(img_orig: ndarray, lmark_lhand: tuple) -> ndarray:
-        img: ndarray= img_orig.copy()
-        return drawSkeletonImg(
-            img_orig=img,
-            lmark_cords=lmark_lhand,
-            conn_idxs_list=HAND_CONNECTIONS,
-            thick=1,
-            color_conn=(255, 255, 255),
-            drawJoint=False
-        )
-    def recalcDrawRightHands(img_orig: ndarray, lmark_rhand: tuple) -> ndarray:
-        img: ndarray= img_orig.copy()
-        return drawSkeletonImg(
-            img_orig=img,
-            lmark_cords=lmark_rhand,
-            conn_idxs_list=HAND_CONNECTIONS,
-            thick=1,
-            color_conn=(204, 204, 204), # 204/255= 0.8
-            drawJoint=False
-        )
     # lmark_fph.face_landmarks.landmark
     # lmark_fph.pose_landmarks.landmark
     # lmark_fph.left_hand_landmarks.landmark
@@ -317,16 +280,44 @@ def drawFacePoseHand(
     quantity_lm_pose: int= len(WORTHY_POSE_IDX)
     if has_face:
         # print(f"{array(landmark_numpy[:len(WORTHY_FACE_IDX)]).shape}")
-        img_write_to= recalcDrawFace(img_write_to, tuple(landmark_numpy.tolist()[:quantity_lm_face]))
+        img_write_to= drawSkeletonImg(
+            image=img_write_to,
+            lmark_coordinates=tuple(landmark_numpy.tolist()[:quantity_lm_face]),
+            connections_idxs=FACE_CONNECTIONS,
+            thick=1,
+            color_line=(0, 153, 0), # 153/255= 0.6
+            color_dot=None,
+        )
     if has_pose:
         # print(f"{array(landmark_numpy[len(WORTHY_FACE_IDX):len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX)]).shape}")
-        img_write_to= recalcDrawPose(img_write_to, tuple(landmark_numpy.tolist()[quantity_lm_face:quantity_lm_face+quantity_lm_pose]))
+        img_write_to= drawSkeletonImg(
+            image=img_write_to,
+            lmark_coordinates=tuple(landmark_numpy.tolist()[quantity_lm_face:quantity_lm_face+quantity_lm_pose]),
+            connections_idxs=POSE_CONNECTIONS,
+            thick=1,
+            color_line=(0, 0, 153), # 153/255= 0.6
+            color_dot=None,
+        )
     if has_left_hand:
         # print(f"{array(landmark_numpy[len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX):len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX)+21]).shape}")
-        img_write_to= recalcDrawLeftHands(img_write_to, tuple(landmark_numpy.tolist()[quantity_lm_face+quantity_lm_pose:quantity_lm_face+quantity_lm_pose+21]))
+        img_write_to= drawSkeletonImg(
+            image=img_write_to,
+            lmark_coordinates=tuple(landmark_numpy.tolist()[quantity_lm_face+quantity_lm_pose:quantity_lm_face+quantity_lm_pose+21]),
+            connections_idxs=HAND_CONNECTIONS,
+            thick=1,
+            color_line=(255, 255, 255),
+            color_dot=None,
+        )
     if has_right_hand:
         # print(f"{array(landmark_numpy[-21:]).shape}")
-        img_write_to= recalcDrawRightHands(img_write_to, tuple(landmark_numpy.tolist()[-21:]))
+        img_write_to= drawSkeletonImg(
+            image=img_write_to,
+            lmark_coordinates=tuple(landmark_numpy.tolist()[-21:]),
+            connections_idxs=HAND_CONNECTIONS,
+            thick=1,
+            color_line=(204, 204, 204), # 204/255= 0.8
+            color_dot=None,
+        )
 
     return img_write_to
 
