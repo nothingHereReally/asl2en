@@ -74,5 +74,5 @@ def main() -> None:
     with open(f"{PROJ_ROOT /"src_asl2gloss" /"create_own_dataset" /"glasl.annotation.clean.json"}", "w") as f:
         savejson(glasl, f, indent=4)
 
-
-main()
+if __name__=="__main__":
+    main()
