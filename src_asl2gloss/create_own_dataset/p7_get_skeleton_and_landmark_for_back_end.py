@@ -367,7 +367,7 @@ def init_vars() -> tuple:
     return (glasl_clean_landmark, glasl_LANDMARK)
 
 
-if __name__=='__main__':
+def main():
     mandatory_all_2_notExist()
     glasl_c_landmark, glasl_LANDMARK= init_vars()
 
@@ -428,3 +428,7 @@ if __name__=='__main__':
                 })
     with open(f"{GLASL_DIR /"glasl.annotation.image_landmark.json"}", 'w') as f:
         jsonsave(glasl_LANDMARK, f, indent=4)
+
+
+if __name__=='__main__':
+    main()
