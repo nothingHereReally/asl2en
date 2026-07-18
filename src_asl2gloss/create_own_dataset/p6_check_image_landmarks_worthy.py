@@ -911,7 +911,7 @@ def drawFacePoseHand(lmark_mph, original_shape: tuple) -> tuple:
     )
 
 
-if __name__=='__main__':
+def main():
     if exists(WHOLE_BODY_FILE_PATH):
         image_origin= imread(str(WHOLE_BODY_FILE_PATH))
         image_origin= cvtColor(src=image_origin, code=COLOR_BGR2RGB).copy()
@@ -1042,3 +1042,7 @@ if __name__=='__main__':
         print(f"images at {folder_dir}")
     else:
         print(f"file does not exist: {WHOLE_BODY_FILE_PATH}")
+
+
+if __name__=='__main__':
+    main()
