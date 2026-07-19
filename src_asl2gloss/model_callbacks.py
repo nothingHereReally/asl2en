@@ -28,4 +28,3 @@ tf_board: TensorBoard= TensorBoard(
     write_steps_per_second=False,
     update_freq='epoch'
 )
-
