@@ -20,9 +20,7 @@ from .model_layers import data_in, data_out
 from .model_callbacks import d_lr, sTraining, tf_board
 
 
-    
-
-if __name__=="__main__":
+def main():
     model: Model= Model(
         inputs=data_in,
         outputs=data_out
@@ -45,3 +43,7 @@ if __name__=="__main__":
     model_file_name: str= "aslvid2gloss_v37.keras"
     print(f"model( --> {model_file_name} <-- ) quantity of outputs {model.output_shape[-1]}")
     model.save(f"{PROJ_ROOT /"model" /model_file_name}")
+
+
+if __name__=="__main__":
+    main()

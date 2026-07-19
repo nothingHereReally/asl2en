@@ -75,6 +75,7 @@ HAND_CONNECTIONS: tuple= (
     (13, 14), (14, 15), (15, 16),     # ring finger connections
     (17, 18), (18, 19), (19, 20)      # pinky finger connections
 )
+QUANTITY_HAND_LMARK: int= 21
 # ---- contants end ------
 # ------------------------
 # ------------------------
@@ -82,107 +83,102 @@ HAND_CONNECTIONS: tuple= (
 
 
 
-def drawSkeletonImg(img_orig: ndarray, \
-                    lmark_cords: tuple, \
-                    conn_idxs_list: tuple, \
-                    thick: int=2, \
-                    color_conn: tuple=(255,0,255), \
-                    color_lmark: tuple=(255,255,0), \
-                    drawJoint: bool=True) -> ndarray:
-    def isOKplt(coord: tuple) -> bool:
-        # x and y coordinates
-        # mandatory be greater than or equal to Zero
-        # and less than or equal to One
-        return coord[0]<=1.0 and coord[1]<=1.0 and 0.0<=coord[0] and 0.0<=coord[1]
-    img: ndarray= img_orig.copy()
-    img_wh: dict= {"wx": img.shape[1], "hy": img.shape[0]}
+def isOkPlot(coord: tuple) -> bool:
+    # x and y coordinates
+    # mandatory be greater than or equal to Zero
+    # and less than or equal to One
+    return coord[0]<=1.0 and coord[1]<=1.0 and 0.0<=coord[0] and 0.0<=coord[1]
+def part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    # xs, ys= zip(*landmarks)
+    xs= list(map(lambda el: el[0], landmarks))
+    ys= list(map(lambda el: el[1], landmarks))
+    min_x, min_y= min(xs), min(ys)
+    xNeedForward: bool= min_x<0.0
+    yNeedForward: bool= min_y<0.0
+    if xNeedForward or yNeedForward:
+        landmarks= [(
+            x -min_x    if xNeedForward    else x,
+            y -min_y    if yNeedForward    else y
+        ) for x, y in landmarks]
+    del xs, ys, min_x, min_y, xNeedForward, yNeedForward
 
+    max_xy: float= max(
+        max(x for x, _ in landmarks),
+        max(y for _, y in landmarks)
+    )
+    if max_xy>1:
+        landmarks= [(
+            x/max_xy,
+            y/max_xy
+        ) for x, y in landmarks]
 
-    # drawing the lines between 2 landmark connections
-    for l in conn_idxs_list:
-        pA: tuple= (
-            lmark_cords[  l[0]  ][0], # x
-            lmark_cords[  l[0]  ][1]  # y
-        )
-        pB: tuple= (
-            lmark_cords[  l[1]  ][0], # x
-            lmark_cords[  l[1]  ][1]  # y
-        )
-        if isOKplt(pA) and isOKplt(pB):
-            line(
-                img=img,
-                pt1=(int(pA[0]*img_wh['wx']), int(pA[1]*img_wh['hy'])),
-                pt2=(int(pB[0]*img_wh['wx']), int(pB[1]*img_wh['hy'])),
-                color=color_conn,
-                thickness=thick
-            )
-        else:
-            raise ValueError("Has landmark_coordinate<0.0 or 1.0<landmark_coordinate which is not allowed, it should be 0.0<= landmark_coordinate <=1.0")
-        del pA
-        del pB
+    return landmarks
+def part2_beSquareRatioOnImage(landmarks: list[tuple[float, float]], original_shape: tuple[int, int]) -> list[tuple[float, float]]:
+    height, width= original_shape
+    if height==width:
+        return landmarks
 
+    if width<height: # portrait, change2withRespect2Height
+        scale: float= width/height
+        return [(
+            x*scale,
+            y
+        ) for x, y in landmarks]
 
-    # drawing joints as cricles
-    if drawJoint:
-        for o in lmark_cords:
-            if isOKplt(o):
-                circle(
-                    img=img,
-                    center=(
-                        int(o[0]*img_wh['wx']),
-                        int(o[1]*img_wh['hy'])
-                    ),
-                    radius=0,
-                    color=color_lmark,
-                    thickness=thick*2
-                )
-            else:
-                raise ValueError("Has landmark_coordinate<0.0 or 1.0<landmark_coordinate which is not allowed, it should be 0.0<= landmark_coordinate <=1.0")
-    return img
-def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tuple:
-    def recalcDrawFace(img_orig: ndarray, lmark_face: tuple) -> ndarray:
-        img: ndarray= img_orig.copy()
-        return drawSkeletonImg(
-            img_orig=img,
-            lmark_cords=lmark_face,
-            conn_idxs_list=FACE_CONNECTIONS,
-            thick=1,
-            color_conn=(0, 153, 0), # 153/255= 0.6
-            drawJoint=False
-        )
-    def recalcDrawPose(img_orig: ndarray, lmark_pose: tuple) -> ndarray:
-        img: ndarray= img_orig.copy()
-        return drawSkeletonImg(
-            img_orig=img,
-            lmark_cords=lmark_pose,
-            conn_idxs_list=POSE_CONNECTIONS,
-            thick=1,
-            color_conn=(0, 0, 153), # 153/255= 0.6
-            drawJoint=False
-        )
-    def recalcDrawLeftHands(img_orig: ndarray, lmark_lhand: tuple) -> ndarray:
-        img: ndarray= img_orig.copy()
-        return drawSkeletonImg(
-            img_orig=img,
-            lmark_cords=lmark_lhand,
-            conn_idxs_list=HAND_CONNECTIONS,
-            thick=1,
-            color_conn=(255, 255, 255),
-            drawJoint=False
-        )
-    def recalcDrawRightHands(img_orig: ndarray, lmark_rhand: tuple) -> ndarray:
-        img: ndarray= img_orig.copy()
-        return drawSkeletonImg(
-            img_orig=img,
-            lmark_cords=lmark_rhand,
-            conn_idxs_list=HAND_CONNECTIONS,
-            thick=1,
-            color_conn=(204, 204, 204), # 204/255= 0.8
-            drawJoint=False
-        )
-    img: ndarray= img_write_to.copy()
+    # landscape, change2withRespect2Width
+    scale: float= height/width
+    return [(
+        x,
+        y*scale
+    ) for x, y in landmarks]
+def part3_zoomInOutForPadding(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    ### 2) zoom in/out with padding 0.05 each side( with respecting orig aspect ratio )
+    # zoom in/out for padding be 10% each side with respect to original aspect ratio
+    # ie.:
+    # ---- top/bottom pad 0.02, leftSide( fromPerspectiveOfSomeoneReadingThis ) pad 0.02: if wx < hy
+    # ---- top pad 0.02, leftSide/right pad 0.02: if hy < wx
+    # pad: float= 0.05
+    pad: float= 4.0/158.0
+    # xs, ys = zip(*landmarks)
+    xs: list= list(map(lambda el: el[0], landmarks))
+    ys: list= list(map(lambda el: el[1], landmarks))
+    xs= list(filter(lambda el: el!=0, xs))
+    ys= list(filter(lambda el: el!=0, ys))
+    if len(xs)==0 or len(ys)==0:
+        return landmarks
+    min_x, min_y=    min(xs), min(ys)
+    max_x, max_y=    max(xs), max(ys)
+    scale: float= (1  -2*pad)/max(
+        max_x -min_x,
+        max_y -min_y
+    )
+    return [(
+        (x -min_x)    *scale    +pad  if x!=0 else x,
+        (y -min_y)    *scale    +pad  if y!=0 else y
+    ) for x, y in landmarks]
+def part4_centerLandmarkVerticallyHorizontally(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    ### 3) center landmark with same aspect ratio as original
+    # center horizontally and vertically, since done padding then just
+    # move to right/down
+    # xs, ys = zip(*landmarks)
+    xs: list= list(map(lambda el: el[0], landmarks))
+    ys: list= list(map(lambda el: el[1], landmarks))
+    xs= list(filter(lambda el: el!=0, xs))
+    ys= list(filter(lambda el: el!=0, ys))
+    if len(xs)==0 or len(ys)==0:
+        return landmarks
+    shift_x: float=  0.5    -(min(xs) +max(xs))  /2
+    shift_y: float=  0.5    -(min(ys) +max(ys))  /2
 
-
+    return [(
+        x +shift_x  if x!=0 else x,
+        y +shift_y  if y!=0 else y
+    ) for x, y in landmarks]
+def normalizeLandmarks(landmarks: list[tuple[float, float]], original_shape: tuple) -> list[tuple[float, float]]:
+    '''
+    landmarks is an array eg. of shape (86, 2)
+    original_shape is tuple (HEIGHT, WIDTH)
+    '''
     # lmark_fph.face_landmarks.landmark
     # lmark_fph.pose_landmarks.landmark
     # lmark_fph.left_hand_landmarks.landmark
@@ -210,316 +206,176 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
     #         b) min_wx_hy as mn; max_wx_hy as mx
     #         c) if mn is wx, all X +( (mx-mn)/(mx*2) )
     #         d) if mn is hy, all Y +( (mx-mn)/(mx*2) )
-    landmark__face_pose_left_right_hand= zeros(((36+8+(21*2)), 2), dtype=float32)
-    landmark__face_pose_left_right_hand= landmark__face_pose_left_right_hand.tolist()
+    assert 1<len(original_shape) # incorrect use of normalizeLandmarks(...), mandatory 1<len(original_shape)
+    assert len(landmarks)==len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX)+QUANTITY_HAND_LMARK*2
+    landmarks= part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(landmarks)
+    landmarks= part2_beSquareRatioOnImage(
+        landmarks,
+        (original_shape[0], original_shape[1])
+    )
+    landmarks= part3_zoomInOutForPadding(landmarks)
+    landmarks= part4_centerLandmarkVerticallyHorizontally(landmarks)
+
+
+    return landmarks
+def drawSkeletonImg(image: ndarray, \
+                    lmark_coordinates: list, \
+                    connections_idxs: tuple, \
+                    thick: int=2, \
+                    color_line: tuple|None=None, \
+                    color_dot: tuple|None=None) -> ndarray:
+    img_wh: dict= {"wx": image.shape[1], "hy": image.shape[0]}
+
+
+    # drawing the lines between 2 landmark connections
+    if color_line!=None or color_dot!=None:
+        for lmark_idx_pair in connections_idxs:
+            pA: tuple= (
+                lmark_coordinates[  lmark_idx_pair[0]  ][0], # x
+                lmark_coordinates[  lmark_idx_pair[0]  ][1]  # y
+            )
+            pB: tuple= (
+                lmark_coordinates[  lmark_idx_pair[1]  ][0], # x
+                lmark_coordinates[  lmark_idx_pair[1]  ][1]  # y
+            )
+            if isOkPlot(pA) and isOkPlot(pB):
+                if color_dot!=None:
+                    circle(
+                        img=image,
+                        center=(
+                            int(pA[0]*img_wh['wx']),
+                            int(pA[1]*img_wh['hy'])
+                        ),
+                        radius=0,
+                        color=color_dot,
+                        thickness=thick*2
+                    )
+                    circle(
+                        img=image,
+                        center=(
+                            int(pB[0]*img_wh['wx']),
+                            int(pB[1]*img_wh['hy'])
+                        ),
+                        radius=0,
+                        color=color_dot,
+                        thickness=thick*2
+                    )
+                if color_line!=None:
+                    line(
+                        img=image,
+                        pt1=(int(pA[0]*img_wh['wx']), int(pA[1]*img_wh['hy'])),
+                        pt2=(int(pB[0]*img_wh['wx']), int(pB[1]*img_wh['hy'])),
+                        color=color_line,
+                        thickness=thick
+                    )
+            else:
+                raise NotImplementedError("Has landmark_coordinate<0.0 or 1.0<landmark_coordinate which is not allowed, it should be 0.0<= landmark_coordinate <=1.0, on both x and y coordinates")
+            del pA
+            del pB
+    return image
+def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tuple:
+    landmark__face_pose_left_right_hand: list= zeros((
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +(QUANTITY_HAND_LMARK*2),
+        2
+    ), dtype=float32).tolist()
     if lmark_mph.face_landmarks!=None \
         or lmark_mph.pose_landmarks!=None \
         or lmark_mph.left_hand_landmarks!=None \
         or lmark_mph.right_hand_landmarks!=None:
-        recalc_lmark_face= []
-        recalc_lmark_pose= []
-        recalc_lmark_left_hand= []
-        recalc_lmark_right_hand= []
-        all_x= []
-        all_y= []
+        landmark__face_pose_left_right_hand= list()
         # here possible -2.0<= i[1].x <=2.0, mostly on pose
         # here possible -2.0<= i[1].y <=2.0, mostly on pose
         # that's why next force be 0.0<= all <=1.0
+
+        # ---- face landmarks ----
         if lmark_mph.face_landmarks != None:
-            for i in enumerate(lmark_mph.face_landmarks.landmark):
-                if int(i[0]) in WORTHY_FACE_IDX:
-                    recalc_lmark_face.append((  (i[1]).x, (i[1]).y  ))
-                    all_x.append( (i[1]).x )
-                    all_y.append( (i[1]).y )
+            for idx, el in enumerate(lmark_mph.face_landmarks.landmark):
+                if idx in WORTHY_FACE_IDX:
+                    landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
+        else:
+            landmark__face_pose_left_right_hand.extend(zeros((len(WORTHY_FACE_IDX), 2)).tolist())
+
+        # ---- pose landmarks ----
         if lmark_mph.pose_landmarks != None:
-            for i in enumerate(lmark_mph.pose_landmarks.landmark):
-                if int(i[0]) in WORTHY_POSE_IDX:
-                    recalc_lmark_pose.append((  (i[1]).x, (i[1]).y  ))
-                    all_x.append( (i[1]).x )
-                    all_y.append( (i[1]).y )
+            for idx, el in enumerate(lmark_mph.pose_landmarks.landmark):
+                if idx in WORTHY_POSE_IDX:
+                    landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
+        else:
+            landmark__face_pose_left_right_hand.extend(zeros((len(WORTHY_POSE_IDX), 2)).tolist())
+
+        # ---- left hand landmarks ----
         if lmark_mph.left_hand_landmarks != None:
-            for i in enumerate(lmark_mph.left_hand_landmarks.landmark):
-                recalc_lmark_left_hand.append((  (i[1]).x, (i[1]).y  ))
-                all_x.append( (i[1]).x )
-                all_y.append( (i[1]).y )
+            for el in lmark_mph.left_hand_landmarks.landmark:
+                landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
+        else:
+            landmark__face_pose_left_right_hand.extend(zeros((QUANTITY_HAND_LMARK, 2)).tolist())
+
+        # ---- right hand landmarks ----
         if lmark_mph.right_hand_landmarks != None:
-            for i in enumerate(lmark_mph.right_hand_landmarks.landmark):
-                recalc_lmark_right_hand.append((  (i[1]).x, (i[1]).y  ))
-                all_x.append( (i[1]).x )
-                all_y.append( (i[1]).y )
-        all_x= tuple(all_x)
-        all_y= tuple(all_y)
-        min_x= float(min(all_x))
-        min_y= float(min(all_y))
+            for el in lmark_mph.right_hand_landmarks.landmark:
+                landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
+        else:
+            landmark__face_pose_left_right_hand.extend(zeros((QUANTITY_HAND_LMARK, 2)).tolist())
 
 
-        ### 0) all coords be greater than|= 0.0 and less than|= 1.0
-        # force all be greater than or = to 0.0, ie. move right/down
-        if min_x<0.0: # move right
-            all_x= []
-            if 0<len(recalc_lmark_face):
-                recalc_lmark_face= [(i[0]+abs(min_x), i[1])
-                                    for i in recalc_lmark_face]
-                all_x.extend([i[0] for i in recalc_lmark_face])
-            if 0<len(recalc_lmark_pose):
-                recalc_lmark_pose= [(i[0]+abs(min_x), i[1])
-                                    for i in recalc_lmark_pose]
-                all_x.extend([i[0] for i in recalc_lmark_pose])
-            if 0<len(recalc_lmark_left_hand):
-                recalc_lmark_left_hand= [(i[0]+abs(min_x), i[1])
-                                    for i in recalc_lmark_left_hand]
-                all_x.extend([i[0] for i in recalc_lmark_left_hand])
-            if 0<len(recalc_lmark_right_hand):
-                recalc_lmark_right_hand= [(i[0]+abs(min_x), i[1])
-                                    for i in recalc_lmark_right_hand]
-                all_x.extend([i[0] for i in recalc_lmark_right_hand])
-            min_x= 0.0
-            all_x= tuple(all_x)
-        if min_y<0.0: # move down
-            all_y= []
-            if 0<len(recalc_lmark_face):
-                recalc_lmark_face= [(i[0], i[1]+abs(min_y))
-                                    for i in recalc_lmark_face]
-                all_y.extend([i[1] for i in recalc_lmark_face])
-            if 0<len(recalc_lmark_pose):
-                recalc_lmark_pose= [(i[0], i[1]+abs(min_y))
-                                    for i in recalc_lmark_pose]
-                all_y.extend([i[1] for i in recalc_lmark_pose])
-            if 0<len(recalc_lmark_left_hand):
-                recalc_lmark_left_hand= [(i[0], i[1]+abs(min_y))
-                                    for i in recalc_lmark_left_hand]
-                all_y.extend([i[1] for i in recalc_lmark_left_hand])
-            if 0<len(recalc_lmark_right_hand):
-                recalc_lmark_right_hand= [(i[0], i[1]+abs(min_y))
-                                    for i in recalc_lmark_right_hand]
-                all_y.extend([i[1] for i in recalc_lmark_right_hand])
-            min_y= 0.0
-            all_y= tuple(all_y)
-        # force all be less than or = to 1.0
-        # makes maximum be 1.0, due to max/max= 1.0
-        max_xy= max([float(max(all_x)), float(max(all_y))])
-        if 1.0<max_xy:
-            all_x= []
-            all_y= []
-            if 0<len(recalc_lmark_face):
-                recalc_lmark_face= [(i[0]/max_xy, i[1]/max_xy)
-                                    for i in recalc_lmark_face]
-                all_x.extend([i[0] for i in recalc_lmark_face])
-                all_y.extend([i[1] for i in recalc_lmark_face])
-            if 0<len(recalc_lmark_pose):
-                recalc_lmark_pose= [(i[0]/max_xy, i[1]/max_xy)
-                                    for i in recalc_lmark_pose]
-                all_x.extend([i[0] for i in recalc_lmark_pose])
-                all_y.extend([i[1] for i in recalc_lmark_pose])
-            if 0<len(recalc_lmark_left_hand):
-                recalc_lmark_left_hand= [(i[0]/max_xy, i[1]/max_xy)
-                                    for i in recalc_lmark_left_hand]
-                all_x.extend([i[0] for i in recalc_lmark_left_hand])
-                all_y.extend([i[1] for i in recalc_lmark_left_hand])
-            if 0<len(recalc_lmark_right_hand):
-                recalc_lmark_right_hand= [(i[0]/max_xy, i[1]/max_xy)
-                                    for i in recalc_lmark_right_hand]
-                all_x.extend([i[0] for i in recalc_lmark_right_hand])
-                all_y.extend([i[1] for i in recalc_lmark_right_hand])
-            all_x= tuple(all_x)
-            all_y= tuple(all_y)
-            min_x= min(all_x)
-            min_y= min(all_y)
-        del max_xy
+        landmark__face_pose_left_right_hand= normalizeLandmarks(
+            landmark__face_pose_left_right_hand,
+            orig_shape
+        )
 
 
-        ### 1) from old img ratio to new ratio(ie. square img )
-        # remap coords( x,y ) to rescale( same ratio as orig ) on square
-        # and also center orig img to New img sqaure
-        if orig_shape[0]!=orig_shape[1]: # else equal, then don't touch it
-            owx: int= int(orig_shape[1])
-            ohy: int= int(orig_shape[0])
-            wx_hy: int= img.shape[0]
-            if owx<ohy: # just overwrite x with respect to now on square
-                all_x= []
-                ccc: float= (wx_hy*owx/ohy)/wx_hy # rescale
-                if 0<len(recalc_lmark_face):
-                    recalc_lmark_face= [(i[0]*ccc, i[1])
-                                        for i in recalc_lmark_face]
-                    all_x.extend([i[0] for i in recalc_lmark_face])
-                if 0<len(recalc_lmark_pose):
-                    recalc_lmark_pose= [(i[0]*ccc, i[1])
-                                        for i in recalc_lmark_pose]
-                    all_x.extend([i[0] for i in recalc_lmark_pose])
-                if 0<len(recalc_lmark_left_hand):
-                    recalc_lmark_left_hand= [(i[0]*ccc, i[1])
-                                        for i in recalc_lmark_left_hand]
-                    all_x.extend([i[0] for i in recalc_lmark_left_hand])
-                if 0<len(recalc_lmark_right_hand):
-                    recalc_lmark_right_hand= [(i[0]*ccc, i[1])
-                                        for i in recalc_lmark_right_hand]
-                    all_x.extend([i[0] for i in recalc_lmark_right_hand])
-                all_x= tuple(all_x)
-                min_x= min(all_x)
-            else: # ohy < owx, just overwrite y with respect to now on square
-                all_y= []
-                ccc: float= (wx_hy*ohy/owx)/wx_hy # rescale
-                if 0<len(recalc_lmark_face):
-                    recalc_lmark_face= [(i[0], i[1]*ccc)
-                                        for i in recalc_lmark_face]
-                    all_y.extend([i[1] for i in recalc_lmark_face])
-                if 0<len(recalc_lmark_pose):
-                    recalc_lmark_pose= [(i[0], i[1]*ccc)
-                                        for i in recalc_lmark_pose]
-                    all_y.extend([i[1] for i in recalc_lmark_pose])
-                if 0<len(recalc_lmark_left_hand):
-                    recalc_lmark_left_hand= [(i[0], i[1]*ccc)
-                                        for i in recalc_lmark_left_hand]
-                    all_y.extend([i[1] for i in recalc_lmark_left_hand])
-                if 0<len(recalc_lmark_right_hand):
-                    recalc_lmark_right_hand= [(i[0], i[1]*ccc)
-                                        for i in recalc_lmark_right_hand]
-                    all_y.extend([i[1] for i in recalc_lmark_right_hand])
-                all_y= tuple(all_y)
-                min_y= min(all_y)
-            del owx
-            del ohy
-            del wx_hy
-
-
-        ### 2) zoom in/out with padding 0.05 each side( with respecting orig aspect ratio )
-        # zoom in/out for padding be 10% each side with respect to original aspect ratio
-        # ie.:
-        # ---- top/bottom pad 0.02, leftSide( fromPerspectiveOfSomeoneReadingThis ) pad 0.02: if wx < hy
-        # ---- top pad 0.02, leftSide/right pad 0.02: if hy < wx
-        # pad: float= 0.05
-        pad: float= 4.0/IMG_SIZE
-        # scale: float= (1.0 -2.0*pad)/max_wy_hy, 0.0< max_wy_hy <=1.0
-        # scale: float= (whole -pad_leftRight_upDown)/max_wy_hy, 0.0< max_wy_hy <=1.0
-        scale: float= (1.0 -2.0*pad)/max((  max(all_x)-min_x, max(all_y)-min_y  ))
-        all_x= []
-        all_y= []
-        if 0<len(recalc_lmark_face):
-            recalc_lmark_face= [((i[0]-min_x)*scale +pad, (i[1]-min_y)*scale +pad)
-                                for i in recalc_lmark_face]
-            all_x.extend([i[0] for i in recalc_lmark_face])
-            all_y.extend([i[1] for i in recalc_lmark_face])
-        if 0<len(recalc_lmark_pose):
-            recalc_lmark_pose= [((i[0]-min_x)*scale +pad, (i[1]-min_y)*scale +pad)
-                                for i in recalc_lmark_pose]
-            all_x.extend([i[0] for i in recalc_lmark_pose])
-            all_y.extend([i[1] for i in recalc_lmark_pose])
-        if 0<len(recalc_lmark_left_hand):
-            recalc_lmark_left_hand= [((i[0]-min_x)*scale +pad, (i[1]-min_y)*scale +pad)
-                                for i in recalc_lmark_left_hand]
-            all_x.extend([i[0] for i in recalc_lmark_left_hand])
-            all_y.extend([i[1] for i in recalc_lmark_left_hand])
-        if 0<len(recalc_lmark_right_hand):
-            recalc_lmark_right_hand= [((i[0]-min_x)*scale +pad, (i[1]-min_y)*scale +pad)
-                                for i in recalc_lmark_right_hand]
-            all_x.extend([i[0] for i in recalc_lmark_right_hand])
-            all_y.extend([i[1] for i in recalc_lmark_right_hand])
-        del pad
-        del scale
-        all_x= tuple(all_x)
-        all_y= tuple(all_y)
-        min_x= min(all_x)
-        min_y= min(all_y)
-
-
-        ### 3) center landmark with same aspect ratio as original
-        # center horizontally and vertically, since done padding then just
-        # move to right/down
-        lm_wx: float= max(all_x)-min_x
-        lm_hy: float= max(all_y)-min_y
-        if lm_wx < lm_hy:
-            # all_x= []
-            shift_x_right= (1.0 -lm_wx) /2.0 -min_x
-            recalc_lmark_face= [(i[0]+shift_x_right, i[1])
-                                for i in recalc_lmark_face]
-            # all_x.extend([i[0] for i in recalc_lmark_face])
-            recalc_lmark_pose= [(i[0]+shift_x_right, i[1])
-                                for i in recalc_lmark_pose]
-            # all_x.extend([i[0] for i in recalc_lmark_pose])
-            recalc_lmark_left_hand= [(i[0]+shift_x_right, i[1])
-                                for i in recalc_lmark_left_hand]
-            # all_x.extend([i[0] for i in recalc_lmark_left_hand])
-            recalc_lmark_right_hand= [(i[0]+shift_x_right, i[1])
-                                for i in recalc_lmark_right_hand]
-            # all_x.extend([i[0] for i in recalc_lmark_right_hand])
-            # all_x= tuple(all_x)
-            # min_x= min(all_x)
-        elif lm_hy < lm_wx:
-            # all_y= []
-            shift_y_down= (1.0 -lm_hy) /2.0 -min_y
-            recalc_lmark_face= [(i[0], i[1]+shift_y_down)
-                                for i in recalc_lmark_face]
-            # all_y.extend([i[1] for i in recalc_lmark_face])
-            recalc_lmark_pose= [(i[0], i[1]+shift_y_down)
-                                for i in recalc_lmark_pose]
-            # all_y.extend([i[1] for i in recalc_lmark_pose])
-            recalc_lmark_left_hand= [(i[0], i[1]+shift_y_down)
-                                for i in recalc_lmark_left_hand]
-            # all_y.extend([i[1] for i in recalc_lmark_left_hand])
-            recalc_lmark_right_hand= [(i[0], i[1]+shift_y_down)
-                                for i in recalc_lmark_right_hand]
-            # all_y.extend([i[1] for i in recalc_lmark_right_hand])
-            # all_y= tuple(all_y)
-            # min_y= min(all_y)
-        del lm_wx
-        del lm_hy
-        # shift_x= 0.5 -(max(all_x)+min_x)/2
-        # shift_y= 0.5 -(max(all_y)+min_y)/2
-        # if 0<len(recalc_lmark_face):
-        #     recalc_lmark_face= [(i[0]+shift_x, i[1]+shift_y)
-        #                         for i in recalc_lmark_face]
-        # if 0<len(recalc_lmark_pose):
-        #     recalc_lmark_pose= [(i[0]+shift_x, i[1]+shift_y)
-        #                         for i in recalc_lmark_pose]
-        # if 0<len(recalc_lmark_left_hand):
-        #     recalc_lmark_left_hand= [(i[0]+shift_x, i[1]+shift_y)
-        #                         for i in recalc_lmark_left_hand]
-        # if 0<len(recalc_lmark_right_hand):
-        #     recalc_lmark_right_hand= [(i[0]+shift_x, i[1]+shift_y)
-        #                         for i in recalc_lmark_right_hand]
-        # print(f"len(all_x) {len(all_x)}")
-        # print(f"len(all_y) {len(all_y)}")
-        # print(f"min_x {min_x} ---- max x {max(all_x)}")
-        # print(f"min_y {min_y} ---- max y {max(all_y)}")
-        del all_x
-        del all_y
-        del min_x
-        del min_y
-
-
-        landmark__face= zeros((36, 2), dtype=float32)
+        # ---- face landmarks ----
         if lmark_mph.face_landmarks != None:
-            img= recalcDrawFace(img, tuple(recalc_lmark_face))
-            landmark__face= array(recalc_lmark_face, dtype=float32)
-        landmark__face= landmark__face.tolist()
+            img_write_to= drawSkeletonImg(
+                image=img_write_to,
+                lmark_coordinates=landmark__face_pose_left_right_hand[:len(WORTHY_FACE_IDX)],
+                connections_idxs=FACE_CONNECTIONS,
+                thick=1,
+                color_dot=None,
+                color_line=(0, 153, 0), # 153/255= 0.6
+            )
 
-        landmark__pose= zeros((8, 2), dtype=float32)
+        # ---- pose landmarks ----
         if lmark_mph.pose_landmarks != None:
-            img= recalcDrawPose(img, tuple(recalc_lmark_pose))
-            landmark__pose= array(recalc_lmark_pose, dtype=float32)
-        landmark__pose= landmark__pose.tolist()
+            img_write_to= drawSkeletonImg(
+                image=img_write_to,
+                lmark_coordinates=landmark__face_pose_left_right_hand[
+                    len(WORTHY_FACE_IDX): len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX)
+                ],
+                connections_idxs=POSE_CONNECTIONS,
+                thick=1,
+                color_dot=None,
+                color_line=(0, 0, 153), # 153/255= 0.6
+            )
 
-        landmark__left_hand= zeros((21, 2), dtype=float32)
+        # ---- left hand landmarks ----
         if lmark_mph.left_hand_landmarks != None:
-            img= recalcDrawLeftHands(img, tuple(recalc_lmark_left_hand))
-            landmark__left_hand= array(recalc_lmark_left_hand, dtype=float32)
-        landmark__left_hand= landmark__left_hand.tolist()
+            img_write_to= drawSkeletonImg(
+                image=img_write_to,
+                lmark_coordinates=landmark__face_pose_left_right_hand[
+                    len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX): len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX)+QUANTITY_HAND_LMARK
+                ],
+                connections_idxs=HAND_CONNECTIONS,
+                thick=1,
+                color_dot=None,
+                color_line=(255, 255, 255)
+            )
 
-        landmark__right_hand= zeros((21, 2), dtype=float32)
+        # ---- right hand landmarks ----
         if lmark_mph.right_hand_landmarks != None:
-            img= recalcDrawRightHands(img, tuple(recalc_lmark_right_hand))
-            landmark__right_hand= array(recalc_lmark_right_hand, dtype=float32)
-        landmark__right_hand= landmark__right_hand.tolist()
+            img_write_to= drawSkeletonImg(
+                image=img_write_to,
+                lmark_coordinates=landmark__face_pose_left_right_hand[ len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX)+QUANTITY_HAND_LMARK: ],
+                connections_idxs=HAND_CONNECTIONS,
+                thick=1,
+                color_dot=None,
+                color_line=(153, 204, 204), # 204/255= 0.8
+            )
 
-        landmark__face_pose_left_right_hand= []
         # HERE ORDER OF LANDMARKS
         # order of landmarks [...face..., ...pose..., ...left_hand..., ...right_hand...]
-        landmark__face_pose_left_right_hand.extend(landmark__face)
-        landmark__face_pose_left_right_hand.extend(landmark__pose)
-        landmark__face_pose_left_right_hand.extend(landmark__left_hand)
-        landmark__face_pose_left_right_hand.extend(landmark__right_hand)
-
-    return (img, landmark__face_pose_left_right_hand)
+    # return tuple(ndarray, list_of_shape_86_2)
+    return (img_write_to, landmark__face_pose_left_right_hand)
 
 
 def get_images_from_video(split_vid_dict: dict) -> ndarray:
@@ -676,4 +532,5 @@ def main() -> None:
 
 
 if __name__=='__main__':
+    # took 2h and 11m to finish
     main()

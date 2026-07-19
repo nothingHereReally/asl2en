@@ -15,7 +15,7 @@ data_in= Input(
 )
 x= Reshape(
     target_shape=(QUANTITY_FRAME, -1),
-)(data_in) # now shape be (22, 86*2) or (22, 172)
+)(data_in) # now shape be (18, 86*2) or (18, 172)
 
 
 

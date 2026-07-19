@@ -19,7 +19,8 @@ GLASL_DIR: Path= PROJ_ROOT /"dataset" /"glasl"
 def count_dataset_is_it_correct(gl_clean: dict, gl_landmark: dict, gl_skeleton: dict) -> tuple:
     g2id: dict= dict(gl_landmark[KEY_G2ID])
     errors: list= []
-    MIN_hands_quantity: int= 99999
+    MIN_hands_quantity_min1hand: int= 99999
+    MIN_hands_quantity_2hands:   int= 99999
     for gloss in gl_clean:
         if len(gloss["instances"])!=(
             len(tuple(filter(lambda x: x[G_ID]==g2id[gloss[G_]], tuple(gl_landmark[KEY_TRAIN]))))+
@@ -60,7 +61,8 @@ def count_dataset_is_it_correct(gl_clean: dict, gl_landmark: dict, gl_skeleton: 
                 if len(landmark_video['landmark'])!=len(skeleton_video['skeleton']):
                     errors.append({f"{each_video[G_]}_{each_video['video_file'][:-4]}": f"landmark len(landmark) != skeleton len(skeleton) --> {len(landmark_video['landmark'])}!={len(skeleton_video['skeleton'])}"})
                 else:
-                    count_hands: int= 0
+                    count_hands_min1hand: int= 0
+                    count_hands_2hands: int= 0
                     for lm, sn in zip(landmark_video['landmark'], skeleton_video['skeleton']):
                         if lm['face']!=sn['face']:
                             errors.append({f"{each_video['video_file'][:-4]}": f"problem at face {lm['face']}!={sn['face']}"})
@@ -71,16 +73,20 @@ def count_dataset_is_it_correct(gl_clean: dict, gl_landmark: dict, gl_skeleton: 
                         if lm['right_hand']!=sn['right_hand']:
                             errors.append({f"{each_video['video_file'][:-4]}": f"problem at right_hand {lm['right_hand']}!={sn['right_hand']}"})
                         if lm['left_hand'] or lm['right_hand']:
-                            count_hands+= 1
-                    if count_hands==0:
+                            count_hands_min1hand+= 1
+                        elif lm['left_hand'] and lm['right_hand']:
+                            count_hands_2hands+= 1
+                    if count_hands_min1hand==0:
                         errors.append({f"{each_video['video_file'][:-4]}": f"no hand not even just single 1"})
-                    if count_hands<MIN_hands_quantity:
-                        MIN_hands_quantity= count_hands
+                    if count_hands_min1hand<MIN_hands_quantity_min1hand:
+                        MIN_hands_quantity_min1hand= count_hands_min1hand
+                    if count_hands_2hands<MIN_hands_quantity_2hands:
+                        MIN_hands_quantity_2hands= count_hands_2hands
     if len(errors)!=0:
         for err in errors:
             print(f"{tuple(err.keys())[0]}: {err[tuple(err.keys())[0]]}")
         raise NotImplementedError("____ sorry incorrect implementation on p4, due to here p5 didn't pass ____")
-    return (True, MIN_hands_quantity)
+    return (True, MIN_hands_quantity_min1hand, MIN_hands_quantity_2hands)
 
 
 def mandatory3exist(clean_file: Path, landmark_file: Path, skeleton_file: Path) -> None:
@@ -92,7 +98,7 @@ def mandatory3exist(clean_file: Path, landmark_file: Path, skeleton_file: Path) 
         raise FileNotFoundError(f"file doesn't exist {skeleton_file}")
 
 
-if __name__=='__main__':
+def main():
     glasl_clean: dict= {}
     glasl_landmark: dict= {}
     glasl_skeleton: dict= {}
@@ -112,8 +118,8 @@ if __name__=='__main__':
         glasl_skeleton= jsonload(f)
 
 
-    check_ds= count_dataset_is_it_correct(glasl_clean, glasl_landmark, glasl_skeleton)
-    if check_ds[0]:
+    ds_ok, min1hand, has2hands= count_dataset_is_it_correct(glasl_clean, glasl_landmark, glasl_skeleton)
+    if ds_ok:
         print("--> quantity dataset: train, val, test")
         for tvt in (KEY_TRAIN, KEY_VAL, KEY_TEST):
             print(f"{tvt} quantity videos: {len(glasl_landmark[tvt])}")
@@ -122,7 +128,12 @@ if __name__=='__main__':
         for gloss in glasl_clean:
             print(f"{gloss[G_]}( {glasl_landmark[KEY_G2ID][gloss[G_]]} ) quantity videos: {len(gloss["instances"])}")
         print("-------------------------------------------")
-        print(f"min quantity of hands on single video: {check_ds[1]}")
+        print(f"min quantity of at least 1 hand on single video: {min1hand}")
+        print(f"min quantity of         2 hands on single video: {has2hands}")
         print( "<< ------------------------------------------------------------------ >>")
         print(f"-- passed: all have same quantity of video on clean/landmark/skeleton --")
         print( "<< ------------------------------------------------------------------ >>")
+
+
+if __name__=='__main__':
+    main()
