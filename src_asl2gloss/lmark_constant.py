@@ -6,7 +6,7 @@ PROJ_ROOT: Path= Path(__file__).resolve().parent.parent
 
 EPOCHS: int= 12
 ON_TRAINING_BATCH: int= 2
-QUANTITY_FRAME: int= 22
+QUANTITY_FRAME: int= 14
 LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2) # ie. (86, 2)
 # SKELETON_SHAPE: tuple= (158, 158, 3)
 PART4_MOD2USE: tuple= (3,4,5,6,7,8,9)                 # 1st try
