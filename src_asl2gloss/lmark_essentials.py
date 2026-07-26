@@ -22,10 +22,14 @@ from .lmark_constant import (
 )
 
 
-def get_idx_start_hand(annotated_images: list) -> int:
+def get_idx_start_hand(annotated_images: list, right_hand: bool=False) -> int:
     for idx in range(len(annotated_images)):
-        if annotated_images[idx][KEY_LHAND] or annotated_images[idx][KEY_RHAND]:
-            return idx
+        if right_hand:
+            if annotated_images[idx][KEY_RHAND]:
+                return idx
+        else:
+            if annotated_images[idx][KEY_LHAND] or annotated_images[idx][KEY_RHAND]:
+                return idx
     return -1
 
 
