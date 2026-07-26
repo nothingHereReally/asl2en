@@ -9,11 +9,11 @@ ON_TRAINING_BATCH: int= 2
 QUANTITY_FRAME: int= 18
 LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2) # ie. (86, 2)
 # SKELETON_SHAPE: tuple= (158, 158, 3)
-PART4_MOD2USE: tuple= (3,4,5,6,7,8,9)                 # 1st try
+# PART4_MOD2USE: tuple= (3,4,5,6,7,8,9)                 # 1st try
 # PART4_MOD2USE: tuple= (4,5,6,7,8,9,10,11,12,13,14,15) # 2nd try
 # PART4_MOD2USE: tuple= (3,5,7,9)                       # 3rd try
-# TODO: PART4_MOD2USE: tuple= (3,4,5,6,7,8,9,10,11,12)  # 4st ( try this said.2026.7.22 4PM UTC+8 )
-# TODO: data cleaning added new GLASL
+PART4_MOD2USE: tuple= (3,4,5,6,7,8,9,10,11,12)  # 4st ( try this said.2026.7.22 4PM UTC+8 )DONE✔ 2026/7/26
+# ✔ 2026/7/26 DONE: data cleaning added new GLASL
 # TODO: add `right_hand_mandatory` key on an images gloss
 # ---- eg. who, drink, fever, ...
 IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
