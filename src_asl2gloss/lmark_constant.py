@@ -33,6 +33,7 @@ KEY_VAL: str= 'val'       # face full is (468, 2) --> face worthy is (36, 2)
 KEY_TEST: str= 'test'     # pose full is (33, 2) --> pose worthy is (8, 2)
 KEY_ID2G: str= 'id2gloss' # left_hand is (21, 2)
 KEY_G2ID: str= 'gloss2id' # right_hand is (21, 2)
+KEY_RH_MANDATORY: str= "right_hand_mandatory"
 KEY_GLOSS: str= 'gloss_id'
 KEY_VIDEO: str= 'video_id'
 KEY_LMARK: str= 'landmark'
