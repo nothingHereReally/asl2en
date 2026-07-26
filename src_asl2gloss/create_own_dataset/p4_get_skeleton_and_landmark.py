@@ -532,5 +532,7 @@ def main() -> None:
 
 
 if __name__=='__main__':
-    # took 2h and 11m to finish
+    # 45 videos per categories: took 2h and 11m to finish
+    # 95 viewos per categories: Sun Jul 26 12:18:47 AM +08 2026 --> Sun Jul 26 09:30:38 AM +08 2026
+    # 95 viewos per categories: took 9h and 13m to finish
     main()
