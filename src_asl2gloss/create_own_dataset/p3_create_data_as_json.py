@@ -41,15 +41,15 @@ def main() -> None:
         "instances": []
     } for glossWord in GLOSS_IN_ORDER]
     LEN_CLASS: int= len(glasl)
-    for i in range(1,46):
-        if i<41:
+    for i in range(1,96):
+        if i<91:
             # loop LEN_CLASS times, due to LEN_CLASS categories
             for ii in range(LEN_CLASS):
                 glasl[ii]["instances"].append({
                     "split": T_TRAIN,
                     "video_file": f"{glasl[ii]["gloss"]}_00{str(i).zfill(2)}.mp4"
                 })
-        elif i<44:
+        elif i<94:
             # loop LEN_CLASS times, due to LEN_CLASS categories
             for ii in range(LEN_CLASS):
                 glasl[ii]["instances"].append({
