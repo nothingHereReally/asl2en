@@ -9,6 +9,7 @@ from .lmark_constant import (
     GLASL_LANDMARK_DIR,
     KEY_FILE,
     KEY_GLOSS,
+    KEY_RH_MANDATORY,
     KEY_VIDEO,
     LANDMARK_SHAPE,
     PART4_MOD2USE,
@@ -65,7 +66,7 @@ def get_landmark4less_or_equal(a_raw_video: dict, idx_init_has_hand: int|None=No
     equal to the target frames which is `QUANTITY_FRAME: int`
     '''
     if idx_init_has_hand is None:
-        idx_init_has_hand= get_idx_start_hand(a_raw_video[KEY_LMARK])
+        idx_init_has_hand= get_idx_start_hand(a_raw_video[KEY_LMARK], GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ])
     if idx_init_has_hand==-1:
         return list()
 
@@ -74,8 +75,18 @@ def get_landmark4less_or_equal(a_raw_video: dict, idx_init_has_hand: int|None=No
         QUANTITY_FRAME  /  (len(a_raw_video[KEY_LMARK])-idx_init_has_hand)
     ))
     for idx in range(idx_init_has_hand, len(a_raw_video[KEY_LMARK])):
-        with open(f"{GLASL_LANDMARK_DIR /a_raw_video[KEY_VIDEO] /a_raw_video[KEY_LMARK][idx][KEY_FILE]}", 'rb') as f:
-            load_an_image_landmarks= loadnp(f)
+        load_an_image_landmarks: ndarray|None= None
+        if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+            if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                with open(f"{GLASL_LANDMARK_DIR /a_raw_video[KEY_VIDEO] /a_raw_video[KEY_LMARK][idx][KEY_FILE]}", 'rb') as f:
+                    load_an_image_landmarks= loadnp(f)
+            else:
+                load_an_image_landmarks= lmark_numpy_out[-1]
+        elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+            with open(f"{GLASL_LANDMARK_DIR /a_raw_video[KEY_VIDEO] /a_raw_video[KEY_LMARK][idx][KEY_FILE]}", 'rb') as f:
+                load_an_image_landmarks= loadnp(f)
+        else:
+            load_an_image_landmarks= lmark_numpy_out[-1]
         lmark_numpy_out.extend([load_an_image_landmarks] *ratio_what)
     lmark_numpy_out= lmark_numpy_out[:QUANTITY_FRAME]
     check_shape: ndarray= array(lmark_numpy_out, dtype=float32)
