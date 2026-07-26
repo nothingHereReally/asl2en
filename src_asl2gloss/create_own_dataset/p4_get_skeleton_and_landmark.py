@@ -31,17 +31,17 @@ KEY_ID2G: str= "id2gloss"
 KEY_G2ID: str= "gloss2id"
 KEY_RH_MANDATORY: str= "right_hand_mandatory"
 MANDATORY_RHAND: tuple= (
-    "drink",
-    "who",
-    "candy",
-    "cousin",
-    "mine_my",
-    "me_i",
-    "stomach",
-    "need",
-    "see",
-    "feel",
-    "fever",
+    "drink",    # -- index:  1
+    "who",      # -- index:  7
+    "candy",    # -- index:  8
+    "cousin",   # -- index:  9
+    "mine_my",  # -- index: 10
+    "me_i",     # -- index: 11
+    "stomach",  # -- index: 12
+    "need",     # -- index: 14
+    "see",      # -- index: 15
+    "feel",     # -- index: 16
+    "fever",    # -- index: 18
 )
 IMG_SIZE: int= 158
 FACE_CONNECTIONS: tuple= (
