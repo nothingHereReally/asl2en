@@ -112,7 +112,10 @@ def get_landmark4greater(a_raw_video: dict) -> list:
         with open(f"{GLASL_LANDMARK_DIR /a_raw_video[KEY_VIDEO] /a_raw_video[KEY_LMARK][idx][KEY_FILE]}", 'rb') as f:
             lmark_load_ALL.append(loadnp(f))
         if idx_init_has_hand==-1:
-            if a_raw_video[KEY_LMARK][idx][KEY_LHAND] or a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+            if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+                if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                    idx_init_has_hand= idx
+            elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
                 idx_init_has_hand= idx
     if idx_init_has_hand==-1:
         return list()
@@ -121,7 +124,12 @@ def get_landmark4greater(a_raw_video: dict) -> list:
     ratio: float= (len(a_raw_video[KEY_LMARK]) -idx_init_has_hand) /QUANTITY_FRAME
     for idx in range(QUANTITY_FRAME):
         append_if_valid: int= idx_init_has_hand +int(idx*ratio) # floor
-        if a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
+        if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+            if a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+                lmark_numpy_out__MANY_VIDS[0].append(lmark_load_ALL[append_if_valid])
+            else:
+                lmark_numpy_out__MANY_VIDS[0].append(lmark_numpy_out__MANY_VIDS[0][-1])
+        elif a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
             a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
             lmark_numpy_out__MANY_VIDS[0].append(lmark_load_ALL[append_if_valid])
         else:
@@ -161,7 +169,14 @@ def get_landmark4greater(a_raw_video: dict) -> list:
                 lmark_numpy_out__MANY_VIDS.append([])
                 for idx_img2target in range(QUANTITY_FRAME):
                     append_if_valid: int= idx_init_has_hand +(idx_img2target*o2t_ratio+idx_mod) +shift_right
-                    if a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
+                    if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+                        if a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+                            lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[append_if_valid])
+                        elif idx_img2target==0:
+                            lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[idx_init_has_hand])
+                        else:
+                            lmark_numpy_out__MANY_VIDS[-1].append(lmark_numpy_out__MANY_VIDS[-1][-1])
+                    elif a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
                         a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
                         lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[
                             append_if_valid
@@ -201,12 +216,20 @@ def get_landmark4greater(a_raw_video: dict) -> list:
         for check_mod_init_0, idx in zip(range(len_available_images), init_hand_idxs):
             for work4mod_what in PART4_MOD2USE:
                 if check_mod_init_0%work4mod_what == work4mod_what-1:
-                    if a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
+                    if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+                        if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                            tmp_part4[work4mod_what].append(lmark_load_ALL[idx])
+                        else:
+                            tmp_part4[work4mod_what].append(past_img_has_hand)
+                    elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
                         a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
                         tmp_part4[work4mod_what].append(lmark_load_ALL[idx])
                     else:
                         tmp_part4[work4mod_what].append(past_img_has_hand)
-            if a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
+            if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+                if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                    past_img_has_hand= lmark_load_ALL[idx]
+            elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
                 a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
                 past_img_has_hand= lmark_load_ALL[idx]
         for work4mod_what in PART4_MOD2USE:
