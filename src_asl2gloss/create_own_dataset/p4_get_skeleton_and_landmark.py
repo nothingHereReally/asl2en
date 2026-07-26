@@ -29,6 +29,20 @@ KEY_VAL: str= "val"
 KEY_TEST: str= "test"
 KEY_ID2G: str= "id2gloss"
 KEY_G2ID: str= "gloss2id"
+KEY_RH_MANDATORY: str= "right_hand_mandatory"
+MANDATORY_RHAND: tuple= (
+    "drink",
+    "who",
+    "candy",
+    "cousin",
+    "mine_my",
+    "me_i",
+    "stomach",
+    "need",
+    "see",
+    "feel",
+    "fever",
+)
 IMG_SIZE: int= 158
 FACE_CONNECTIONS: tuple= (
     (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
@@ -507,14 +521,16 @@ def init_vars() -> tuple:
         KEY_VAL: [],
         KEY_TEST: [],
         KEY_ID2G: [ins["gloss"] for ins in glasl_clean],
-        KEY_G2ID: {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))}
+        KEY_G2ID: {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))},
+        KEY_RH_MANDATORY: [el["gloss"] in MANDATORY_RHAND for el in glasl_clean]
     }
     glasl_SKELETON: dict= {
         KEY_TRAIN: [],
         KEY_VAL: [],
         KEY_TEST: [],
         KEY_ID2G: [ins["gloss"] for ins in glasl_clean],
-        KEY_G2ID: {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))}
+        KEY_G2ID: {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))},
+        KEY_RH_MANDATORY: [el["gloss"] in MANDATORY_RHAND for el in glasl_clean]
     }
     return (glasl_clean, glasl_LANDMARK, glasl_SKELETON)
 
