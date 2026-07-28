@@ -99,3 +99,6 @@ model/aslvid2gloss_v39.keras filter=lfs diff=lfs merge=lfs -text
 model/tfboard_logs_v40_glasl/validation/events.out.tfevents.1785071869.dvxvb.1257398.1.v2 filter=lfs diff=lfs merge=lfs -text
 model/aslvid2gloss_v40.keras filter=lfs diff=lfs merge=lfs -text
 model/tfboard_logs_v40_glasl/train/events.out.tfevents.1785069981.dvxvb.1257398.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/aslvid2gloss_v41.keras filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs_v41_glasl/train/events.out.tfevents.1785163047.dvxvb.46776.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs_v41_glasl/validation/events.out.tfevents.1785164843.dvxvb.46776.1.v2 filter=lfs diff=lfs merge=lfs -text
