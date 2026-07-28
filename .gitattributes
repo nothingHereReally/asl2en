@@ -93,3 +93,6 @@ model/tfboard_logs_v37_glasl/validation/events.out.tfevents.1784429467.dvxvb.142
 model/tfboard_logs_v38_glasl/validation/events.out.tfevents.1784432684.dvxvb.272905.1.v2 filter=lfs diff=lfs merge=lfs -text
 model/aslvid2gloss_v38.keras filter=lfs diff=lfs merge=lfs -text
 model/tfboard_logs_v38_glasl/train/events.out.tfevents.1784432402.dvxvb.272905.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs_v39_glasl/train/events.out.tfevents.1785049159.dvxvb.454866.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/tfboard_logs_v39_glasl/validation/events.out.tfevents.1785051138.dvxvb.454866.1.v2 filter=lfs diff=lfs merge=lfs -text
+model/aslvid2gloss_v39.keras filter=lfs diff=lfs merge=lfs -text
