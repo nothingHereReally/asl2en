@@ -1,6 +1,6 @@
 from math import ceil
 from keras.src.activations.activations import ReLU
-from keras.src.layers import Add, Attention, Flatten, Reshape, Dense, Input, TimeDistributed
+from keras.src.layers import Add, Attention, Flatten, Reshape, Dense, Input, TimeDistributed, MultiHeadAttention
 from keras.src.activations import softmax
 from numpy import float32, float64
 
@@ -15,7 +15,7 @@ data_in= Input(
 )
 x= Reshape(
     target_shape=(QUANTITY_FRAME, -1),
-)(data_in) # now shape be (18, 86*2) or (18, 172)
+)(data_in) # now shape be (22, 86*2) or (18, 172)
 
 
 
@@ -287,16 +287,31 @@ att_h8= Attention(
 
 x= Add()([att_h1, att_h2, att_h3, att_h4, att_h5, att_h6, att_h7, att_h8])
 # x= Add()([att_h1, att_h2, att_h3, att_h4, att_h5, att_h6, att_h7, att_h8, att_h9, att_h10, att_h11, att_h12])
+x= MultiHeadAttention(
+    num_heads=8,
+    key_dim=LANDMARK_SHAPE[1],
+    dropout=0.05,
+    use_bias=True,
+)(
+    query=x,
+    value=x,
+    key=x,
+)
 
 
 
 
 ann= Flatten()(x)
-# ann= Dense(
-#     units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//2),
-#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-#     dtype=float64,
-# )(ann)
+ann= Dense(
+    units=LANDMARK_SHAPE[0]*2,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+)(ann)
+ann= Dense(
+    units=LANDMARK_SHAPE[0]//2,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+)(ann)
 # ann= Dense(
 #     units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//5),
 #     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
