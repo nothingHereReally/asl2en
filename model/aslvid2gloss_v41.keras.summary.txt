@@ -7,7 +7,7 @@ model v41
 
 
 
-summary
+summary from 45 videos per category
 -----------------------------------------------------------------
 ____ train --> 765/880 --> 86.93181818181817%
 ____ overall accuracy train --> 92.90778350830078%
