@@ -6,12 +6,16 @@ PROJ_ROOT: Path= Path(__file__).resolve().parent.parent
 
 EPOCHS: int= 12
 ON_TRAINING_BATCH: int= 2
-QUANTITY_FRAME: int= 18
+QUANTITY_FRAME: int= 22
 LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2) # ie. (86, 2)
 # SKELETON_SHAPE: tuple= (158, 158, 3)
-PART4_MOD2USE: tuple= (3,4,5,6,7,8,9)                 # 1st try
+# PART4_MOD2USE: tuple= (3,4,5,6,7,8,9)                 # 1st try
 # PART4_MOD2USE: tuple= (4,5,6,7,8,9,10,11,12,13,14,15) # 2nd try
 # PART4_MOD2USE: tuple= (3,5,7,9)                       # 3rd try
+PART4_MOD2USE: tuple= (3,4,5,6,7,8,9,10,11,12)  # 4st ( try this said.2026.7.22 4PM UTC+8 )DONE✔ 2026/7/26
+# ✔ 2026/7/26 DONE: data cleaning added new GLASL
+# ✔ 2026/7/26 DONE: add `right_hand_mandatory` key on an images gloss
+# ---- eg. who, drink, fever, ...
 IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
 GLASL_LANDMARK_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"landmark"
 GLASL_SKELETON_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"skeleton"
@@ -29,6 +33,7 @@ KEY_VAL: str= 'val'       # face full is (468, 2) --> face worthy is (36, 2)
 KEY_TEST: str= 'test'     # pose full is (33, 2) --> pose worthy is (8, 2)
 KEY_ID2G: str= 'id2gloss' # left_hand is (21, 2)
 KEY_G2ID: str= 'gloss2id' # right_hand is (21, 2)
+KEY_RH_MANDATORY: str= "right_hand_mandatory"
 KEY_GLOSS: str= 'gloss_id'
 KEY_VIDEO: str= 'video_id'
 KEY_LMARK: str= 'landmark'

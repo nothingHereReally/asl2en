@@ -25,7 +25,7 @@ PROJ_ROOT: Path= Path(__file__).parent.parent.parent
 MODEL_DIR: Path= PROJ_ROOT /"model"
 MODEL_FILE_LIST: tuple= (
     "aslvid2gloss_v25.keras",
-    "aslvid2gloss_v30.keras",
+    "aslvid2gloss_v41.keras",
 )
 ASL2GLOSS_MODEL_LIST: tuple= tuple(load_model(str(MODEL_DIR /el)) for el in MODEL_FILE_LIST)
 

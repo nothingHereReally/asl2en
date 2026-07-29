@@ -1,0 +1,177 @@
+model v39
+-- input shape
+( 16, 86, 2 )
+-- output shape
+( 22, )
+
+
+
+
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                  ┃ Output Shape              ┃         Param # ┃ Connected to               ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)        │ (None, 16, 86, 2)         │               0 │ -                          │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ reshape (Reshape)             │ (None, 16, 172)           │               0 │ batch_vid[0][0]            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed              │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_1            │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_2            │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_3            │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_4            │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_5            │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_6            │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_7            │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_8            │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_9            │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_10           │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_11           │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_12           │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_13           │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_14           │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_15           │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_16           │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_17           │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_18           │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_19           │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_20           │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_21           │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_22           │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_23           │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_1 (Attention)             │ (None, 16, 86)            │               1 │ time_distributed[0][0],    │
+│                               │                           │                 │ time_distributed_1[0][0],  │
+│                               │                           │                 │ time_distributed_2[0][0]   │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_2 (Attention)             │ (None, 16, 86)            │               1 │ time_distributed_3[0][0],  │
+│                               │                           │                 │ time_distributed_4[0][0],  │
+│                               │                           │                 │ time_distributed_5[0][0]   │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_3 (Attention)             │ (None, 16, 86)            │               1 │ time_distributed_6[0][0],  │
+│                               │                           │                 │ time_distributed_7[0][0],  │
+│                               │                           │                 │ time_distributed_8[0][0]   │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_4 (Attention)             │ (None, 16, 86)            │               1 │ time_distributed_9[0][0],  │
+│                               │                           │                 │ time_distributed_10[0][0], │
+│                               │                           │                 │ time_distributed_11[0][0]  │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_5 (Attention)             │ (None, 16, 86)            │               1 │ time_distributed_12[0][0], │
+│                               │                           │                 │ time_distributed_13[0][0], │
+│                               │                           │                 │ time_distributed_14[0][0]  │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_6 (Attention)             │ (None, 16, 86)            │               1 │ time_distributed_15[0][0], │
+│                               │                           │                 │ time_distributed_16[0][0], │
+│                               │                           │                 │ time_distributed_17[0][0]  │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_7 (Attention)             │ (None, 16, 86)            │               1 │ time_distributed_18[0][0], │
+│                               │                           │                 │ time_distributed_19[0][0], │
+│                               │                           │                 │ time_distributed_20[0][0]  │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ att_8 (Attention)             │ (None, 16, 86)            │               1 │ time_distributed_21[0][0], │
+│                               │                           │                 │ time_distributed_22[0][0], │
+│                               │                           │                 │ time_distributed_23[0][0]  │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ add (Add)                     │ (None, 16, 86)            │               0 │ att_1[0][0], att_2[0][0],  │
+│                               │                           │                 │ att_3[0][0], att_4[0][0],  │
+│                               │                           │                 │ att_5[0][0], att_6[0][0],  │
+│                               │                           │                 │ att_7[0][0], att_8[0][0]   │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ flatten (Flatten)             │ (None, 1376)              │               0 │ add[0][0]                  │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ batch_class (Dense)           │ (None, 22)                │          30,294 │ flatten[0][0]              │
+└───────────────────────────────┴───────────────────────────┴─────────────────┴────────────────────────────┘
+ Total params: 387,374 (2.84 MB)
+ Trainable params: 387,374 (2.84 MB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/12
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1785049172.747724  455226 service.cc:152] XLA service 0x7fbc4802dfc0 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1785049172.747742  455226 service.cc:160]   StreamExecutor device (0): NVIDIA GeForce RTX 3070 Laptop GPU, Compute Capability 8.6
+2026-07-26 14:59:33.171066: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:269] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+I0000 00:00:1785049177.451024  455226 cuda_dnn.cc:529] Loaded cuDNN version 90501
+2026-07-26 14:59:40.517974: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14063', 24 bytes spill stores, 24 bytes spill loads
+
+2026-07-26 14:59:52.686640: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'loop_add_fusion_1', 8 bytes spill stores, 8 bytes spill loads
+
+I0000 00:00:1785049192.891037  455226 device_compiler.h:188] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+273869/273869 ━━━━━━━━━━━━━━━━━━━━ 2025s 7ms/step - accuracy: 0.9360 - loss: 0.3303 - val_accuracy: 0.2691 - val_loss: 6.9938 - learning_rate: 1.0000e-04
+Epoch 2/12
+273869/273869 ━━━━━━━━━━━━━━━━━━━━ 1542s 6ms/step - accuracy: 0.9534 - loss: 0.2356 - val_accuracy: 0.3363 - val_loss: 3.5292 - learning_rate: 1.0000e-04
+Epoch 3/12
+273863/273869 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step - accuracy: 0.9593 - loss: 0.2112
+Epoch 3: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+273869/273869 ━━━━━━━━━━━━━━━━━━━━ 1471s 5ms/step - accuracy: 0.9574 - loss: 0.2234 - val_accuracy: 0.2446 - val_loss: 3.9585 - learning_rate: 1.0000e-04
+Epoch 4/12
+273869/273869 ━━━━━━━━━━━━━━━━━━━━ 1988s 7ms/step - accuracy: 0.9046 - loss: 0.3908 - val_accuracy: 0.5912 - val_loss: 1.5683 - learning_rate: 1.0000e-05
+Epoch 5/12
+273869/273869 ━━━━━━━━━━━━━━━━━━━━ 1698s 6ms/step - accuracy: 0.9334 - loss: 0.2929 - val_accuracy: 0.6887 - val_loss: 1.1017 - learning_rate: 1.0000e-05
+Epoch 6/12
+273861/273869 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step - accuracy: 0.9334 - loss: 0.2946
+Epoch 6: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+273869/273869 ━━━━━━━━━━━━━━━━━━━━ 1470s 5ms/step - accuracy: 0.9417 - loss: 0.2530 - val_accuracy: 0.6433 - val_loss: 1.2477 - learning_rate: 1.0000e-05
+Epoch 7/12
+273869/273869 ━━━━━━━━━━━━━━━━━━━━ 1989s 7ms/step - accuracy: 0.8618 - loss: 0.5376 - val_accuracy: 0.6986 - val_loss: 0.8118 - learning_rate: 1.0000e-06
+Epoch 8/12
+273869/273869 ━━━━━━━━━━━━━━━━━━━━ 1790s 7ms/step - accuracy: 0.8727 - loss: 0.4883 - val_accuracy: 0.7617 - val_loss: 0.7007 - learning_rate: 1.0000e-06
+Epoch 9/12
+273869/273869 ━━━━━━━━━━━━━━━━━━━━ 1472s 5ms/step - accuracy: 0.8811 - loss: 0.4664 - val_accuracy: 0.8281 - val_loss: 0.5176 - learning_rate: 1.0000e-06
+Epoch 10/12
+273868/273869 ━━━━━━━━━━━━━━━━━━━━ 0s 7ms/step - accuracy: 0.8935 - loss: 0.3999
+Epoch 10: ReduceLROnPlateau reducing learning rate to 9.999999974752428e-08.
+273869/273869 ━━━━━━━━━━━━━━━━━━━━ 1824s 7ms/step - accuracy: 0.8840 - loss: 0.4562 - val_accuracy: 0.7356 - val_loss: 0.7193 - learning_rate: 1.0000e-06
+Epoch 11/12
+273865/273869 ━━━━━━━━━━━━━━━━━━━━ 0s 7ms/step - accuracy: 0.8509 - loss: 0.5189
+Epoch 11: ReduceLROnPlateau reducing learning rate to 1.0000000116860975e-08.
+273869/273869 ━━━━━━━━━━━━━━━━━━━━ 1908s 7ms/step - accuracy: 0.8566 - loss: 0.5417 - val_accuracy: 0.7825 - val_loss: 0.5289 - learning_rate: 1.0000e-07
+Epoch 11: early stopping
+Restoring model weights from the end of the best epoch: 9.
+model( --> aslvid2gloss_v39.keras <-- ) quantity of outputs 22
+----> training took approx. 5h 45m

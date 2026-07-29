@@ -1,49 +1,27 @@
-from os.path import exists
-from os import makedirs
-from json import load as jsonload, dump as jsonsave
+#!/usr/bin/env python
+
+
+from random import uniform
+from tempfile import gettempdir
+from json import dump as jsonsave
 from typing import Any
 from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, imwrite, line
-from sys import stderr
-from numpy import array, float32, ndarray, uint8, zeros, save as numpysave
 from mediapipe.python.solutions.holistic import Holistic
+from numpy import array, float32, ndarray, uint8, zeros
 from pathlib import Path
+from sys import argv, stderr, exit
 
 
 # ------------------------
 # ------------------------
 # ---- contants start ----
-PROJ_ROOT= Path(__file__).resolve().parent.parent.parent
-GLASL_DIR: Path= PROJ_ROOT /"dataset" /"glasl"
-VIDEO_DIR: Path= GLASL_DIR /"video"
-IMAGE_dir: Path= GLASL_DIR /"image"
-LANDMARK_dir: Path= GLASL_DIR /"landmark"
-SKELETON_dir: Path= GLASL_DIR /"skeleton"
 MPH_fph: Holistic= Holistic(
     static_image_mode=False,
     model_complexity=2,
     min_detection_confidence=0.5,
     min_tracking_confidence=0.5
 )
-KEY_TRAIN: str= "train"
-KEY_VAL: str= "val"
-KEY_TEST: str= "test"
-KEY_ID2G: str= "id2gloss"
-KEY_G2ID: str= "gloss2id"
-KEY_RH_MANDATORY: str= "right_hand_mandatory"
-MANDATORY_RHAND: tuple= (
-    "drink",    # -- index:  1
-    "who",      # -- index:  7
-    "candy",    # -- index:  8
-    "cousin",   # -- index:  9
-    "mine_my",  # -- index: 10
-    "me_i",     # -- index: 11
-    "stomach",  # -- index: 12
-    "need",     # -- index: 14
-    "see",      # -- index: 15
-    "feel",     # -- index: 16
-    "fever",    # -- index: 18
-)
-IMG_SIZE: int= 158
+IMG_SIZE: int= 250
 FACE_CONNECTIONS: tuple= (
     (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
     (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
@@ -93,8 +71,6 @@ QUANTITY_HAND_LMARK: int= 21
 # ---- contants end ------
 # ------------------------
 # ------------------------
-
-
 
 
 def isOkPlot(coord: tuple) -> bool:
@@ -390,13 +366,16 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
         # order of landmarks [...face..., ...pose..., ...left_hand..., ...right_hand...]
     # return tuple(ndarray, list_of_shape_86_2)
     return (img_write_to, landmark__face_pose_left_right_hand)
-
-
-def get_images_from_video(split_vid_dict: dict) -> ndarray:
-    video_abs_file_dir: Path= VIDEO_DIR /split_vid_dict["video_file"]
-    if exists(video_abs_file_dir):
+def create_tmp_folder() -> Path:
+    folder_dir: Path= Path(gettempdir()).resolve() /f"p2_see_landmarks_of_video_{int(uniform(0,1)*1000)}"
+    while folder_dir.exists():
+        folder_dir= Path(gettempdir()).resolve() /f"p2_see_landmarks_of_video_{int(uniform(0,1)*1000)}"
+    folder_dir.mkdir()
+    return folder_dir
+def get_images_from_video(video_path: Path) -> ndarray:
+    if video_path.exists():
         try:
-            video_ocv: VideoCapture= VideoCapture(str(video_abs_file_dir))
+            video_ocv: VideoCapture= VideoCapture(str(video_path))
             frames_on_video: list= []
             if video_ocv.isOpened():
                 for _ in range(  int(video_ocv.get(CAP_PROP_FRAME_COUNT))  ):
@@ -404,151 +383,62 @@ def get_images_from_video(split_vid_dict: dict) -> ndarray:
                     if isNotEmpty and 0<len(obj_image):
                         frames_on_video.append(array(obj_image, dtype=uint8))
                 if len(frames_on_video)<1:
-                    raise ValueError(f"Video {VIDEO_DIR /split_vid_dict["video_file"]} has No images exist.")
+                    raise ValueError(f"Video {video_path} has No images exist.")
                 return array(frames_on_video, dtype=uint8)
 
 
         except Exception as e:
-            print(f"error at video {VIDEO_DIR /split_vid_dict['video_file']}: {e}", file=stderr)
-    raise FileNotFoundError(f"Video {split_vid_dict["video_file"]} Does Not Exist --> No such file {video_abs_file_dir}")
+            print(f"error at video {video_path}: {e}", file=stderr)
+    raise FileNotFoundError(f"Video {video_path.name} Does Not Exist --> No such file {video_path}")
+def main():
+    video_path: Path= Path('/aa/bb.mp4')
+    try:
+        video_path= Path(argv[1]).expanduser()
+    except IndexError:
+        exit(f"---> Please provide the video file path")
+    if not video_path.exists():
+        exit(f"---> The video {video_path.name} doesn't exist")
 
+    try:
+        images4m_video: ndarray= get_images_from_video(video_path)
+    except ValueError as err:
+        exit(f"---> {str(err)}")
+    except FileNotFoundError as err:
+        exit(f"---> {str(err)}")
 
-def get_video_details(split_vid_dict: dict) -> tuple:
-    allImg_human: ndarray= get_images_from_video(split_vid_dict)
-    allImg_landmark: list= []
-    allImg_skeleton: list= []
-    allImg_details: list= []
-    for img in allImg_human:
-        fph_lmark: Any= MPH_fph.process(cvtColor(src=img, code=COLOR_BGR2RGB))
-        skeleton__image, landmark__fpLhRh= drawFacePoseHand(
+    folder_dir: Path= create_tmp_folder()
+    images_details: list= list()
+    total_at_least1hand: int= 0
+    has2hands: int= 0
+    for idx, an_image in enumerate(images4m_video):
+        mph_fph_result: Any= MPH_fph.process(cvtColor(src=an_image, code=COLOR_BGR2RGB))
+        skeleton_img, _= drawFacePoseHand(
             img_write_to=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
-            lmark_mph=fph_lmark,
-            orig_shape=img.shape
+            lmark_mph=mph_fph_result,
+            orig_shape=an_image.shape
         )
-        allImg_landmark.append(landmark__fpLhRh)
-        allImg_skeleton.append(skeleton__image)
-        allImg_details.append({
-            'face': fph_lmark.face_landmarks != None,
-            'pose': fph_lmark.face_landmarks != None,
-            'left_hand': fph_lmark.left_hand_landmarks != None,
-            'right_hand': fph_lmark.right_hand_landmarks != None,
+        images_details.append({
+            'face': mph_fph_result.face_landmarks != None,
+            'pose': mph_fph_result.face_landmarks != None,
+            'left_hand': mph_fph_result.left_hand_landmarks != None,
+            'right_hand': mph_fph_result.right_hand_landmarks != None,
             'width': IMG_SIZE,
             'height': IMG_SIZE
         })
+        if mph_fph_result.left_hand_landmarks!=None or mph_fph_result.right_hand_landmarks!=None:
+            total_at_least1hand+= 1
+        if mph_fph_result.left_hand_landmarks!=None and mph_fph_result.right_hand_landmarks!=None:
+            has2hands+= 1
+        imwrite(
+            filename=f"{folder_dir /f'skeleton_image_{str(idx+1).zfill(5)}'}.jpeg",
+            img=skeleton_img
+        )
+    with open(f"{folder_dir /"details.json"}", "w") as f:
+        jsonsave(images_details, f, indent=4)
+    print(f"---> at least ONE hand images ---> {total_at_least1hand}")
+    print(f"---> TWO hand images ---> {has2hands}")
+    print(f"---> folder ---> {folder_dir}")
+    print(f"---> {video_path.name}")
 
-    if len(allImg_human)!=len(allImg_landmark) or len(allImg_landmark)!=len(allImg_skeleton) or len(allImg_skeleton)!=len(allImg_details):
-        print(f"len allImg_human --> {len(allImg_human)}", file=stderr)
-        print(f"len allImg_landmark --> {len(allImg_landmark)}", file=stderr)
-        print(f"len allImg_skeleton --> {len(allImg_skeleton)}", file=stderr)
-        print(f"len allImg_details --> {len(allImg_details)}", file=stderr)
-        raise NotImplementedError("Incorrect implementation due to mandatory all 4 be having same quantity of elements")
-    return (
-        array(allImg_human, dtype=uint8),
-        array(allImg_landmark, dtype=float32),
-        array(allImg_skeleton, dtype=uint8),
-        allImg_details,
-    )
-
-
-def mandatory_all_3_notExist() -> None:
-    if exists(IMAGE_dir):
-        raise FileExistsError(f"please delete this folder {IMAGE_dir}, will be the one to create it for you.")
-    if exists(LANDMARK_dir):
-        raise FileExistsError(f"please delete this folder {LANDMARK_dir}, will be the one to create it for you.")
-    if exists(SKELETON_dir):
-        raise FileExistsError(f"please delete this folder {SKELETON_dir}, will be the one to create it for you.")
-
-    makedirs(IMAGE_dir)
-    makedirs(LANDMARK_dir)
-    makedirs(SKELETON_dir)
-
-
-def processDataForTrainingLater(glasl_clean: list, glasl_LANDMARK: dict, glasl_SKELETON: dict) -> tuple:
-    for idxGloss, gloss_ds in enumerate(glasl_clean): # for each gloss ie. book, drink, computer, ...
-        print(f"currently processing( {gloss_ds['gloss']} ) completed: {round(idxGloss/len(glasl_clean), 3)*100}%")
-        for gloss_instance in gloss_ds["instances"]: # on each gloss has many videos, now for each videos
-            imgs_human_rgb, imgs_landmark, imgs_skeleton, imgs_details= get_video_details(gloss_instance)
-            # don't extract images due to takes too much space, ie. 10gloss about 46GiB
-            # makedirs(f"{IMAGE_dir /gloss_instance["video_file"][:-4]}")
-            makedirs(f"{LANDMARK_dir /gloss_instance["video_file"][:-4]}")
-            makedirs(f"{SKELETON_dir /gloss_instance["video_file"][:-4]}")
-            glasl_LANDMARK[ gloss_instance["split"] ].append({
-                "gloss_id": int(glasl_LANDMARK[KEY_G2ID][gloss_ds["gloss"]]),
-                "video_id": gloss_instance["video_file"][:-4],
-                "landmark": [],
-            })
-            glasl_SKELETON[ gloss_instance["split"] ].append({
-                "gloss_id": int(glasl_SKELETON[KEY_G2ID][gloss_ds["gloss"]]),
-                "video_id": gloss_instance["video_file"][:-4],
-                "skeleton": [],
-            })
-            for i in range(len(imgs_human_rgb)): # each video has many images, now for each images
-                file2create: str= str(i+1).zfill(5)
-                # filename_abs_human: Path= IMAGE_dir /gloss_instance["video_file"][:-4] /f"{file2create}.png"
-                filename_abs_landmark: Path= LANDMARK_dir /gloss_instance["video_file"][:-4] /f"{file2create}.npy"
-                filename_abs_skeleton: Path= SKELETON_dir /gloss_instance["video_file"][:-4] /f"{file2create}.png"
-                # imwrite(filename=str(filename_abs_human), img=imgs_human_rgb[i])
-                with open(str(filename_abs_landmark), "wb") as f:
-                    # lanmarks order is face, then pose, then left hand, then right hand
-                    # see `HERE ORDER OF LANDMARKS`
-                    numpysave(file=f, arr=imgs_landmark[i])
-                imwrite(filename=str(filename_abs_skeleton), img=imgs_skeleton[i])
-                glasl_LANDMARK[ gloss_instance["split"] ][-1]["landmark"].append({
-                    "file": f"{file2create}.npy",
-                    "face": imgs_details[i]["face"],
-                    "pose": imgs_details[i]["pose"],
-                    "left_hand": imgs_details[i]["left_hand"],
-                    "right_hand": imgs_details[i]["right_hand"],
-                })
-                glasl_SKELETON[ gloss_instance["split"] ][-1]["skeleton"].append({
-                    "file": f"{file2create}.png",
-                    "face": imgs_details[i]["face"],
-                    "pose": imgs_details[i]["pose"],
-                    "left_hand": imgs_details[i]["left_hand"],
-                    "right_hand": imgs_details[i]["right_hand"],
-                    "width": imgs_details[i]["width"],
-                    "height": imgs_details[i]["height"],
-                })
-    return (glasl_LANDMARK, glasl_SKELETON)
-
-
-def init_vars() -> tuple:
-    glasl_clean: list= []
-    with open(f"{GLASL_DIR /"glasl.annotation.clean.json"}", 'r') as f:
-        glasl_clean= jsonload(f)
-    glasl_LANDMARK: dict= {
-        KEY_TRAIN: [],
-        KEY_VAL: [],
-        KEY_TEST: [],
-        KEY_ID2G: [ins["gloss"] for ins in glasl_clean],
-        KEY_G2ID: {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))},
-        KEY_RH_MANDATORY: [el["gloss"] in MANDATORY_RHAND for el in glasl_clean]
-    }
-    glasl_SKELETON: dict= {
-        KEY_TRAIN: [],
-        KEY_VAL: [],
-        KEY_TEST: [],
-        KEY_ID2G: [ins["gloss"] for ins in glasl_clean],
-        KEY_G2ID: {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))},
-        KEY_RH_MANDATORY: [el["gloss"] in MANDATORY_RHAND for el in glasl_clean]
-    }
-    return (glasl_clean, glasl_LANDMARK, glasl_SKELETON)
-
-
-def main() -> None:
-    mandatory_all_3_notExist()
-    glasl_clean, glasl_LANDMARK, glasl_SKELETON= init_vars()
-
-
-    glasl_LANDMARK, glasl_SKELETON= processDataForTrainingLater(glasl_clean, glasl_LANDMARK, glasl_SKELETON)
-    with open(f"{GLASL_DIR /"glasl.annotation.landmark.json"}", "w") as f:
-        jsonsave(glasl_LANDMARK, f, indent=4)
-    with open(f"{GLASL_DIR /"glasl.annotation.skeleton.json"}", "w") as f:
-        jsonsave(glasl_SKELETON, f, indent=4)
-
-
-if __name__=='__main__':
-    # 45 videos per categories: took 2h and 11m to finish
-    # 95 viewos per categories: Sun Jul 26 12:18:47 AM +08 2026 --> Sun Jul 26 09:30:38 AM +08 2026
-    # 95 viewos per categories: took 9h and 13m to finish
+if __name__=="__main__":
     main()

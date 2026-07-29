@@ -40,7 +40,7 @@ def main():
         validation_steps=calculate_steps_needed(KEY_VAL),
         validation_freq=1
     )
-    model_file_name: str= "aslvid2gloss_v37.keras"
+    model_file_name: str= "aslvid2gloss_v41.keras"
     print(f"model( --> {model_file_name} <-- ) quantity of outputs {model.output_shape[-1]}")
     model.save(f"{PROJ_ROOT /"model" /model_file_name}")
 
