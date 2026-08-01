@@ -586,4 +586,8 @@ if __name__=='__main__':
     # ---- contains 5videos from 1st 45 videos glasl
     # ---- contains 10videos from 50 videos glasl
     # ---- contains 4videos from 4 long videos
+    # 99 videos per categories: took 23h and 22m to finish
+    # ---- contains 45videos from 1st glasl created
+    # ---- contains 50videos from 50 videos glasl
+    # ---- contains 4videos from 4 long videos
     main()
