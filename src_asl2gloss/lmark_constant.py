@@ -24,10 +24,6 @@ glasl_landmark: dict= {}
 with open(f"{PROJ_ROOT /"dataset" /"glasl" /"glasl.annotation.landmark.json"}", "r") as f:
     glasl_landmark= loadjson(f)
 
-glasl_skeleton: dict= {}
-with open(f"{PROJ_ROOT /"dataset" /"glasl" /"glasl.annotation.skeleton.json"}", "r") as f:
-    glasl_skeleton= loadjson(f)
-
 KEY_TRAIN: str= 'train'   # landmark is face, then pose, then left_had, then right hand
 KEY_VAL: str= 'val'       # face full is (468, 2) --> face worthy is (36, 2)
 KEY_TEST: str= 'test'     # pose full is (33, 2) --> pose worthy is (8, 2)
@@ -41,7 +37,7 @@ KEY_FILE: str= 'file'
 KEY_LHAND: str= 'left_hand'
 KEY_RHAND: str= 'right_hand'
 
-LEN_GLOSS: int= int(len(glasl_skeleton[KEY_ID2G]))
+LEN_GLOSS: int= int(len(glasl_landmark[KEY_ID2G]))
 
 
 FACE_CONNECTIONS_FULL: tuple= (
