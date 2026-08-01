@@ -575,7 +575,7 @@ def main() -> None:
     with open(f"{GLASL_DIR /"glasl.annotation.skeleton.json"}", "w") as f:
         jsonsave(glasl_SKELETON, f, indent=4)
     if IMAGE_tmp_dir.exists():
-        IMAGE_tmp_dir.unlink()
+        IMAGE_tmp_dir.rmdir()
 
 
 if __name__=='__main__':
