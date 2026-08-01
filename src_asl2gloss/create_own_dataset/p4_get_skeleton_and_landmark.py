@@ -582,4 +582,8 @@ if __name__=='__main__':
     # 45 videos per categories: took 2h and 11m to finish
     # 95 viewos per categories: Sun Jul 26 12:18:47 AM +08 2026 --> Sun Jul 26 09:30:38 AM +08 2026
     # 95 viewos per categories: took 9h and 13m to finish
+    # 19 videos per categories: took about 15h 55m
+    # ---- contains 5videos from 1st 45 videos glasl
+    # ---- contains 10videos from 50 videos glasl
+    # ---- contains 4videos from 4 long videos
     main()
