@@ -1,0 +1,133 @@
+model v43
+-- input shape
+( 16, 86, 2 )
+-- output shape
+( 22, )
+
+
+
+
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                  ┃ Output Shape              ┃         Param # ┃ Connected to               ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)        │ (None, 16, 86, 2)         │               0 │ -                          │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ reshape (Reshape)             │ (None, 16, 172)           │               0 │ batch_vid[0][0]            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed              │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ multi_head_attention          │ (None, 16, 86)            │         238,822 │ time_distributed[0][0],    │
+│ (MultiHeadAttention)          │                           │                 │ time_distributed[0][0],    │
+│                               │                           │                 │ time_distributed[0][0]     │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_1            │ (None, 16, 42)            │           3,654 │ multi_head_attention[0][0] │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ multi_head_attention_1        │ (None, 16, 42)            │          57,498 │ time_distributed_1[0][0],  │
+│ (MultiHeadAttention)          │                           │                 │ time_distributed_1[0][0],  │
+│                               │                           │                 │ time_distributed_1[0][0]   │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ flatten (Flatten)             │ (None, 672)               │               0 │ multi_head_attention_1[0]… │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ dense_2 (Dense)               │ (None, 172)               │         115,756 │ flatten[0][0]              │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ batch_class (Dense)           │ (None, 22)                │           3,806 │ dense_2[0][0]              │
+└───────────────────────────────┴───────────────────────────┴─────────────────┴────────────────────────────┘
+ Total params: 434,414 (2.17 MB)
+ Trainable params: 434,414 (2.17 MB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/18
+WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1785654003.012327 1293558 service.cc:152] XLA service 0x7f506000a8e0 initialized for platform CUDA (this does not guarantee that XLA will be used). Devices:
+I0000 00:00:1785654003.012370 1293558 service.cc:160]   StreamExecutor device (0): NVIDIA GeForce RTX 3070 Laptop GPU, Compute Capability 8.6
+2026-08-02 15:00:03.108641: I tensorflow/compiler/mlir/tensorflow/utils/dump_mlir_util.cc:269] disabling MLIR crash reproducer, set env var `MLIR_CRASH_REPRODUCER_DIRECTORY` to enable.
+I0000 00:00:1785654003.876757 1293558 cuda_dnn.cc:529] Loaded cuDNN version 90501
+2026-08-02 15:00:05.510921: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_10', 68 bytes spill stores, 68 bytes spill loads
+
+2026-08-02 15:00:05.543790: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_10', 12 bytes spill stores, 12 bytes spill loads
+
+2026-08-02 15:00:05.739083: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_10', 596 bytes spill stores, 596 bytes spill loads
+
+2026-08-02 15:00:06.023505: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_10_0', 512 bytes spill stores, 512 bytes spill loads
+
+2026-08-02 15:00:06.233529: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14', 240 bytes spill stores, 240 bytes spill loads
+
+2026-08-02 15:00:06.264717: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_10', 12 bytes spill stores, 12 bytes spill loads
+
+2026-08-02 15:00:06.322169: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14', 480 bytes spill stores, 480 bytes spill loads
+
+2026-08-02 15:00:06.342239: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_10', 704 bytes spill stores, 704 bytes spill loads
+
+2026-08-02 15:00:06.417391: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_10', 320 bytes spill stores, 320 bytes spill loads
+
+2026-08-02 15:00:06.848300: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14_0', 348 bytes spill stores, 348 bytes spill loads
+
+2026-08-02 15:00:06.869167: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_10', 560 bytes spill stores, 560 bytes spill loads
+
+2026-08-02 15:00:06.974159: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14_0', 1684 bytes spill stores, 1400 bytes spill loads
+
+2026-08-02 15:00:07.086068: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14', 320 bytes spill stores, 320 bytes spill loads
+
+2026-08-02 15:00:07.203591: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14', 5376 bytes spill stores, 5436 bytes spill loads
+
+2026-08-02 15:00:07.404782: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14', 28 bytes spill stores, 28 bytes spill loads
+
+2026-08-02 15:00:07.700735: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14', 12 bytes spill stores, 12 bytes spill loads
+
+2026-08-02 15:00:07.740978: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14', 12 bytes spill stores, 12 bytes spill loads
+
+2026-08-02 15:00:07.775293: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14', 384 bytes spill stores, 384 bytes spill loads
+
+2026-08-02 15:00:07.787321: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14', 2256 bytes spill stores, 1844 bytes spill loads
+
+2026-08-02 15:00:07.813728: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14', 5220 bytes spill stores, 5256 bytes spill loads
+
+2026-08-02 15:00:07.841308: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14', 528 bytes spill stores, 528 bytes spill loads
+
+2026-08-02 15:00:07.869970: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_14', 408 bytes spill stores, 408 bytes spill loads
+
+2026-08-02 15:00:07.901506: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_10', 3988 bytes spill stores, 3368 bytes spill loads
+
+I0000 00:00:1785654010.690561 1293558 device_compiler.h:188] Compiled cluster using XLA!  This line is logged at most once for the lifetime of the process.
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 3464s 56ms/step - accuracy: 0.8110 - loss: 0.6859 - val_accuracy: 0.1594 - val_loss: 2.8846 - learning_rate: 1.0000e-04
+Epoch 2/18
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 3436s 56ms/step - accuracy: 0.8478 - loss: 0.5053 - val_accuracy: 0.3781 - val_loss: 2.5330 - learning_rate: 1.0000e-04
+Epoch 3/18
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 0s 55ms/step - accuracy: 0.8707 - loss: 0.4329
+Epoch 3: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 3444s 56ms/step - accuracy: 0.8723 - loss: 0.4224 - val_accuracy: 0.2339 - val_loss: 4.8540 - learning_rate: 1.0000e-04
+Epoch 4/18
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 3377s 55ms/step - accuracy: 0.8727 - loss: 0.3980 - val_accuracy: 0.5975 - val_loss: 0.9823 - learning_rate: 1.0000e-05
+Epoch 5/18
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 3379s 55ms/step - accuracy: 0.9146 - loss: 0.2778 - val_accuracy: 0.6487 - val_loss: 0.8462 - learning_rate: 1.0000e-05
+Epoch 6/18
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 0s 55ms/step - accuracy: 0.9298 - loss: 0.2226
+Epoch 6: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 3457s 56ms/step - accuracy: 0.9291 - loss: 0.2317 - val_accuracy: 0.4679 - val_loss: 2.9304 - learning_rate: 1.0000e-05
+Epoch 7/18
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 3454s 56ms/step - accuracy: 0.8798 - loss: 0.3847 - val_accuracy: 0.7414 - val_loss: 0.7401 - learning_rate: 1.0000e-06
+Epoch 8/18
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 3539s 57ms/step - accuracy: 0.8927 - loss: 0.3330 - val_accuracy: 0.7520 - val_loss: 0.7255 - learning_rate: 1.0000e-06
+Epoch 9/18
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 0s 58ms/step - accuracy: 0.9050 - loss: 0.2902
+Epoch 9: ReduceLROnPlateau reducing learning rate to 9.999999974752428e-08.
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 3650s 59ms/step - accuracy: 0.9027 - loss: 0.3069 - val_accuracy: 0.7190 - val_loss: 0.9405 - learning_rate: 1.0000e-06
+Epoch 10/18
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 3665s 59ms/step - accuracy: 0.8404 - loss: 0.4559 - val_accuracy: 0.7537 - val_loss: 0.5963 - learning_rate: 1.0000e-07
+Epoch 11/18
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 3650s 59ms/step - accuracy: 0.8568 - loss: 0.3980 - val_accuracy: 0.7625 - val_loss: 0.5752 - learning_rate: 1.0000e-07
+Epoch 12/18
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 0s 57ms/step - accuracy: 0.8791 - loss: 0.3795
+Epoch 12: ReduceLROnPlateau reducing learning rate to 1.0000000116860975e-08.
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 3646s 59ms/step - accuracy: 0.8585 - loss: 0.4002 - val_accuracy: 0.7469 - val_loss: 0.6014 - learning_rate: 1.0000e-07
+Epoch 13/18
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 0s 57ms/step - accuracy: 0.8743 - loss: 0.3875
+Epoch 13: ReduceLROnPlateau reducing learning rate to 9.999999939225292e-10.
+61764/61764 ━━━━━━━━━━━━━━━━━━━━ 3637s 59ms/step - accuracy: 0.8547 - loss: 0.4100 - val_accuracy: 0.7554 - val_loss: 0.5988 - learning_rate: 1.0000e-08
+Epoch 13: early stopping
+Restoring model weights from the end of the best epoch: 11.
+model( --> aslvid2gloss_v43.keras <-- ) quantity of outputs 22
+--------------------------------------------------------------
+training took --> 12h 45m
