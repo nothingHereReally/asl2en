@@ -139,6 +139,34 @@ def get95is45p50videos(landmark, skeleton) -> tuple:
     for a_gloss in skeleton[KEY_TEST]:
         out_skeleton[KEY_TEST].extend(a_gloss[:2])
     return (out_landmark, out_skeleton)
+def get49is45p4videos(landmark, skeleton) -> tuple:
+    out_landmark: dict= {
+        KEY_TRAIN: list(),
+        KEY_VAL: list(),
+        KEY_TEST: list(),
+        KEY_ID2G: list(landmark[KEY_ID2G]),
+        KEY_G2ID: dict(landmark[KEY_G2ID]),
+        KEY_RH_MANDATORY: list(landmark[KEY_RH_MANDATORY]),
+    }
+    out_skeleton: dict= {
+        KEY_TRAIN: list(),
+        KEY_VAL: list(),
+        KEY_TEST: list(),
+        KEY_ID2G: list(skeleton[KEY_ID2G]),
+        KEY_G2ID: dict(skeleton[KEY_G2ID]),
+        KEY_RH_MANDATORY: list(skeleton[KEY_RH_MANDATORY]),
+    }
+    for a_gloss in landmark[KEY_TRAIN]:
+        out_landmark[KEY_TRAIN].extend(a_gloss[:40])
+        out_landmark[KEY_TRAIN].extend(a_gloss[90:94])
+        out_landmark[KEY_VAL].extend(a_gloss[40:43])
+        out_landmark[KEY_TEST].extend(a_gloss[43:45])
+    for a_gloss in skeleton[KEY_TRAIN]:
+        out_skeleton[KEY_TRAIN].extend(a_gloss[:40])
+        out_skeleton[KEY_TRAIN].extend(a_gloss[90:94])
+        out_skeleton[KEY_VAL].extend(a_gloss[40:43])
+        out_skeleton[KEY_TEST].extend(a_gloss[43:45])
+    return (out_landmark, out_skeleton)
 # ----------------------------------------------------------
 # ----------------------------------------------------------
 
@@ -213,6 +241,7 @@ def main() -> None:
     glasl_LANDMARK_50, glasl_SKELETON_50= get50videos(landmark_details, skeleton_details)
     # -----------------------------------------------------------------------------------
     glasl_LANDMARK_95, glasl_SKELETON_95= get95is45p50videos(landmark_details, skeleton_details)
+    glasl_LANDMARK_49, glasl_SKELETON_49= get49is45p4videos(landmark_details, skeleton_details)
 
     with open(f"{GLASL_DIR /"glasl.annotation.landmark.19videos.json"}", "w") as f:
         jsonsave(glasl_LANDMARK_19, f, indent=4)
@@ -234,6 +263,11 @@ def main() -> None:
         jsonsave(glasl_LANDMARK_95, f, indent=4)
     with open(f"{GLASL_DIR /"glasl.annotation.skeleton.95videos.json"}", "w") as f:
         jsonsave(glasl_SKELETON_95, f, indent=4)
+
+    with open(f"{GLASL_DIR /"glasl.annotation.landmark.49videos.json"}", "w") as f:
+        jsonsave(glasl_SKELETON_49, f, indent=4)
+    with open(f"{GLASL_DIR /"glasl.annotation.skeleton.49videos.json"}", "w") as f:
+        jsonsave(glasl_LANDMARK_49, f, indent=4)
 
 
 if __name__=='__main__':
