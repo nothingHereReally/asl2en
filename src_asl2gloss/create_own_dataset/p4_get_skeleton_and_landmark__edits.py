@@ -67,6 +67,42 @@ def get_details(landmark, skeleton) -> tuple:
         KEY_RH_MANDATORY: list(skeleton[KEY_RH_MANDATORY]),
     }
     return (landmark_details, skeleton_details)
+def get19videos(landmark, skeleton) -> tuple:
+    out_landmark: dict= {
+        KEY_TRAIN: list(),
+        KEY_VAL: list(),
+        KEY_TEST: list(),
+        KEY_ID2G: list(landmark[KEY_ID2G]),
+        KEY_G2ID: dict(landmark[KEY_G2ID]),
+        KEY_RH_MANDATORY: list(landmark[KEY_RH_MANDATORY]),
+    }
+    out_skeleton: dict= {
+        KEY_TRAIN: list(),
+        KEY_VAL: list(),
+        KEY_TEST: list(),
+        KEY_ID2G: list(skeleton[KEY_ID2G]),
+        KEY_G2ID: dict(skeleton[KEY_G2ID]),
+        KEY_RH_MANDATORY: list(skeleton[KEY_RH_MANDATORY]),
+    }
+    for a_gloss in landmark[KEY_TRAIN]:
+        out_landmark[KEY_TRAIN].extend(a_gloss[:5])
+        out_landmark[KEY_TRAIN].extend(a_gloss[45:50])
+        out_landmark[KEY_TRAIN].extend(a_gloss[90:94])
+    for a_gloss in skeleton[KEY_TRAIN]:
+        out_skeleton[KEY_TRAIN].extend(a_gloss[:5])
+        out_skeleton[KEY_TRAIN].extend(a_gloss[45:50])
+        out_skeleton[KEY_TRAIN].extend(a_gloss[90:94])
+
+    for a_gloss in landmark[KEY_VAL]:
+        out_landmark[KEY_VAL].extend(a_gloss[:3])
+    for a_gloss in skeleton[KEY_VAL]:
+        out_skeleton[KEY_VAL].extend(a_gloss[:3])
+
+    for a_gloss in landmark[KEY_TEST]:
+        out_landmark[KEY_TEST].extend(a_gloss[:2])
+    for a_gloss in skeleton[KEY_TEST]:
+        out_skeleton[KEY_TEST].extend(a_gloss[:2])
+    return (out_landmark, out_skeleton)
 def get45videos(landmark, skeleton) -> tuple:
     out_landmark: dict= {
         KEY_TRAIN: list(),
@@ -132,13 +168,20 @@ def main() -> None:
     glasl_LANDMARK, glasl_SKELETON= load_dataset()
 
     landmark_details, skeleton_details= get_details(glasl_LANDMARK, glasl_SKELETON)
+    glasl_LANDMARK_19, glasl_SKELETON_19= get19videos(landmark_details, skeleton_details)
     glasl_LANDMARK_45, glasl_SKELETON_45= get45videos(landmark_details, skeleton_details)
     glasl_LANDMARK_50, glasl_SKELETON_50= get50videos(landmark_details, skeleton_details)
+
+    with open(f"{GLASL_DIR /"glasl.annotation.landmark.19videos.json"}", "w") as f:
+        jsonsave(glasl_LANDMARK_19, f, indent=4)
+    with open(f"{GLASL_DIR /"glasl.annotation.skeleton.19videos.json"}", "w") as f:
+        jsonsave(glasl_SKELETON_19, f, indent=4)
 
     with open(f"{GLASL_DIR /"glasl.annotation.landmark.45videos.json"}", "w") as f:
         jsonsave(glasl_LANDMARK_45, f, indent=4)
     with open(f"{GLASL_DIR /"glasl.annotation.skeleton.45videos.json"}", "w") as f:
         jsonsave(glasl_SKELETON_45, f, indent=4)
+
     with open(f"{GLASL_DIR /"glasl.annotation.landmark.50videos.json"}", "w") as f:
         jsonsave(glasl_LANDMARK_50, f, indent=4)
     with open(f"{GLASL_DIR /"glasl.annotation.skeleton.50videos.json"}", "w") as f:
