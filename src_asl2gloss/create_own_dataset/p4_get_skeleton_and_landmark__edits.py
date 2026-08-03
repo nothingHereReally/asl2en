@@ -84,11 +84,14 @@ def get45videos(landmark, skeleton) -> tuple:
         KEY_G2ID: dict(skeleton[KEY_G2ID]),
         KEY_RH_MANDATORY: list(skeleton[KEY_RH_MANDATORY]),
     }
-    for tvt in (KEY_TRAIN, KEY_VAL, KEY_TEST):
-        for a_gloss in landmark[tvt]:
-            out_landmark[tvt].extend(a_gloss[:45])
-        for a_gloss in skeleton[tvt]:
-            out_skeleton[tvt].extend(a_gloss[:45])
+    for a_gloss in landmark[KEY_TRAIN]:
+        out_landmark[KEY_TRAIN].extend(a_gloss[:40])
+        out_landmark[KEY_VAL].extend(a_gloss[40:43])
+        out_landmark[KEY_TEST].extend(a_gloss[43:45])
+    for a_gloss in skeleton[KEY_TRAIN]:
+        out_skeleton[KEY_TRAIN].extend(a_gloss[:40])
+        out_skeleton[KEY_VAL].extend(a_gloss[40:43])
+        out_skeleton[KEY_TEST].extend(a_gloss[43:45])
     return (out_landmark, out_skeleton)
 def get50videos(landmark, skeleton) -> tuple:
     out_landmark: dict= {
@@ -107,11 +110,20 @@ def get50videos(landmark, skeleton) -> tuple:
         KEY_G2ID: dict(skeleton[KEY_G2ID]),
         KEY_RH_MANDATORY: list(skeleton[KEY_RH_MANDATORY]),
     }
-    for tvt in (KEY_TRAIN, KEY_VAL, KEY_TEST):
-        for a_gloss in landmark[tvt]:
-            out_landmark[tvt].extend(a_gloss[45:95])
-        for a_gloss in skeleton[tvt]:
-            out_skeleton[tvt].extend(a_gloss[45:95])
+    for a_gloss in landmark[KEY_TRAIN]:
+        out_landmark[KEY_TRAIN].extend(a_gloss[45:90])
+    for a_gloss in skeleton[KEY_TRAIN]:
+        out_skeleton[KEY_TRAIN].extend(a_gloss[45:90])
+
+    for a_gloss in landmark[KEY_VAL]:
+        out_landmark[KEY_VAL].extend(a_gloss[:3])
+    for a_gloss in skeleton[KEY_VAL]:
+        out_skeleton[KEY_VAL].extend(a_gloss[:3])
+
+    for a_gloss in landmark[KEY_TEST]:
+        out_landmark[KEY_TEST].extend(a_gloss[:2])
+    for a_gloss in skeleton[KEY_TEST]:
+        out_skeleton[KEY_TEST].extend(a_gloss[:2])
     return (out_landmark, out_skeleton)
 
 
