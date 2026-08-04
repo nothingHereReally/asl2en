@@ -272,9 +272,9 @@ def main() -> None:
     glasl_LANDMARK_45, glasl_SKELETON_45= get45videos(landmark_details, skeleton_details)
     glasl_LANDMARK_50, glasl_SKELETON_50= get50videos(landmark_details, skeleton_details)
     # -----------------------------------------------------------------------------------
-    glasl_LANDMARK_95, glasl_SKELETON_95= get95is45p50videos(landmark_details, skeleton_details)
-    glasl_LANDMARK_49, glasl_SKELETON_49= get49is45p4videos(landmark_details, skeleton_details)
-    glasl_LANDMARK_54, glasl_SKELETON_54= get54is50p4videos(landmark_details, skeleton_details)
+    glasl_LANDMARK_95is45p50, glasl_SKELETON_95is45p50= get95is45p50videos(landmark_details, skeleton_details)
+    glasl_LANDMARK_49is45p4, glasl_SKELETON_49is45p4= get49is45p4videos(landmark_details, skeleton_details)
+    glasl_LANDMARK_54is50p4, glasl_SKELETON_54is50p4= get54is50p4videos(landmark_details, skeleton_details)
 
     with open(f"{GLASL_DIR /"glasl.annotation.landmark.19videos.json"}", "w") as f:
         jsonsave(glasl_LANDMARK_19, f, indent=4)
@@ -292,20 +292,20 @@ def main() -> None:
         jsonsave(glasl_SKELETON_50, f, indent=4)
 
     # -----------------------------------------------------------------------------
-    with open(f"{GLASL_DIR /"glasl.annotation.landmark.95videos.json"}", "w") as f:
-        jsonsave(glasl_LANDMARK_95, f, indent=4)
-    with open(f"{GLASL_DIR /"glasl.annotation.skeleton.95videos.json"}", "w") as f:
-        jsonsave(glasl_SKELETON_95, f, indent=4)
+    with open(f"{GLASL_DIR /"glasl.annotation.landmark.95videos_is45p50.json"}", "w") as f:
+        jsonsave(glasl_LANDMARK_95is45p50, f, indent=4)
+    with open(f"{GLASL_DIR /"glasl.annotation.skeleton.95videos_is45p50.json"}", "w") as f:
+        jsonsave(glasl_SKELETON_95is45p50, f, indent=4)
 
-    with open(f"{GLASL_DIR /"glasl.annotation.landmark.49videos.json"}", "w") as f:
-        jsonsave(glasl_SKELETON_49, f, indent=4)
-    with open(f"{GLASL_DIR /"glasl.annotation.skeleton.49videos.json"}", "w") as f:
-        jsonsave(glasl_LANDMARK_49, f, indent=4)
+    with open(f"{GLASL_DIR /"glasl.annotation.landmark.49videos_is45p4.json"}", "w") as f:
+        jsonsave(glasl_LANDMARK_49is45p4, f, indent=4)
+    with open(f"{GLASL_DIR /"glasl.annotation.skeleton.49videos_is45p4.json"}", "w") as f:
+        jsonsave(glasl_SKELETON_49is45p4, f, indent=4)
 
-    with open(f"{GLASL_DIR /"glasl.annotation.landmark.54videos.json"}", "w") as f:
-        jsonsave(glasl_LANDMARK_54, f, indent=4)
-    with open(f"{GLASL_DIR /"glasl.annotation.skeleton.54videos.json"}", "w") as f:
-        jsonsave(glasl_SKELETON_54, f, indent=4)
+    with open(f"{GLASL_DIR /"glasl.annotation.landmark.54videos_is50p4.json"}", "w") as f:
+        jsonsave(glasl_LANDMARK_54is50p4, f, indent=4)
+    with open(f"{GLASL_DIR /"glasl.annotation.skeleton.54videos_is50p4.json"}", "w") as f:
+        jsonsave(glasl_SKELETON_54is50p4, f, indent=4)
 
 
 if __name__=='__main__':
