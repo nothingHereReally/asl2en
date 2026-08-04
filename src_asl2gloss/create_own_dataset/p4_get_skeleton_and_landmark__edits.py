@@ -191,12 +191,14 @@ def get54is50p4videos(landmark, skeleton) -> tuple:
         out_skeleton[KEY_TRAIN].extend(a_gloss[45:90])
         out_skeleton[KEY_TRAIN].extend(a_gloss[90:94])
 
-    for a_gloss in skeleton[KEY_VAL]:
+    for a_gloss in landmark[KEY_VAL]:
         out_landmark[KEY_VAL].extend(a_gloss[:3])
+    for a_gloss in skeleton[KEY_VAL]:
         out_skeleton[KEY_VAL].extend(a_gloss[:3])
 
-    for a_gloss in skeleton[KEY_TEST]:
+    for a_gloss in landmark[KEY_TEST]:
         out_landmark[KEY_TEST].extend(a_gloss[:2])
+    for a_gloss in skeleton[KEY_TEST]:
         out_skeleton[KEY_TEST].extend(a_gloss[:2])
     return (out_landmark, out_skeleton)
 # ----------------------------------------------------------
