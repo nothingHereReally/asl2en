@@ -35,6 +35,18 @@ GLOSS_IN_ORDER: list[str]= [
 ]
 
 
+def get_19videos_dataset(glasl: list[dict]):
+    glasl_19: list[dict]= [{
+        "gloss": glossWord,
+        "instances": []
+    } for glossWord in GLOSS_IN_ORDER]
+    for ii in range(len(GLOSS_IN_ORDER)):
+        glasl_19[ii]["instances"].extend( glasl[ii]["instances"][:5] )    # ie. +5
+        glasl_19[ii]["instances"].extend( glasl[ii]["instances"][45:50] ) # ie. +5
+        glasl_19[ii]["instances"].extend( glasl[ii]["instances"][95:] )   # ie. +9
+    return glasl_19
+
+
 def main() -> None:
     glasl: list[dict]= [{
         "gloss": glossWord,
@@ -107,24 +119,24 @@ def main() -> None:
                     "split": T_TEST,
                     "video_file": f"{glasl_50[ii]["gloss"]}_00{i}.mp4"
                 })
-    for i in range(1,5):
+    glasl_9: list[dict]= [{
+        "gloss": glossWord,
+        "instances": []
+    } for glossWord in GLOSS_IN_ORDER]
+    for i in range(1,10):
         for ii in range(LEN_CLASS):
             glasl[ii]["instances"].append({
                 "split": T_TRAIN,
                 "video_file": f"{glasl[ii]["gloss"]}__long_000{i}.mp4"
             })
-    glasl_19: list[dict]= [{
-        "gloss": glossWord,
-        "instances": []
-    } for glossWord in GLOSS_IN_ORDER]
-    for ii in range(LEN_CLASS):
-        glasl_19[ii]["instances"].extend( glasl[ii]["instances"][:5] )
-        glasl_19[ii]["instances"].extend( glasl[ii]["instances"][45:45+5] )
-        glasl_19[ii]["instances"].extend( glasl[ii]["instances"][-4:] )
-        glasl_19[ii]["instances"].extend( glasl[ii]["instances"][90:95] )
+            glasl_9[ii]["instances"].append({
+                "split": T_TRAIN,
+                "video_file": f"{glasl[ii]["gloss"]}__long_000{i}.mp4"
+            })
+    glasl_19: list[dict]= get_19videos_dataset(glasl)
 
 
-    for idxVideo in range(99):
+    for idxVideo in range(104):
         for idxCat in range(LEN_CLASS):
             if not exists(f"{VIDEO_DIR /glasl[idxCat]["instances"][idxVideo]["video_file"]}"):
                 raise FileNotFoundError(f"video {VIDEO_DIR /glasl[idxCat]["instances"][idxVideo]["video_file"]} Does Not Exist.")
@@ -135,7 +147,7 @@ def main() -> None:
         savejson(glasl_45, f, indent=4)
     with open(f"{GLASL_DIR /"glasl.annotation.clean.50videos.json"}", "w") as f:
         savejson(glasl_50, f, indent=4)
-    with open(f"{GLASL_DIR /"glasl.annotation.clean.99videos.json"}", "w") as f:
+    with open(f"{GLASL_DIR /"glasl.annotation.clean.104videos.json"}", "w") as f:
         savejson(glasl, f, indent=4)
 
     with open(f"{GLASL_DIR /"glasl.annotation.clean.19videos.json"}", "w") as f:
