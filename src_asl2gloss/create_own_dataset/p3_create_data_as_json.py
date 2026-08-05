@@ -147,6 +147,8 @@ def main() -> None:
         savejson(glasl_45, f, indent=4)
     with open(f"{GLASL_DIR /"glasl.annotation.clean.50videos.json"}", "w") as f:
         savejson(glasl_50, f, indent=4)
+    with open(f"{GLASL_DIR /"glasl.annotation.clean.9videos.json"}", "w") as f:
+        savejson(glasl_9, f, indent=4)
     with open(f"{GLASL_DIR /"glasl.annotation.clean.104videos.json"}", "w") as f:
         savejson(glasl, f, indent=4)
 
