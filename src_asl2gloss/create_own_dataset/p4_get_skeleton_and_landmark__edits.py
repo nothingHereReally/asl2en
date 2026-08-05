@@ -28,9 +28,9 @@ KEY_RH_MANDATORY: str= "right_hand_mandatory"
 
 def mandatory_all_2exist() -> None:
     if not exists(LANDMARK_dir):
-        raise FileExistsError(f"please this folder {LANDMARK_dir} exist and has dataset contents.")
+        raise FileExistsError(f"Missing folder {LANDMARK_dir} and dataset contents.")
     if not exists(SKELETON_dir):
-        raise FileExistsError(f"please this folder {SKELETON_dir} exist and has dataset contents.")
+        raise FileExistsError(f"Missing folder {SKELETON_dir} and dataset contents.")
 
 
 def load_dataset() -> tuple:
