@@ -542,7 +542,7 @@ def processDataForTrainingLater(glasl_clean: list, glasl_LANDMARK: dict, glasl_S
 
 def init_vars() -> tuple:
     glasl_clean: list= []
-    # source: str= "glasl.annotation.clean.99videos.json"
+    # source: str= "glasl.annotation.clean.104videos.json"
     source: str= "glasl.annotation.clean.json"
     with open(f"{GLASL_DIR /source}", 'r') as f:
         glasl_clean= jsonload(f)
