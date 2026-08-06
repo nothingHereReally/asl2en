@@ -141,12 +141,12 @@ def main() -> None:
                 "split": T_TRAIN,
                 "video_file": f"{glasl[ii]["gloss"]}__long_000{i}.mp4"
             })
-            if i<4:
+            if i<5:
                 glasl_9[ii]["instances"].append({
                     "split": T_TRAIN,
                     "video_file": f"{glasl[ii]["gloss"]}__long_000{i}.mp4"
                 })
-            elif i<7:
+            elif i<8:
                 glasl_9[ii]["instances"].append({
                     "split": T_VAL,
                     "video_file": f"{glasl[ii]["gloss"]}__long_000{i}.mp4"
