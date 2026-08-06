@@ -1,3 +1,4 @@
+from concurrent.futures import ThreadPoolExecutor
 from math import ceil
 from numpy import array, float32, load as loadnp, ndarray, uint16
 from pathlib import Path
@@ -6,6 +7,7 @@ from typing import Generator
 
 
 from .lmark_constant import (
+    CPU_THREAD,
     GLASL_LANDMARK_DIR,
     KEY_FILE,
     KEY_GLOSS,
@@ -505,3 +507,51 @@ def get_data_landmark(
                 batch_videos= batch_videos[batch_size:]
                 batch_class= batch_class[batch_size:]
                 yield (out_inputs, out_expected_outputs)
+
+def get_batch_numpy_parallel(videos: list[list[str]], exec) -> list:
+    '''
+    don't use due to slower than just doing plain synchronous code
+    just keeping for record purposes
+    '''
+    return list(exec.map(get_numpy, videos))
+def get_data_landmark_parallel(
+    train_val: str= KEY_TRAIN,
+    batch_size: int=ON_TRAINING_BATCH
+) -> Generator:
+    '''
+    don't use due to slower than just doing plain synchronous code
+    just keeping for record purposes
+    '''
+    dataset_idxs: tuple= tuple(sample(
+        range(len(GLASL_LM_DS[train_val])),
+        len(GLASL_LM_DS[train_val])
+    ))
+    batch_videos: list= []
+    batch_class: list= []
+    with ThreadPoolExecutor(max_workers=int(CPU_THREAD*.75)) as exec:
+        while True:
+            for idx_ds in dataset_idxs:
+                a_raw_video: dict= GLASL_LM_DS[train_val][idx_ds]
+                if QUANTITY_FRAME<len(a_raw_video[KEY_LMARK]):
+                    tmp: list= get_landmark4greater(a_raw_video)
+                    if 0<len(tmp):
+                        batch_videos.extend(tmp)
+                        batch_class.extend(
+                            [a_raw_video[KEY_GLOSS]] *len(tmp)
+                        )
+                else:
+                    tmp: list= get_landmark4less_or_equal(a_raw_video)
+                    if 0<len(tmp):
+                        batch_videos.append(tmp)
+                        batch_class.append(a_raw_video[KEY_GLOSS])
+                # ---- now ready ----
+                while batch_size<=len(batch_videos):
+                    out_inputs: ndarray= array(
+                        get_batch_numpy_parallel(batch_videos[:batch_size], exec),
+                        dtype=float32
+                    )
+                    assert out_inputs.shape==(batch_size, QUANTITY_FRAME, 86, 2)
+                    out_expected_outputs: ndarray= array(batch_class[:batch_size], dtype=uint16)
+                    batch_videos= batch_videos[batch_size:]
+                    batch_class= batch_class[batch_size:]
+                    yield (out_inputs, out_expected_outputs)
