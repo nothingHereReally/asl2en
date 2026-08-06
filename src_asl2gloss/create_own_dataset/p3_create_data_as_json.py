@@ -43,7 +43,19 @@ def get_19videos_dataset(glasl: list[dict]):
     for ii in range(len(GLOSS_IN_ORDER)):
         glasl_19[ii]["instances"].extend( glasl[ii]["instances"][:5] )    # ie. +5
         glasl_19[ii]["instances"].extend( glasl[ii]["instances"][45:50] ) # ie. +5
-        glasl_19[ii]["instances"].extend( glasl[ii]["instances"][95:] )   # ie. +9
+        glasl_19[ii]["instances"].extend( glasl[ii]["instances"][95:99] ) # ie. +4
+        glasl_19[ii]["instances"].extend( [
+            {
+                "split": T_VAL,
+                "video_file": el["video_file"]
+            } for el in glasl[ii]["instances"][99:102]
+        ] )   # ie. +2
+        glasl_19[ii]["instances"].extend( [
+            {
+                "split": T_TEST,
+                "video_file": el["video_file"]
+            } for el in glasl[ii]["instances"][102:104]
+        ] )   # ie. +2
     return glasl_19
 
 
@@ -129,10 +141,21 @@ def main() -> None:
                 "split": T_TRAIN,
                 "video_file": f"{glasl[ii]["gloss"]}__long_000{i}.mp4"
             })
-            glasl_9[ii]["instances"].append({
-                "split": T_TRAIN,
-                "video_file": f"{glasl[ii]["gloss"]}__long_000{i}.mp4"
-            })
+            if i<4:
+                glasl_9[ii]["instances"].append({
+                    "split": T_TRAIN,
+                    "video_file": f"{glasl[ii]["gloss"]}__long_000{i}.mp4"
+                })
+            elif i<7:
+                glasl_9[ii]["instances"].append({
+                    "split": T_VAL,
+                    "video_file": f"{glasl[ii]["gloss"]}__long_000{i}.mp4"
+                })
+            else:
+                glasl_9[ii]["instances"].append({
+                    "split": T_TEST,
+                    "video_file": f"{glasl[ii]["gloss"]}__long_000{i}.mp4"
+                })
     glasl_19: list[dict]= get_19videos_dataset(glasl)
 
 
