@@ -496,6 +496,7 @@ def get_data_landmark(
                     get_batch_numpy(batch_videos[:batch_size]),
                     dtype=float32
                 )
+                assert out_inputs.shape==(batch_size, QUANTITY_FRAME, 86, 2)
                 out_expected_outputs: ndarray= array(batch_class[:batch_size], dtype=uint16)
                 batch_videos= batch_videos[batch_size:]
                 batch_class= batch_class[batch_size:]
