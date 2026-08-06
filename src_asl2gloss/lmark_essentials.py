@@ -1,8 +1,8 @@
 from math import ceil
-from pathlib import Path
-from typing import Generator
-from random import sample
 from numpy import array, float32, load as loadnp, ndarray, uint16
+from pathlib import Path
+from random import sample
+from typing import Generator
 
 
 from .lmark_constant import (
@@ -452,11 +452,15 @@ def get_landmark4greater(a_raw_video: dict) -> list:
     return lmark_out__MANY_VIDS
 
 
-def get_numpy(file_list: list) -> list:
+def load_a_numpy(file: str) -> ndarray:
+    out: ndarray
+    with open(f"{GLASL_LANDMARK_DIR /file}", "rb") as f:
+        out= loadnp(f)
+    return out
+def get_numpy(file_list: list[str]) -> list:
     out: list= []
     for file in file_list:
-        with open(f"{GLASL_LANDMARK_DIR /file}", "rb") as f:
-            out.append(loadnp(f))
+        out.append(load_a_numpy(file))
     return out
 def get_batch_numpy(videos: list) -> list:
     out: list= []
