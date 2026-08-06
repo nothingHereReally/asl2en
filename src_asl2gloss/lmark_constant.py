@@ -17,7 +17,6 @@ PART4_MOD2USE: tuple= (3,4,5,6,7,8,9,10,11,12)  # 4st ( try this said.2026.7.22 
 # ✔ 2026/7/26 DONE: add `right_hand_mandatory` key on an images gloss
 # ---- eg. who, drink, fever, ...
 IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
-CPU_THREAD: int= int(cpu_count() if cpu_count()!=None else 2)
 GLASL_LANDMARK_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"landmark"
 GLASL_SKELETON_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"skeleton"
 
