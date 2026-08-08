@@ -1,0 +1,98 @@
+model v47
+
+
+--> training took 6 hours 41 minutes
+input shape (16, 86, 2)
+output shape (22,)
+--> dataset used
+95 videos= 45 videos + 50 videos glasl
+
+
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                  ┃ Output Shape              ┃         Param # ┃ Connected to               ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)        │ (None, 16, 86, 2)         │               0 │ -                          │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ reshape (Reshape)             │ (None, 16, 172)           │               0 │ batch_vid[0][0]            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed              │ (None, 16, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ multi_head_attention          │ (None, 16, 86)            │         238,822 │ time_distributed[0][0],    │
+│ (MultiHeadAttention)          │                           │                 │ time_distributed[0][0],    │
+│                               │                           │                 │ time_distributed[0][0]     │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ add (Add)                     │ (None, 16, 86)            │               0 │ time_distributed[0][0],    │
+│                               │                           │                 │ multi_head_attention[0][0] │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed_1            │ (None, 16, 42)            │           3,654 │ add[0][0]                  │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ multi_head_attention_1        │ (None, 16, 42)            │          57,498 │ time_distributed_1[0][0],  │
+│ (MultiHeadAttention)          │                           │                 │ time_distributed_1[0][0],  │
+│                               │                           │                 │ time_distributed_1[0][0]   │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ add_1 (Add)                   │ (None, 16, 42)            │               0 │ time_distributed_1[0][0],  │
+│                               │                           │                 │ multi_head_attention_1[0]… │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ flatten (Flatten)             │ (None, 672)               │               0 │ add_1[0][0]                │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ dense_2 (Dense)               │ (None, 172)               │         115,756 │ flatten[0][0]              │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ dense_3 (Dense)               │ (None, 43)                │           7,439 │ dense_2[0][0]              │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ batch_class (Dense)           │ (None, 22)                │             968 │ dense_3[0][0]              │
+└───────────────────────────────┴───────────────────────────┴─────────────────┴────────────────────────────┘
+ Total params: 439,015 (2.22 MB)
+ Trainable params: 439,015 (2.22 MB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/20
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 1431s 5ms/step - accuracy: 0.9151 - loss: 0.3897 - val_accuracy: 0.1375 - val_loss: 6.8004 - learning_rate: 1.0000e-04
+Epoch 2/20
+273816/273820 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step - accuracy: 0.8151 - loss: 0.6212
+Epoch 2: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 1425s 5ms/step - accuracy: 0.8421 - loss: 0.5584 - val_accuracy: 0.1016 - val_loss: 8.0321 - learning_rate: 1.0000e-04
+Epoch 3/20
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 1655s 6ms/step - accuracy: 0.8515 - loss: 0.5236 - val_accuracy: 0.2853 - val_loss: 3.4229 - learning_rate: 1.0000e-05
+Epoch 4/20
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 2462s 9ms/step - accuracy: 0.9284 - loss: 0.2903 - val_accuracy: 0.4579 - val_loss: 2.5562 - learning_rate: 1.0000e-05
+Epoch 5/20
+273812/273820 ━━━━━━━━━━━━━━━━━━━━ 0s 7ms/step - accuracy: 0.9564 - loss: 0.1855
+Epoch 5: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 2083s 8ms/step - accuracy: 0.9553 - loss: 0.1945 - val_accuracy: 0.4413 - val_loss: 3.2469 - learning_rate: 1.0000e-05
+Epoch 6/20
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 1432s 5ms/step - accuracy: 0.8858 - loss: 0.4266 - val_accuracy: 0.6410 - val_loss: 1.5768 - learning_rate: 1.0000e-06
+Epoch 7/20
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 1907s 7ms/step - accuracy: 0.9184 - loss: 0.2970 - val_accuracy: 0.6610 - val_loss: 1.2812 - learning_rate: 1.0000e-06
+Epoch 8/20
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 2381s 9ms/step - accuracy: 0.9339 - loss: 0.2488 - val_accuracy: 0.7487 - val_loss: 0.8056 - learning_rate: 1.0000e-06
+Epoch 9/20
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 1421s 5ms/step - accuracy: 0.9416 - loss: 0.2177 - val_accuracy: 0.7646 - val_loss: 0.7840 - learning_rate: 1.0000e-06
+Epoch 10/20
+273813/273820 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step - accuracy: 0.9374 - loss: 0.2375
+Epoch 10: ReduceLROnPlateau reducing learning rate to 9.999999974752428e-08.
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 1555s 6ms/step - accuracy: 0.9449 - loss: 0.2092 - val_accuracy: 0.7643 - val_loss: 0.9165 - learning_rate: 1.0000e-06
+Epoch 11/20
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 1413s 5ms/step - accuracy: 0.8809 - loss: 0.4189 - val_accuracy: 0.8717 - val_loss: 0.4774 - learning_rate: 1.0000e-07
+Epoch 12/20
+273812/273820 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step - accuracy: 0.8870 - loss: 0.3665
+Epoch 12: ReduceLROnPlateau reducing learning rate to 1.0000000116860975e-08.
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 1418s 5ms/step - accuracy: 0.8910 - loss: 0.3668 - val_accuracy: 0.8648 - val_loss: 0.4080 - learning_rate: 1.0000e-07
+Epoch 13/20
+273816/273820 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step - accuracy: 0.8704 - loss: 0.4382
+Epoch 13: ReduceLROnPlateau reducing learning rate to 9.999999939225292e-10.
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 1405s 5ms/step - accuracy: 0.8752 - loss: 0.4264 - val_accuracy: 0.8712 - val_loss: 0.3930 - learning_rate: 1.0000e-08
+Epoch 14/20
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 1398s 5ms/step - accuracy: 0.8758 - loss: 0.4291 - val_accuracy: 0.8804 - val_loss: 0.3832 - learning_rate: 1.0000e-09
+Epoch 15/20
+273816/273820 ━━━━━━━━━━━━━━━━━━━━ 0s 5ms/step - accuracy: 0.8825 - loss: 0.4020
+Epoch 15: ReduceLROnPlateau reducing learning rate to 1e-10.
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 1400s 5ms/step - accuracy: 0.8741 - loss: 0.4293 - val_accuracy: 0.8776 - val_loss: 0.3825 - learning_rate: 1.0000e-09
+Epoch 16/20
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 1406s 5ms/step - accuracy: 0.8776 - loss: 0.4273 - val_accuracy: 0.8667 - val_loss: 0.3990 - learning_rate: 1.0000e-10
+Epoch 17/20
+273820/273820 ━━━━━━━━━━━━━━━━━━━━ 1401s 5ms/step - accuracy: 0.8773 - loss: 0.4248 - val_accuracy: 0.8683 - val_loss: 0.3930 - learning_rate: 1.0000e-10
+Epoch 17: early stopping
+Restoring model weights from the end of the best epoch: 14.
+model( --> aslvid2gloss_v47.keras <-- ) quantity of outputs 22
