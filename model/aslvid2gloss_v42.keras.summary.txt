@@ -7,6 +7,24 @@ model v42
 
 
 
+summary from 45 videos per category
+-----------------------------------------------------------------
+____ train --> 551/880 --> 62.61363636363636%
+____ overall accuracy train --> 75.64622497558594%
+-----------------------------------------------------------------
+____ val --> 47/66 --> 71.21212121212122%
+____ overall accuracy val --> 78.44969940185547%
+-----------------------------------------------------------------
+____ test --> 30/44 --> 68.18181818181817%
+____ overall accuracy test --> 74.94737243652344%
+-----------------------------------------------------------------
+____ percentage correct --> 628 / 990 --> 63.43434343434343%
+____ hardmax accuracy --> 67.33585858585859%
+____ softmax accuracy --> 76.34777069091797%
+
+
+
+
 Model: "functional"
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Layer (type)                  ┃ Output Shape              ┃         Param # ┃ Connected to               ┃
@@ -124,10 +142,7 @@ Epoch 12/12
 247054/247054 ━━━━━━━━━━━━━━━━━━━━ 4125s 17ms/step - accuracy: 0.8028 - loss: 0.5793 - val_accuracy: 0.7435 - val_loss: 0.8369 - learning_rate: 1.0000e-08
 Restoring model weights from the end of the best epoch: 12.
 model( --> aslvid2gloss_v42.keras <-- ) quantity of outputs 22
---------------------------------------------------------------
-Sun Aug  2 12:29:37 AM +08 2026
-Sun Aug  2 02:30:50 PM +08 2026
-training took --> 14h 2m
+----> training took approx. 14 hours 2 minutes
 
 
 
