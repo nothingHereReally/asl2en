@@ -9,7 +9,9 @@ from ..lmark_constant import KEY_FILE, KEY_GLOSS, KEY_ID2G, KEY_LHAND, KEY_LMARK
 
 
 LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2)
-QUANTITY_FRAME: int= 22
+model: Any= load_model(f"{PROJ_ROOT /"model" /"aslvid2gloss_v22.keras"}")
+TRAIN_GLOSS: int= model.output_shape[-1]   # 10 categories
+QUANTITY_FRAME: int= model.input_shape[-3] # 22 frames/images
 TRAIN_BATCH: int= 2
 
 
@@ -108,10 +110,8 @@ def get_landmark4greater(a_raw_video: dict) -> list:
 
 if __name__=="__main__":
     glasl_landmark: dict= {}
-    with open(f"{PROJ_ROOT /"dataset" /"glasl" /"glasl.annotation.landmark.json"}", 'r') as f:
+    with open(f"{PROJ_ROOT /"dataset" /"glasl" /"glasl.annotation.landmark.45videos.json"}", 'r') as f:
         glasl_landmark= loadjson(f)
-    model: Any= load_model(f"{PROJ_ROOT /"model" /"aslvid2gloss_v22.keras"}")
-    TRAIN_GLOSS: int= model.output_shape[-1] # 10 categories
 
 
     batch: int= 8
