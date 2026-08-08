@@ -1,13 +1,31 @@
 model v45
+-- input shape
+( 22, 86, 2 )
+-- output shape
+( 22, )
 
 
---> training took 4h 2m
-input shape (22, 86, 2)
-output shape (22,)
+
+
+summary from 45 videos per category
+-----------------------------------------------------------------
+____ train --> 228/880 --> 25.90909090909091%
+____ overall accuracy train --> 81.01642608642578%
+-----------------------------------------------------------------
+____ val --> 13/66 --> 19.696969696969695%
+____ overall accuracy val --> 82.57046508789062%
+-----------------------------------------------------------------
+____ test --> 13/44 --> 29.545454545454547%
+____ overall accuracy test --> 80.4455795288086%
+-----------------------------------------------------------------
+____ percentage correct --> 254 / 990 --> 25.656565656565654%
+____ hardmax accuracy --> 25.050505050505052%
+____ softmax accuracy --> 81.34415435791016%
+
+
+
+
 --> uses 50 videos per category glasl for training
-~69% accurate
-
-
 Model: "functional"
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Layer (type)                  ┃ Output Shape              ┃         Param # ┃ Connected to               ┃
@@ -55,6 +73,7 @@ Epoch 9: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
 Epoch 9: early stopping
 Restoring model weights from the end of the best epoch: 7.
 model( --> aslvid2gloss_v45.keras <-- ) quantity of outputs 22
+----> training took approx. 4 hours 2 minutes
 
 
 
