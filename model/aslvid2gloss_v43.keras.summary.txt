@@ -7,6 +7,24 @@ model v43
 
 
 
+summary from 45 videos per category
+-----------------------------------------------------------------
+____ train --> 608/880 --> 69.0909090909091%
+____ overall accuracy train --> 80.40814208984375%
+-----------------------------------------------------------------
+____ val --> 45/66 --> 68.18181818181817%
+____ overall accuracy val --> 80.31733703613281%
+-----------------------------------------------------------------
+____ test --> 30/44 --> 68.18181818181817%
+____ overall accuracy test --> 80.01256561279297%
+-----------------------------------------------------------------
+____ percentage correct --> 683 / 990 --> 68.98989898989899%
+____ hardmax accuracy --> 68.48484848484847%
+____ softmax accuracy --> 80.24600982666016%
+
+
+
+
 Model: "functional"
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Layer (type)                  ┃ Output Shape              ┃         Param # ┃ Connected to               ┃
@@ -129,8 +147,7 @@ Epoch 13: ReduceLROnPlateau reducing learning rate to 9.999999939225292e-10.
 Epoch 13: early stopping
 Restoring model weights from the end of the best epoch: 11.
 model( --> aslvid2gloss_v43.keras <-- ) quantity of outputs 22
---------------------------------------------------------------
-training took --> 12h 45m
+----> training took approx. 12 hours 45 minutes
 
 
 
