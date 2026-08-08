@@ -11,7 +11,7 @@ from ..lmark_constant import KEY_FILE, KEY_GLOSS, KEY_ID2G, KEY_LHAND, KEY_LMARK
 LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2)
 model: Any= load_model(f"{PROJ_ROOT /"model" /"aslvid2gloss_v24.keras"}")
 TRAIN_GLOSS: int= model.output_shape[-1]   # 10 categories
-QUANTITY_FRAME: int= model.input_shape[-3] # 22 categories
+QUANTITY_FRAME: int= model.input_shape[-3] # 22 frames/images
 TRAIN_BATCH: int= 2
 
 
