@@ -198,7 +198,7 @@ Epoch 12/12
 216071/216071 ━━━━━━━━━━━━━━━━━━━━ 1710s 8ms/step - accuracy: 0.9238 - loss: 0.2429 - val_accuracy: 0.9319 - val_loss: 0.2003 - learning_rate: 1.0000e-07
 Restoring model weights from the end of the best epoch: 12.
 model( --> aslvid2gloss_v41.keras <-- ) quantity of outputs 22
-----> training took approx. 6h 35m
+----> training took approx. 6 hours 35 minutes
 
 
 
