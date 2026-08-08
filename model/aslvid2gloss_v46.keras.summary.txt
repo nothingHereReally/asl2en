@@ -1,13 +1,31 @@
 model v46
+-- input shape
+( 18, 86, 2 )
+-- output shape
+( 22, )
 
 
---> training took 7 hours 22 minutes
-input shape (18, 86, 2)
-output shape (22,)
---> dataset used
-95 videos= 45 videos + 50 videos glasl
 
 
+summary from 45 videos per category
+-----------------------------------------------------------------
+____ train --> 716/880 --> 81.36363636363636%
+____ overall accuracy train --> 89.2633056640625%
+-----------------------------------------------------------------
+____ val --> 51/66 --> 77.27272727272727%
+____ overall accuracy val --> 85.48953247070312%
+-----------------------------------------------------------------
+____ test --> 36/44 --> 81.81818181818183%
+____ overall accuracy test --> 89.42804718017578%
+-----------------------------------------------------------------
+____ percentage correct --> 803 / 990 --> 81.11111111111111%
+____ hardmax accuracy --> 80.15151515151516%
+____ softmax accuracy --> 88.06028747558594%
+
+
+
+
+--> uses 95 videos= 45 videos + 50 videos glasl per category glasl for training
 Model: "functional"
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Layer (type)                  ┃ Output Shape              ┃         Param # ┃ Connected to               ┃
@@ -178,6 +196,7 @@ Epoch 14/18
 Epoch 14: early stopping
 Restoring model weights from the end of the best epoch: 12.
 model( --> aslvid2gloss_v46.keras <-- ) quantity of outputs 22
+----> training took approx. 7 hours 22 minutes
 
 
 
