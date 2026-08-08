@@ -96,3 +96,88 @@ Epoch 17/20
 Epoch 17: early stopping
 Restoring model weights from the end of the best epoch: 14.
 model( --> aslvid2gloss_v47.keras <-- ) quantity of outputs 22
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------
+-- model_layers.py
+from keras.src.activations.activations import ReLU
+from keras.src.layers import Add, Flatten, Reshape, Dense, Input, TimeDistributed, MultiHeadAttention
+from keras.src.activations import softmax
+from numpy import float32, float64
+
+
+from .lmark_constant import LANDMARK_SHAPE, QUANTITY_FRAME, LEN_GLOSS, QUANTITY_HAND_LMARK
+
+
+data_in= Input(
+    shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]),
+    dtype=float32,
+    name='batch_vid',
+)
+x= Reshape(
+    target_shape=(QUANTITY_FRAME, -1),
+)(data_in) # now shape be (16, 86*2) or (18, 172)
+
+
+
+
+layer_1= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64
+))(x)
+x= MultiHeadAttention(
+    num_heads=8,
+    key_dim=LANDMARK_SHAPE[0],
+    value_dim=LANDMARK_SHAPE[0],
+    dropout=0.05,
+    use_bias=True
+)(
+    query=layer_1,
+    value=layer_1,
+    key=layer_1
+)
+x= Add()([layer_1, x])
+
+layer_2= TimeDistributed(Dense(
+    units=QUANTITY_HAND_LMARK*2,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64
+))(x)
+x= MultiHeadAttention(
+    num_heads=8,
+    key_dim=QUANTITY_HAND_LMARK*2,
+    value_dim=QUANTITY_HAND_LMARK*2,
+    dropout=0.05,
+    use_bias=True
+)(
+    query=layer_2,
+    value=layer_2,
+    key=layer_2
+)
+x= Add()([layer_2, x])
+
+
+
+
+ann= Flatten()(x)
+ann= Dense(
+    units=LANDMARK_SHAPE[0]*2,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+)(ann)
+ann= Dense(
+    units=LANDMARK_SHAPE[0]//2,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+)(ann)
+
+
+data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
+-------------------------------------------------------------------------
