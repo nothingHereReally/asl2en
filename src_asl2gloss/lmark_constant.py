@@ -5,7 +5,7 @@ from pathlib import Path
 
 PROJ_ROOT: Path= Path(__file__).resolve().parent.parent
 
-EPOCHS: int= 12
+EPOCHS: int= 20
 ON_TRAINING_BATCH: int= 2
 QUANTITY_FRAME: int= 22
 LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2) # ie. (86, 2)
