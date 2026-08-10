@@ -10,7 +10,7 @@ d_lr: ReduceLROnPlateau= ReduceLROnPlateau(
     mode='max',
     min_delta=0.001,
     cooldown=1,
-    min_lr=1.0e-8
+    min_lr=1.0e-12
 )
 sTraining: EarlyStopping= EarlyStopping(
     monitor='val_loss',
