@@ -253,15 +253,11 @@ def get_landmark4greater(a_raw_video: dict) -> list:
     return lmark_out__MANY_VIDS
 
 
-def load_a_numpy(file: str) -> ndarray:
-    out: ndarray
-    with open(f"{GLASL_LANDMARK_DIR /file}", "rb") as f:
-        out= loadnp(f)
-    return out
 def get_numpy(file_list: list[str]) -> list:
     out: list= []
     for file in file_list:
-        out.append(load_a_numpy(file))
+        with open(f"{GLASL_LANDMARK_DIR /file}", "rb") as f:
+            out.append(loadnp(f))
     return out
 def get_batch_numpy(videos: list) -> list:
     out: list= []
