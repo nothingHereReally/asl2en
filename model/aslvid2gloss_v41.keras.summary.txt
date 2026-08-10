@@ -25,6 +25,7 @@ ____ softmax accuracy --> 93.07014465332031%
 
 
 
+--> uses 95 videos= 45 videos + 50 videos glasl per category glasl for training
 Model: "functional"
 ┏━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━┓
 ┃ Layer (type)              ┃ Output Shape           ┃        Param # ┃ Connected to           ┃
