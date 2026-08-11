@@ -104,3 +104,74 @@ model v41 -> v52: delta
         ANN (172, )
         ANN (43, )
         ANN (LEN_GLOSS, )
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------
+-- model_layers.py
+from keras.src.activations.activations import ReLU
+from keras.src.layers import Flatten, Reshape, Dense, Input, TimeDistributed, MultiHeadAttention
+from keras.src.activations import softmax
+from numpy import float32, float64
+
+
+from .lmark_constant import LANDMARK_SHAPE, QUANTITY_FRAME, LEN_GLOSS
+
+
+data_in= Input(
+    shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]),
+    dtype=float32,
+    name='batch_vid',
+)
+data_layer_ml= Reshape(
+    target_shape=(QUANTITY_FRAME, -1),
+)(data_in)
+data_layer_ml= MultiHeadAttention(
+    num_heads=8,
+    key_dim=LANDMARK_SHAPE[1],
+    value_dim=LANDMARK_SHAPE[1],
+    dropout=0.05,
+    use_bias=True,
+)(
+    query=data_layer_ml,
+    value=data_layer_ml,
+    key=data_layer_ml,
+)
+data_layer_ml= TimeDistributed(Dense(
+    units=8,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+))(data_layer_ml)
+data_layer_ml= MultiHeadAttention(
+    num_heads=8,
+    key_dim=8,
+    value_dim=8,
+    dropout=0.05,
+    use_bias=True,
+)(
+    query=data_layer_ml,
+    value=data_layer_ml,
+    key=data_layer_ml
+)
+
+
+ann= Flatten()(data_layer_ml)
+ann= Dense(
+    units=LANDMARK_SHAPE[0]*2,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+)(ann)
+ann= Dense(
+    units=LANDMARK_SHAPE[0]//2,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64,
+)(ann)
+
+
+data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
+-------------------------------------------------------------------------
