@@ -198,6 +198,10 @@ Epoch 20/20
 Restoring model weights from the end of the best epoch: 19.
 Quantity images --> 22
 Quantity categories --> 22
-model( --> aslvid2gloss_v54.keras <-- )
+model( --> aslvid2gloss_v53.keras <-- )
 ----> training took approx. 13 hours 26 minutes
 -----------------------------------------------
+model v41 -> v53: delta
+    tried longer patience on EarlyStopping(..)
+        patience 2 -> 5
+        didn't help
