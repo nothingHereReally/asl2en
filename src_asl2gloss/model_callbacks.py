@@ -13,6 +13,7 @@ d_lr: ReduceLROnPlateau= ReduceLROnPlateau(
     min_lr=1.0e-12
 )
 sTraining: EarlyStopping= EarlyStopping(
+    # monitor='val_accuracy',
     monitor='val_loss',
     min_delta=0.001,
     patience=2,
