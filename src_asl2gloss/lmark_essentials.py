@@ -1,17 +1,18 @@
+from concurrent.futures import ThreadPoolExecutor
 from math import ceil
-from numpy import load as loadnp
-from typing import Generator
+from numpy import array, float32, load as loadnp, ndarray, uint16
+from pathlib import Path
 from random import sample
-from numpy import array, float32, ndarray, uint16
+from typing import Generator
 
 
 from .lmark_constant import (
+    CPU_THREAD,
     GLASL_LANDMARK_DIR,
     KEY_FILE,
     KEY_GLOSS,
     KEY_RH_MANDATORY,
     KEY_VIDEO,
-    LANDMARK_SHAPE,
     PART4_MOD2USE,
     glasl_landmark as GLASL_LM_DS,
     KEY_LHAND,
@@ -66,37 +67,31 @@ def get_landmark4less_or_equal(a_raw_video: dict, idx_init_has_hand: int|None=No
     equal to the target frames which is `QUANTITY_FRAME: int`
     '''
     if idx_init_has_hand is None:
-        idx_init_has_hand= get_idx_start_hand(a_raw_video[KEY_LMARK], GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ])
+        idx_init_has_hand= get_idx_start_hand(
+            a_raw_video[KEY_LMARK],
+            GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]
+        )
     if idx_init_has_hand==-1:
         return list()
 
-    lmark_numpy_out: list= []
+    lmark_folderfile: list= []
     ratio_what: int= int(ceil(
         QUANTITY_FRAME  /  (len(a_raw_video[KEY_LMARK])-idx_init_has_hand)
     ))
     for idx in range(idx_init_has_hand, len(a_raw_video[KEY_LMARK])):
-        load_an_image_landmarks: ndarray|None= None
+        an_image_landmarks_path: Path|None= None
         if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
             if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
-                with open(f"{GLASL_LANDMARK_DIR /a_raw_video[KEY_VIDEO] /a_raw_video[KEY_LMARK][idx][KEY_FILE]}", 'rb') as f:
-                    load_an_image_landmarks= loadnp(f)
+                an_image_landmarks_path= Path(a_raw_video[KEY_VIDEO]) /a_raw_video[KEY_LMARK][idx][KEY_FILE]
             else:
-                load_an_image_landmarks= lmark_numpy_out[-1]
+                an_image_landmarks_path= lmark_folderfile[-1]
         elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
-            with open(f"{GLASL_LANDMARK_DIR /a_raw_video[KEY_VIDEO] /a_raw_video[KEY_LMARK][idx][KEY_FILE]}", 'rb') as f:
-                load_an_image_landmarks= loadnp(f)
+            an_image_landmarks_path= Path(a_raw_video[KEY_VIDEO]) /a_raw_video[KEY_LMARK][idx][KEY_FILE]
         else:
-            load_an_image_landmarks= lmark_numpy_out[-1]
-        lmark_numpy_out.extend([load_an_image_landmarks] *ratio_what)
-    lmark_numpy_out= lmark_numpy_out[:QUANTITY_FRAME]
-    check_shape: ndarray= array(lmark_numpy_out, dtype=float32)
-    if check_shape.shape!=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
-        raise NotImplementedError(
-            f"incorrect implementation on get_landmark4less_or_equal(), due to lmark_numpy_out should be of shape {
-            tuple((QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]))
-            }, but got {check_shape.shape}"
-        )
-    return lmark_numpy_out
+            an_image_landmarks_path= lmark_folderfile[-1]
+        lmark_folderfile.extend([an_image_landmarks_path] *ratio_what)
+    lmark_folderfile= lmark_folderfile[:QUANTITY_FRAME]
+    return lmark_folderfile
 
 
 def get_landmark4greater(a_raw_video: dict) -> list:
@@ -104,13 +99,12 @@ def get_landmark4greater(a_raw_video: dict) -> list:
     to be used for when len(a_raw_video[KEY_LMARK]) > QUANTITY_FRAME
     output be of shape(____ int, QUANTITY_FRAME, 86, 2 ____)
     '''
-    lmark_numpy_out__MANY_VIDS: list= [[]] # be of shape(__ int, QUANTITY_FRAME, 86, 2 __)
+    lmark_out__MANY_VIDS: list= [[]] # be of shape(__ int, QUANTITY_FRAME, 86, 2 __)
 
-    lmark_load_ALL: list= []
+    lmark_all_path: list= []
     idx_init_has_hand: int= -1
     for idx in range(len(a_raw_video[KEY_LMARK])):
-        with open(f"{GLASL_LANDMARK_DIR /a_raw_video[KEY_VIDEO] /a_raw_video[KEY_LMARK][idx][KEY_FILE]}", 'rb') as f:
-            lmark_load_ALL.append(loadnp(f))
+        lmark_all_path.append(Path(Path( a_raw_video[KEY_VIDEO] ) /a_raw_video[KEY_LMARK][idx][KEY_FILE]))
         if idx_init_has_hand==-1:
             if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
                 if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
@@ -126,19 +120,19 @@ def get_landmark4greater(a_raw_video: dict) -> list:
         append_if_valid: int= idx_init_has_hand +int(idx*ratio) # floor
         if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
             if a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
-                lmark_numpy_out__MANY_VIDS[0].append(lmark_load_ALL[append_if_valid])
+                lmark_out__MANY_VIDS[0].append(lmark_all_path[append_if_valid])
             else:
-                lmark_numpy_out__MANY_VIDS[0].append(lmark_numpy_out__MANY_VIDS[0][-1])
+                lmark_out__MANY_VIDS[0].append(lmark_out__MANY_VIDS[0][-1])
         elif a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
             a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
-            lmark_numpy_out__MANY_VIDS[0].append(lmark_load_ALL[append_if_valid])
+            lmark_out__MANY_VIDS[0].append(lmark_all_path[append_if_valid])
         else:
-            lmark_numpy_out__MANY_VIDS[0].append(lmark_numpy_out__MANY_VIDS[0][-1])
-    if len(lmark_numpy_out__MANY_VIDS[0])!=QUANTITY_FRAME:
+            lmark_out__MANY_VIDS[0].append(lmark_out__MANY_VIDS[0][-1])
+    if len(lmark_out__MANY_VIDS[0])!=QUANTITY_FRAME:
         raise ValueError("incorrect implementation on get_landmark4greater() on part 1 due to NOT QUANTITY_FRAME, when should be QUANTITY_FRAME")
     del ratio
-    # lmark_numpy_out__MANY_VIDS[0] is of shape (QUANTITY_FRAME, 86, 2), but
-    # here lmark_numpy_out__MANY_VIDS is of shape (1, QUANTITY_FRAME, 86, 2)
+    # lmark_out__MANY_VIDS[0] is of shape (QUANTITY_FRAME, 86, 2), but
+    # here lmark_out__MANY_VIDS is of shape (1, QUANTITY_FRAME, 86, 2)
 
     len_available_images: int= len(a_raw_video[KEY_LMARK])-idx_init_has_hand
     # len_available_images, quantity of images starting from idx_init_has_hand till end
@@ -166,98 +160,110 @@ def get_landmark4greater(a_raw_video: dict) -> list:
         # '''
         for shift_right in range(notIncludedOn_mod+1):
             for idx_mod in range(o2t_ratio):
-                lmark_numpy_out__MANY_VIDS.append([])
+                lmark_out__MANY_VIDS.append([])
                 for idx_img2target in range(QUANTITY_FRAME):
                     append_if_valid: int= idx_init_has_hand +(idx_img2target*o2t_ratio+idx_mod) +shift_right
                     if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
                         if a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
-                            lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[append_if_valid])
+                            lmark_out__MANY_VIDS[-1].append(lmark_all_path[append_if_valid])
                         elif idx_img2target==0:
-                            lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[idx_init_has_hand])
+                            lmark_out__MANY_VIDS[-1].append(lmark_all_path[idx_init_has_hand])
                         else:
-                            lmark_numpy_out__MANY_VIDS[-1].append(lmark_numpy_out__MANY_VIDS[-1][-1])
+                            lmark_out__MANY_VIDS[-1].append(lmark_out__MANY_VIDS[-1][-1])
                     elif a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
                         a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
-                        lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[
+                        lmark_out__MANY_VIDS[-1].append(lmark_all_path[
                             append_if_valid
                         ])
                     elif idx_img2target==0:
-                        # due to since idx_img2target==0 then lmark_numpy_out__MANY_VIDS[-1][-1] does not exist,
-                        # ie. len(lmark_numpy_out__MANY_VIDS[-1])==0 True, due to prev at
-                        # lmark_numpy_out__MANY_VIDS.append([]) above
-                        lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[idx_init_has_hand])
+                        # due to since idx_img2target==0 then lmark_out__MANY_VIDS[-1][-1] does not exist,
+                        # ie. len(lmark_out__MANY_VIDS[-1])==0 True, due to prev at
+                        # lmark_out__MANY_VIDS.append([]) above
+                        lmark_out__MANY_VIDS[-1].append(lmark_all_path[idx_init_has_hand])
                     else:
-                        lmark_numpy_out__MANY_VIDS[-1].append(lmark_numpy_out__MANY_VIDS[-1][-1])
+                        lmark_out__MANY_VIDS[-1].append(lmark_out__MANY_VIDS[-1][-1])
         del notIncludedOn_mod
 
         # # part 3, consecutive, mandatory initial has hand
         # for start_where in range((len_available_images-QUANTITY_FRAME)+1):
-        #     lmark_numpy_out__MANY_VIDS.append([])
+        #     lmark_out__MANY_VIDS.append([])
         #     # due to below appends shape (QUANTITY_FRAME, 86, 2)
         #     for idx in range(QUANTITY_FRAME):
         #         append_if_valid: int= idx_init_has_hand+idx +start_where
         #         if a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
         #             a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
-        #             lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[
+        #             lmark_out__MANY_VIDS[-1].append(lmark_all_path[
         #                 append_if_valid
         #             ])
         #         elif idx==0:
-        #             # due to since ii==0 then lmark_numpy_out__MANY_VIDS[-1][-1] does not exist,
-        #             # ie. len(lmark_numpy_out__MANY_VIDS[-1])==0 True, due to prev at
-        #             # lmark_numpy_out__MANY_VIDS.append([]) above
-        #             lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[idx_init_has_hand])
+        #             # due to since ii==0 then lmark_out__MANY_VIDS[-1][-1] does not exist,
+        #             # ie. len(lmark_out__MANY_VIDS[-1])==0 True, due to prev at
+        #             # lmark_out__MANY_VIDS.append([]) above
+        #             lmark_out__MANY_VIDS[-1].append(lmark_all_path[idx_init_has_hand])
         #         else:
-        #             lmark_numpy_out__MANY_VIDS[-1].append(lmark_numpy_out__MANY_VIDS[-1][-1])
+        #             lmark_out__MANY_VIDS[-1].append(lmark_out__MANY_VIDS[-1][-1])
 
         # part 4, all has hand and use past if current no hand
         init_hand_idxs: tuple= tuple(range(idx_init_has_hand, len(a_raw_video[KEY_LMARK])))
-        past_img_has_hand: ndarray= lmark_load_ALL[idx_init_has_hand]
+        past_img_path_has_hand: Path= lmark_all_path[idx_init_has_hand]
         tmp_part4: dict= {i: [] for i in PART4_MOD2USE}
         for check_mod_init_0, idx in zip(range(len_available_images), init_hand_idxs):
             for work4mod_what in PART4_MOD2USE:
                 if check_mod_init_0%work4mod_what == work4mod_what-1:
                     if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
                         if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
-                            tmp_part4[work4mod_what].append(lmark_load_ALL[idx])
+                            tmp_part4[work4mod_what].append(lmark_all_path[idx])
                         else:
-                            tmp_part4[work4mod_what].append(past_img_has_hand)
+                            tmp_part4[work4mod_what].append(past_img_path_has_hand)
                     elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
                         a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
-                        tmp_part4[work4mod_what].append(lmark_load_ALL[idx])
+                        tmp_part4[work4mod_what].append(lmark_all_path[idx])
                     else:
-                        tmp_part4[work4mod_what].append(past_img_has_hand)
+                        tmp_part4[work4mod_what].append(past_img_path_has_hand)
             if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
                 if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
-                    past_img_has_hand= lmark_load_ALL[idx]
+                    past_img_path_has_hand= lmark_all_path[idx]
             elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
                 a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
-                past_img_has_hand= lmark_load_ALL[idx]
+                past_img_path_has_hand= lmark_all_path[idx]
         for work4mod_what in PART4_MOD2USE:
             if QUANTITY_FRAME<len(tmp_part4[work4mod_what]):
                 for idx_start_at in range(len(tmp_part4[work4mod_what])-QUANTITY_FRAME +1):
-                    lmark_numpy_out__MANY_VIDS.append(tmp_part4[work4mod_what][
+                    lmark_out__MANY_VIDS.append(tmp_part4[work4mod_what][
                         idx_start_at:idx_start_at+QUANTITY_FRAME
                     ])
             else:
-                lmark_numpy_out__MANY_VIDS.append([])
+                lmark_out__MANY_VIDS.append([])
                 ratio4mod_part4: int= int(ceil(QUANTITY_FRAME/len(tmp_part4[work4mod_what])))
                 for an_image_landmarks in tmp_part4[work4mod_what]:
-                    lmark_numpy_out__MANY_VIDS[-1].extend(list([an_image_landmarks]) *ratio4mod_part4)
-                lmark_numpy_out__MANY_VIDS[-1]= lmark_numpy_out__MANY_VIDS[-1][:QUANTITY_FRAME]
+                    lmark_out__MANY_VIDS[-1].extend(list([an_image_landmarks]) *ratio4mod_part4)
+                lmark_out__MANY_VIDS[-1]= lmark_out__MANY_VIDS[-1][:QUANTITY_FRAME]
     else: # len_available_images <= QUANTITY_FRAME
         copy_a_raw_video: dict= {
             KEY_GLOSS: a_raw_video[KEY_GLOSS],
             KEY_VIDEO: a_raw_video[KEY_VIDEO],
             KEY_LMARK: a_raw_video[KEY_LMARK][idx_init_has_hand:]
         }
-        lmark_numpy_out__MANY_VIDS.append(get_landmark4less_or_equal(copy_a_raw_video, 0))
-    check_shape: ndarray= array(lmark_numpy_out__MANY_VIDS, dtype=float32)
-    if check_shape.shape[-3:]!=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
-        raise NotImplementedError(f"incorrect implementation get_landmark4greater(), lmark_numpy_out__MANY_VIDS should of shape {
-        (QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1])
-        } but got {tuple(check_shape.shape[-3:])}")
+        lmark_out__MANY_VIDS.append(get_landmark4less_or_equal(copy_a_raw_video, 0))
+    if not all(len(el)==QUANTITY_FRAME for el in lmark_out__MANY_VIDS):
+        raise NotImplementedError(f"incorrect implementation get_landmark4greater(), lmark_out__MANY_VIDS each element should be of length {
+        QUANTITY_FRAME
+        } but got {list(filter(lambda el: len(el)!=QUANTITY_FRAME, lmark_out__MANY_VIDS))}")
 
-    return lmark_numpy_out__MANY_VIDS
+    return lmark_out__MANY_VIDS
+
+
+def get_numpy(file_list: list[str]) -> list:
+    out: list= []
+    for file in file_list:
+        with open(f"{GLASL_LANDMARK_DIR /file}", "rb") as f:
+            out.append(loadnp(f))
+    return out
+def get_batch_numpy(videos: list) -> list:
+    out: list= []
+    for video in videos:
+        out.append(get_numpy(video))
+    return out
 
 
 def get_data_landmark(
@@ -287,8 +293,60 @@ def get_data_landmark(
                     batch_class.append(a_raw_video[KEY_GLOSS])
             # ---- now ready ----
             while batch_size<=len(batch_videos):
-                out_inputs: ndarray= array(batch_videos[:batch_size], dtype=float32)
+                out_inputs: ndarray= array(
+                    get_batch_numpy(batch_videos[:batch_size]),
+                    dtype=float32
+                )
+                assert out_inputs.shape==(batch_size, QUANTITY_FRAME, 86, 2)
                 out_expected_outputs: ndarray= array(batch_class[:batch_size], dtype=uint16)
                 batch_videos= batch_videos[batch_size:]
                 batch_class= batch_class[batch_size:]
                 yield (out_inputs, out_expected_outputs)
+
+def get_batch_numpy_parallel(videos: list[list[str]], exec) -> list:
+    '''
+    don't use due to slower than just doing plain synchronous code
+    just keeping for record purposes
+    '''
+    return list(exec.map(get_numpy, videos))
+def get_data_landmark_parallel(
+    train_val: str= KEY_TRAIN,
+    batch_size: int=ON_TRAINING_BATCH
+) -> Generator:
+    '''
+    don't use due to slower than just doing plain synchronous code
+    just keeping for record purposes
+    '''
+    dataset_idxs: tuple= tuple(sample(
+        range(len(GLASL_LM_DS[train_val])),
+        len(GLASL_LM_DS[train_val])
+    ))
+    batch_videos: list= []
+    batch_class: list= []
+    with ThreadPoolExecutor(max_workers=int(CPU_THREAD*.75)) as exec:
+        while True:
+            for idx_ds in dataset_idxs:
+                a_raw_video: dict= GLASL_LM_DS[train_val][idx_ds]
+                if QUANTITY_FRAME<len(a_raw_video[KEY_LMARK]):
+                    tmp: list= get_landmark4greater(a_raw_video)
+                    if 0<len(tmp):
+                        batch_videos.extend(tmp)
+                        batch_class.extend(
+                            [a_raw_video[KEY_GLOSS]] *len(tmp)
+                        )
+                else:
+                    tmp: list= get_landmark4less_or_equal(a_raw_video)
+                    if 0<len(tmp):
+                        batch_videos.append(tmp)
+                        batch_class.append(a_raw_video[KEY_GLOSS])
+                # ---- now ready ----
+                while batch_size<=len(batch_videos):
+                    out_inputs: ndarray= array(
+                        get_batch_numpy_parallel(batch_videos[:batch_size], exec),
+                        dtype=float32
+                    )
+                    assert out_inputs.shape==(batch_size, QUANTITY_FRAME, 86, 2)
+                    out_expected_outputs: ndarray= array(batch_class[:batch_size], dtype=uint16)
+                    batch_videos= batch_videos[batch_size:]
+                    batch_class= batch_class[batch_size:]
+                    yield (out_inputs, out_expected_outputs)

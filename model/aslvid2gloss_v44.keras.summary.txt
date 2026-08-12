@@ -1,0 +1,948 @@
+model v44
+-- input shape
+( 22, 86, 2 )
+-- output shape
+( 22, )
+
+
+
+
+summary from 45 videos per category
+-----------------------------------------------------------------
+____ train --> 679/880 --> 77.1590909090909%
+____ overall accuracy train --> 73.54409790039062%
+-----------------------------------------------------------------
+____ val --> 48/66 --> 72.72727272727273%
+____ overall accuracy val --> 73.52012634277344%
+-----------------------------------------------------------------
+____ test --> 28/44 --> 63.63636363636363%
+____ overall accuracy test --> 72.1059799194336%
+-----------------------------------------------------------------
+____ percentage correct --> 755 / 990 --> 76.26262626262627%
+____ hardmax accuracy --> 71.17424242424242%
+____ softmax accuracy --> 73.0567398071289%
+
+
+
+
+--> uses 45 videos per category glasl for training
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                  ┃ Output Shape              ┃         Param # ┃ Connected to               ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)        │ (None, 22, 86, 2)         │               0 │ -                          │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ reshape (Reshape)             │ (None, 22, 172)           │               0 │ batch_vid[0][0]            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ time_distributed              │ (None, 22, 86)            │          14,878 │ reshape[0][0]              │
+│ (TimeDistributed)             │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ multi_head_attention          │ (None, 22, 86)            │         238,822 │ time_distributed[0][0],    │
+│ (MultiHeadAttention)          │                           │                 │ time_distributed[0][0],    │
+│                               │                           │                 │ time_distributed[0][0]     │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ flatten (Flatten)             │ (None, 1892)              │               0 │ multi_head_attention[0][0] │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ batch_class (Dense)           │ (None, 22)                │          41,646 │ flatten[0][0]              │
+└───────────────────────────────┴───────────────────────────┴─────────────────┴────────────────────────────┘
+ Total params: 295,346 (1.18 MB)
+ Trainable params: 295,346 (1.18 MB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/18
+14826/14826 ━━━━━━━━━━━━━━━━━━━━ 170s 11ms/step - accuracy: 0.7176 - loss: 1.1622 - val_accuracy: 0.1478 - val_loss: 3.6727 - learning_rate: 1.0000e-04
+Epoch 2/18
+14826/14826 ━━━━━━━━━━━━━━━━━━━━ 98s 7ms/step - accuracy: 0.7493 - loss: 0.9687 - val_accuracy: 0.3759 - val_loss: 2.0545 - learning_rate: 1.0000e-04
+Epoch 3/18
+14826/14826 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - accuracy: 0.8184 - loss: 0.7200
+Epoch 3: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+14826/14826 ━━━━━━━━━━━━━━━━━━━━ 99s 7ms/step - accuracy: 0.8163 - loss: 0.7245 - val_accuracy: 0.2636 - val_loss: 4.0943 - learning_rate: 1.0000e-04
+Epoch 4/18
+14826/14826 ━━━━━━━━━━━━━━━━━━━━ 99s 7ms/step - accuracy: 0.7012 - loss: 0.9535 - val_accuracy: 0.4377 - val_loss: 1.7783 - learning_rate: 1.0000e-05
+Epoch 5/18
+14826/14826 ━━━━━━━━━━━━━━━━━━━━ 99s 7ms/step - accuracy: 0.8038 - loss: 0.6034 - val_accuracy: 0.6696 - val_loss: 0.8605 - learning_rate: 1.0000e-05
+Epoch 6/18
+14818/14826 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - accuracy: 0.8390 - loss: 0.5053
+Epoch 6: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+14826/14826 ━━━━━━━━━━━━━━━━━━━━ 100s 7ms/step - accuracy: 0.8330 - loss: 0.5092 - val_accuracy: 0.6016 - val_loss: 1.6091 - learning_rate: 1.0000e-05
+Epoch 7/18
+14826/14826 ━━━━━━━━━━━━━━━━━━━━ 100s 7ms/step - accuracy: 0.7832 - loss: 0.6672 - val_accuracy: 0.7876 - val_loss: 0.5614 - learning_rate: 1.0000e-06
+Epoch 8/18
+14824/14826 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - accuracy: 0.8581 - loss: 0.4770
+Epoch 8: ReduceLROnPlateau reducing learning rate to 9.999999974752428e-08.
+14826/14826 ━━━━━━━━━━━━━━━━━━━━ 100s 7ms/step - accuracy: 0.8457 - loss: 0.5115 - val_accuracy: 0.7590 - val_loss: 0.7027 - learning_rate: 1.0000e-06
+Epoch 9/18
+14826/14826 ━━━━━━━━━━━━━━━━━━━━ 101s 7ms/step - accuracy: 0.7957 - loss: 0.5611 - val_accuracy: 0.8285 - val_loss: 0.4909 - learning_rate: 1.0000e-07
+Epoch 10/18
+14825/14826 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - accuracy: 0.8133 - loss: 0.5632
+Epoch 10: ReduceLROnPlateau reducing learning rate to 1.0000000116860975e-08.
+14826/14826 ━━━━━━━━━━━━━━━━━━━━ 103s 7ms/step - accuracy: 0.8306 - loss: 0.5102 - val_accuracy: 0.7693 - val_loss: 0.6816 - learning_rate: 1.0000e-07
+Epoch 11/18
+14819/14826 ━━━━━━━━━━━━━━━━━━━━ 0s 6ms/step - accuracy: 0.8183 - loss: 0.5815
+Epoch 11: ReduceLROnPlateau reducing learning rate to 9.999999939225292e-10.
+14826/14826 ━━━━━━━━━━━━━━━━━━━━ 102s 7ms/step - accuracy: 0.8059 - loss: 0.5552 - val_accuracy: 0.8021 - val_loss: 0.5390 - learning_rate: 1.0000e-08
+Epoch 11: early stopping
+Restoring model weights from the end of the best epoch: 9.
+model( --> aslvid2gloss_v44.keras <-- ) quantity of outputs 22
+----> training took approx. 21 minutes
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------
+-- model_layers.py
+from keras.src.activations.activations import ReLU
+from keras.src.layers import Flatten, Reshape, Dense, Input, TimeDistributed, MultiHeadAttention
+from keras.src.activations import softmax
+from numpy import float32, float64
+
+
+from .lmark_constant import LANDMARK_SHAPE, QUANTITY_FRAME, LEN_GLOSS #, QUANTITY_HAND_LMARK
+
+
+data_in= Input(
+    shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]),
+    dtype=float32,
+    name='batch_vid',
+)
+x= Reshape(
+    target_shape=(QUANTITY_FRAME, -1),
+)(data_in) # now shape be (22, 86*2) or (18, 172)
+
+
+
+
+x= TimeDistributed(Dense(
+    units=LANDMARK_SHAPE[0],
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+    dtype=float64
+))(x)
+x= MultiHeadAttention(
+    num_heads=8,
+    key_dim=LANDMARK_SHAPE[0],
+    dropout=0.05,
+    use_bias=True,
+)(
+    query=x,
+    value=x,
+    key=x,
+)
+# x= TimeDistributed(Dense(
+#     units=QUANTITY_HAND_LMARK*2,
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64
+# ))(x)
+# x= MultiHeadAttention(
+#     num_heads=8,
+#     key_dim=QUANTITY_HAND_LMARK*2,
+#     value_dim=QUANTITY_HAND_LMARK*2,
+#     dropout=0.05,
+#     use_bias=True,
+# )(
+#     query=x,
+#     value=x,
+#     key=x,
+# )
+
+
+
+
+ann= Flatten()(x)
+# ann= Dense(
+#     units=LANDMARK_SHAPE[0]*2,
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# )(ann)
+# ann= Dense(
+#     units=LANDMARK_SHAPE[0]//2,
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# )(ann)
+# ann= Dense(
+#     units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//5),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# )(ann)
+# ann= Dense(
+#     units=int((QUANTITY_FRAME*LANDMARK_SHAPE[0])//10),
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+#     dtype=float64,
+# )(ann)
+
+
+data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
+-------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------
+-- model_train.py
+# best model yet: model_v14 then model_v10 and model_v12
+# best model
+# 1) model v30 (83.8% train/val/test g22)
+# 2) model v25 (87.06% train/val/test g10)
+# 3) model v23 (85.5% train/val/test g10)
+# 4) model v22 (60% testing g10)
+# 5) model v15 (57% testing g10)
+# 6) model v14 (56% testing g10)
+# 7) model v12 (4% testing)
+# 8) model v10 (4% testing)
+# from os.path import exists
+# from typing import Any
+from keras.src.losses import sparse_categorical_crossentropy
+from keras.src.models import Model
+from keras.src.optimizers import Adam
+
+from .lmark_constant import EPOCHS, KEY_TRAIN, KEY_VAL, PROJ_ROOT
+from .lmark_essentials import calculate_steps_needed, get_data_landmark
+from .model_layers import data_in, data_out
+from .model_callbacks import d_lr, sTraining, tf_board
+
+
+def main():
+    model: Model= Model(
+        inputs=data_in,
+        outputs=data_out
+    )
+    model.compile(
+        optimizer=Adam(learning_rate=0.0001),
+        loss=sparse_categorical_crossentropy,
+        metrics=['accuracy']
+    )
+    model.summary()
+    model.fit(
+        x=get_data_landmark(train_val=KEY_TRAIN),
+        epochs=EPOCHS,
+        callbacks=[d_lr, sTraining, tf_board],
+        validation_data=get_data_landmark(train_val=KEY_VAL),
+        steps_per_epoch=calculate_steps_needed(KEY_TRAIN),
+        validation_steps=calculate_steps_needed(KEY_VAL),
+        validation_freq=1
+    )
+    model_file_name: str= "aslvid2gloss_v44.keras"
+    print(f"model( --> {model_file_name} <-- ) quantity of outputs {model.output_shape[-1]}")
+    model.save(f"{PROJ_ROOT /"model" /model_file_name}")
+
+
+if __name__=="__main__":
+    main()
+-------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------
+-- model_callbacks.py
+from keras.src.callbacks import ReduceLROnPlateau, EarlyStopping, TensorBoard
+from .lmark_constant import PROJ_ROOT
+
+
+d_lr: ReduceLROnPlateau= ReduceLROnPlateau(
+    monitor='val_accuracy',
+    factor=0.1,
+    patience=1,
+    verbose=1,
+    mode='max',
+    min_delta=0.001,
+    cooldown=1,
+    min_lr=1.0e-10
+)
+sTraining: EarlyStopping= EarlyStopping(
+    monitor='val_loss',
+    min_delta=0.001,
+    patience=2,
+    verbose=1,
+    mode='min',
+    restore_best_weights=True,
+)
+tf_board: TensorBoard= TensorBoard(
+    log_dir=f"{PROJ_ROOT /"model" /"tfboard_logs"}",
+    histogram_freq=1,
+    write_graph=False,
+    write_images=False,
+    write_steps_per_second=False,
+    update_freq='epoch'
+)
+-------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------
+-- lmark_constant.py
+from json import load as loadjson
+from pathlib import Path
+
+
+PROJ_ROOT: Path= Path(__file__).resolve().parent.parent
+
+EPOCHS: int= 18
+ON_TRAINING_BATCH: int= 8
+QUANTITY_FRAME: int= 16
+LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2) # ie. (86, 2)
+# SKELETON_SHAPE: tuple= (158, 158, 3)
+# PART4_MOD2USE: tuple= (3,4,5,6,7,8,9)                 # 1st try
+# PART4_MOD2USE: tuple= (4,5,6,7,8,9,10,11,12,13,14,15) # 2nd try
+# PART4_MOD2USE: tuple= (3,5,7,9)                       # 3rd try
+PART4_MOD2USE: tuple= (3,4,5,6,7,8,9,10)  # 4st ( try this said.2026.7.22 4PM UTC+8 )DONE✔ 2026/7/26
+# ✔ 2026/7/26 DONE: data cleaning added new GLASL
+# ✔ 2026/7/26 DONE: add `right_hand_mandatory` key on an images gloss
+# ---- eg. who, drink, fever, ...
+IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
+GLASL_LANDMARK_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"landmark"
+GLASL_SKELETON_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"skeleton"
+
+glasl_landmark: dict= {}
+with open(f"{PROJ_ROOT /"dataset" /"glasl" /"glasl.annotation.landmark.json"}", "r") as f:
+    glasl_landmark= loadjson(f)
+
+KEY_TRAIN: str= 'train'   # landmark is face, then pose, then left_had, then right hand
+KEY_VAL: str= 'val'       # face full is (468, 2) --> face worthy is (36, 2)
+KEY_TEST: str= 'test'     # pose full is (33, 2) --> pose worthy is (8, 2)
+KEY_ID2G: str= 'id2gloss' # left_hand is (21, 2)
+KEY_G2ID: str= 'gloss2id' # right_hand is (21, 2)
+KEY_RH_MANDATORY: str= "right_hand_mandatory"
+KEY_GLOSS: str= 'gloss_id'
+KEY_VIDEO: str= 'video_id'
+KEY_LMARK: str= 'landmark'
+KEY_FILE: str= 'file'
+KEY_LHAND: str= 'left_hand'
+KEY_RHAND: str= 'right_hand'
+
+LEN_GLOSS: int= int(len(glasl_landmark[KEY_ID2G]))
+
+
+FACE_CONNECTIONS_FULL: tuple= (
+    # oval face
+    (10, 338), (338, 297), (297, 332), (332, 284),
+    (284, 251), (251, 389), (389, 356), (356, 454),
+    (454, 323), (323, 361), (361, 288), (288, 397),
+    (397, 365), (365, 379), (379, 378), (378, 400),
+    (400, 377), (377, 152), (152, 148), (148, 176),
+    (176, 149), (149, 150), (150, 136), (136, 172),
+    (172, 58), (58, 132), (132, 93), (93, 234),
+    (234, 127), (127, 162), (162, 21), (21, 54),
+    (54, 103), (103, 67), (67, 109), (109, 10),
+
+    # left eyebrow
+    (276, 283), (283, 282), (282, 295),
+    (295, 285), (300, 293), (293, 334),
+    (334, 296), (296, 336),
+    (276, 300), (285, 336),
+    # left eye
+    (263, 249), (249, 390), (390, 373), (373, 374),
+    (374, 380), (380, 381), (381, 382), (382, 362),
+    (263, 466), (466, 388), (388, 387), (387, 386),
+    (386, 385), (385, 384), (384, 398), (398, 362),
+    # right eyebrow
+    (46, 53), (53, 52), (52, 65),
+    (65, 55), (70, 63), (63, 105),
+    (105, 66), (66, 107),
+    (46, 70), (55, 107),
+    # right eye
+    (33, 7), (7, 163), (163, 144), (144, 145),
+    (145, 153), (153, 154), (154, 155), (155, 133),
+    (33, 246), (246, 161), (161, 160), (160, 159),
+    (159, 158), (158, 157), (157, 173), (173, 133),
+
+    # nose
+    (168, 6), (6, 197), (197, 195), (195, 5),
+    (5, 4), (4, 1), (1, 19), (19, 94), (94, 2), (98, 97),
+    (97, 2), (2, 326), (326, 327), (327, 294),
+    (294, 278), (278, 344), (344, 440), (440, 275),
+    (275, 4), (4, 45), (45, 220), (220, 115), (115, 48),
+    (48, 64), (64, 98),
+    # lips
+    (61, 146), (146, 91), (91, 181), (181, 84), (84, 17),
+    (17, 314), (314, 405), (405, 321), (321, 375),
+    (375, 291), (61, 185), (185, 40), (40, 39), (39, 37),
+    (37, 0), (0, 267),
+    (267, 269), (269, 270), (270, 409), (409, 291),
+    (78, 95), (95, 88), (88, 178), (178, 87), (87, 14),
+    (14, 317), (317, 402), (402, 318), (318, 324),
+    (324, 308), (78, 191), (191, 80), (80, 81), (81, 82),
+    (82, 13), (13, 312), (312, 311), (311, 310),
+    (310, 415), (415, 308)
+)
+FACE_CONNECTIONS: tuple= (
+    (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
+    (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
+
+    (26, 29), (29, 30), # left eyebrow
+
+    (23, 32), (32, 31), # left eye down
+    (31, 33), (33, 23), # left eye up
+
+    (10, 13), (13, 14), # right eyebrow
+
+    (7, 16), (16, 15), # right eye down
+    (15, 18), (18, 7), # rght eye up
+
+    (20, 22), (22, 2), # nose vertical line
+    (2, 25), (25, 1), # left half nose
+    (1, 9), (9, 2), # rigth half nose
+
+    # mouth
+    (8, 6), (6, 24), # down lip edge down
+    (24, 0), (0, 8), # up lip edge up
+    (8, 5), (5, 24), # up/down lip inner a
+    (24, 4), (4, 8), # up/down lip inner b
+)
+WORTHY_FACE_IDX: tuple= (
+    0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
+    105, 107, 133, 145, 152, 159, 162, 168, 172, 195,
+    263, 291, 294, 300, 323, 332, 334, 336, 362, 374,
+    386, 389, 397
+)
+
+# before use of POSE_CONNECTIONS modify landmark 1st
+# modify to use index to be used only: 11,12,13,14,15,16,23,24
+# so new index: 0,1,2,3,4,5,6,7
+POSE_CONNECTIONS_FULL: tuple= ((0, 1), (1, 2), (2, 3), (3, 7), (0, 4), (4, 5),
+                              (5, 6), (6, 8), (9, 10), (11, 12), (11, 13),
+                              (13, 15), (15, 17), (15, 19), (15, 21), (17, 19),
+                              (12, 14), (14, 16), (16, 18), (16, 20), (16, 22),
+                              (18, 20), (11, 23), (12, 24), (23, 24), (23, 25),
+                              (24, 26), (25, 27), (26, 28), (27, 29), (28, 30),
+                              (29, 31), (30, 32), (27, 31), (28, 32))
+POSE_CONNECTIONS: tuple= ((0, 1), (0, 2), (1, 3), (2, 4), (3, 5), (6, 7), (0, 6), (1, 7))
+WORTHY_POSE_IDX: tuple= (11,12,13,14,15,16,23,24)
+
+HAND_CONNECTIONS: tuple= (
+    (0, 1), (0, 5), (9, 13), (13, 17), (5, 9), (0, 17), # palm connections
+    (1, 2), (2, 3), (3, 4),           # thumb finger connections
+    (5, 6), (6, 7), (7, 8),           # index finger connections
+    (9, 10), (10, 11), (11, 12),      # middle finger connections
+    (13, 14), (14, 15), (15, 16),     # ring finger connections
+    (17, 18), (18, 19), (19, 20)      # pinky finger connections
+)
+-------------------------------------------------------------------------
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------
+-- lmark_essentials.py
+from math import ceil
+from pathlib import Path
+from typing import Generator
+from random import sample
+from numpy import array, float32, load as loadnp, ndarray, uint16
+
+
+from .lmark_constant import (
+    GLASL_LANDMARK_DIR,
+    KEY_FILE,
+    KEY_GLOSS,
+    KEY_RH_MANDATORY,
+    KEY_VIDEO,
+    LANDMARK_SHAPE,
+    PART4_MOD2USE,
+    glasl_landmark as GLASL_LM_DS,
+    KEY_LHAND,
+    KEY_LMARK,
+    KEY_RHAND,
+    KEY_TRAIN,
+    ON_TRAINING_BATCH,
+    QUANTITY_FRAME,
+)
+
+
+def get_idx_start_hand(annotated_images: list, right_hand: bool=False) -> int:
+    for idx in range(len(annotated_images)):
+        if right_hand:
+            if annotated_images[idx][KEY_RHAND]:
+                return idx
+        else:
+            if annotated_images[idx][KEY_LHAND] or annotated_images[idx][KEY_RHAND]:
+                return idx
+    return -1
+
+
+def calculate_steps_needed(train_val: str=KEY_TRAIN, batch_size: int=ON_TRAINING_BATCH) -> int:
+    total_DS: int= 0
+    for a_video in GLASL_LM_DS[train_val]:
+        idx_init_has_hand: int= get_idx_start_hand(a_video[KEY_LMARK])
+        if idx_init_has_hand!=-1:
+            if len(a_video[KEY_LMARK])<=QUANTITY_FRAME:
+                total_DS+= 1
+            else:
+                len_available_images: int= len(a_video[KEY_LMARK])-idx_init_has_hand
+                o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
+                total_DS+= 1 # for part 1
+                if QUANTITY_FRAME<len_available_images:
+                    total_DS+= int(
+                        o2t_mod *(len(a_video[KEY_LMARK]) -(idx_init_has_hand+ QUANTITY_FRAME*o2t_mod))
+                    ) # for part 2
+                    # total_DS+= (len_available_images-QUANTITY_FRAME)+1 # for part 3
+                    for work4mod_what in PART4_MOD2USE: # for part 4
+                        if 0<int(len_available_images//work4mod_what):
+                            total_DS+= (len_available_images//work4mod_what) -QUANTITY_FRAME +1
+                        else:
+                            total_DS+= 1
+                else:
+                    total_DS+= 1
+    return int(ceil(total_DS/float(batch_size)))
+
+
+def get_landmark4less_or_equal_old(a_raw_video: dict, idx_init_has_hand: int|None=None) -> list:
+    '''
+    on a raw video the quantity of images is less than or
+    equal to the target frames which is `QUANTITY_FRAME: int`
+    '''
+    if idx_init_has_hand is None:
+        idx_init_has_hand= get_idx_start_hand(a_raw_video[KEY_LMARK], GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ])
+    if idx_init_has_hand==-1:
+        return list()
+
+    lmark_numpy_out: list= []
+    ratio_what: int= int(ceil(
+        QUANTITY_FRAME  /  (len(a_raw_video[KEY_LMARK])-idx_init_has_hand)
+    ))
+    for idx in range(idx_init_has_hand, len(a_raw_video[KEY_LMARK])):
+        load_an_image_landmarks: ndarray|None= None
+        if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+            if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                with open(f"{GLASL_LANDMARK_DIR /a_raw_video[KEY_VIDEO] /a_raw_video[KEY_LMARK][idx][KEY_FILE]}", 'rb') as f:
+                    load_an_image_landmarks= loadnp(f)
+            else:
+                load_an_image_landmarks= lmark_numpy_out[-1]
+        elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+            with open(f"{GLASL_LANDMARK_DIR /a_raw_video[KEY_VIDEO] /a_raw_video[KEY_LMARK][idx][KEY_FILE]}", 'rb') as f:
+                load_an_image_landmarks= loadnp(f)
+        else:
+            load_an_image_landmarks= lmark_numpy_out[-1]
+        lmark_numpy_out.extend([load_an_image_landmarks] *ratio_what)
+    lmark_numpy_out= lmark_numpy_out[:QUANTITY_FRAME]
+    check_shape: ndarray= array(lmark_numpy_out, dtype=float32)
+    if check_shape.shape!=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
+        raise NotImplementedError(
+            f"incorrect implementation on get_landmark4less_or_equal(), due to lmark_numpy_out should be of shape {
+            tuple((QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]))
+            }, but got {check_shape.shape}"
+        )
+    return lmark_numpy_out
+
+
+def get_landmark4greater_old(a_raw_video: dict) -> list:
+    '''
+    to be used for when len(a_raw_video[KEY_LMARK]) > QUANTITY_FRAME
+    output be of shape(____ int, QUANTITY_FRAME, 86, 2 ____)
+    '''
+    lmark_numpy_out__MANY_VIDS: list= [[]] # be of shape(__ int, QUANTITY_FRAME, 86, 2 __)
+
+    lmark_load_ALL: list= []
+    idx_init_has_hand: int= -1
+    for idx in range(len(a_raw_video[KEY_LMARK])):
+        with open(f"{GLASL_LANDMARK_DIR /a_raw_video[KEY_VIDEO] /a_raw_video[KEY_LMARK][idx][KEY_FILE]}", 'rb') as f:
+            lmark_load_ALL.append(loadnp(f))
+        if idx_init_has_hand==-1:
+            if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+                if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                    idx_init_has_hand= idx
+            elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                idx_init_has_hand= idx
+    if idx_init_has_hand==-1:
+        return list()
+
+    # part 1, floor at index level, still idx_init_has_hand
+    ratio: float= (len(a_raw_video[KEY_LMARK]) -idx_init_has_hand) /QUANTITY_FRAME
+    for idx in range(QUANTITY_FRAME):
+        append_if_valid: int= idx_init_has_hand +int(idx*ratio) # floor
+        if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+            if a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+                lmark_numpy_out__MANY_VIDS[0].append(lmark_load_ALL[append_if_valid])
+            else:
+                lmark_numpy_out__MANY_VIDS[0].append(lmark_numpy_out__MANY_VIDS[0][-1])
+        elif a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
+            a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+            lmark_numpy_out__MANY_VIDS[0].append(lmark_load_ALL[append_if_valid])
+        else:
+            lmark_numpy_out__MANY_VIDS[0].append(lmark_numpy_out__MANY_VIDS[0][-1])
+    if len(lmark_numpy_out__MANY_VIDS[0])!=QUANTITY_FRAME:
+        raise ValueError("incorrect implementation on get_landmark4greater() on part 1 due to NOT QUANTITY_FRAME, when should be QUANTITY_FRAME")
+    del ratio
+    # lmark_numpy_out__MANY_VIDS[0] is of shape (QUANTITY_FRAME, 86, 2), but
+    # here lmark_numpy_out__MANY_VIDS is of shape (1, QUANTITY_FRAME, 86, 2)
+
+    len_available_images: int= len(a_raw_video[KEY_LMARK])-idx_init_has_hand
+    # len_available_images, quantity of images starting from idx_init_has_hand till end
+    if QUANTITY_FRAME<len_available_images:
+        # part 2, evenly spaced via mod, floor at orig/target ratio level
+        o2t_ratio: int= int(len_available_images/QUANTITY_FRAME) # floor >= 1
+        notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        # '''
+        # notIncludedOn_mod, due to on a single video has quantity of images( ie. len(a_raw_video[KEY_LMARK]) )
+        # then mandatory idx_init_has_hand till last has enough images for QUANTITY_FRAME
+        # ie. above --> QUANTITY_FRAME<=len_available_images,
+        # notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        #                         ^^^^^^^^^^^^^^^^^^^^^^^____ total quanitty images on video
+        # notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        #                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^____ subtract
+        # whats to be used on forward index images
+        # notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        #                                                  ^^^^^^^^^^^^^^^^^____ due below appends starts
+        # at idx_init_has_hand
+        # notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        #                                                                     ^^^^^^^^^^^^^^^^^^^^^^____ due to
+        # index below `ii`( represents mod ie. o2t_ratio, ie. int(len_available_images/QUANTITY_FRAME) --> floor,
+        # ie. 0, 1, 2, ..., o2t_ratio-1 ) and `iii`( represents 0, 1, 2, ..., QUANTITY_FRAME-1 ), ie.
+        # for combo o2t_ratio*`iii` on last part of images as (QUANTITY_FRAME, 86, 2)
+        # '''
+        for shift_right in range(notIncludedOn_mod+1):
+            for idx_mod in range(o2t_ratio):
+                lmark_numpy_out__MANY_VIDS.append([])
+                for idx_img2target in range(QUANTITY_FRAME):
+                    append_if_valid: int= idx_init_has_hand +(idx_img2target*o2t_ratio+idx_mod) +shift_right
+                    if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+                        if a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+                            lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[append_if_valid])
+                        elif idx_img2target==0:
+                            lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[idx_init_has_hand])
+                        else:
+                            lmark_numpy_out__MANY_VIDS[-1].append(lmark_numpy_out__MANY_VIDS[-1][-1])
+                    elif a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
+                        a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+                        lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[
+                            append_if_valid
+                        ])
+                    elif idx_img2target==0:
+                        # due to since idx_img2target==0 then lmark_numpy_out__MANY_VIDS[-1][-1] does not exist,
+                        # ie. len(lmark_numpy_out__MANY_VIDS[-1])==0 True, due to prev at
+                        # lmark_numpy_out__MANY_VIDS.append([]) above
+                        lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[idx_init_has_hand])
+                    else:
+                        lmark_numpy_out__MANY_VIDS[-1].append(lmark_numpy_out__MANY_VIDS[-1][-1])
+        del notIncludedOn_mod
+
+        # # part 3, consecutive, mandatory initial has hand
+        # for start_where in range((len_available_images-QUANTITY_FRAME)+1):
+        #     lmark_numpy_out__MANY_VIDS.append([])
+        #     # due to below appends shape (QUANTITY_FRAME, 86, 2)
+        #     for idx in range(QUANTITY_FRAME):
+        #         append_if_valid: int= idx_init_has_hand+idx +start_where
+        #         if a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
+        #             a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+        #             lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[
+        #                 append_if_valid
+        #             ])
+        #         elif idx==0:
+        #             # due to since ii==0 then lmark_numpy_out__MANY_VIDS[-1][-1] does not exist,
+        #             # ie. len(lmark_numpy_out__MANY_VIDS[-1])==0 True, due to prev at
+        #             # lmark_numpy_out__MANY_VIDS.append([]) above
+        #             lmark_numpy_out__MANY_VIDS[-1].append(lmark_load_ALL[idx_init_has_hand])
+        #         else:
+        #             lmark_numpy_out__MANY_VIDS[-1].append(lmark_numpy_out__MANY_VIDS[-1][-1])
+
+        # part 4, all has hand and use past if current no hand
+        init_hand_idxs: tuple= tuple(range(idx_init_has_hand, len(a_raw_video[KEY_LMARK])))
+        past_img_has_hand: ndarray= lmark_load_ALL[idx_init_has_hand]
+        tmp_part4: dict= {i: [] for i in PART4_MOD2USE}
+        for check_mod_init_0, idx in zip(range(len_available_images), init_hand_idxs):
+            for work4mod_what in PART4_MOD2USE:
+                if check_mod_init_0%work4mod_what == work4mod_what-1:
+                    if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+                        if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                            tmp_part4[work4mod_what].append(lmark_load_ALL[idx])
+                        else:
+                            tmp_part4[work4mod_what].append(past_img_has_hand)
+                    elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
+                        a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                        tmp_part4[work4mod_what].append(lmark_load_ALL[idx])
+                    else:
+                        tmp_part4[work4mod_what].append(past_img_has_hand)
+            if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+                if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                    past_img_has_hand= lmark_load_ALL[idx]
+            elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
+                a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                past_img_has_hand= lmark_load_ALL[idx]
+        for work4mod_what in PART4_MOD2USE:
+            if QUANTITY_FRAME<len(tmp_part4[work4mod_what]):
+                for idx_start_at in range(len(tmp_part4[work4mod_what])-QUANTITY_FRAME +1):
+                    lmark_numpy_out__MANY_VIDS.append(tmp_part4[work4mod_what][
+                        idx_start_at:idx_start_at+QUANTITY_FRAME
+                    ])
+            else:
+                lmark_numpy_out__MANY_VIDS.append([])
+                ratio4mod_part4: int= int(ceil(QUANTITY_FRAME/len(tmp_part4[work4mod_what])))
+                for an_image_landmarks in tmp_part4[work4mod_what]:
+                    lmark_numpy_out__MANY_VIDS[-1].extend(list([an_image_landmarks]) *ratio4mod_part4)
+                lmark_numpy_out__MANY_VIDS[-1]= lmark_numpy_out__MANY_VIDS[-1][:QUANTITY_FRAME]
+    else: # len_available_images <= QUANTITY_FRAME
+        copy_a_raw_video: dict= {
+            KEY_GLOSS: a_raw_video[KEY_GLOSS],
+            KEY_VIDEO: a_raw_video[KEY_VIDEO],
+            KEY_LMARK: a_raw_video[KEY_LMARK][idx_init_has_hand:]
+        }
+        lmark_numpy_out__MANY_VIDS.append(get_landmark4less_or_equal(copy_a_raw_video, 0))
+    check_shape: ndarray= array(lmark_numpy_out__MANY_VIDS, dtype=float32)
+    if check_shape.shape[-3:]!=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
+        raise NotImplementedError(f"incorrect implementation get_landmark4greater(), lmark_numpy_out__MANY_VIDS should of shape {
+        (QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1])
+        } but got {tuple(check_shape.shape[-3:])}")
+
+    return lmark_numpy_out__MANY_VIDS
+
+
+def get_landmark4less_or_equal(a_raw_video: dict, idx_init_has_hand: int|None=None) -> list:
+    '''
+    on a raw video the quantity of images is less than or
+    equal to the target frames which is `QUANTITY_FRAME: int`
+    '''
+    if idx_init_has_hand is None:
+        idx_init_has_hand= get_idx_start_hand(
+            a_raw_video[KEY_LMARK],
+            GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]
+        )
+    if idx_init_has_hand==-1:
+        return list()
+
+    lmark_folderfile: list= []
+    ratio_what: int= int(ceil(
+        QUANTITY_FRAME  /  (len(a_raw_video[KEY_LMARK])-idx_init_has_hand)
+    ))
+    for idx in range(idx_init_has_hand, len(a_raw_video[KEY_LMARK])):
+        an_image_landmarks_path: Path|None= None
+        if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+            if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                an_image_landmarks_path= Path(a_raw_video[KEY_VIDEO]) /a_raw_video[KEY_LMARK][idx][KEY_FILE]
+            else:
+                an_image_landmarks_path= lmark_folderfile[-1]
+        elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+            an_image_landmarks_path= Path(a_raw_video[KEY_VIDEO]) /a_raw_video[KEY_LMARK][idx][KEY_FILE]
+        else:
+            an_image_landmarks_path= lmark_folderfile[-1]
+        lmark_folderfile.extend([an_image_landmarks_path] *ratio_what)
+    lmark_folderfile= lmark_folderfile[:QUANTITY_FRAME]
+    return lmark_folderfile
+
+
+def get_landmark4greater(a_raw_video: dict) -> list:
+    '''
+    to be used for when len(a_raw_video[KEY_LMARK]) > QUANTITY_FRAME
+    output be of shape(____ int, QUANTITY_FRAME, 86, 2 ____)
+    '''
+    lmark_out__MANY_VIDS: list= [[]] # be of shape(__ int, QUANTITY_FRAME, 86, 2 __)
+
+    lmark_all_path: list= []
+    idx_init_has_hand: int= -1
+    for idx in range(len(a_raw_video[KEY_LMARK])):
+        lmark_all_path.append(Path(Path( a_raw_video[KEY_VIDEO] ) /a_raw_video[KEY_LMARK][idx][KEY_FILE]))
+        if idx_init_has_hand==-1:
+            if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+                if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                    idx_init_has_hand= idx
+            elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                idx_init_has_hand= idx
+    if idx_init_has_hand==-1:
+        return list()
+
+    # part 1, floor at index level, still idx_init_has_hand
+    ratio: float= (len(a_raw_video[KEY_LMARK]) -idx_init_has_hand) /QUANTITY_FRAME
+    for idx in range(QUANTITY_FRAME):
+        append_if_valid: int= idx_init_has_hand +int(idx*ratio) # floor
+        if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+            if a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+                lmark_out__MANY_VIDS[0].append(lmark_all_path[append_if_valid])
+            else:
+                lmark_out__MANY_VIDS[0].append(lmark_out__MANY_VIDS[0][-1])
+        elif a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
+            a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+            lmark_out__MANY_VIDS[0].append(lmark_all_path[append_if_valid])
+        else:
+            lmark_out__MANY_VIDS[0].append(lmark_out__MANY_VIDS[0][-1])
+    if len(lmark_out__MANY_VIDS[0])!=QUANTITY_FRAME:
+        raise ValueError("incorrect implementation on get_landmark4greater() on part 1 due to NOT QUANTITY_FRAME, when should be QUANTITY_FRAME")
+    del ratio
+    # lmark_out__MANY_VIDS[0] is of shape (QUANTITY_FRAME, 86, 2), but
+    # here lmark_out__MANY_VIDS is of shape (1, QUANTITY_FRAME, 86, 2)
+
+    len_available_images: int= len(a_raw_video[KEY_LMARK])-idx_init_has_hand
+    # len_available_images, quantity of images starting from idx_init_has_hand till end
+    if QUANTITY_FRAME<len_available_images:
+        # part 2, evenly spaced via mod, floor at orig/target ratio level
+        o2t_ratio: int= int(len_available_images/QUANTITY_FRAME) # floor >= 1
+        notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        # '''
+        # notIncludedOn_mod, due to on a single video has quantity of images( ie. len(a_raw_video[KEY_LMARK]) )
+        # then mandatory idx_init_has_hand till last has enough images for QUANTITY_FRAME
+        # ie. above --> QUANTITY_FRAME<=len_available_images,
+        # notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        #                         ^^^^^^^^^^^^^^^^^^^^^^^____ total quanitty images on video
+        # notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        #                                                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^____ subtract
+        # whats to be used on forward index images
+        # notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        #                                                  ^^^^^^^^^^^^^^^^^____ due below appends starts
+        # at idx_init_has_hand
+        # notIncludedOn_mod: int= len(a_raw_video[KEY_LMARK])-(idx_init_has_hand+ QUANTITY_FRAME*o2t_ratio)
+        #                                                                     ^^^^^^^^^^^^^^^^^^^^^^____ due to
+        # index below `ii`( represents mod ie. o2t_ratio, ie. int(len_available_images/QUANTITY_FRAME) --> floor,
+        # ie. 0, 1, 2, ..., o2t_ratio-1 ) and `iii`( represents 0, 1, 2, ..., QUANTITY_FRAME-1 ), ie.
+        # for combo o2t_ratio*`iii` on last part of images as (QUANTITY_FRAME, 86, 2)
+        # '''
+        for shift_right in range(notIncludedOn_mod+1):
+            for idx_mod in range(o2t_ratio):
+                lmark_out__MANY_VIDS.append([])
+                for idx_img2target in range(QUANTITY_FRAME):
+                    append_if_valid: int= idx_init_has_hand +(idx_img2target*o2t_ratio+idx_mod) +shift_right
+                    if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+                        if a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+                            lmark_out__MANY_VIDS[-1].append(lmark_all_path[append_if_valid])
+                        elif idx_img2target==0:
+                            lmark_out__MANY_VIDS[-1].append(lmark_all_path[idx_init_has_hand])
+                        else:
+                            lmark_out__MANY_VIDS[-1].append(lmark_out__MANY_VIDS[-1][-1])
+                    elif a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
+                        a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+                        lmark_out__MANY_VIDS[-1].append(lmark_all_path[
+                            append_if_valid
+                        ])
+                    elif idx_img2target==0:
+                        # due to since idx_img2target==0 then lmark_out__MANY_VIDS[-1][-1] does not exist,
+                        # ie. len(lmark_out__MANY_VIDS[-1])==0 True, due to prev at
+                        # lmark_out__MANY_VIDS.append([]) above
+                        lmark_out__MANY_VIDS[-1].append(lmark_all_path[idx_init_has_hand])
+                    else:
+                        lmark_out__MANY_VIDS[-1].append(lmark_out__MANY_VIDS[-1][-1])
+        del notIncludedOn_mod
+
+        # # part 3, consecutive, mandatory initial has hand
+        # for start_where in range((len_available_images-QUANTITY_FRAME)+1):
+        #     lmark_out__MANY_VIDS.append([])
+        #     # due to below appends shape (QUANTITY_FRAME, 86, 2)
+        #     for idx in range(QUANTITY_FRAME):
+        #         append_if_valid: int= idx_init_has_hand+idx +start_where
+        #         if a_raw_video[KEY_LMARK][append_if_valid][KEY_LHAND] or \
+        #             a_raw_video[KEY_LMARK][append_if_valid][KEY_RHAND]:
+        #             lmark_out__MANY_VIDS[-1].append(lmark_all_path[
+        #                 append_if_valid
+        #             ])
+        #         elif idx==0:
+        #             # due to since ii==0 then lmark_out__MANY_VIDS[-1][-1] does not exist,
+        #             # ie. len(lmark_out__MANY_VIDS[-1])==0 True, due to prev at
+        #             # lmark_out__MANY_VIDS.append([]) above
+        #             lmark_out__MANY_VIDS[-1].append(lmark_all_path[idx_init_has_hand])
+        #         else:
+        #             lmark_out__MANY_VIDS[-1].append(lmark_out__MANY_VIDS[-1][-1])
+
+        # part 4, all has hand and use past if current no hand
+        init_hand_idxs: tuple= tuple(range(idx_init_has_hand, len(a_raw_video[KEY_LMARK])))
+        past_img_path_has_hand: Path= lmark_all_path[idx_init_has_hand]
+        tmp_part4: dict= {i: [] for i in PART4_MOD2USE}
+        for check_mod_init_0, idx in zip(range(len_available_images), init_hand_idxs):
+            for work4mod_what in PART4_MOD2USE:
+                if check_mod_init_0%work4mod_what == work4mod_what-1:
+                    if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+                        if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                            tmp_part4[work4mod_what].append(lmark_all_path[idx])
+                        else:
+                            tmp_part4[work4mod_what].append(past_img_path_has_hand)
+                    elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
+                        a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                        tmp_part4[work4mod_what].append(lmark_all_path[idx])
+                    else:
+                        tmp_part4[work4mod_what].append(past_img_path_has_hand)
+            if GLASL_LM_DS[KEY_RH_MANDATORY][ a_raw_video[KEY_GLOSS] ]:
+                if a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                    past_img_path_has_hand= lmark_all_path[idx]
+            elif a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
+                a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
+                past_img_path_has_hand= lmark_all_path[idx]
+        for work4mod_what in PART4_MOD2USE:
+            if QUANTITY_FRAME<len(tmp_part4[work4mod_what]):
+                for idx_start_at in range(len(tmp_part4[work4mod_what])-QUANTITY_FRAME +1):
+                    lmark_out__MANY_VIDS.append(tmp_part4[work4mod_what][
+                        idx_start_at:idx_start_at+QUANTITY_FRAME
+                    ])
+            else:
+                lmark_out__MANY_VIDS.append([])
+                ratio4mod_part4: int= int(ceil(QUANTITY_FRAME/len(tmp_part4[work4mod_what])))
+                for an_image_landmarks in tmp_part4[work4mod_what]:
+                    lmark_out__MANY_VIDS[-1].extend(list([an_image_landmarks]) *ratio4mod_part4)
+                lmark_out__MANY_VIDS[-1]= lmark_out__MANY_VIDS[-1][:QUANTITY_FRAME]
+    else: # len_available_images <= QUANTITY_FRAME
+        copy_a_raw_video: dict= {
+            KEY_GLOSS: a_raw_video[KEY_GLOSS],
+            KEY_VIDEO: a_raw_video[KEY_VIDEO],
+            KEY_LMARK: a_raw_video[KEY_LMARK][idx_init_has_hand:]
+        }
+        lmark_out__MANY_VIDS.append(get_landmark4less_or_equal(copy_a_raw_video, 0))
+    if not all(len(el)==QUANTITY_FRAME for el in lmark_out__MANY_VIDS):
+        raise NotImplementedError(f"incorrect implementation get_landmark4greater(), lmark_out__MANY_VIDS each element should be of length {
+        QUANTITY_FRAME
+        } but got {list(filter(lambda el: len(el)!=QUANTITY_FRAME, lmark_out__MANY_VIDS))}")
+
+    return lmark_out__MANY_VIDS
+
+
+def get_numpy(file_list: list) -> list:
+    out: list= []
+    for file in file_list:
+        with open(f"{GLASL_LANDMARK_DIR /file}", "rb") as f:
+            out.append(loadnp(f))
+    return out
+def get_batch_numpy(videos: list) -> list:
+    out: list= []
+    for video in videos:
+        out.append(get_numpy(video))
+    return out
+
+
+def get_data_landmark(
+    train_val: str= KEY_TRAIN,
+    batch_size: int=ON_TRAINING_BATCH
+) -> Generator:
+    dataset_idxs: tuple= tuple(sample(
+        range(len(GLASL_LM_DS[train_val])),
+        len(GLASL_LM_DS[train_val])
+    ))
+    batch_videos: list= []
+    batch_class: list= []
+    while True:
+        for idx_ds in dataset_idxs:
+            a_raw_video: dict= GLASL_LM_DS[train_val][idx_ds]
+            if QUANTITY_FRAME<len(a_raw_video[KEY_LMARK]):
+                tmp: list= get_landmark4greater(a_raw_video)
+                if 0<len(tmp):
+                    batch_videos.extend(tmp)
+                    batch_class.extend(
+                        [a_raw_video[KEY_GLOSS]] *len(tmp)
+                    )
+            else:
+                tmp: list= get_landmark4less_or_equal(a_raw_video)
+                if 0<len(tmp):
+                    batch_videos.append(tmp)
+                    batch_class.append(a_raw_video[KEY_GLOSS])
+            # ---- now ready ----
+            while batch_size<=len(batch_videos):
+                out_inputs: ndarray= array(
+                    get_batch_numpy(batch_videos[:batch_size]),
+                    dtype=float32
+                )
+                out_expected_outputs: ndarray= array(batch_class[:batch_size], dtype=uint16)
+                batch_videos= batch_videos[batch_size:]
+                batch_class= batch_class[batch_size:]
+                yield (out_inputs, out_expected_outputs)
+-------------------------------------------------------------------------

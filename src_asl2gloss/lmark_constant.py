@@ -1,10 +1,11 @@
 from json import load as loadjson
+from os import cpu_count
 from pathlib import Path
 
 
 PROJ_ROOT: Path= Path(__file__).resolve().parent.parent
 
-EPOCHS: int= 12
+EPOCHS: int= 20
 ON_TRAINING_BATCH: int= 2
 QUANTITY_FRAME: int= 22
 LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2) # ie. (86, 2)
@@ -17,16 +18,18 @@ PART4_MOD2USE: tuple= (3,4,5,6,7,8,9,10,11,12)  # 4st ( try this said.2026.7.22 
 # ✔ 2026/7/26 DONE: add `right_hand_mandatory` key on an images gloss
 # ---- eg. who, drink, fever, ...
 IMG_SIZE: int= 158 # on G10 mandatory be 158x158x3
+def get_cpu_count() -> int:
+    count: int|None= cpu_count()
+    if count==None:
+        return 2
+    return int(count)
+CPU_THREAD: int= get_cpu_count()
 GLASL_LANDMARK_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"landmark"
 GLASL_SKELETON_DIR: Path= PROJ_ROOT /"dataset" /"glasl" /"skeleton"
 
 glasl_landmark: dict= {}
 with open(f"{PROJ_ROOT /"dataset" /"glasl" /"glasl.annotation.landmark.json"}", "r") as f:
     glasl_landmark= loadjson(f)
-
-glasl_skeleton: dict= {}
-with open(f"{PROJ_ROOT /"dataset" /"glasl" /"glasl.annotation.skeleton.json"}", "r") as f:
-    glasl_skeleton= loadjson(f)
 
 KEY_TRAIN: str= 'train'   # landmark is face, then pose, then left_had, then right hand
 KEY_VAL: str= 'val'       # face full is (468, 2) --> face worthy is (36, 2)
@@ -41,7 +44,7 @@ KEY_FILE: str= 'file'
 KEY_LHAND: str= 'left_hand'
 KEY_RHAND: str= 'right_hand'
 
-LEN_GLOSS: int= int(len(glasl_skeleton[KEY_ID2G]))
+LEN_GLOSS: int= int(len(glasl_landmark[KEY_ID2G]))
 
 
 FACE_CONNECTIONS_FULL: tuple= (

@@ -1,8 +1,9 @@
 from os.path import exists
 from os import makedirs
+from shutil import rmtree
 from json import load as jsonload, dump as jsonsave
 from typing import Any
-from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, imwrite, line
+from cv2 import CAP_PROP_FRAME_COUNT, COLOR_BGR2RGB, VideoCapture, circle, cvtColor, imread, imwrite, line
 from sys import stderr
 from numpy import array, float32, ndarray, uint8, zeros, save as numpysave
 from mediapipe.python.solutions.holistic import Holistic
@@ -16,6 +17,7 @@ PROJ_ROOT= Path(__file__).resolve().parent.parent.parent
 GLASL_DIR: Path= PROJ_ROOT /"dataset" /"glasl"
 VIDEO_DIR: Path= GLASL_DIR /"video"
 IMAGE_dir: Path= GLASL_DIR /"image"
+IMAGE_tmp_dir: Path= GLASL_DIR /"image_tmp"
 LANDMARK_dir: Path= GLASL_DIR /"landmark"
 SKELETON_dir: Path= GLASL_DIR /"skeleton"
 MPH_fph: Holistic= Holistic(
@@ -392,7 +394,7 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
     return (img_write_to, landmark__face_pose_left_right_hand)
 
 
-def get_images_from_video(split_vid_dict: dict) -> ndarray:
+def get_images_from_video_old(split_vid_dict: dict) -> ndarray:
     video_abs_file_dir: Path= VIDEO_DIR /split_vid_dict["video_file"]
     if exists(video_abs_file_dir):
         try:
@@ -411,19 +413,44 @@ def get_images_from_video(split_vid_dict: dict) -> ndarray:
         except Exception as e:
             print(f"error at video {VIDEO_DIR /split_vid_dict['video_file']}: {e}", file=stderr)
     raise FileNotFoundError(f"Video {split_vid_dict["video_file"]} Does Not Exist --> No such file {video_abs_file_dir}")
+def get_images_from_video(split_vid_dict: dict) -> list[str]:
+    video_abs_file_dir: Path= VIDEO_DIR /split_vid_dict["video_file"]
+    if exists(video_abs_file_dir):
+        try:
+            video_ocv: VideoCapture= VideoCapture(str(video_abs_file_dir))
+            images_list: list[str]= list()
+            if video_ocv.isOpened():
+                for _ in range(  int(video_ocv.get(CAP_PROP_FRAME_COUNT))  ):
+                    isNotEmpty, obj_image= video_ocv.read()
+                    if isNotEmpty and 0<len(obj_image):
+                        filename: str= f"{str(len(images_list)+1).zfill(8)}.jpeg"
+                        imwrite(f"{IMAGE_tmp_dir /filename}", obj_image)
+                        images_list.append(filename)
+                if len(images_list)<1:
+                    raise ValueError(f"Video {VIDEO_DIR /split_vid_dict["video_file"]} has No images exist.")
+                return images_list
+
+
+        except Exception as e:
+            print(f"error at video {VIDEO_DIR /split_vid_dict['video_file']}: {e}", file=stderr)
+    raise FileNotFoundError(f"Video {split_vid_dict["video_file"]} Does Not Exist --> No such file {video_abs_file_dir}")
+def delete_tmp_image(image_list: list[str]):
+    for file in image_list:
+        (IMAGE_tmp_dir /file).unlink()
 
 
 def get_video_details(split_vid_dict: dict) -> tuple:
-    allImg_human: ndarray= get_images_from_video(split_vid_dict)
+    images_filenames: list[str]= get_images_from_video(split_vid_dict)
     allImg_landmark: list= []
     allImg_skeleton: list= []
     allImg_details: list= []
-    for img in allImg_human:
-        fph_lmark: Any= MPH_fph.process(cvtColor(src=img, code=COLOR_BGR2RGB))
+    for image_filename in images_filenames:
+        an_image= imread(f"{IMAGE_tmp_dir /image_filename}")
+        fph_lmark: Any= MPH_fph.process(cvtColor(src=an_image, code=COLOR_BGR2RGB))
         skeleton__image, landmark__fpLhRh= drawFacePoseHand(
             img_write_to=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
             lmark_mph=fph_lmark,
-            orig_shape=img.shape
+            orig_shape=an_image.shape
         )
         allImg_landmark.append(landmark__fpLhRh)
         allImg_skeleton.append(skeleton__image)
@@ -435,86 +462,101 @@ def get_video_details(split_vid_dict: dict) -> tuple:
             'width': IMG_SIZE,
             'height': IMG_SIZE
         })
+    delete_tmp_image(images_filenames)
 
-    if len(allImg_human)!=len(allImg_landmark) or len(allImg_landmark)!=len(allImg_skeleton) or len(allImg_skeleton)!=len(allImg_details):
-        print(f"len allImg_human --> {len(allImg_human)}", file=stderr)
+    if len(images_filenames)!=len(allImg_landmark) or len(allImg_landmark)!=len(allImg_skeleton) or len(allImg_skeleton)!=len(allImg_details):
+        print(f"len images_filenames --> {len(images_filenames)}", file=stderr)
         print(f"len allImg_landmark --> {len(allImg_landmark)}", file=stderr)
         print(f"len allImg_skeleton --> {len(allImg_skeleton)}", file=stderr)
         print(f"len allImg_details --> {len(allImg_details)}", file=stderr)
         raise NotImplementedError("Incorrect implementation due to mandatory all 4 be having same quantity of elements")
     return (
-        array(allImg_human, dtype=uint8),
         array(allImg_landmark, dtype=float32),
         array(allImg_skeleton, dtype=uint8),
         allImg_details,
     )
 
 
-def mandatory_all_3_notExist() -> None:
-    if exists(IMAGE_dir):
-        raise FileExistsError(f"please delete this folder {IMAGE_dir}, will be the one to create it for you.")
-    if exists(LANDMARK_dir):
-        raise FileExistsError(f"please delete this folder {LANDMARK_dir}, will be the one to create it for you.")
-    if exists(SKELETON_dir):
-        raise FileExistsError(f"please delete this folder {SKELETON_dir}, will be the one to create it for you.")
+def create_if_not_exist() -> None:
+    if not exists(IMAGE_dir):
+        makedirs(IMAGE_dir)
+    if not exists(LANDMARK_dir):
+        makedirs(LANDMARK_dir)
+    if not exists(SKELETON_dir):
+        makedirs(SKELETON_dir)
+    if not IMAGE_tmp_dir.exists():
+        IMAGE_tmp_dir.mkdir()
 
-    makedirs(IMAGE_dir)
-    makedirs(LANDMARK_dir)
-    makedirs(SKELETON_dir)
 
 
 def processDataForTrainingLater(glasl_clean: list, glasl_LANDMARK: dict, glasl_SKELETON: dict) -> tuple:
     for idxGloss, gloss_ds in enumerate(glasl_clean): # for each gloss ie. book, drink, computer, ...
         print(f"currently processing( {gloss_ds['gloss']} ) completed: {round(idxGloss/len(glasl_clean), 3)*100}%")
         for gloss_instance in gloss_ds["instances"]: # on each gloss has many videos, now for each videos
-            imgs_human_rgb, imgs_landmark, imgs_skeleton, imgs_details= get_video_details(gloss_instance)
-            # don't extract images due to takes too much space, ie. 10gloss about 46GiB
-            # makedirs(f"{IMAGE_dir /gloss_instance["video_file"][:-4]}")
-            makedirs(f"{LANDMARK_dir /gloss_instance["video_file"][:-4]}")
-            makedirs(f"{SKELETON_dir /gloss_instance["video_file"][:-4]}")
-            glasl_LANDMARK[ gloss_instance["split"] ].append({
-                "gloss_id": int(glasl_LANDMARK[KEY_G2ID][gloss_ds["gloss"]]),
-                "video_id": gloss_instance["video_file"][:-4],
-                "landmark": [],
-            })
-            glasl_SKELETON[ gloss_instance["split"] ].append({
-                "gloss_id": int(glasl_SKELETON[KEY_G2ID][gloss_ds["gloss"]]),
-                "video_id": gloss_instance["video_file"][:-4],
-                "skeleton": [],
-            })
-            for i in range(len(imgs_human_rgb)): # each video has many images, now for each images
-                file2create: str= str(i+1).zfill(5)
-                # filename_abs_human: Path= IMAGE_dir /gloss_instance["video_file"][:-4] /f"{file2create}.png"
-                filename_abs_landmark: Path= LANDMARK_dir /gloss_instance["video_file"][:-4] /f"{file2create}.npy"
-                filename_abs_skeleton: Path= SKELETON_dir /gloss_instance["video_file"][:-4] /f"{file2create}.png"
-                # imwrite(filename=str(filename_abs_human), img=imgs_human_rgb[i])
-                with open(str(filename_abs_landmark), "wb") as f:
-                    # lanmarks order is face, then pose, then left hand, then right hand
-                    # see `HERE ORDER OF LANDMARKS`
-                    numpysave(file=f, arr=imgs_landmark[i])
-                imwrite(filename=str(filename_abs_skeleton), img=imgs_skeleton[i])
-                glasl_LANDMARK[ gloss_instance["split"] ][-1]["landmark"].append({
-                    "file": f"{file2create}.npy",
-                    "face": imgs_details[i]["face"],
-                    "pose": imgs_details[i]["pose"],
-                    "left_hand": imgs_details[i]["left_hand"],
-                    "right_hand": imgs_details[i]["right_hand"],
+            video_landmark_abs_folder: Path= LANDMARK_dir /Path(gloss_instance["video_file"]).stem
+            video_skeleton_abs_folder: Path= SKELETON_dir /Path(gloss_instance["video_file"]).stem
+            if not (
+                video_landmark_abs_folder.exists() and \
+                video_skeleton_abs_folder.exists() and \
+                any(video_landmark_abs_folder.iterdir()) and \
+                any(video_skeleton_abs_folder.iterdir())
+            ):
+                if video_landmark_abs_folder.exists():
+                    rmtree(video_landmark_abs_folder)
+                if video_skeleton_abs_folder.exists():
+                    rmtree(video_skeleton_abs_folder)
+                video_landmark_abs_folder.mkdir()
+                video_skeleton_abs_folder.mkdir()
+                imgs_landmark, imgs_skeleton, imgs_details= get_video_details(gloss_instance)
+                # don't extract images due to takes too much space, ie. 10gloss about 46GiB
+                # makedirs(f"{IMAGE_dir /gloss_instance["video_file"][:-4]}")
+                glasl_LANDMARK[ gloss_instance["split"] ].append({
+                    "gloss_id": int(glasl_LANDMARK[KEY_G2ID][gloss_ds["gloss"]]),
+                    "video_id": gloss_instance["video_file"][:-4],
+                    "landmark": [],
                 })
-                glasl_SKELETON[ gloss_instance["split"] ][-1]["skeleton"].append({
-                    "file": f"{file2create}.png",
-                    "face": imgs_details[i]["face"],
-                    "pose": imgs_details[i]["pose"],
-                    "left_hand": imgs_details[i]["left_hand"],
-                    "right_hand": imgs_details[i]["right_hand"],
-                    "width": imgs_details[i]["width"],
-                    "height": imgs_details[i]["height"],
+                glasl_SKELETON[ gloss_instance["split"] ].append({
+                    "gloss_id": int(glasl_SKELETON[KEY_G2ID][gloss_ds["gloss"]]),
+                    "video_id": gloss_instance["video_file"][:-4],
+                    "skeleton": [],
                 })
+                for i in range(len(imgs_landmark)): # each video has many images, now for each images
+                    file2create: str= str(i+1).zfill(5)
+                    # filename_abs_human: Path= IMAGE_dir /gloss_instance["video_file"][:-4] /f"{file2create}.png"
+                    filename_abs_landmark: Path= LANDMARK_dir /gloss_instance["video_file"][:-4] /f"{file2create}.npy"
+                    filename_abs_skeleton: Path= SKELETON_dir /gloss_instance["video_file"][:-4] /f"{file2create}.png"
+                    with open(str(filename_abs_landmark), "wb") as f:
+                        # lanmarks order is face, then pose, then left hand, then right hand
+                        # see `HERE ORDER OF LANDMARKS`
+                        numpysave(file=f, arr=imgs_landmark[i])
+                    imwrite(filename=str(filename_abs_skeleton), img=imgs_skeleton[i])
+                    glasl_LANDMARK[ gloss_instance["split"] ][-1]["landmark"].append({
+                        "file": f"{file2create}.npy",
+                        "face": imgs_details[i]["face"],
+                        "pose": imgs_details[i]["pose"],
+                        "left_hand": imgs_details[i]["left_hand"],
+                        "right_hand": imgs_details[i]["right_hand"],
+                    })
+                    glasl_SKELETON[ gloss_instance["split"] ][-1]["skeleton"].append({
+                        "file": f"{file2create}.png",
+                        "face": imgs_details[i]["face"],
+                        "pose": imgs_details[i]["pose"],
+                        "left_hand": imgs_details[i]["left_hand"],
+                        "right_hand": imgs_details[i]["right_hand"],
+                        "width": imgs_details[i]["width"],
+                        "height": imgs_details[i]["height"],
+                    })
     return (glasl_LANDMARK, glasl_SKELETON)
 
 
 def init_vars() -> tuple:
     glasl_clean: list= []
-    with open(f"{GLASL_DIR /"glasl.annotation.clean.json"}", 'r') as f:
+    # source: str= "glasl.annotation.clean.104videos.json"
+    source: str= "glasl.annotation.clean.json"
+    out_landmark: str= "glasl.annotation.landmark.json"
+    out_skeleton: str= "glasl.annotation.skeleton.json"
+    source: str= "glasl.annotation.clean.json"
+    with open(f"{GLASL_DIR /source}", 'r') as f:
         glasl_clean= jsonload(f)
     glasl_LANDMARK: dict= {
         KEY_TRAIN: [],
@@ -532,11 +574,16 @@ def init_vars() -> tuple:
         KEY_G2ID: {glasl_clean[i]["gloss"]: i for i in range(len(glasl_clean))},
         KEY_RH_MANDATORY: [el["gloss"] in MANDATORY_RHAND for el in glasl_clean]
     }
+    if (GLASL_DIR /out_landmark).exists() and (GLASL_DIR /out_skeleton).exists():
+        with open(f"{GLASL_DIR /out_landmark}", 'r') as f:
+            glasl_LANDMARK= jsonload(f)
+        with open(f"{GLASL_DIR /out_skeleton}", 'r') as f:
+            glasl_SKELETON= jsonload(f)
     return (glasl_clean, glasl_LANDMARK, glasl_SKELETON)
 
 
 def main() -> None:
-    mandatory_all_3_notExist()
+    create_if_not_exist()
     glasl_clean, glasl_LANDMARK, glasl_SKELETON= init_vars()
 
 
@@ -545,10 +592,20 @@ def main() -> None:
         jsonsave(glasl_LANDMARK, f, indent=4)
     with open(f"{GLASL_DIR /"glasl.annotation.skeleton.json"}", "w") as f:
         jsonsave(glasl_SKELETON, f, indent=4)
+    if IMAGE_tmp_dir.exists():
+        IMAGE_tmp_dir.rmdir()
 
 
 if __name__=='__main__':
     # 45 videos per categories: took 2h and 11m to finish
     # 95 viewos per categories: Sun Jul 26 12:18:47 AM +08 2026 --> Sun Jul 26 09:30:38 AM +08 2026
     # 95 viewos per categories: took 9h and 13m to finish
+    # 19 videos per categories: took about 15h 55m
+    # ---- contains 5videos from 1st 45 videos glasl
+    # ---- contains 10videos from 50 videos glasl
+    # ---- contains 4videos from 4 long videos
+    # 99 videos per categories: took 23h and 22m to finish
+    # ---- contains 45videos from 1st glasl created
+    # ---- contains 50videos from 50 videos glasl
+    # ---- contains 4videos from 4 long videos
     main()
