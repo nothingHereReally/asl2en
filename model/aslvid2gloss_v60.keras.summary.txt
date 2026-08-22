@@ -81,3 +81,230 @@ Quantity images --> 4
 Quantity categories --> 22
 model( --> aslvid2gloss_v60.keras <-- )
 ----> training took approx. 14 hours 51 minutes
+
+
+
+
+
+
+
+
+-------------------------------------------------------------------------
+-- model_layers.py
+from keras.src.activations.activations import ReLU
+from keras.src.layers import Attention, Flatten, Dense, Input, MultiHeadAttention, Layer
+from keras.src.activations import softmax
+from keras.src.saving import register_keras_serializable
+from typing import Any
+import tensorflow as tf
+from numpy import float32, float64
+
+
+from .lmark_constant import LANDMARK_SHAPE, QUANTITY_FRAME, LEN_GLOSS
+
+
+@register_keras_serializable()
+class ShapeReduce43ViaAttention(Layer):
+    def __init__(self, num_heads: int, dropout: float, name: str='reduce_shape', **kwargs):
+        super().__init__(**kwargs)
+        self.num_heads=   num_heads
+        self.dropout=     dropout
+        self.name=        name
+    def build(self, input_shape):
+        self.in_query= [Dense(
+                units=input_shape[-2], # 86
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+        self.in_value= [Dense(
+                units=input_shape[-2], # 86
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+        self.in_key= [Dense(
+                units=input_shape[-2], # 86
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+        self.in_attention= [Attention(
+                use_scale=True,
+                dropout=self.dropout,
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+        # -----------------------------------
+        self.query= [Dense( # ---------------
+                units=input_shape[-2]//2, # 43
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+        self.value= [Dense(
+                units=input_shape[-2]//2, # 43
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+        self.key= [Dense(
+                units=input_shape[-2]//2, # 43
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+        self.attention= [Attention(
+                use_scale=True,
+                dropout=self.dropout,
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+    def call(self, data_self_att):
+        shape: Any= tf.shape(data_self_att) # shape(BATCH_SIZE, QUANTITY_FRAME, 86, 2)
+        data= tf.reshape(data_self_att, (-1, shape[-2]*shape[-1])) # shape(BATCH_SIZE*QUANTITY_FRAME, 86*2)
+        query= [query_ann(data) for query_ann in self.in_query] # (-1, 172) -> shape(-1, 86)
+        value= [value_ann(data) for value_ann in self.in_value] # (-1, 172) -> shape(-1, 86)
+        key=   [key_ann(data)   for key_ann   in self.in_key]   # (-1, 172) -> shape(-1, 86)
+        query= [tf.reshape(query_ann, (-1, shape[-3], shape[-2])) for query_ann in query]
+        value= [tf.reshape(value_ann, (-1, shape[-3], shape[-2])) for value_ann in value]
+        key=   [tf.reshape(key_ann,   (-1, shape[-3], shape[-2])) for key_ann   in key]
+        output= [attention(
+            [query[idx], value[idx], key[idx]]
+        ) for idx, attention in enumerate(self.in_attention)]
+        output= tf.reduce_sum(output, axis=0) # shape(BATCH_SIZE, QUANTITY_FRAME, 86)
+        # ----------------------------------------------------------------------
+        output= tf.reshape(output, (-1, shape[-2])) # shape(BATCH_SIZE*QUANTITY_FRAME, 86)
+        query= [query_ann(output) for query_ann in self.query]
+        value= [value_ann(output) for value_ann in self.value]
+        key=   [key_ann(output)   for key_ann   in self.key]
+        query= [tf.reshape(query_ann, (-1, shape[-3], shape[-2]//2)) for query_ann in query]
+        value= [tf.reshape(value_ann, (-1, shape[-3], shape[-2]//2)) for value_ann in value]
+        key=   [tf.reshape(key_ann,   (-1, shape[-3], shape[-2]//2)) for key_ann   in key]
+        output= [attention(
+            [query[idx], value[idx], key[idx]]
+        ) for idx, attention in enumerate(self.attention)]
+        # input_shape (BATCH_SIZE, QUANTITY_FRAME, 86, 2)
+        # output_shape (BATCH_SIZE, QUANTITY_FRAME, 43=86//2)
+        return tf.reduce_sum(output, axis=0)
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "num_heads": self.num_heads,
+            "dropout":   self.dropout,
+            "name":      self.name,
+        }
+@register_keras_serializable()
+class ShapeReduceViaAddAndAttention(Layer):
+    def __init__(self, target: int, num_heads: int, dropout: float, name: str='reduce_shape21', **kwargs):
+        super().__init__(**kwargs)
+        self.target=    target
+        self.num_heads= num_heads
+        self.dropout=   dropout
+        self.name=      name
+    def build(self, input_shape):
+        assert input_shape[-2]%2==0
+        self.target_query= [Dense(
+                units=self.target,
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+        self.target_value= [Dense(
+                units=self.target,
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+        self.target_key= [Dense(
+                units=self.target,
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+        self.target_attention= [Attention(
+                use_scale=True,
+                dropout=self.dropout,
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+        # -----------------------------------
+        self.query= [Dense(
+                units=self.target*input_shape[-2]//2,
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+        self.value= [Dense(
+                units=self.target*input_shape[-2]//2,
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+        self.key= [Dense(
+                units=self.target*input_shape[-2]//2,
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+        self.attention= [Attention(
+                use_scale=True,
+                dropout=self.dropout,
+                dtype=float64,
+            ) for _ in range(self.num_heads)]
+    def call(self, data_self_att):
+        origin_shape: Any= tf.shape(data_self_att) # shape(BATCH_SIZE, QUANTITY_FRAME, 43)
+        data= tf.reshape(data_self_att, (-1, origin_shape[-2]//2, 2, origin_shape[-1]))
+        data= tf.reduce_sum(data, axis=-2) # shape(BATCH_SIZE, QUANTITY_FRAME/2, 43)
+        shape: Any= tf.shape(data)
+        data=  tf.reshape(data, (-1, shape[-1])) # shape(BATCH_SIZE*QUANTITY_FRAME/2, 43)
+        # ----------------------------------------------------------------------
+        query= [query_ann(data) for query_ann in self.target_query]
+        value= [value_ann(data) for value_ann in self.target_value]
+        key=   [key_ann(data)   for key_ann   in self.target_key]
+        query= [tf.reshape(query_ann, (-1, shape[-2], self.target)) for query_ann in query]
+        value= [tf.reshape(value_ann, (-1, shape[-2], self.target)) for value_ann in value]
+        key=   [tf.reshape(key_ann,   (-1, shape[-2], self.target)) for key_ann   in key]
+        output= [attention(
+            [query[idx], value[idx], key[idx]]
+        ) for idx, attention in enumerate(self.target_attention)]
+        output= tf.reduce_sum(output, axis=0)
+        shape= tf.shape(output) # (BATCH_SIZE, QUANTITY_FRAME/2, self.target)
+        # ----------------------------------------------------------------------
+        output= tf.reshape(output, (-1, shape[-2]*shape[-1])) # shape(BATCH_SIZE, QUANTITY_FRAME/2*self.target)
+        query= [query_ann(output) for query_ann in self.query]
+        value= [value_ann(output) for value_ann in self.value]
+        key=   [key_ann(output)   for key_ann   in self.key]
+        query= [tf.reshape(query_ann, (-1, shape[-2], self.target)) for query_ann in query]
+        value= [tf.reshape(value_ann, (-1, shape[-2], self.target)) for value_ann in value]
+        key=   [tf.reshape(key_ann,   (-1, shape[-2], self.target)) for key_ann   in key]
+        output= [attention(
+            [query[idx], value[idx], key[idx]]
+        ) for idx, attention in enumerate(self.attention)]
+        # input_shape (BATCH_SIZE, QUANTITY_FRAME, 43)
+        # output_shape (BATCH_SIZE, QUANTITY_FRAME/2, self.target)
+        return tf.reduce_sum(output, axis=0)
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "target":    self.target,
+            "num_heads": self.num_heads,
+            "dropout":   self.dropout,
+            "name":      self.name,
+        }
+# ---------------------------------------------------------------------------
+data_in= Input(
+    shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]),
+    dtype=float32,
+    name='batch_vid',
+)
+# ---------------------------------------------------------------------------
+x= ShapeReduce43ViaAttention(
+    num_heads=8,
+    dropout=0.1, # (QUANTITY_FRAME, LANDMARK_SHAPE[0]//2==43)
+)(data_in)
+x= MultiHeadAttention(
+    num_heads=8,
+    key_dim=43//8,
+    dropout=0.1,
+    use_bias=True,
+    name='mha_86',
+)(
+    query=x,
+    value=x,
+    key=x,
+) # (QUANTITY_FRAME, LANDMARK_SHAPE[0]//2==43)
+x= ShapeReduceViaAddAndAttention(
+    target=21,
+    num_heads=8,
+    dropout=0.1
+)(x)
+ann= Flatten()(x)
+# ---------------------------------------------------------------------------
+data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
+-------------------------------------------------------------------------
