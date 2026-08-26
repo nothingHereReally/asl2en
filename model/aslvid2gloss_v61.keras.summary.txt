@@ -1,0 +1,102 @@
+model v61
+-- input shape
+( 8, 86, 2 )
+-- output shape
+( 22, )
+
+
+
+
+--> uses 95 videos= 45 videos + 50 videos glasl per category glasl for training
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)               │ (None, 8, 86, 2)            │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ landmark_projection (Dense)          │ (None, 8, 86, 128)          │             384 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ landmark_position                    │ (None, 8, 86, 128)          │          11,008 │
+│ (LandmarkPositionEmbedding)          │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ spatial_transformer_1                │ (None, 8, 86, 128)          │         198,272 │
+│ (SpatialTransformerBlock)            │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ spatial_transformer_2                │ (None, 8, 86, 128)          │         198,272 │
+│ (SpatialTransformerBlock)            │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ spatial_output_norm                  │ (None, 8, 86, 128)          │             256 │
+│ (LayerNormalization)                 │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ landmark_mean_pooling                │ (None, 8, 128)              │               0 │
+│ (LandmarkMeanPooling)                │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ temporal_position                    │ (None, 8, 128)              │           1,024 │
+│ (TemporalPositionEmbedding)          │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ temporal_transformer_1               │ (None, 8, 128)              │         198,272 │
+│ (TemporalTransformerBlock)           │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ temporal_transformer_2               │ (None, 8, 128)              │         198,272 │
+│ (TemporalTransformerBlock)           │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ temporal_output_norm                 │ (None, 8, 128)              │             256 │
+│ (LayerNormalization)                 │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ temporal_global_pool                 │ (None, 128)                 │               0 │
+│ (GlobalAveragePooling1D)             │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ classifier_projection (Dense)        │ (None, 128)                 │          16,512 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ classifier_dropout (Dropout)         │ (None, 128)                 │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_class (Dense)                  │ (None, 22)                  │           2,838 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 825,366 (3.15 MB)
+ Trainable params: 825,366 (3.15 MB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 0s 40ms/step - accuracy: 0.2166 - loss: 2.75212026-08-25 08:26:40.356338: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'gemm_fusion_dot_38', 8 bytes spill stores, 8 bytes spill loads
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 1062s 41ms/step - accuracy: 0.2674 - loss: 2.4514 - val_accuracy: 0.1676 - val_loss: 2.6051 - learning_rate: 1.0000e-04
+Epoch 2/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 1025s 41ms/step - accuracy: 0.5176 - loss: 1.4032 - val_accuracy: 0.2123 - val_loss: 2.8548 - learning_rate: 1.0000e-04
+Epoch 3/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 907s 37ms/step - accuracy: 0.5965 - loss: 1.1608 - val_accuracy: 0.2162 - val_loss: 2.3766 - learning_rate: 1.0000e-04
+Epoch 4/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 793s 32ms/step - accuracy: 0.6788 - loss: 0.9696 - val_accuracy: 0.5411 - val_loss: 1.2289 - learning_rate: 1.0000e-04
+Epoch 5/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 0s 30ms/step - accuracy: 0.7430 - loss: 0.7989
+Epoch 5: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 790s 32ms/step - accuracy: 0.7492 - loss: 0.7778 - val_accuracy: 0.4392 - val_loss: 1.6230 - learning_rate: 1.0000e-04
+Epoch 6/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 789s 32ms/step - accuracy: 0.7986 - loss: 0.6046 - val_accuracy: 0.6733 - val_loss: 0.7671 - learning_rate: 1.0000e-05
+Epoch 7/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 862s 35ms/step - accuracy: 0.8451 - loss: 0.4841 - val_accuracy: 0.7621 - val_loss: 0.5447 - learning_rate: 1.0000e-05
+Epoch 8/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 1028s 41ms/step - accuracy: 0.8648 - loss: 0.4358 - val_accuracy: 0.7717 - val_loss: 0.5401 - learning_rate: 1.0000e-05
+Epoch 9/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 963s 39ms/step - accuracy: 0.8771 - loss: 0.3965 - val_accuracy: 0.8220 - val_loss: 0.4524 - learning_rate: 1.0000e-05
+Epoch 10/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 792s 32ms/step - accuracy: 0.8893 - loss: 0.3636 - val_accuracy: 0.8317 - val_loss: 0.4671 - learning_rate: 1.0000e-05
+Epoch 11/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 791s 32ms/step - accuracy: 0.8990 - loss: 0.3370 - val_accuracy: 0.8784 - val_loss: 0.3483 - learning_rate: 1.0000e-05
+Epoch 12/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 0s 30ms/step - accuracy: 0.9119 - loss: 0.3108
+Epoch 12: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 791s 32ms/step - accuracy: 0.9079 - loss: 0.3157 - val_accuracy: 0.8732 - val_loss: 0.3635 - learning_rate: 1.0000e-05
+Epoch 13/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 790s 32ms/step - accuracy: 0.9069 - loss: 0.3084 - val_accuracy: 0.9199 - val_loss: 0.2851 - learning_rate: 1.0000e-06
+Epoch 14/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 0s 32ms/step - accuracy: 0.9184 - loss: 0.2838
+Epoch 14: ReduceLROnPlateau reducing learning rate to 9.999999974752428e-08.
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 846s 34ms/step - accuracy: 0.9174 - loss: 0.2815 - val_accuracy: 0.8994 - val_loss: 0.3110 - learning_rate: 1.0000e-06
+Epoch 15/20
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 0s 40ms/step - accuracy: 0.9061 - loss: 0.3131
+Epoch 15: ReduceLROnPlateau reducing learning rate to 1.0000000116860975e-08.
+24816/24816 ━━━━━━━━━━━━━━━━━━━━ 1029s 41ms/step - accuracy: 0.9164 - loss: 0.2846 - val_accuracy: 0.8998 - val_loss: 0.3057 - learning_rate: 1.0000e-07
+Epoch 15: early stopping
+Restoring model weights from the end of the best epoch: 13.
+Quantity images --> 8
+Quantity categories --> 22
+model( --> aslvid2gloss_v61.keras <-- )
+----> training took approx. 3 hours 42 minutes
