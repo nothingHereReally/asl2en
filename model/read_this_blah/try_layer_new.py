@@ -31,7 +31,7 @@ class SinCosPostionalEncoding( Layer ):
         assert len(input_shape)==3
         self.positional_encoding= SinePositionEncoding(
             max_wavelength=10000,
-        )(x)
+        )
     def call(self, data_input):
         data= ops.add(
             data_input,
@@ -84,7 +84,11 @@ class EncoderTransformer( Layer ):
         )
         self.normAfterAnn= LayerNormalization()
     def call(self, data_input):
-        data= self.multiHeadAtt(data_input)
+        data= self.multiHeadAtt(
+            query=data_input,
+            value=data_input,
+            key=data_input,
+        )
         data= ops.add(data, data_input)
         data_after_mha= self.normAfterMHA(data)
 
@@ -165,6 +169,10 @@ x= Reshape(
     ),
     name="reshape_QF_172"
 )(data_in)
+x= Dense(
+    units=512,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+)(x)
 x= SinCosPostionalEncoding(
     name="positional_encoding"
 )(x)
