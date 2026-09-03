@@ -356,6 +356,7 @@ if __name__=="__main__":
         print(f"____ {tvt_idv} --> {  sum(details[tvt_idv]['count_correct'])  }/{  sum(details[tvt_idv]['count_videos'])  } --> {
             sum(details[tvt_idv]['count_correct']) / sum(details[tvt_idv]['count_videos']) *100
         }%")
+        print(f"____ accuracy on correct {tvt_idv} --> {sum(details[tvt_idv]['accuracy_correct'])/sum(details[tvt_idv]['count_correct'])*100}%")
         print(f"____ overall accuracy {tvt_idv} --> {sum(details[tvt_idv]['accuracy_overall'])/sum(details[tvt_idv]['count_videos'])*100}%")
     print(f"-----------------------------------------------------------------")
     print(f"____ percentage correct --> {
