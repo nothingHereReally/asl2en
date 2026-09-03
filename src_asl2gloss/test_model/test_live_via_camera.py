@@ -48,7 +48,7 @@ def configs() -> None:
 
 
     projectDirectory: Path= Path(__file__).parent.parent.parent
-    ASL2EN= loadModelKerasFile(f"{Path(projectDirectory/"model"/"aslvid2gloss_v67.keras")}")
+    ASL2EN= loadModelKerasFile(f"{Path(projectDirectory /"model" /"aslvid2gloss_v67.keras")}")
     with open(Path(projectDirectory/"dataset"/"glasl"/"glasl.annotation.landmark.json"), 'r') as f:
         assert ASL2EN is not None
         ASL2EN.predict(
