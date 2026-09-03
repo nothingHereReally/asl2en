@@ -22,7 +22,7 @@ from ..lmark_constant import (
 
 
 LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2)
-model: Any= load_model(f"{PROJ_ROOT /"model" /"aslvid2gloss_v62.keras"}")
+model: Any= load_model(f"{PROJ_ROOT /"model" /"aslvid2gloss_v63.keras"}")
 TRAIN_GLOSS: int= model.output_shape[-1]   # 22 categories
 QUANTITY_FRAME: int= model.input_shape[-3] # 18 frames/images
 TRAIN_BATCH: int= 2
