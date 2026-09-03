@@ -1,7 +1,7 @@
 from concurrent.futures import ProcessPoolExecutor
 import cv2
 from json import load as loadJson
-from keras.models import load_model as loadModelKerasFile
+from keras.src.saving import load_model as loadModelKerasFile
 from mediapipe.python.solutions.holistic import Holistic
 import numpy
 from pathlib import Path
@@ -48,7 +48,7 @@ def configs() -> None:
 
 
     projectDirectory: Path= Path(__file__).parent.parent.parent
-    ASL2EN= loadModelKerasFile(Path(projectDirectory/"model"/"aslvid2gloss_v41.keras"))
+    ASL2EN= loadModelKerasFile(f"{Path(projectDirectory/"model"/"aslvid2gloss_v67.keras")}")
     with open(Path(projectDirectory/"dataset"/"glasl"/"glasl.annotation.landmark.json"), 'r') as f:
         assert ASL2EN is not None
         ASL2EN.predict(
@@ -431,7 +431,7 @@ def normalizeLandmarks(dataIn: tuple) -> list:
 def doRecognitionAslAlgorithm(tmpLandmarks: dict, anImageLandmarks: list|None) -> dict:
     assert ASL2EN is not None
     assert ASL_GLOSS is not None and isinstance(ASL_GLOSS, tuple)
-    GAP_BE_HOW_MANY_THEN_APPEND: int= 4
+    GAP_BE_HOW_MANY_THEN_APPEND: int= 6
     MAX_LAST_HAS_HAND: int= 9
     assert MAX_LAST_HAS_HAND < ASL2EN.input_shape[1]
     # tmpLandmarks: dict= {
