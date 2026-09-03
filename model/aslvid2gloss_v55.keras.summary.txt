@@ -10,17 +10,22 @@ model v55
 summary from 45 videos per category
 -----------------------------------------------------------------
 ____ train --> 780/880 --> 88.63636363636364%
-____ overall accuracy train --> 95.09475708007812%
+____ accuracy on correct train --> 96.66954803466797%
+____ overall accuracy train --> 95.09282684326172%
 -----------------------------------------------------------------
 ____ val --> 61/66 --> 92.42424242424242%
-____ overall accuracy val --> 97.05174255371094%
+____ accuracy on correct val --> 97.6352767944336%
+____ overall accuracy val --> 97.05915832519531%
 -----------------------------------------------------------------
 ____ test --> 36/44 --> 81.81818181818183%
-____ overall accuracy test --> 93.6829605102539%
+____ accuracy on correct test --> 97.40484619140625%
+____ overall accuracy test --> 93.68596649169922%
 -----------------------------------------------------------------
 ____ percentage correct --> 877 / 990 --> 88.58585858585859%
-____ hardmax accuracy --> 87.62626262626263%
-____ softmax accuracy --> 95.2764892578125%
+____ accuracy on correct --> 96.76689147949219%
+____ accuracy( overall ) --> 95.16138458251953%
+____ accuracy on correct( avg.(train, val, test) --> 97.23655700683594%
+____ accuracy( overall )( avg.(train, val, test) --> 95.27931213378906%
 
 
 
