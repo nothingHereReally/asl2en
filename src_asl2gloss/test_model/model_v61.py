@@ -599,43 +599,23 @@ if __name__=="__main__":
     batch: int= 8
     details: dict= {
         KEY_TRAIN: {
-            'correct':          [0 for _ in range(TRAIN_GLOSS)],
-            'accuracy':         [0 for _ in range(TRAIN_GLOSS)],
-            'overall_accuracy': [0 for _ in range(TRAIN_GLOSS)],
-            'total_vid':        [0 for _ in range(TRAIN_GLOSS)]
+            'accuracy_correct':    [0 for _ in range(TRAIN_GLOSS)],
+            'accuracy_overall':    [0 for _ in range(TRAIN_GLOSS)],
+            'count_correct':       [0 for _ in range(TRAIN_GLOSS)],
+            'count_videos':        [0 for _ in range(TRAIN_GLOSS)]
         },
         KEY_VAL: {
-            'correct':          [0 for _ in range(TRAIN_GLOSS)],
-            'accuracy':         [0 for _ in range(TRAIN_GLOSS)],
-            'overall_accuracy': [0 for _ in range(TRAIN_GLOSS)],
-            'total_vid':        [0 for _ in range(TRAIN_GLOSS)]
+            'accuracy_correct':    [0 for _ in range(TRAIN_GLOSS)],
+            'accuracy_overall':    [0 for _ in range(TRAIN_GLOSS)],
+            'count_correct':       [0 for _ in range(TRAIN_GLOSS)],
+            'count_videos':        [0 for _ in range(TRAIN_GLOSS)]
         },
         KEY_TEST: {
-            'correct':          [0 for _ in range(TRAIN_GLOSS)],
-            'accuracy':         [0 for _ in range(TRAIN_GLOSS)],
-            'overall_accuracy': [0 for _ in range(TRAIN_GLOSS)],
-            'total_vid':        [0 for _ in range(TRAIN_GLOSS)]
+            'accuracy_correct':    [0 for _ in range(TRAIN_GLOSS)],
+            'accuracy_overall':    [0 for _ in range(TRAIN_GLOSS)],
+            'count_correct':       [0 for _ in range(TRAIN_GLOSS)],
+            'count_videos':        [0 for _ in range(TRAIN_GLOSS)]
         },
-        "summary": {
-            KEY_TRAIN: {
-                'correct':          [0 for _ in range(TRAIN_GLOSS)],
-                'accuracy':         [0 for _ in range(TRAIN_GLOSS)],
-                'overall_accuracy': [0 for _ in range(TRAIN_GLOSS)],
-                'total_vid':        [0 for _ in range(TRAIN_GLOSS)]
-            },
-            KEY_VAL: {
-                'correct':          [0 for _ in range(TRAIN_GLOSS)],
-                'accuracy':         [0 for _ in range(TRAIN_GLOSS)],
-                'overall_accuracy': [0 for _ in range(TRAIN_GLOSS)],
-                'total_vid':        [0 for _ in range(TRAIN_GLOSS)]
-            },
-            KEY_TEST: {
-                'correct':          [0 for _ in range(TRAIN_GLOSS)],
-                'accuracy':         [0 for _ in range(TRAIN_GLOSS)],
-                'overall_accuracy': [0 for _ in range(TRAIN_GLOSS)],
-                'total_vid':        [0 for _ in range(TRAIN_GLOSS)]
-            },
-        }
     }
     for tvt_idv in (KEY_TRAIN, KEY_VAL, KEY_TEST):
         batch_vid_lm: list= []
@@ -663,10 +643,10 @@ if __name__=="__main__":
                 for y_out, y_shouldbe in zip(y_pred, batch_gloss):
                     y_out_g_id= int(argmax(y_out, axis=-1))
                     if y_out_g_id==y_shouldbe:
-                        details[tvt_idv]['correct'][y_shouldbe]+= 1
-                        details[tvt_idv]['accuracy'][y_shouldbe]+= y_out[y_out_g_id]
-                    details[tvt_idv]['overall_accuracy'][y_shouldbe]+= y_out[y_out_g_id]
-                    details[tvt_idv]['total_vid'][y_shouldbe]+= 1
+                        details[tvt_idv]['accuracy_correct'][y_shouldbe]+= y_out[y_out_g_id]
+                        details[tvt_idv]['count_correct'][y_shouldbe]+= 1
+                    details[tvt_idv]['accuracy_overall'][y_shouldbe]+= y_out[y_out_g_id]
+                    details[tvt_idv]['count_videos'][y_shouldbe]+= 1
                 batch_vid_lm= []
                 batch_gloss= []
         if len(batch_vid_lm)>0:
@@ -677,49 +657,100 @@ if __name__=="__main__":
             for y_out, y_shouldbe in zip(y_pred, batch_gloss):
                 y_out_g_id= int(argmax(y_out, axis=-1))
                 if y_out_g_id==y_shouldbe:
-                    details[tvt_idv]['correct'][y_shouldbe]+= 1
-                    details[tvt_idv]['accuracy'][y_shouldbe]+= y_out[y_out_g_id]
-                details[tvt_idv]['overall_accuracy'][y_shouldbe]+= y_out[y_out_g_id]
-                details[tvt_idv]['total_vid'][y_shouldbe]+= 1
+                    details[tvt_idv]['accuracy_correct'][y_shouldbe]+= y_out[y_out_g_id]
+                    details[tvt_idv]['count_correct'][y_shouldbe]+= 1
+                details[tvt_idv]['accuracy_overall'][y_shouldbe]+= y_out[y_out_g_id]
+                details[tvt_idv]['count_videos'][y_shouldbe]+= 1
             batch_vid_lm= []
             batch_gloss= []
     for tvt_idv in (KEY_TRAIN, KEY_VAL, KEY_TEST):
         print(f"__________________________ {tvt_idv} ____")
-        q_correct: int= 0
-        q_vid: int= 0
-        overall_accuracy: float= 0.0
-        quantity_videos: int= 0
         for g_id in range(TRAIN_GLOSS):
-            q_correct+= details[tvt_idv]['correct'][g_id]
-            q_vid+= details[tvt_idv]['total_vid'][g_id]
-            print(f"{g_id}: {glasl_landmark[KEY_ID2G][g_id]} --> {details[tvt_idv]['correct'][g_id]}/{details[tvt_idv]['total_vid'][g_id]}")
-            print(f"precentage correct: {details[tvt_idv]['correct'][g_id] / details[tvt_idv]['total_vid'][g_id] *100}%")
-            print(f"accuracy: {details[tvt_idv]['accuracy'][g_id] / (details[tvt_idv]['correct'][g_id] if details[tvt_idv]['correct'][g_id]>0 else 1) *100}%")
-            print(f"overall accuracy: {details[tvt_idv]['overall_accuracy'][g_id] / details[tvt_idv]['total_vid'][g_id] *100}%")
-            overall_accuracy+= details[tvt_idv]['overall_accuracy'][g_id]
-            quantity_videos+= details[tvt_idv]['total_vid'][g_id]
+            print(f"{g_id}: {glasl_landmark[KEY_ID2G][g_id]} --> {details[tvt_idv]['count_correct'][g_id]}/{details[tvt_idv]['count_videos'][g_id]} --> {
+                (details[tvt_idv]['count_correct'][g_id] / details[tvt_idv]['count_videos'][g_id] * 100):.2f
+            }%")
+            print(f"accuracy on correct: {
+                details[tvt_idv]['accuracy_correct'][g_id] /
+                (details[tvt_idv]['count_correct'][g_id] if details[tvt_idv]['count_correct'][g_id]>0 else 1) *
+                100
+            }%")
+            print(f"accuracy( overall ): {
+                details[tvt_idv]['accuracy_overall'][g_id] /
+                (details[tvt_idv]['count_videos'][g_id] if details[tvt_idv]['count_videos'][g_id]>0 else 1) *
+                100
+            }%")
             print()
         print("<< ----------------------------------------------------------------- >>")
-        print(f"____ {tvt_idv} --> {q_correct}/{q_vid} --> {q_correct/q_vid*100}%")
-        print(f"____ overall accuracy {tvt_idv} --> {overall_accuracy/quantity_videos*100}%")
+        print(f"____ {tvt_idv} --> {sum(details[tvt_idv]['count_correct'])}/{sum(details[tvt_idv]['count_videos'])} --> {
+            sum(details[tvt_idv]['count_correct']) / sum(details[tvt_idv]['count_videos']) *100
+        }%")
+        print(f"____ accuracy on correct {tvt_idv} --> {
+            sum(details[tvt_idv]['accuracy_correct']) / sum(details[tvt_idv]['count_correct']) *100
+        }%")
+        print(f"____ overall accuracy {tvt_idv} --> {
+            sum(details[tvt_idv]['accuracy_overall']) / sum(details[tvt_idv]['count_videos']) *100
+        }%")
         print("<< ----------------------------------------------------------------- >>")
     print("\n\nsummary")
-    summary_details: dict= {
-        'correct': 0,
-        'total_vid': 0,
-        'accuracy': 0,
-        'overall_accuracy': 0
-    }
     for tvt_idv in (KEY_TRAIN, KEY_VAL, KEY_TEST):
         print(f"-----------------------------------------------------------------")
-        print(f"____ {tvt_idv} --> {  sum(details[tvt_idv]['correct'])  }/{  sum(details[tvt_idv]['total_vid'])  } --> {sum(details[tvt_idv]['correct'])  /  sum(details[tvt_idv]['total_vid'])*100}%")
-        print(f"____ overall accuracy {tvt_idv} --> {sum(details[tvt_idv]['overall_accuracy'])/sum(details[tvt_idv]['total_vid'])*100}%")
-
-        summary_details['correct']+= sum(details[tvt_idv]['correct'])
-        summary_details['total_vid']+= sum(details[tvt_idv]['total_vid'])
-        summary_details['accuracy']+= sum(details[tvt_idv]['correct'])  /  sum(details[tvt_idv]['total_vid'])
-        summary_details['overall_accuracy']+= sum(details[tvt_idv]['overall_accuracy'])/sum(details[tvt_idv]['total_vid'])
+        print(f"____ {tvt_idv} --> {  sum(details[tvt_idv]['count_correct'])  }/{  sum(details[tvt_idv]['count_videos'])  } --> {
+            sum(details[tvt_idv]['count_correct']) / sum(details[tvt_idv]['count_videos']) *100
+        }%")
+        print(f"____ overall accuracy {tvt_idv} --> {sum(details[tvt_idv]['accuracy_overall'])/sum(details[tvt_idv]['count_videos'])*100}%")
     print(f"-----------------------------------------------------------------")
-    print(f"____ percentage correct --> {summary_details['correct']} / {summary_details['total_vid']} --> {summary_details['correct'] /summary_details['total_vid']  *100}%")
-    print(f"____ hardmax accuracy --> {summary_details['accuracy']  /3  *100}%")
-    print(f"____ softmax accuracy --> {summary_details['overall_accuracy']  /3  *100}%")
+    print(f"____ percentage correct --> {
+        sum(details[KEY_TRAIN]['count_correct'])+
+        sum(details[KEY_VAL  ]['count_correct'])+
+        sum(details[KEY_TEST ]['count_correct'])
+    } / {
+        sum(details[KEY_TRAIN]['count_videos'])+
+        sum(details[KEY_VAL  ]['count_videos'])+
+        sum(details[KEY_TEST ]['count_videos'])
+    } --> {
+        (
+            sum(details[KEY_TRAIN]['count_correct'])+
+            sum(details[KEY_VAL  ]['count_correct'])+
+            sum(details[KEY_TEST ]['count_correct'])
+        ) / (
+            sum(details[KEY_TRAIN]['count_videos'])+
+            sum(details[KEY_VAL  ]['count_videos'])+
+            sum(details[KEY_TEST ]['count_videos'])
+        )*100
+    }%")
+    print(f"____ accuracy on correct --> {
+        (
+            sum(details[KEY_TRAIN]['accuracy_correct'])+
+            sum(details[KEY_VAL  ]['accuracy_correct'])+
+            sum(details[KEY_TEST ]['accuracy_correct'])
+        ) / (
+            sum(details[KEY_TRAIN]['count_correct'])+
+            sum(details[KEY_VAL  ]['count_correct'])+
+            sum(details[KEY_TEST ]['count_correct'])
+        )*100
+    }%")
+    print(f"____ accuracy( overall ) --> {
+        (
+            sum(details[KEY_TRAIN]['accuracy_overall'])+
+            sum(details[KEY_VAL  ]['accuracy_overall'])+
+            sum(details[KEY_TEST ]['accuracy_overall'])
+        ) / (
+            sum(details[KEY_TRAIN]['count_videos'])+
+            sum(details[KEY_VAL  ]['count_videos'])+
+            sum(details[KEY_TEST ]['count_videos'])
+        )*100
+    }%")
+    print(f"____ accuracy on correct( avg.({KEY_TRAIN}, {KEY_VAL}, {KEY_TEST}) --> {
+        (
+            sum(details[KEY_TRAIN]['accuracy_correct']) / sum(details[KEY_TRAIN]['count_correct']) +
+            sum(details[KEY_VAL  ]['accuracy_correct']) / sum(details[KEY_VAL  ]['count_correct']) +
+            sum(details[KEY_TEST ]['accuracy_correct']) / sum(details[KEY_TEST ]['count_correct'])
+        )/3.0*100
+    }%")
+    print(f"____ accuracy( overall )( avg.({KEY_TRAIN}, {KEY_VAL}, {KEY_TEST}) --> {
+        (
+            sum(details[KEY_TRAIN]['accuracy_overall']) / sum(details[KEY_TRAIN]['count_videos']) +
+            sum(details[KEY_VAL  ]['accuracy_overall']) / sum(details[KEY_VAL  ]['count_videos']) +
+            sum(details[KEY_TEST ]['accuracy_overall']) / sum(details[KEY_TEST ]['count_videos'])
+        )/3.0*100
+    }%")
