@@ -74,6 +74,40 @@ def max_split_hand(split: list) -> dict:
             }
 
     return details
+def min_split_2hand(split: list) -> dict:
+    details: dict= {
+        'min': 999_999,
+        'index': 0,
+    }
+    for idx, el in enumerate(split):
+        q_images_hand: int= list(filter(
+            lambda x: x[KEY_LHAND] and x[KEY_RHAND],
+            el[KEY_LMARK]
+        )).__len__()
+        if q_images_hand<details['min']:
+            details= {
+                'min': q_images_hand,
+                'index': idx
+            }
+
+    return details
+def max_split_2hand(split: list) -> dict:
+    details: dict= {
+        'max': 0,
+        'index': 0,
+    }
+    for idx, el in enumerate(split):
+        q_images_hand: int= list(filter(
+            lambda x: x[KEY_LHAND] and x[KEY_RHAND],
+            el[KEY_LMARK]
+        )).__len__()
+        if details['max']<q_images_hand:
+            details= {
+                'max': q_images_hand,
+                'index': idx
+            }
+
+    return details
 
 
 def main() -> None:
@@ -91,6 +125,7 @@ def main() -> None:
     print(f"maximum images on a video on --'val'----: {max_images_val['max']  } at index {max_images_val['index']}")
     print(f"maximum images on a video on --'test'---: {max_images_test['max'] } at index {max_images_test['index']}")
 
+    print()
     print(f"------------------------------------------------------------------------------")
     min_images_train_hand: dict= min_split_hand(glasl_landmark[KEY_TRAIN])
     min_images_val_hand: dict= min_split_hand(glasl_landmark[KEY_VAL])
@@ -105,5 +140,21 @@ def main() -> None:
     print(f"maximum images( at least 1 hand ) on a video on --'train'--: {max_images_train_hand['max']} at index {max_images_train_hand['index']}")
     print(f"maximum images( at least 1 hand ) on a video on --'val'----: {max_images_val_hand['max']  } at index {max_images_val_hand['index']}")
     print(f"maximum images( at least 1 hand ) on a video on --'test'---: {max_images_test_hand['max'] } at index {max_images_test_hand['index']}")
+
+    print()
+    print(f"------------------------------------------------------------------------------")
+    min_images_train_2hand: dict= min_split_2hand(glasl_landmark[KEY_TRAIN])
+    min_images_val_2hand: dict= min_split_2hand(glasl_landmark[KEY_VAL])
+    min_images_test_2hand: dict= min_split_2hand(glasl_landmark[KEY_TEST])
+    print(f"minimum images( 2 hand ) on a video on --'train'--: {min_images_train_2hand['min']} at index {min_images_train_2hand['index']}")
+    print(f"minimum images( 2 hand ) on a video on --'val'----: {min_images_val_2hand['min']  } at index {min_images_val_2hand['index']}")
+    print(f"minimum images( 2 hand ) on a video on --'test'---: {min_images_test_2hand['min'] } at index {min_images_test_2hand['index']}")
+    print(f"------------------------------------------------------------------------------")
+    max_images_train_2hand: dict= max_split_2hand(glasl_landmark[KEY_TRAIN])
+    max_images_val_2hand: dict= max_split_2hand(glasl_landmark[KEY_VAL])
+    max_images_test_2hand: dict= max_split_2hand(glasl_landmark[KEY_TEST])
+    print(f"maximum images( 2 hand ) on a video on --'train'--: {max_images_train_2hand['max']} at index {max_images_train_2hand['index']}")
+    print(f"maximum images( 2 hand ) on a video on --'val'----: {max_images_val_2hand['max']  } at index {max_images_val_2hand['index']}")
+    print(f"maximum images( 2 hand ) on a video on --'test'---: {max_images_test_2hand['max'] } at index {max_images_test_2hand['index']}")
 if __name__=="__main__":
     main()
