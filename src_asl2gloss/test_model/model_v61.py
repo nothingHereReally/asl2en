@@ -644,11 +644,11 @@ if __name__=="__main__":
         while i<len(glasl_landmark[tvt_idv]) and glasl_landmark[tvt_idv][i][KEY_GLOSS]<TRAIN_GLOSS:
             if len(batch_vid_lm)<batch:
                 tmp= []
-                a_video_details: dict= trim_images({
+                a_video_details: dict= {
                     KEY_GLOSS: glasl_landmark[tvt_idv][i][KEY_GLOSS],
                     KEY_VIDEO: glasl_landmark[tvt_idv][i][KEY_VIDEO],
                     KEY_LMARK: glasl_landmark[tvt_idv][i][KEY_LMARK],
-                })
+                }
                 if len(a_video_details[KEY_LMARK])<=QUANTITY_FRAME:
                     batch_vid_lm.append(array(get_landmark4less_or_equal(a_video_details), dtype=float32))
                 else:
