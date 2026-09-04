@@ -49,7 +49,7 @@ def configs() -> None:
 
 
     projectDirectory: Path= Path(__file__).parent.parent.parent
-    ASL2EN= loadModelKerasFile(f"{Path(projectDirectory /"model" /"aslvid2gloss_v67.keras")}")
+    ASL2EN= loadModelKerasFile(f"{Path(projectDirectory /"model" /"aslvid2gloss_v41.keras")}")
     with open(Path(projectDirectory/"dataset"/"glasl"/"glasl.annotation.landmark.json"), 'r') as f:
         assert ASL2EN is not None
         ASL2EN.predict(
@@ -390,7 +390,13 @@ def part3_zoomInOutForPadding(landmarks: list) -> list:
     # ---- top pad 0.02, leftSide/right pad 0.02: if hy < wx
     # pad: float= 0.05
     pad: float= 4.0/158.0
-    xs, ys = zip(*landmarks)
+    # xs, ys = zip(*landmarks)
+    xs: list= list(map(lambda el: el[0], landmarks))
+    ys: list= list(map(lambda el: el[1], landmarks))
+    xs= list(filter(lambda el: el!=0, xs))
+    ys= list(filter(lambda el: el!=0, ys))
+    if len(xs)==0 or len(ys)==0:
+        return landmarks
     min_x, min_y=    min(xs), min(ys)
     max_x, max_y=    max(xs), max(ys)
     scale: float= (1  -2*pad)/max(
@@ -398,8 +404,8 @@ def part3_zoomInOutForPadding(landmarks: list) -> list:
         max_y -min_y
     )
     return [(
-        (x -min_x)    *scale    +pad,
-        (y -min_y)    *scale    +pad
+        (x -min_x)    *scale    +pad  if x!=0 else x,
+        (y -min_y)    *scale    +pad  if y!=0 else y
     ) for x, y in landmarks]
 def part4_centerLandmarkVerticallyHorizontally(landmarks: list) -> list:
     if not landmarks:
@@ -408,13 +414,19 @@ def part4_centerLandmarkVerticallyHorizontally(landmarks: list) -> list:
     ### 3) center landmark with same aspect ratio as original
     # center horizontally and vertically, since done padding then just
     # move to right/down
-    xs, ys = zip(*landmarks)
+    # xs, ys = zip(*landmarks)
+    xs: list= list(map(lambda el: el[0], landmarks))
+    ys: list= list(map(lambda el: el[1], landmarks))
+    xs= list(filter(lambda el: el!=0, xs))
+    ys= list(filter(lambda el: el!=0, ys))
+    if len(xs)==0 or len(ys)==0:
+        return landmarks
     shift_x: float=  0.5    -(min(xs) +max(xs))  /2
     shift_y: float=  0.5    -(min(ys) +max(ys))  /2
 
     return [(
-        x +shift_x,
-        y +shift_y
+        x +shift_x  if x!=0 else x,
+        y +shift_y  if y!=0 else y
     ) for x, y in landmarks]
 def normalizeLandmarks(dataIn: tuple) -> list:
     landmarks: list= dataIn[0]
