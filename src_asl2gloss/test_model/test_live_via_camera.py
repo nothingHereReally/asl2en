@@ -3,6 +3,7 @@ import cv2
 from json import load as loadJson
 from keras.src.saving import load_model as loadModelKerasFile
 from mediapipe.python.solutions.holistic import Holistic
+from math import ceil
 import numpy
 from pathlib import Path
 import pygame
@@ -432,7 +433,7 @@ def doRecognitionAslAlgorithm(tmpLandmarks: dict, anImageLandmarks: list|None) -
     assert ASL2EN is not None
     assert ASL_GLOSS is not None and isinstance(ASL_GLOSS, tuple)
     GAP_BE_HOW_MANY_THEN_APPEND: int= 6
-    MAX_LAST_HAS_HAND: int= 9
+    MAX_LAST_HAS_HAND: int= ceil(ASL2EN.input_shape[1]*0.2)
     assert MAX_LAST_HAS_HAND < ASL2EN.input_shape[1]
     # tmpLandmarks: dict= {
     #     'lastAnImageLandmarks': [],
