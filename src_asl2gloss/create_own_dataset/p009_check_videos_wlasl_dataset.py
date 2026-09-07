@@ -9,7 +9,7 @@ def get_video_exist(videos: list, gloss: str) -> list:
         if not (PROJ_ROOT /"dataset" /"wlasl" /"videos" /f"{a_video["video_id"]}.mp4").exists():
             print(f"file NOT exist -- {gloss} -- {a_video["video_id"]}.mp4")
         else:
-            videos_exist.append(f"dataset/wlasl/videos{a_video["video_id"]}.mp4")
+            videos_exist.append(f"dataset/wlasl/videos/{a_video["video_id"]}.mp4")
     return videos_exist
 def main():
     wlasl_dataset: list= []
