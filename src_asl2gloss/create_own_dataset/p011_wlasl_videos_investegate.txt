@@ -235,7 +235,6 @@ breaks pattern:
     dataset/wlasl/videos/68018.mp4
     dataset/wlasl/videos/70326.mp4
     dataset/wlasl/videos/68790.mp4
-    dataset/wlasl/videos/08928.mp4
     dataset/wlasl/videos/08929.mp4
     dataset/wlasl/videos/08916.mp4
     dataset/wlasl/videos/08919.mp4
@@ -253,6 +252,7 @@ breaks pattern:
     dataset/wlasl/videos/08918.mp4
     dataset/wlasl/videos/08922.mp4
     dataset/wlasl/videos/08920.mp4
+    dataset/wlasl/videos/08928.mp4
     dataset/wlasl/videos/65298.mp4
     dataset/wlasl/videos/65300.mp4
     dataset/wlasl/videos/67468.mp4
