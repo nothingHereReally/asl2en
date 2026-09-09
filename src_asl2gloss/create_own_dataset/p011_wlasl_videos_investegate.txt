@@ -242,7 +242,6 @@ breaks pattern:
     dataset/wlasl/videos/08921.mp4
     dataset/wlasl/videos/08923.mp4
     dataset/wlasl/videos/65299.mp4
-    dataset/wlasl/videos/67470.mp4
     dataset/wlasl/videos/08926.mp4
     dataset/wlasl/videos/08927.mp4
 corrupted file:
@@ -257,6 +256,7 @@ breaks pattern:
     dataset/wlasl/videos/65298.mp4
     dataset/wlasl/videos/65300.mp4
     dataset/wlasl/videos/67468.mp4
+    dataset/wlasl/videos/67470.mp4
     dataset/wlasl/videos/08915.mp4
 
 9: cousin
