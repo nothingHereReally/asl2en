@@ -113,12 +113,16 @@ breaks pattern:
     dataset/wlasl/videos/05730.mp4
     dataset/wlasl/videos/65167.mp4
     dataset/wlasl/videos/05727.mp4
+    dataset/wlasl/videos/05733.mp4
+    dataset/wlasl/videos/05739.mp4
+    dataset/wlasl/videos/05747.mp4
+    dataset/wlasl/videos/05748.mp4
+    dataset/wlasl/videos/05750.mp4
+    dataset/wlasl/videos/05740.mp4
 corrupted file:
     dataset/wlasl/videos/05731.mp4
     dataset/wlasl/videos/05732.mp4
-    dataset/wlasl/videos/05733.mp4
     dataset/wlasl/videos/05734.mp4
-    dataset/wlasl/videos/05739.mp4
     dataset/wlasl/videos/05743.mp4
 breaks pattern:
     dataset/wlasl/videos/05724.mp4
@@ -126,14 +130,10 @@ breaks pattern:
     dataset/wlasl/videos/68007.mp4
     dataset/wlasl/videos/05746.mp4
     dataset/wlasl/videos/05728.mp4
-    dataset/wlasl/videos/05747.mp4
-    dataset/wlasl/videos/05748.mp4
     dataset/wlasl/videos/05749.mp4
-    dataset/wlasl/videos/05750.mp4
     dataset/wlasl/videos/05735.mp4
     dataset/wlasl/videos/05736.mp4
     dataset/wlasl/videos/05737.mp4
-    dataset/wlasl/videos/05740.mp4
     dataset/wlasl/videos/05741.mp4
     dataset/wlasl/videos/05742.mp4
 
