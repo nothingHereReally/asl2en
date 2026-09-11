@@ -1,13 +1,15 @@
-# best model yet: model_v14 then model_v10 and model_v12
 # best model
-# 1) model v30 (83.8% train/val/test g22)
-# 2) model v25 (87.06% train/val/test g10)
-# 3) model v23 (85.5% train/val/test g10)
-# 4) model v22 (60% testing g10)
-# 5) model v15 (57% testing g10)
-# 6) model v14 (56% testing g10)
-# 7) model v12 (4% testing)
-# 8) model v10 (4% testing)
+# 1) model v67 (87.93% train/val/test GLASL g22, 8 images input)
+# 2) model v66 (86.19% train/val/test GLASL g22, 6 images input)
+# 3) model v41 (86.33% train/val/test GLASL g22, 22 images input)
+# 4) model v30 (83.8%  train/val/test GLASL g22)
+# 5) model v25 (87.06% train/val/test GLASL g10)
+# 6) model v23 (85.5%  train/val/test GLASL g10)
+# 7) model v22 (60% testing g10)
+# 8) model v15 (57% testing g10)
+# 9) model v14 (56% testing g10)
+#10) model v12 (4% testing)
+#11) model v10 (4% testing)
 # from os.path import exists
 # from typing import Any
 from keras.src.losses import sparse_categorical_crossentropy
