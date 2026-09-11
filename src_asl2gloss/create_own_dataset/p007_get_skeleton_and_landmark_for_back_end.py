@@ -26,6 +26,7 @@ MODEL_DIR: Path= PROJ_ROOT /"model"
 MODEL_FILE_LIST: tuple= (
     "aslvid2gloss_v25.keras",
     "aslvid2gloss_v41.keras",
+    "aslvid2gloss_v67.keras",
 )
 ASL2GLOSS_MODEL_LIST: tuple= tuple(load_model(str(MODEL_DIR /el)) for el in MODEL_FILE_LIST)
 
@@ -38,7 +39,6 @@ KEY_VAL: str= "val"
 KEY_TEST: str= "test"
 KEY_ID2G: str= "id2gloss"
 KEY_G2ID: str= "gloss2id"
-QUANTITY_FRAME: int= 22
 IMG_SIZE: int= 240
 KEY_G_ID: str= 'gloss_id'
 KEY_V_ID: str= 'video_id'
@@ -101,7 +101,7 @@ def get_idx_start_hand(annotated_images: list) -> int:
     return -1
 
 
-def get_landmark4less_or_equal(a_raw_video: dict, idx_init_has_hand: int|None=None) -> list:
+def get_landmark4less_or_equal(a_raw_video: dict, quantity_frame: int, idx_init_has_hand: int|None=None) -> list:
     '''
     output be of shape(____ QUANTITY_FRAME, 86, 2 ____)
     '''
@@ -112,27 +112,27 @@ def get_landmark4less_or_equal(a_raw_video: dict, idx_init_has_hand: int|None=No
 
     lmark_numpy_out: list= []
     ratio_what: int= int(ceil(
-        QUANTITY_FRAME  /  (len(a_raw_video[KEY_LMARK])-idx_init_has_hand)
+        quantity_frame  /  (len(a_raw_video[KEY_LMARK])-idx_init_has_hand)
     ))
     for idx in range(idx_init_has_hand, len(a_raw_video[KEY_LMARK])):
         with open(f"{GLASL_LANDMARK_DIR /a_raw_video[KEY_VIDEO] /a_raw_video[KEY_LMARK][idx][KEY_FILE]}", 'rb') as f:
             load_an_image_landmarks= loadnp(f)
-        for _ in range(min(ratio_what, QUANTITY_FRAME-len(lmark_numpy_out))):
+        for _ in range(min(ratio_what, quantity_frame-len(lmark_numpy_out))):
             if a_raw_video[KEY_LMARK][idx][KEY_LHAND] or a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
                 lmark_numpy_out.append(load_an_image_landmarks)
             else:
                 lmark_numpy_out.append(lmark_numpy_out[-1])
     check_shape: ndarray= array(lmark_numpy_out, dtype=float32)
-    if check_shape.shape!=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
+    if check_shape.shape!=(quantity_frame, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]):
         raise NotImplementedError(
             f"incorrect implementation on get_landmark4less_or_equal(), due to lmark_numpy_out should be of shape {
-            tuple((QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]))
+            tuple((quantity_frame, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]))
             }, but got {check_shape.shape}"
         )
     return lmark_numpy_out
 
 
-def get_landmark4greater(a_raw_video: dict) -> list:
+def get_landmark4greater(a_raw_video: dict, quantity_frame: int) -> list:
     '''
     output be of shape(____ QUANTITY_FRAME, 86, 2 ____)
     '''
@@ -148,7 +148,7 @@ def get_landmark4greater(a_raw_video: dict) -> list:
         raise ValueError(f"video {a_raw_video[KEY_VIDEO]}.mp4 has no hands")
     len_available_images: int= len(a_raw_video[KEY_LMARK])-idx_init_has_hand
 
-    if QUANTITY_FRAME<len_available_images:
+    if quantity_frame<len_available_images:
         init_hand_idxs: tuple= tuple(range(idx_init_has_hand, len(a_raw_video[KEY_LMARK])))
         past_img_has_hand: ndarray= lmark_load_ALL[idx_init_has_hand]
         tmp_part4: list= []
@@ -162,15 +162,15 @@ def get_landmark4greater(a_raw_video: dict) -> list:
             if a_raw_video[KEY_LMARK][idx][KEY_LHAND] or \
                 a_raw_video[KEY_LMARK][idx][KEY_RHAND]:
                 past_img_has_hand= lmark_load_ALL[idx]
-        if QUANTITY_FRAME<len(tmp_part4):
-            start_where: int= int((len(tmp_part4)-QUANTITY_FRAME+1)//2)
-            return tmp_part4[start_where:start_where+QUANTITY_FRAME]
+        if quantity_frame<len(tmp_part4):
+            start_where: int= int((len(tmp_part4)-quantity_frame+1)//2)
+            return tmp_part4[start_where:start_where+quantity_frame]
         else:
             tmp_for_less_or_qual: list= []
-            ratio4mod_part4: int= int(ceil(QUANTITY_FRAME/len(tmp_part4)))
+            ratio4mod_part4: int= int(ceil(quantity_frame/len(tmp_part4)))
             for an_image_landmarks in tmp_part4:
                 tmp_for_less_or_qual.extend(list([an_image_landmarks]) *ratio4mod_part4)
-            tmp_for_less_or_qual= tmp_for_less_or_qual[:QUANTITY_FRAME]
+            tmp_for_less_or_qual= tmp_for_less_or_qual[:quantity_frame]
             return tmp_for_less_or_qual
     # len_available_images <= QUANTITY_FRAME
     copy_a_raw_video: dict= {
@@ -354,7 +354,7 @@ def mandatory_all_2_notExist() -> None:
 
 def init_vars() -> tuple:
     glasl_clean_landmark: dict= {}
-    with open(f"{GLASL_DIR /"glasl.annotation.landmark.json"}", 'r') as f:
+    with open(f"{GLASL_DIR /"glasl.annotation.landmark.45videos.json"}", 'r') as f:
         glasl_clean_landmark= jsonload(f)
     glasl_LANDMARK: dict= {
         KEY_TRAIN: [],
@@ -391,15 +391,18 @@ def main():
                 KEY_V_IMGs_ID: [],
             })
             for model_idx in range(len(MODEL_FILE_LIST)):
+                quantity_frame: int= int(ASL2GLOSS_MODEL_LIST[model_idx].input_shape[1])
                 if a_gloss_video[KEY_G_ID]<ASL2GLOSS_MODEL_LIST[model_idx].output_shape[-1]:
                     landmark_dataset_elements: list= []
-                    if len(a_gloss_video[KEY_V_IMGs_ID_origin])<=QUANTITY_FRAME:
+                    if len(a_gloss_video[KEY_V_IMGs_ID_origin])<=quantity_frame:
                         landmark_dataset_elements.append(get_landmark4less_or_equal(
-                            a_raw_video=a_gloss_video
+                            a_raw_video=a_gloss_video,
+                            quantity_frame=quantity_frame,
                         ))
                     else:
                         landmark_dataset_elements.append(get_landmark4greater(
-                            a_raw_video=a_gloss_video
+                            a_raw_video=a_gloss_video,
+                            quantity_frame=quantity_frame,
                         ))
                     quantity_of_elements: int= array(landmark_dataset_elements).shape[0]
                     modelPredict= ASL2GLOSS_MODEL_LIST[model_idx].predict(

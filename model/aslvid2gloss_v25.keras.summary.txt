@@ -8,18 +8,23 @@ landmarks is used with glasl dataset
 -------------------------------------
 -- result
 -----------------------------------------------------------------
-____ train --> 373/400 --> 93.25%
-____ overall accuracy train --> 89.0196304321289%
+____ train --> 370/400 --> 92.5%
+____ accuracy on correct train --> 90.83150482177734%
+____ overall accuracy train --> 88.85440063476562%
 -----------------------------------------------------------------
 ____ val --> 27/30 --> 90.0%
-____ overall accuracy val --> 88.82782745361328%
+____ accuracy on correct val --> 88.50350952148438%
+____ overall accuracy val --> 87.07782745361328%
 -----------------------------------------------------------------
 ____ test --> 17/20 --> 85.0%
-____ overall accuracy test --> 83.34896087646484%
+____ accuracy on correct test --> 84.2082290649414%
+____ overall accuracy test --> 81.38097381591797%
 -----------------------------------------------------------------
-____ percentage correct --> 417 / 450 --> 92.66666666666666%
-____ hardmax accuracy --> 89.41666666666667%
-____ softmax accuracy --> 87.06547546386719%
+____ percentage correct --> 414 / 450 --> 92.0%
+____ accuracy on correct --> 90.40770721435547%
+____ accuracy( overall ) --> 88.40380859375%
+____ accuracy on correct( avg.(train, val, test) --> 87.84774780273438%
+____ accuracy( overall )( avg.(train, val, test) --> 85.77106475830078%
 
 
 
