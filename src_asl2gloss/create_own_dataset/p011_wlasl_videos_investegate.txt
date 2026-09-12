@@ -267,9 +267,11 @@ breaks pattern:
     dataset/wlasl/videos/65299.mp4
     dataset/wlasl/videos/08926.mp4
     dataset/wlasl/videos/08927.mp4
+    dataset/wlasl/videos/08915.mp4
+    dataset/wlasl/videos/08925.mp4
+    dataset/wlasl/videos/67468.mp4
 corrupted file:
     dataset/wlasl/videos/08924.mp4
-    dataset/wlasl/videos/08925.mp4
 breaks pattern:
     dataset/wlasl/videos/08909.mp4
     dataset/wlasl/videos/08917.mp4
@@ -279,9 +281,7 @@ breaks pattern:
     dataset/wlasl/videos/08928.mp4
     dataset/wlasl/videos/65298.mp4
     dataset/wlasl/videos/65300.mp4
-    dataset/wlasl/videos/67468.mp4
     dataset/wlasl/videos/67470.mp4
-    dataset/wlasl/videos/08915.mp4
 
 9: cousin
     dataset/wlasl/videos/65415.mp4
