@@ -183,15 +183,15 @@ breaks pattern:
     dataset/wlasl/videos/24940.mp4
     dataset/wlasl/videos/67715.mp4
     dataset/wlasl/videos/24951.mp4
-corrupted file:
+    dataset/wlasl/videos/24947.mp4
+    dataset/wlasl/videos/24954.mp4
     dataset/wlasl/videos/24955.mp4
+    dataset/wlasl/videos/24956.mp4
+    dataset/wlasl/videos/65824.mp4
+corrupted file:
     dataset/wlasl/videos/24960.mp4
     dataset/wlasl/videos/24961.mp4
     dataset/wlasl/videos/24962.mp4
-    dataset/wlasl/videos/24954.mp4
-    dataset/wlasl/videos/24956.mp4
-    dataset/wlasl/videos/65824.mp4
-    dataset/wlasl/videos/24947.mp4
 breaks pattern:
     dataset/wlasl/videos/24972.mp4
     dataset/wlasl/videos/24950.mp4
