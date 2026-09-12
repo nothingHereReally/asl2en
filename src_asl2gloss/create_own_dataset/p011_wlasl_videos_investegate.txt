@@ -233,6 +233,7 @@ breaks pattern:
     dataset/wlasl/videos/63229.mp4
     dataset/wlasl/videos/63234.mp4
     dataset/wlasl/videos/63237.mp4
+    dataset/wlasl/videos/63232.mp4
 corrupted file:
     dataset/wlasl/videos/63236.mp4
 breaks pattern:
@@ -248,7 +249,6 @@ breaks pattern:
     dataset/wlasl/videos/63230.mp4
     dataset/wlasl/videos/63231.mp4
     dataset/wlasl/videos/66778.mp4
-    dataset/wlasl/videos/63232.mp4
     dataset/wlasl/videos/66779.mp4
     dataset/wlasl/videos/66780.mp4
     dataset/wlasl/videos/63225.mp4
