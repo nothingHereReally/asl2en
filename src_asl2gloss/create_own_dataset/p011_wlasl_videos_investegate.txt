@@ -298,17 +298,17 @@ breaks pattern:
     dataset/wlasl/videos/13644.mp4 -- need trim
     dataset/wlasl/videos/13645.mp4 -- need trim
     dataset/wlasl/videos/13646.mp4
-corrupted file:
     dataset/wlasl/videos/13634.mp4
     dataset/wlasl/videos/13635.mp4
     dataset/wlasl/videos/13636.mp4
-    dataset/wlasl/videos/13640.mp4
-    dataset/wlasl/videos/13641.mp4
-    dataset/wlasl/videos/13642.mp4
-breaks pattern:
     dataset/wlasl/videos/13637.mp4
     dataset/wlasl/videos/13638.mp4
     dataset/wlasl/videos/13639.mp4
+    dataset/wlasl/videos/13640.mp4
+    dataset/wlasl/videos/13641.mp4
+    dataset/wlasl/videos/13642.mp4
+corrupted file:
+breaks pattern:
 
 10: mine_my
     dataset/wlasl/videos/36139.mp4
