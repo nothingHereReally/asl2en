@@ -343,8 +343,8 @@ breaks pattern:
     dataset/wlasl/videos/35547.mp4
     dataset/wlasl/videos/35549.mp4
     dataset/wlasl/videos/35550.mp4
-corrupted file:
     dataset/wlasl/videos/35548.mp4
+corrupted file:
 breaks pattern:
 
 12: stomach
