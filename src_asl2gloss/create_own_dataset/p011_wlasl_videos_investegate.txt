@@ -212,10 +212,8 @@ breaks pattern:
     dataset/wlasl/videos/11309.mp4
     dataset/wlasl/videos/11316.mp4
     dataset/wlasl/videos/11324.mp4 -- need trim
-corrupted file:
     dataset/wlasl/videos/11311.mp4
     dataset/wlasl/videos/11313.mp4
-breaks pattern:
     dataset/wlasl/videos/11317.mp4
     dataset/wlasl/videos/11318.mp4
     dataset/wlasl/videos/11319.mp4
@@ -225,6 +223,8 @@ breaks pattern:
     dataset/wlasl/videos/11323.mp4
     dataset/wlasl/videos/11325.mp4
     dataset/wlasl/videos/11326.mp4
+corrupted file:
+breaks pattern:
 
 7: who
     dataset/wlasl/videos/63240.mp4
