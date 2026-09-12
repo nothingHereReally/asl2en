@@ -160,12 +160,12 @@ breaks pattern:
     dataset/wlasl/videos/09860.mp4 -- need trim
     dataset/wlasl/videos/09862.mp4
     dataset/wlasl/videos/09863.mp4
-corrupted file:
     dataset/wlasl/videos/09849.mp4
     dataset/wlasl/videos/09854.mp4
-breaks pattern:
     dataset/wlasl/videos/09859.mp4
     dataset/wlasl/videos/09861.mp4
+corrupted file:
+breaks pattern:
 
 5: go
     dataset/wlasl/videos/24857.mp4
