@@ -496,9 +496,9 @@ breaks pattern:
     dataset/wlasl/videos/26846.mp4
     dataset/wlasl/videos/26833.mp4
     dataset/wlasl/videos/26834.mp4
-corrupted file:
     dataset/wlasl/videos/26839.mp4
     dataset/wlasl/videos/26840.mp4
+corrupted file:
 breaks pattern:
 
 21: doctor
