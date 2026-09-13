@@ -380,8 +380,8 @@ breaks pattern:
     dataset/wlasl/videos/26767.mp4
     dataset/wlasl/videos/26768.mp4
     dataset/wlasl/videos/26770.mp4
-corrupted file:
     dataset/wlasl/videos/26773.mp4
+corrupted file:
 breaks pattern:
 
 14: need
