@@ -435,9 +435,9 @@ breaks pattern:
     dataset/wlasl/videos/21433.mp4
     dataset/wlasl/videos/21435.mp4
     dataset/wlasl/videos/21437.mp4
-corrupted file:
     dataset/wlasl/videos/21434.mp4
     dataset/wlasl/videos/21436.mp4
+corrupted file:
 breaks pattern:
 
 17: hurt
