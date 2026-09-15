@@ -362,6 +362,8 @@ breaks pattern:
     dataset/wlasl/videos/54881.mp4
     dataset/wlasl/videos/54883.mp4
     dataset/wlasl/videos/54884.mp4
+    dataset/glasl/video/stomach_0001.mp4
+    dataset/glasl/video/stomach_0002.mp4
 corrupted file:
     dataset/wlasl/videos/54882.mp4
 breaks pattern:
