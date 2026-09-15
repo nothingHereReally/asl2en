@@ -81,6 +81,8 @@ corrupted video file:
     dataset/wlasl/videos/12314.mp4
     dataset/wlasl/videos/12312.mp4
     dataset/wlasl/videos/12326.mp4
+    dataset/glasl/video/computer_0004.mp4
+    dataset/glasl/video/computer_0005.mp4
 corrupted file:
     dataset/wlasl/videos/12328.mp4
     dataset/wlasl/videos/12313.mp4
