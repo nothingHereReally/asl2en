@@ -238,7 +238,7 @@ def normalizeLandmarks(landmarks: list[tuple[float, float]], original_shape: tup
 
 
     return landmarks
-def normalizeLandmarkWrapper(
+def normalizeWorthyLandmarkWrapper(
     landmarks: list[tuple[float, float]], # order --> face_pose_left_right_hand
     original_shape: tuple,
     hasLandmarks: dict
@@ -465,7 +465,7 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
             landmark__face_pose_left_right_hand.extend(zeros((QUANTITY_HAND_LMARK, 2)).tolist())
 
 
-        landmark__face_pose_left_right_hand= normalizeLandmarkWrapper(
+        landmark__face_pose_left_right_hand= normalizeWorthyLandmarkWrapper(
             landmark__face_pose_left_right_hand,
             orig_shape,
             {
