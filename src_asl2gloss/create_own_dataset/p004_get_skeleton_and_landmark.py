@@ -158,8 +158,8 @@ def part3_zoomInOutForPadding(landmarks: list[tuple[float, float]]) -> list[tupl
     # xs, ys = zip(*landmarks)
     xs: list= list(map(lambda el: el[0], landmarks))
     ys: list= list(map(lambda el: el[1], landmarks))
-    xs= list(filter(lambda el: el!=0, xs))
-    ys= list(filter(lambda el: el!=0, ys))
+    # xs= list(filter(lambda el: el!=0, xs))
+    # ys= list(filter(lambda el: el!=0, ys))
     if len(xs)==0 or len(ys)==0:
         return landmarks
     min_x, min_y=    min(xs), min(ys)
@@ -169,8 +169,10 @@ def part3_zoomInOutForPadding(landmarks: list[tuple[float, float]]) -> list[tupl
         max_y -min_y
     )
     return [(
-        (x -min_x)    *scale    +pad  if x!=0 else x,
-        (y -min_y)    *scale    +pad  if y!=0 else y
+        # (x -min_x)    *scale    +pad  if x!=0 else x,
+        # (y -min_y)    *scale    +pad  if y!=0 else y
+        (x -min_x)    *scale    +pad,
+        (y -min_y)    *scale    +pad
     ) for x, y in landmarks]
 def part4_centerLandmarkVerticallyHorizontally(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
     ### 3) center landmark with same aspect ratio as original
@@ -179,16 +181,18 @@ def part4_centerLandmarkVerticallyHorizontally(landmarks: list[tuple[float, floa
     # xs, ys = zip(*landmarks)
     xs: list= list(map(lambda el: el[0], landmarks))
     ys: list= list(map(lambda el: el[1], landmarks))
-    xs= list(filter(lambda el: el!=0, xs))
-    ys= list(filter(lambda el: el!=0, ys))
+    # xs= list(filter(lambda el: el!=0, xs))
+    # ys= list(filter(lambda el: el!=0, ys))
     if len(xs)==0 or len(ys)==0:
         return landmarks
     shift_x: float=  0.5    -(min(xs) +max(xs))  /2
     shift_y: float=  0.5    -(min(ys) +max(ys))  /2
 
     return [(
-        x +shift_x  if x!=0 else x,
-        y +shift_y  if y!=0 else y
+        # x +shift_x  if x!=0 else x,
+        # y +shift_y  if y!=0 else y
+        x +shift_x,
+        y +shift_y
     ) for x, y in landmarks]
 def normalizeLandmarks(landmarks: list[tuple[float, float]], original_shape: tuple) -> list[tuple[float, float]]:
     '''
@@ -234,6 +238,133 @@ def normalizeLandmarks(landmarks: list[tuple[float, float]], original_shape: tup
 
 
     return landmarks
+def normalizeLandmarkWrapper(
+    landmarks: list[tuple[float, float]], # order --> face_pose_left_right_hand
+    original_shape: tuple,
+    hasLandmarks: dict
+) -> list[tuple[float, float]]:
+    if not (hasLandmarks["face"] and hasLandmarks["pose"] and hasLandmarks["left_hand"] and hasLandmarks["right_hand"]):
+        return landmarks
+    norm: list= []
+    if hasLandmarks['face']:
+        norm.extend(landmarks[:len(WORTHY_FACE_IDX)])
+    if hasLandmarks['pose']:
+        norm.extend(landmarks[len(WORTHY_FACE_IDX):len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX)])
+    if hasLandmarks['left_hand']:
+        norm.extend(landmarks[
+            len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX):len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX)+QUANTITY_HAND_LMARK
+        ])
+    if hasLandmarks['right_hand']:
+        norm.extend(landmarks[
+            len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX)+QUANTITY_HAND_LMARK:
+        ])
+    norm= normalizeLandmarks(landmarks=norm, original_shape=original_shape)
+
+    out_landmark: list= []
+    # -- face landmarks --
+    if hasLandmarks["face"]:
+        out_landmark.extend(norm[:len(WORTHY_FACE_IDX)])
+    else:
+        out_landmark.extend(zeros(
+            (
+                len(WORTHY_FACE_IDX),
+                2
+            ), dtype=float32).tolist()
+        )
+
+    # -- pose landmarks --
+    if hasLandmarks["pose"]:
+        if hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX)
+            ])
+        else:
+            out_landmark.extend(norm[
+                :len(WORTHY_POSE_IDX)
+            ])
+    else:
+        out_landmark.extend(zeros(
+            (
+                len(WORTHY_POSE_IDX),
+                2
+            ), dtype=float32).tolist())
+
+    # -- left hand landmarks --
+    if hasLandmarks["left_hand"]:
+        if hasLandmarks["face"] and hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+            ])
+        elif hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+                len(WORTHY_FACE_IDX) +QUANTITY_HAND_LMARK
+            ])
+        elif hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX):
+                len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+            ])
+        else:
+            out_landmark.extend(norm[
+                :QUANTITY_HAND_LMARK
+            ])
+    else:
+        out_landmark.extend(zeros(
+            (
+                QUANTITY_HAND_LMARK,
+                2
+            ), dtype=float32).tolist())
+
+    # -- right hand landmarks --
+    if hasLandmarks["right_hand"]:
+        if hasLandmarks["face"] and hasLandmarks["pose"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+            ])
+        elif hasLandmarks["face"] and hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+            ])
+        elif hasLandmarks["face"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +QUANTITY_HAND_LMARK:
+            ])
+        elif hasLandmarks["pose"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+            ])
+        elif hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+            ])
+        elif hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX):
+            ])
+        elif hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                QUANTITY_HAND_LMARK:
+            ])
+        else:
+            out_landmark.extend(norm)
+    else:
+        out_landmark.extend(zeros(
+            (
+                QUANTITY_HAND_LMARK,
+                2
+            ), dtype=float32).tolist())
+
+    # out_landmark shape:
+    # (
+    #     len(WORTHY_FACE_IDX)
+    #     +len(WORTHY_POSE_IDX)
+    #     +QUANTITY_HAND_LMARK *2,
+    #     2
+    # )
+    return out_landmark # ie. output shape (86, 2)
 def drawSkeletonImg(image: ndarray, \
                     lmark_coordinates: list, \
                     connections_idxs: tuple, \
@@ -334,9 +465,15 @@ def drawFacePoseHand(img_write_to: ndarray, lmark_mph, orig_shape: tuple) -> tup
             landmark__face_pose_left_right_hand.extend(zeros((QUANTITY_HAND_LMARK, 2)).tolist())
 
 
-        landmark__face_pose_left_right_hand= normalizeLandmarks(
+        landmark__face_pose_left_right_hand= normalizeLandmarkWrapper(
             landmark__face_pose_left_right_hand,
-            orig_shape
+            orig_shape,
+            {
+                'face': lmark_mph.face_landmarks!=None,
+                'pose': lmark_mph.pose_landmarks!=None,
+                'left_hand': lmark_mph.left_hand_landmarks!=None,
+                'right_hand': lmark_mph.right_hand_landmarks!=None,
+            }
         )
 
 
