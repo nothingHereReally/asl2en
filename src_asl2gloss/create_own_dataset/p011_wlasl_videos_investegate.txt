@@ -541,18 +541,20 @@ breaks pattern:
 
 
 -- target 10 videos
+-- s( int ), means what image to start( ie. index+1 )
+-- e( int ), means what image to end( ie. index+1 )
 --------------------------
 book( which 10 vids ): 0      --> 39 videos
-    07071.mp4
-    68208.mp4
-    07072.mp4
-    68011.mp4
-    65225.mp4
-    68012.mp4
-    70212.mp4
-    07097.mp4
-    07099.mp4
-    07076.mp4
+    07071.mp4     s(  1 )   e( 18 )
+    68208.mp4     s( 22 )   e( 89 )
+    07072.mp4     s(  1 )   e( 18 )
+    68011.mp4     s(  6 )   e( 40 )
+    65225.mp4     s( 14 )   e( 43 )
+    68012.mp4     s( 27 )   e( 64 )
+    70212.mp4     s( 32 )   e( 65 )
+    07097.mp4     s( 19 )   e( 43 )
+    07099.mp4     s( 31 )   e( 52 )
+    07076.mp4     s( 19 )   e( 67 )
 drink( which 10 vids ): 1     --> 28 videos
     17724.mp4
     68538.mp4
