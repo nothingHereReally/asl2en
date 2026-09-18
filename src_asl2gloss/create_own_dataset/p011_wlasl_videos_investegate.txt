@@ -578,16 +578,16 @@ computer( which 10 vids ): 2  --> 10 videos
     computer_0004.mp4 s( 19 )   e( 86 )
     computer_0005.mp4 s( 13 )   e( 82 )
 before( which 10 vids ): 3    --> 11 videos
-    05730.mp4
-    05733.mp4
-    05744.mp4
-    05729.mp4
-    65167.mp4
-    05727.mp4
-    05739.mp4
-    05747.mp4
-    05748.mp4
-    05750.mp4
+    05730.mp4         s(  8 )   e( 25 )
+    05733.mp4         s( 25 )   e( 83 )
+    05744.mp4         s( 24 )   e( 47 )
+    05729.mp4         s( 13 )   e( 36 )
+    65167.mp4         s( 15 )   e( 32 )
+    05727.mp4         s( 24 )   e( 55 )
+    05739.mp4         s(  1 )   e( 52 )
+    05747.mp4         s( 22 )   e( 46 )
+    05748.mp4         s( 21 )   e( 55 )
+    05750.mp4         s( 39 )   e( 58 )
 chair( which 10 vids ): 4     --> 26 videos
     09853.mp4
     09848.mp4
