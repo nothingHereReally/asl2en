@@ -743,16 +743,16 @@ hurt( which 10 vids ): 17     --> 12 videos
     28452.mp4         s( 26 )   e( 47 )
     28454.mp4         s( 25 )   e( 45 )
 fever( which 10 vids ): 18    --> 10 videos
-    78219.mp4
-    78220.mp4
-    78221.mp4
-    78222.mp4
-    78223.mp4
-    78224.mp4
-    78225.mp4
-    78226.mp4
-    fever_0001.mp4
-    fever_0002.mp4
+    78219.mp4         s(  7 )   e( 43 )
+    78220.mp4         s(  7 )   e( 28 )
+    78221.mp4         s(  2 )   e( 19 )
+    78222.mp4         s(  4 )   e( 14 )
+    78223.mp4         s(  5 )   e( 89 )
+    78224.mp4         s( 23 )   e( 116 )
+    78225.mp4         s(  1 )   e( 50 )
+    78226.mp4         s( 24 )   e( 50 )
+    fever_0001.mp4    s( 28 )   e( 98 )
+    fever_0002.mp4    s( 35 )   e( 87 )
 dizzy( which 10 vids ): 19    --> 11 videos
     16980.mp4
     65501.mp4
