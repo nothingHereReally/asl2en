@@ -754,16 +754,16 @@ fever( which 10 vids ): 18    --> 10 videos
     fever_0001.mp4    s( 28 )   e( 98 )
     fever_0002.mp4    s( 35 )   e( 87 )
 dizzy( which 10 vids ): 19    --> 11 videos
-    16980.mp4
-    65501.mp4
-    16982.mp4
-    16985.mp4
-    16986.mp4
-    16987.mp4
-    16988.mp4
-    78227.mp4
-    78228.mp4
-    78229.mp4
+    16980.mp4         s(  1 )   e( 91 )
+    65501.mp4         s( 30 )   e( 50 )
+    16982.mp4         s( 17 )   e( 49 )
+    16985.mp4         s(  1 )   e( 28 )
+    16986.mp4         s(  1 )   e( 57 )
+    16987.mp4         s( 23 )   e( 58 )
+    16988.mp4         s( 17 )   e( 53 )
+    78227.mp4         s( 22 )   e( 52 )
+    78228.mp4         s( 48 )   e( 160 )
+    78229.mp4         s( 19 )   e( 130 )
 headache( which 10 vids ): 20 --> 17 videos
     26832.mp4
     26835.mp4
