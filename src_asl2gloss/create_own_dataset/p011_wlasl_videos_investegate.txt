@@ -688,16 +688,16 @@ stomach( which 10 vids ): 12  --> 10 videos
     stomach_0001.mp4  s( 28 )   e( 95 )
     stomach_0002.mp4  s( 44 )   e( 95 )
 have( which 10 vids ): 13     --> 17 videos
-    26773.mp4
-    69088.mp4
-    26776.mp4
-    26757.mp4
-    69360.mp4
-    68069.mp4
-    70221.mp4
-    68984.mp4
-    26775.mp4
-    26766.mp4
+    26773.mp4         s(  1 )   e( 30 )
+    69088.mp4         s(  1 )   e( 32 ) , s( 64 )  e( 86 )
+    26776.mp4         s( 12 )   e( 45 )
+    26757.mp4         s(  1 )   e( 35 )
+    69360.mp4         s( 24 )   e( 42 )
+    68069.mp4         s( 30 )   e( 64 )
+    70221.mp4         s( 27 )   e( 55 )
+    68984.mp4         s( 13 )   e( 40 )
+    26775.mp4         s( 14 )   e( 43 )
+    26766.mp4         s( 11 )   e( 35 )
 need( which 10 vids ): 14     --> 18 videos
     37879.mp4
     37891.mp4
