@@ -601,15 +601,15 @@ chair( which 10 vids ): 4     --> 26 videos
     09866.mp4         s( 28 )   e( 64 )
 go( which 10 vids ): 5        --> 20 videos
     24948.mp4         s(  1 )   e( 18 )
-    68292.mp4         s( 19 )   e( 38 )
-    24965.mp4         s( 17 )   e( 37 )
+    68292.mp4         s( 19 )   e( 38 ) , s( 73 )  e( 98 )  -- needs fixing( due2no hands )
+    24965.mp4         s( 17 )   e( 37 )  -- needs fixing( due2no hands )
     24954.mp4         s(  1 )   e( 61 )
     24857.mp4         s(  1 )   e( 35 )
     69345.mp4         s( 15 )   e( 39 )
     24941.mp4         s( 16 )   e( 32 )
     24969.mp4         s( 27 )   e( 60 )
     24970.mp4         s( 28 )   e( 60 )
-    24971.mp4         s( 21 )   e( 39 )
+    24971.mp4         s( 21 )   e( 39 )  -- needs fixing( due2no hands )
 clothes( which 10 vids ): 6   --> 25 videos
     11326.mp4         s(  2 )   e( 23 )
     11311.mp4         s( 27 )   e( 53 )
