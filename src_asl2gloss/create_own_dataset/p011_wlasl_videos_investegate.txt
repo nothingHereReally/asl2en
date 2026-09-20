@@ -586,8 +586,8 @@ before( which 10 vids ): 3    --> 11 videos
     05727.mp4         s( 24 )   e( 55 )
     05739.mp4         s(  1 )   e( 52 )
     05747.mp4         s( 22 )   e( 46 )
-    05748.mp4         s( 21 )   e( 55 )
-    05750.mp4         s( 39 )   e( 58 )
+    05748.mp4         s( 21 )   e( 55 )  -- needs fixing( due2no hands )
+    05750.mp4         s( 36 )   e( 58 )
 chair( which 10 vids ): 4     --> 26 videos
     09853.mp4         s(  1 )   e( 20 )
     09848.mp4         s( 18 )   e( 60 )
