@@ -745,8 +745,8 @@ hurt( which 10 vids ): 17     --> 12 videos
 fever( which 10 vids ): 18    --> 10 videos
     78219.mp4         s(  7 )   e( 43 )
     78220.mp4         s(  7 )   e( 28 )
-    78221.mp4         s(  2 )   e( 19 )
-    78222.mp4         s(  4 )   e( 14 )
+    78221.mp4         s(  2 )   e( 19 )  -- needs fixing( due2rmNotNeeded hands )
+    78222.mp4         s(  4 )   e( 14 )  -- needs fixing( due2rmNotNeeded hands )
     78223.mp4         s(  5 )   e( 89 )
     78224.mp4         s( 23 )   e( 116 )
     78225.mp4         s(  1 )   e( 50 )
