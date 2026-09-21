@@ -733,8 +733,8 @@ feel( which 10 vids ): 16     --> 15 videos
     21436.mp4         s(  1 )   e( 53 )
 hurt( which 10 vids ): 17     --> 12 videos
     28438.mp4         s(  1 )   e( 33 )
-    70147.mp4         s( 52 )   e( 72 )
-    28453.mp4         s( 19 )   e( 37 )
+    70147.mp4         s( 52 )   e( 72 )  -- needs fixing( due2no hands )
+    28453.mp4         s( 16 )   e( 37 )  -- needs fixing( due2no hands )
     28450.mp4         s( 29 )   e( 58 )
     28445.mp4         s(  1 )   e( 55 )
     28441.mp4         s( 16 )   e( 42 )
