@@ -690,7 +690,7 @@ stomach( which 10 vids ): 12  --> 10 videos
 have( which 10 vids ): 13     --> 17 videos
     26773.mp4         s(  1 )   e( 30 )
     69088.mp4         s(  1 )   e( 32 ) , s( 64 )  e( 86 )
-    26776.mp4         s( 12 )   e( 45 )
+    26776.mp4         s( 12 )   e( 45 )  -- needs fixing( due2no hands )
     26757.mp4         s(  1 )   e( 35 )
     69360.mp4         s( 24 )   e( 42 )
     68069.mp4         s( 30 )   e( 64 )
