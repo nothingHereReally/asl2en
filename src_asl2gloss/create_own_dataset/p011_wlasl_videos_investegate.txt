@@ -721,7 +721,7 @@ see( which 10 vids ): 15      --> 11 videos
     50126.mp4         s( 34 )   e( 50 )
     50127.mp4         s( 13 )   e( 34 )
 feel( which 10 vids ): 16     --> 15 videos
-    67653.mp4         s( 13 )   e( 29 )
+    67653.mp4         s( 12 )   e( 29 )
     21434.mp4         s( 18 )   e( 59 )
     69319.mp4         s( 23 )   e( 56 )
     21425.mp4         s(  1 )   e( 49 )
