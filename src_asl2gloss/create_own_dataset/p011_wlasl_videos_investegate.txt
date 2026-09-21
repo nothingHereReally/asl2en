@@ -758,10 +758,10 @@ dizzy( which 10 vids ): 19    --> 11 videos
     65501.mp4         s( 30 )   e( 50 )
     16982.mp4         s( 17 )   e( 49 )
     16985.mp4         s(  1 )   e( 28 )
-    16986.mp4         s(  1 )   e( 57 )
+    16986.mp4         s(  1 )   e( 57 )  -- needs fixing( due2no face )
     16987.mp4         s( 23 )   e( 58 )
-    16988.mp4         s( 17 )   e( 53 )
-    78227.mp4         s( 22 )   e( 52 )
+    16988.mp4         s( 17 )   e( 53 )  -- needs fixing( due2no face )
+    78227.mp4         s( 22 )   e( 52 )  -- needs fixing( due2no face )
     78228.mp4         s( 48 )   e( 160 )
     78229.mp4         s( 19 )   e( 130 )
 headache( which 10 vids ): 20 --> 17 videos
