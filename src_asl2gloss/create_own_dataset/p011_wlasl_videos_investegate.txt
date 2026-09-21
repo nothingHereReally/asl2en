@@ -701,7 +701,7 @@ have( which 10 vids ): 13     --> 17 videos
 need( which 10 vids ): 14     --> 18 videos
     37879.mp4         s(  1 )   e( 35 )
     37891.mp4         s( 24 )   e( 50 )
-    37892.mp4         s( 17 )   e( 46 )
+    37892.mp4         s( 17 )   e( 46 )  -- needs fixing( due2rmNotNeeded hands )
     68544.mp4         s(  4 )   e( 36 )
     37885.mp4         s(  1 )   e( 55 )
     37887.mp4         s( 17 )   e( 56 )
