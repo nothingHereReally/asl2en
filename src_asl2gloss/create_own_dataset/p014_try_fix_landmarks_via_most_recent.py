@@ -309,7 +309,7 @@ def process_each_gloss() -> tuple:
                     np.save(f, new_lmark)
                 imwrite(f"{SKELETON_DIR /vid_folder /jpeg_image_format}", new_skeleton)
                 fixed_landmark_notation[-1][KEY_VIDS][-1][KEY_LMARK].append(new_notation)
-                fixed_skeleton_notation[-1][KEY_VIDS][-1][KEY_LMARK].append({
+                fixed_skeleton_notation[-1][KEY_VIDS][-1]['skeleton'].append({
                     KEY_FILE: jpeg_image_format,
                     KEY_FACE: new_notation[KEY_FACE],
                     KEY_POSE: new_notation[KEY_POSE],
