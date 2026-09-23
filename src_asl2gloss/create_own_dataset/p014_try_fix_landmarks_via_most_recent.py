@@ -7,8 +7,8 @@ from pathlib import Path
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
 DS_DIR: Path= PROJ_ROOT /"dataset" /"clean_dataset"
 OLD_LANDMARK_DIR: Path= DS_DIR /"investigate_landmark"
-LANDMARK_DIR: Path= DS_DIR /"fixed_landmark_most_recent"
-SKELETON_DIR: Path= DS_DIR /"fixed_skeleton_most_recent"
+LANDMARK_DIR: Path= DS_DIR /"fix_landmark_most_recent"
+SKELETON_DIR: Path= DS_DIR /"fix_skeleton_most_recent"
 IMG_SIZE: int= 158
 KEY_G: str= 'gloss'
 KEY_VIDS: str= 'videos'
@@ -325,9 +325,9 @@ def process_each_gloss() -> tuple:
 def main() -> None:
     check_folders()
     fixed_landmark_notation, fixed_skeleton_notation= process_each_gloss()
-    with open(f"{DS_DIR /'fixed_data_most_recent.investigate.landmark.json'}", 'w') as f:
+    with open(f"{DS_DIR /'fix_most_recent.investigate.landmark.json'}", 'w') as f:
         writeJson(fixed_landmark_notation, f, indent=4)
-    with open(f"{DS_DIR /'fixed_data_most_recent.investigate.skeleton.json'}", 'w') as f:
+    with open(f"{DS_DIR /'fix_most_recent.investigate.skeleton.json'}", 'w') as f:
         writeJson(fixed_skeleton_notation, f, indent=4)
 if __name__=="__main__":
     main()
