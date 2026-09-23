@@ -7,8 +7,8 @@ from pathlib import Path
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
 DS_DIR: Path= PROJ_ROOT /"dataset" /"clean_dataset"
 OLD_LANDMARK_DIR: Path= DS_DIR /"investigate_landmark"
-LANDMARK_DIR: Path= DS_DIR /"fix_landmark_most_recent"
-SKELETON_DIR: Path= DS_DIR /"fix_skeleton_most_recent"
+LANDMARK_DIR: Path= DS_DIR /"fix_most_recent_landmark"
+SKELETON_DIR: Path= DS_DIR /"fix_most_recent_skeleton"
 IMG_SIZE: int= 158
 KEY_G: str= 'gloss'
 KEY_VIDS: str= 'videos'
@@ -288,7 +288,7 @@ def process_each_gloss() -> tuple:
             })
             fixed_skeleton_notation[-1][KEY_VIDS].append({
                 KEY_VFILE: a_video[KEY_VFILE],
-                KEY_LMARK: [],
+                'skeleton': [],
             })
             for an_image_lmark in a_video[KEY_LMARK]:
                 old_img_lmark: np.ndarray
