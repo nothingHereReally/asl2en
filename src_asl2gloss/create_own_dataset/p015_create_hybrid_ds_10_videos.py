@@ -3156,10 +3156,20 @@ def process_lm_video(
                 2
             )
             filename2save: str= str(idx_init_1).zfill(8)
-            landmark_annotations[-1][KEY_LANDMARK].append(video_details[KEY_LANDMARK][idx])
-            landmark_annotations[-1][KEY_LANDMARK][-1][KEY_FILE]= f"{filename2save}.npy"
-            skeleton_annotations[-1][KEY_SKELETON].append(video_details[KEY_LANDMARK][idx])
-            skeleton_annotations[-1][KEY_SKELETON][-1][KEY_FILE]= f"{filename2save}.jpg"
+            landmark_annotations[-1][KEY_LANDMARK].append({
+                KEY_FILE: f"{filename2save}.npy",
+                KEY_FACE: bool(video_details[KEY_LANDMARK][idx][KEY_FACE]),
+                KEY_POSE: bool(video_details[KEY_LANDMARK][idx][KEY_POSE]),
+                KEY_LHAND: bool(video_details[KEY_LANDMARK][idx][KEY_LHAND]),
+                KEY_RHAND: bool(video_details[KEY_LANDMARK][idx][KEY_RHAND]),
+            })
+            skeleton_annotations[-1][KEY_SKELETON].append({
+                KEY_FILE: f"{filename2save}.jpg",
+                KEY_FACE: bool(video_details[KEY_LANDMARK][idx][KEY_FACE]),
+                KEY_POSE: bool(video_details[KEY_LANDMARK][idx][KEY_POSE]),
+                KEY_LHAND: bool(video_details[KEY_LANDMARK][idx][KEY_LHAND]),
+                KEY_RHAND: bool(video_details[KEY_LANDMARK][idx][KEY_RHAND]),
+            })
             if del_lhand:
                 lm_data_npy= rm_lhand(
                     lm_data_npy=lm_data_npy,
