@@ -3123,7 +3123,9 @@ def process_lm_video(
     abs_landmark_dir_from: Path= LM_RECENT_DIR if where_from==VAL_RECENT else LM_NVSTGT_DIR
     abs_landmark_dir_from= abs_landmark_dir_from /folder_video_from
     for a_start_end in which_images:
-        parent_folder_a_start_end: str= f"{folder_video_to}_{a_start_end[KEY_IMGSTART]}_{a_start_end[KEY_IMGEND]}"
+        parent_folder_a_start_end: str= f"{folder_video_to}_{str(
+            a_start_end[KEY_IMGSTART]
+        ).zfill(3)}_{str(a_start_end[KEY_IMGEND]).zfill(3)}"
         abs_landmark_dir_to: Path= LANDMARK_dir /parent_folder_a_start_end
         abs_landmark_dir_to.mkdir()
         abs_skeleton_dir_to: Path= SKELETON_dir /parent_folder_a_start_end
