@@ -14,10 +14,6 @@ KEY_RHAND: str= 'right_hand'
 # -------------------
 KEY_LANDMARK: str= 'landmark'
 PROJ_ROOT: Path= Path(__file__).resolve().parent.parent.parent
-# ---------------------
-KEY_SPLIT: str= 'split'
-KEY_TRAIN: str= 'train'
-KEY_TEST: str= 'test'
 ds_landmark: list= []
 with open(f"{PROJ_ROOT /"dataset" /"clean_dataset" /"ds_landmark.json"}", "r") as f:
     ds_landmark= loadjson(f)
