@@ -26,8 +26,8 @@ with open(f"{PROJ_ROOT /"dataset" /"clean_dataset" /"ds_landmark.json"}", "r") a
 def min_images(a_gloss: dict) -> dict:
     details: dict= {
         'min': 999_999,
-        'index_video': 0,
-        'index_se': 0,
+        'index_video': -1,
+        'index_se': -1,
     }
     for idx_vid, a_video in enumerate(a_gloss[KEY_VIDS]):
         for idx_se, a_start_end_video in enumerate(a_video[KEY_LANDMARK]):
@@ -42,8 +42,8 @@ def min_images(a_gloss: dict) -> dict:
 def max_images(a_gloss: dict) -> dict:
     details: dict= {
         'max': 0,
-        'index_video': 0,
-        'index_se': 0,
+        'index_video': -1,
+        'index_se': -1,
     }
     for idx_vid, a_video in enumerate(a_gloss[KEY_VIDS]):
         for idx_se, a_start_end_video in enumerate(a_video[KEY_LANDMARK]):
@@ -58,8 +58,8 @@ def max_images(a_gloss: dict) -> dict:
 def min_images_hand(a_gloss: dict) -> dict:
     details: dict= {
         'min': 999_999,
-        'index_video': 0,
-        'index_se': 0,
+        'index_video': -1,
+        'index_se': -1,
     }
     for idx_vid, a_video in enumerate(a_gloss[KEY_VIDS]):
         for idx_se, a_start_end_video in enumerate(a_video[KEY_LANDMARK]):
@@ -78,8 +78,8 @@ def min_images_hand(a_gloss: dict) -> dict:
 def max_images_hand(a_gloss: dict) -> dict:
     details: dict= {
         'max': 0,
-        'index_video': 0,
-        'index_se': 0,
+        'index_video': -1,
+        'index_se': -1,
     }
     for idx_vid, a_video in enumerate(a_gloss[KEY_VIDS]):
         for idx_se, a_start_end_video in enumerate(a_video[KEY_LANDMARK]):
@@ -98,8 +98,8 @@ def max_images_hand(a_gloss: dict) -> dict:
 def min_images_2hand(a_gloss: dict) -> dict:
     details: dict= {
         'min': 999_999,
-        'index_video': 0,
-        'index_se': 0,
+        'index_video': -1,
+        'index_se': -1,
     }
     for idx_vid, a_video in enumerate(a_gloss[KEY_VIDS]):
         for idx_se, a_start_end_video in enumerate(a_video[KEY_LANDMARK]):
@@ -118,8 +118,8 @@ def min_images_2hand(a_gloss: dict) -> dict:
 def max_images_2hand(a_gloss: dict) -> dict:
     details: dict= {
         'max': 0,
-        'index_video': 0,
-        'index_se': 0,
+        'index_video': -1,
+        'index_se': -1,
     }
     for idx_vid, a_video in enumerate(a_gloss[KEY_VIDS]):
         for idx_se, a_start_end_video in enumerate(a_video[KEY_LANDMARK]):
@@ -149,24 +149,42 @@ def main() -> None:
         max_images_gloss_2hand: dict= max_images_2hand(a_gloss)
 
         print(f"------------- {a_gloss[KEY_G]} -------------")
-        print(f"minimum images on a video on: {min_images_gloss['min']} at --> {
-            a_gloss[KEY_VIDS][min_images_gloss['index_video']][KEY_LANDMARK][min_images_gloss['index_se']][KEY_PFOLDER]
-        }")
-        print(f"maximum images on a video on: {max_images_gloss['max']} --> {
-            a_gloss[KEY_VIDS][max_images_gloss['index_video']][KEY_LANDMARK][max_images_gloss['index_se']][KEY_PFOLDER]
-        }")
-        print(f"minimum images( at least 1 hand ) on a video on: {min_images_gloss_hand['min']} --> {
-            a_gloss[KEY_VIDS][min_images_gloss_hand['index_video']][KEY_LANDMARK][min_images_gloss_hand['index_se']][KEY_PFOLDER]
-        }")
-        print(f"maximum images( at least 1 hand ) on a video on: {max_images_gloss_hand['max']} --> {
-            a_gloss[KEY_VIDS][max_images_gloss_hand['index_video']][KEY_LANDMARK][max_images_gloss_hand['index_se']][KEY_PFOLDER]
-        }")
-        print(f"minimum images( 2 hand ) on a video on: {min_images_gloss_2hand['min']} --> {
-            a_gloss[KEY_VIDS][min_images_gloss_2hand['index_video']][KEY_LANDMARK][min_images_gloss_2hand['index_se']][KEY_PFOLDER]
-        }")
-        print(f"maximum images( 2 hand ) on a video on: {max_images_gloss_2hand['max']} --> {
-            a_gloss[KEY_VIDS][max_images_gloss_2hand['index_video']][KEY_LANDMARK][max_images_gloss_2hand['index_se']][KEY_PFOLDER]
-        }")
+        if min_images_gloss['index_video']!=-1 and min_images_gloss['min']!=0:
+            print(f"minimum images on a video on: {min_images_gloss['min']} --> {
+                a_gloss[KEY_VIDS][min_images_gloss['index_video']][KEY_LANDMARK][min_images_gloss['index_se']][KEY_PFOLDER]
+            }")
+        else:
+            print('NO minimum images on a video')
+        if max_images_gloss['index_video']!=-1:
+            print(f"maximum images on a video on: {max_images_gloss['max']} --> {
+                a_gloss[KEY_VIDS][max_images_gloss['index_video']][KEY_LANDMARK][max_images_gloss['index_se']][KEY_PFOLDER]
+            }")
+        else:
+            print('NO maximum images on a video')
+        if min_images_gloss_hand['index_video']!=-1 and min_images_gloss_hand['min']!=0:
+            print(f"minimum images( at least 1 hand ) on a video on: {min_images_gloss_hand['min']} --> {
+                a_gloss[KEY_VIDS][min_images_gloss_hand['index_video']][KEY_LANDMARK][min_images_gloss_hand['index_se']][KEY_PFOLDER]
+            }")
+        else:
+            print('NO minimum images( at least 1 hand ) on a video')
+        if max_images_gloss_hand['index_video']!=-1:
+            print(f"maximum images( at least 1 hand ) on a video on: {max_images_gloss_hand['max']} --> {
+                a_gloss[KEY_VIDS][max_images_gloss_hand['index_video']][KEY_LANDMARK][max_images_gloss_hand['index_se']][KEY_PFOLDER]
+            }")
+        else:
+            print('NO maximum images( at least 1 hand ) on a video')
+        if min_images_gloss_2hand['index_video']!=-1 and min_images_gloss_2hand['min']!=0:
+            print(f"minimum images( 2 hand ) on a video on: {min_images_gloss_2hand['min']} --> {
+                a_gloss[KEY_VIDS][min_images_gloss_2hand['index_video']][KEY_LANDMARK][min_images_gloss_2hand['index_se']][KEY_PFOLDER]
+            }")
+        else:
+            print('NO minimum images( 2 hand ) on a video')
+        if max_images_gloss_2hand['index_video']!=-1:
+            print(f"maximum images( 2 hand ) on a video on: {max_images_gloss_2hand['max']} --> {
+                a_gloss[KEY_VIDS][max_images_gloss_2hand['index_video']][KEY_LANDMARK][max_images_gloss_2hand['index_se']][KEY_PFOLDER]
+            }")
+        else:
+            print('NO maximum images( 2 hand ) on a video')
         print('\n')
 if __name__=="__main__":
     main()
