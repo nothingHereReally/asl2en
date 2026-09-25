@@ -107,7 +107,7 @@ def min_images_2hand(a_gloss: dict) -> dict:
                 lambda x: (x[KEY_LHAND] and x[KEY_RHAND]) and x[KEY_FACE] and x[KEY_POSE],
                 a_start_end_video[KEY_LANDMARK]
             )).__len__()
-            if details['min']<q_images_hand:
+            if q_images_hand<details['min']:
                 details= {
                     'min': q_images_hand,
                     'index_video': idx_vid,
@@ -127,7 +127,7 @@ def max_images_2hand(a_gloss: dict) -> dict:
                 lambda x: (x[KEY_LHAND] and x[KEY_RHAND]) and x[KEY_FACE] and x[KEY_POSE],
                 a_start_end_video[KEY_LANDMARK]
             )).__len__()
-            if q_images_hand<details['max']:
+            if details['max']<q_images_hand:
                 details= {
                     'max': q_images_hand,
                     'index_video': idx_vid,
