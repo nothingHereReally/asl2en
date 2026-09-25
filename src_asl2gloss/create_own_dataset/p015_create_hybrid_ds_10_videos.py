@@ -80,6 +80,10 @@ VAL_RECENT: str= 'fill_via_recent'
 VAL_CLASSIC: str= 'classic'
 DEL_LEFT_HAND: str= 'remove_left_hand'
 # ---------------------
+KEY_SPLIT: str= 'split'
+KEY_TRAIN: str= 'train'
+KEY_TEST: str= 'test'
+# ---------------------
 KEY_IMG_VALID: str= 'valid_images'
 KEY_IMGSTART: str= 'start' # counting is 1, 2, 3, ..., NOT --> 0, 1, 2, ....
 KEY_IMGEND: str= 'end'     # counting is 1, 2, 3, ..., NOT --> 0, 1, 2, ....
@@ -3200,7 +3204,7 @@ def process_dataset() -> tuple:
             KEY_G: a_gloss[KEY_G],
             KEY_VIDS: [],
         })
-        for a_video in a_gloss[KEY_VIDS]:
+        for idx_video, a_video in enumerate(a_gloss[KEY_VIDS]):
             ds_landmark[-1][KEY_VIDS].append({
                 KEY_VFILE: a_video[KEY_VFILE],
                 KEY_LANDMARK: []
@@ -3244,6 +3248,12 @@ def process_dataset() -> tuple:
             )
             ds_landmark[-1][KEY_VIDS][-1][KEY_LANDMARK]= new_ann_landmark
             ds_skeleton[-1][KEY_VIDS][-1][KEY_SKELETON]= new_ann_skeleton
+            if idx_video<int(len(a_gloss[KEY_VIDS])*.8): # 80% train; 20% test
+                ds_landmark[-1][KEY_VIDS][-1][KEY_SPLIT]= KEY_TRAIN
+                ds_skeleton[-1][KEY_VIDS][-1][KEY_SPLIT]= KEY_TRAIN
+            else:
+                ds_landmark[-1][KEY_VIDS][-1][KEY_SPLIT]= KEY_TEST
+                ds_skeleton[-1][KEY_VIDS][-1][KEY_SPLIT]= KEY_TEST
     return ds_landmark, ds_skeleton
 def main():
     init_directories()
