@@ -80,10 +80,6 @@ VAL_RECENT: str= 'fill_via_recent'
 VAL_CLASSIC: str= 'classic'
 DEL_LEFT_HAND: str= 'remove_left_hand'
 # ---------------------
-KEY_SPLIT: str= 'split'
-KEY_TRAIN: str= 'train'
-KEY_TEST: str= 'test'
-# ---------------------
 KEY_IMG_VALID: str= 'valid_images'
 KEY_IMGSTART: str= 'start' # counting is 1, 2, 3, ..., NOT --> 0, 1, 2, ....
 KEY_IMGEND: str= 'end'     # counting is 1, 2, 3, ..., NOT --> 0, 1, 2, ....
