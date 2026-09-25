@@ -56,6 +56,61 @@ def q_imgs_less_than_or_equal(
                 annotations.append(annotations[-1])
     assert np.array(lm_data_npy)==(QUANTITY_FRAME, LM_SHAPE_NORMALIZED[0], LM_SHAPE_NORMALIZED[1])
     return (lm_data_npy, annotations)
+def greater_than_qf_p1(
+    landmarks: list,
+    parent_folder: str,
+) -> tuple:
+    lm_data_npy: list= []
+    annotations: list= []
+
+    ratio: int= math.floor(len(landmarks)/QUANTITY_FRAME)
+    past_npy: np.ndarray= np.zeros(LM_SHAPE_NORMALIZED)
+    for idx in range(QUANTITY_FRAME):
+        a_landmark= landmarks[idx*ratio]
+        if has_atleast_1hand(a_landmark):
+            with open(f"{LANDMARK_dir /parent_folder /a_landmark[KEY_FILE]}", 'rb') as f:
+                lm_data_npy.append(np.load(f))
+                annotations.append({
+                    KEY_FACE: a_landmark[KEY_FACE],
+                    KEY_POSE: a_landmark[KEY_POSE],
+                    KEY_LHAND: a_landmark[KEY_LHAND],
+                    KEY_RHAND: a_landmark[KEY_RHAND],
+                })
+                past_npy= np.array(lm_data_npy[-1]).copy()
+        else:
+            lm_data_npy.append(past_npy)
+            annotations.append(annotations[-1])
+    return (lm_data_npy, annotations)
+def q_imgs_greater_than(
+    landmarks: list,
+    parent_folder: str,
+) -> tuple:
+    lm_data_npy_many: list= []
+    annotations_many: list= []
+
+    idx_init: int= idx_init_has_hand(landmarks)
+    assert idx_init!=-1
+    q_imgs_available: int= len(landmarks)-idx_init
+    if q_imgs_available<=QUANTITY_FRAME:
+        lm_data, annotation= q_imgs_less_than_or_equal(
+            landmarks=landmarks[idx_init:],
+            parent_folder=parent_folder
+        )
+        lm_data_npy_many.append(lm_data)
+        annotations_many.append(annotation)
+    else:
+        # ---- part 1 ----
+        lm_data, annotation= greater_than_qf_p1(
+            landmarks=landmarks[idx_init:],
+            parent_folder=parent_folder,
+        )
+        lm_data_npy_many.append(lm_data)
+        annotations_many.append(annotation)
+
+        # ---- part 2 ----
+        # ---- part 3 ----
+        pass
+    return (lm_data_npy_many, annotations_many)
 def main() -> None:
     ds_landmark: list
     with open(DS_DIR /"ds_landmark.json", 'r') as f:
