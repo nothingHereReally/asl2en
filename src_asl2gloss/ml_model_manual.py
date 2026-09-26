@@ -90,13 +90,6 @@ def greater_than_qf_p2(
     lm_data_npy_many: list= [] # each element inside is of shape (QUANTITY_FRAME, 86, 2)
     annotations_many: list= []
 
-    past_npy: np.ndarray= np.zeros(LM_SHAPE_NORMALIZED)
-    past_notation: dict= {
-        KEY_FACE: landmarks[0][KEY_FACE],
-        KEY_POSE: landmarks[0][KEY_POSE],
-        KEY_LHAND: landmarks[0][KEY_LHAND],
-        KEY_RHAND: landmarks[0][KEY_RHAND],
-    }
     how_many_qfs: int= math.floor(len(landmarks)/QUANTITY_FRAME)
     remains: int= len(landmarks) -how_many_qfs*QUANTITY_FRAME
     mod_list: tuple= tuple(range(how_many_qfs))
@@ -104,6 +97,13 @@ def greater_than_qf_p2(
     for a_landmark in landmarks:
         with open(f"{LANDMARK_dir /parent_folder /a_landmark[KEY_FILE]}", 'rb') as f:
             load_lm_data.append(np.load(f))
+    past_npy: np.ndarray= load_lm_data[0].copy()
+    past_notation: dict= {
+        KEY_FACE: landmarks[0][KEY_FACE],
+        KEY_POSE: landmarks[0][KEY_POSE],
+        KEY_LHAND: landmarks[0][KEY_LHAND],
+        KEY_RHAND: landmarks[0][KEY_RHAND],
+    }
     for idx_init_only in range(remains+1):
         tmp_lm_data: list= [[] for _ in range(how_many_qfs)]
         tmp_annotations: list= [[] for _ in range(how_many_qfs)]
@@ -144,17 +144,17 @@ def greater_than_qf_p3(
 
     groups_lm: list= [[] for _ in MOD_PART_3]
     groups_notation: list= [[] for _ in MOD_PART_3]
-    past_npy: np.ndarray= np.zeros(LM_SHAPE_NORMALIZED)
+    load_lm_data: list= []
+    for a_landmark in landmarks:
+        with open(f"{LANDMARK_dir /parent_folder /a_landmark[KEY_FILE]}", 'rb') as f:
+            load_lm_data.append(np.load(f))
+    past_npy: np.ndarray= load_lm_data[0].copy()
     past_notation: dict= {
         KEY_FACE: landmarks[0][KEY_FACE],
         KEY_POSE: landmarks[0][KEY_POSE],
         KEY_LHAND: landmarks[0][KEY_LHAND],
         KEY_RHAND: landmarks[0][KEY_RHAND],
     }
-    load_lm_data: list= []
-    for a_landmark in landmarks:
-        with open(f"{LANDMARK_dir /parent_folder /a_landmark[KEY_FILE]}", 'rb') as f:
-            load_lm_data.append(np.load(f))
     for idx in range(len(landmarks)):
         for idx_mod, what_mod in enumerate(MOD_PART_3):
             if (idx+1)%what_mod==0:
