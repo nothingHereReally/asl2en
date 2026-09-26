@@ -266,10 +266,6 @@ def main() -> None:
                     )
                     gloss_lm_presented.extend(tmp_lm)
                     gloss_annotations.extend(tmp_notation)
-    for a_landmark in lm_data_npy:
-        # print(f"--> {a_landmark.shape} -- {a_landmark[-1]}")
-        blah= a_landmark*2.1
-        del blah
     print(len(ds_landmark))
 if __name__=="__main__":
     main()
