@@ -240,32 +240,37 @@ def q_imgs_greater_than(
         lm_data_npy_many.extend(lm_data)
         annotations_many.extend(annotation)
     return (lm_data_npy_many, annotations_many)
+def landmarks_of_gloss(a_gloss: dict) -> tuple:
+    gloss_lm_presented: list= []
+    gloss_annotations: list= []
+    for a_video in a_gloss[KEY_VIDS]:
+        for a_start_end in a_video[KEY_LANDMARK]:
+            if len(a_start_end[KEY_LANDMARK])<=QUANTITY_FRAME:
+                tmp_lm, tmp_notation= q_imgs_less_than_or_equal(
+                    landmarks=a_start_end[KEY_LANDMARK],
+                    parent_folder=a_start_end[KEY_PFOLDER],
+                )
+                gloss_lm_presented.append(tmp_lm)
+                gloss_annotations.append(tmp_notation)
+            else:
+                tmp_lm, tmp_notation= q_imgs_greater_than(
+                    landmarks=a_start_end[KEY_LANDMARK],
+                    parent_folder=a_start_end[KEY_PFOLDER],
+                )
+                gloss_lm_presented.extend(tmp_lm)
+                gloss_annotations.extend(tmp_notation)
+    return (gloss_lm_presented, gloss_annotations)
 def main() -> None:
     ds_landmark: list
     with open(DS_DIR /"ds_landmark.json", 'r') as f:
         ds_landmark= loadJson(f)
-    # can RAM handle if we load all numpy data
-    lm_data_npy: list= []
+    landmarks_data_npy: list= []
     for a_gloss in ds_landmark:
-        # a_gloss[KEY_G]
-        for a_video in a_gloss[KEY_VIDS]:
-            gloss_lm_presented: list= []
-            gloss_annotations: list= []
-            for a_start_end in a_video[KEY_LANDMARK]:
-                if len(a_start_end[KEY_LANDMARK])<=QUANTITY_FRAME:
-                    tmp_lm, tmp_notation= q_imgs_less_than_or_equal(
-                        landmarks=a_start_end[KEY_LANDMARK],
-                        parent_folder=a_start_end[KEY_PFOLDER],
-                    )
-                    gloss_lm_presented.append(tmp_lm)
-                    gloss_annotations.append(tmp_notation)
-                else:
-                    tmp_lm, tmp_notation= q_imgs_greater_than(
-                        landmarks=a_start_end[KEY_LANDMARK],
-                        parent_folder=a_start_end[KEY_PFOLDER],
-                    )
-                    gloss_lm_presented.extend(tmp_lm)
-                    gloss_annotations.extend(tmp_notation)
+        landmarks_data_npy.append({
+            KEY_G: a_gloss[KEY_G],
+            KEY_LANDMARK: [],
+        })
+        tmp_gloss_lm_presented, tmp_gloss_annotations= landmarks_of_gloss(a_gloss=a_gloss)
     print(len(ds_landmark))
 if __name__=="__main__":
     main()
