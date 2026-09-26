@@ -189,11 +189,11 @@ def greater_than_qf_p3(
                     annotations_many[-1].append(groups_notation[idx_mod][idx_g_lm])
         else:
             for idx_init in range(len(groups_lm[idx_mod]) -QUANTITY_FRAME +1):
-                lm_data_npy_many.append(groups_lm[
+                lm_data_npy_many.append(groups_lm[idx_mod][
                     idx_init:
                     idx_init +QUANTITY_FRAME
                 ])
-                annotations_many.append(groups_notation[
+                annotations_many.append(groups_notation[idx_mod][
                     idx_init:
                     idx_init +QUANTITY_FRAME
                 ])
