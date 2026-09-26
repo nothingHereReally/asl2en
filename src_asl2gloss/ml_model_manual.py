@@ -18,6 +18,7 @@ KEY_LHAND: str= 'left_hand'
 KEY_RHAND: str= 'right_hand'
 KEY_LANDMARK: str= 'landmark'
 QUANTITY_FRAME: int= 8
+MOD_PART_3: tuple= (3, 4, 5, 6, 7)
 LM_SHAPE_NORMALIZED: tuple= (86, 2)
 def has_atleast_1hand(annotation: dict) -> bool:
     return (annotation[KEY_LHAND] or annotation[KEY_RHAND]) and \
@@ -133,6 +134,67 @@ def greater_than_qf_p2(
         lm_data_npy_many.extend(tmp_lm_data)
         annotations_many.extend(tmp_annotations)
     return (lm_data_npy_many, annotations_many)
+def greater_than_qf_p3(
+    landmarks: list,
+    parent_folder: str,
+) -> tuple:
+    lm_data_npy_many: list= [] # each element inside is of shape (QUANTITY_FRAME, 86, 2)
+    annotations_many: list= [] # eachElementInsideIsAnArrayOf len QUANTITY_FRAME, thenEachIs dict
+
+    groups_lm: list= [[] for _ in MOD_PART_3]
+    groups_notation: list= [[] for _ in MOD_PART_3]
+    past_npy: np.ndarray= np.zeros(LM_SHAPE_NORMALIZED)
+    past_notation: dict= {
+        KEY_FACE: landmarks[0][KEY_FACE],
+        KEY_POSE: landmarks[0][KEY_POSE],
+        KEY_LHAND: landmarks[0][KEY_LHAND],
+        KEY_RHAND: landmarks[0][KEY_RHAND],
+    }
+    load_lm_data: list= []
+    for a_landmark in landmarks:
+        with open(f"{LANDMARK_dir /parent_folder /a_landmark[KEY_FILE]}", 'rb') as f:
+            load_lm_data.append(np.load(f))
+    for idx in range(len(landmarks)):
+        for idx_mod, what_mod in enumerate(MOD_PART_3):
+            if (idx+1)%what_mod==0:
+                if has_atleast_1hand(landmarks[idx]):
+                    groups_lm[idx_mod].append(load_lm_data[idx])
+                    groups_notation[idx_mod].append({
+                        KEY_FACE: landmarks[idx][KEY_FACE],
+                        KEY_POSE: landmarks[idx][KEY_POSE],
+                        KEY_LHAND: landmarks[idx][KEY_LHAND],
+                        KEY_RHAND: landmarks[idx][KEY_RHAND],
+                    })
+                    past_npy= load_lm_data[idx].copy()
+                    past_notation= {
+                        KEY_FACE: landmarks[idx][KEY_FACE],
+                        KEY_POSE: landmarks[idx][KEY_POSE],
+                        KEY_LHAND: landmarks[idx][KEY_LHAND],
+                        KEY_RHAND: landmarks[idx][KEY_RHAND],
+                    }
+                else:
+                    groups_lm[idx_mod].append(past_npy)
+                    groups_notation[idx_mod].append(past_notation)
+    for idx_mod in range(len(MOD_PART_3)):
+        if len(groups_lm[idx_mod])<=QUANTITY_FRAME:
+            ratio: int= math.ceil(QUANTITY_FRAME/len(groups_lm[idx_mod]))
+            lm_data_npy_many.append([])
+            annotations_many.append([])
+            for idx_g_lm in range(len(groups_lm[idx_mod])):
+                for _ in range(min(ratio, QUANTITY_FRAME -len(lm_data_npy_many[-1]))):
+                    lm_data_npy_many[-1].append(groups_lm[idx_mod][idx_g_lm])
+                    annotations_many[-1].append(groups_notation[idx_mod][idx_g_lm])
+        else:
+            for idx_init in range(len(groups_lm[idx_mod]) -QUANTITY_FRAME +1):
+                lm_data_npy_many.append(groups_lm[
+                    idx_init:
+                    idx_init +QUANTITY_FRAME
+                ])
+                annotations_many.append(groups_notation[
+                    idx_init:
+                    idx_init +QUANTITY_FRAME
+                ])
+    return (lm_data_npy_many, annotations_many)
 def q_imgs_greater_than(
     landmarks: list,
     parent_folder: str,
@@ -168,7 +230,12 @@ def q_imgs_greater_than(
         annotations_many.extend(annotation)
 
         # ---- part 3 ----
-        pass
+        lm_data, annotation= greater_than_qf_p3(
+            landmarks=landmarks[idx_init:],
+            parent_folder=parent_folder,
+        )
+        lm_data_npy_many.extend(lm_data)
+        annotations_many.extend(annotation)
     return (lm_data_npy_many, annotations_many)
 def main() -> None:
     ds_landmark: list
