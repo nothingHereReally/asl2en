@@ -8,6 +8,8 @@ import numpy as np
 PROJ_ROOT: Path= Path(__file__).parent.parent
 DS_DIR: Path= PROJ_ROOT /"dataset" /"clean_dataset"
 LANDMARK_dir: Path= DS_DIR /"ds_landmark"
+MODEL_LANDMARK_DIR: Path= DS_DIR /"model_landmark"
+MODEL_SKELETON_DIR: Path= DS_DIR /"model_skeleton"
 KEY_G: str= 'gloss'
 KEY_VIDS: str= 'videos'
 KEY_VFILE: str= 'video_file'
@@ -251,15 +253,64 @@ def landmarks_of_gloss(a_gloss: dict) -> tuple:
                     parent_folder=a_start_end[KEY_PFOLDER],
                 )
                 gloss_lm_presented.append(tmp_lm)
-                gloss_annotations.append(tmp_notation)
+                gloss_annotations.append({
+                    KEY_PFOLDER: a_start_end[KEY_PFOLDER],
+                    KEY_LANDMARK: tmp_notation,
+                })
             else:
                 tmp_lm, tmp_notation= q_imgs_greater_than(
                     landmarks=a_start_end[KEY_LANDMARK],
                     parent_folder=a_start_end[KEY_PFOLDER],
                 )
                 gloss_lm_presented.extend(tmp_lm)
-                gloss_annotations.extend(tmp_notation)
+                gloss_annotations.extend([{
+                    KEY_PFOLDER: a_start_end[KEY_PFOLDER],
+                    KEY_LANDMARK: el,
+                } for el in tmp_notation])
+    '''
+    gloss_lm_presented of shape (INT, QUANTITY_FRAME, 86, 2)
+    gloss_annotations is a list(
+        each element is dict_keys(
+            KEY_PFOLDER: str,
+            KEY_LANDMARK: list_of_len --> QUANTITY_FRAME --> each element is dict_keys(
+                KEY_FACE: bool,
+                KEY_POSE: bool,
+                KEY_LHAND: bool,
+                KEY_RHAND: bool,
+            )
+        )
+    )
+    '''
     return (gloss_lm_presented, gloss_annotations)
+def save_landmarks(
+    landmarks: list,
+    annotations: list,
+) -> list:
+    '''
+    landmarks of shape (INT, QUANTITY_FRAME, 86, 2)
+    annotations is a list(
+        each element is dict_keys(
+            KEY_PFOLDER: str,
+            KEY_LANDMARK: list_of_len --> QUANTITY_FRAME --> each element is dict_keys(
+                KEY_FACE: bool,
+                KEY_POSE: bool,
+                KEY_LHAND: bool,
+                KEY_RHAND: bool,
+            )
+        )
+    )
+    '''
+    out_annotations: list= []
+    for idx_video_qf in range(len(landmarks)):
+        new_pfolder: str= f"{annotations[idx_video_qf][KEY_PFOLDER][:-8]}_{str(idx_video_qf+1).zfill(5)}"
+        new_pfolder= f"{new_pfolder}_{annotations[idx_video_qf][KEY_PFOLDER]-7:}"
+        abs_pfolder: Path= MODEL_LANDMARK_DIR /new_pfolder
+        abs_pfolder.mkdir()
+        for idx_img, an_img_detail in enumerate(annotations[idx_video_qf]):
+            out_annotations.append({
+                KEY_PFOLDER: an_img_detail[KEY_PFOLDER]
+            })
+    return out_annotations
 def main() -> None:
     ds_landmark: list
     with open(DS_DIR /"ds_landmark.json", 'r') as f:
