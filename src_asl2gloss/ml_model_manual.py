@@ -1,3 +1,4 @@
+import cv2
 from pathlib import Path
 from json import load as loadJson
 import math
@@ -20,9 +21,61 @@ KEY_POSE: str= 'pose'
 KEY_LHAND: str= 'left_hand'
 KEY_RHAND: str= 'right_hand'
 KEY_LANDMARK: str= 'landmark'
+KEY_SKELETON: str= 'skeleton'
 QUANTITY_FRAME: int= 8
 MOD_PART_3: tuple= (3, 4, 5, 6, 7)
 LM_SHAPE_NORMALIZED: tuple= (86, 2)
+IMG_SIZE: int= 158
+FACE_CONNECTIONS: tuple= (
+    (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
+    (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
+
+    (26, 29), (29, 30), # left eyebrow
+
+    (23, 32), (32, 31), # left eye down
+    (31, 33), (33, 23), # left eye up
+
+    (10, 13), (13, 14), # right eyebrow
+
+    (7, 16), (16, 15), # right eye down
+    (15, 18), (18, 7), # rght eye up
+
+    (20, 22), (22, 2), # nose vertical line
+    (2, 25), (25, 1), # left half nose
+    (1, 9), (9, 2), # rigth half nose
+
+    # mouth
+    (8, 6), (6, 24), # down lip edge down
+    (24, 0), (0, 8), # up lip edge up
+    (8, 5), (5, 24), # up/down lip inner a
+    (24, 4), (4, 8), # up/down lip inner b
+)
+WORTHY_FACE_IDX: tuple= (
+    0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
+    105, 107, 133, 145, 152, 159, 162, 168, 172, 195,
+    263, 291, 294, 300, 323, 332, 334, 336, 362, 374,
+    386, 389, 397
+)
+
+# before use of POSE_CONNECTIONS modify landmark 1st
+# modify to use index to be used only: 11,12,13,14,15,16,23,24
+# so new index: 0,1,2,3,4,5,6,7
+POSE_CONNECTIONS: tuple= ((0, 1), (0, 2), (1, 3), (2, 4), (3, 5), (6, 7), (0, 6), (1, 7))
+WORTHY_POSE_IDX: tuple= (11,12,13,14,15,16,23,24)
+
+HAND_CONNECTIONS: tuple= (
+    (0, 1), (0, 5), (9, 13), (13, 17), (5, 9), (0, 17), # palm connections
+    (1, 2), (2, 3), (3, 4),           # thumb finger connections
+    (5, 6), (6, 7), (7, 8),           # index finger connections
+    (9, 10), (10, 11), (11, 12),      # middle finger connections
+    (13, 14), (14, 15), (15, 16),     # ring finger connections
+    (17, 18), (18, 19), (19, 20)      # pinky finger connections
+)
+QUANTITY_HAND_LMARK: int= 21
+
+
+
+
 def has_atleast_1hand(annotation: dict) -> bool:
     return (annotation[KEY_LHAND] or annotation[KEY_RHAND]) and \
             annotation[KEY_FACE] and annotation[KEY_POSE]
@@ -239,6 +292,7 @@ def q_imgs_greater_than(
             landmarks=landmarks[idx_init:],
             parent_folder=parent_folder,
         )
+        assert np.array(lm_data).shape[1:]==(QUANTITY_FRAME, *LM_SHAPE_NORMALIZED)
         lm_data_npy_many.extend(lm_data)
         annotations_many.extend(annotation)
     return (lm_data_npy_many, annotations_many)
@@ -282,10 +336,140 @@ def landmarks_of_gloss(a_gloss: dict) -> tuple:
     )
     '''
     return (gloss_lm_presented, gloss_annotations)
-def save_landmarks(
+def isOkPlot(coord: tuple) -> bool:
+    # x and y coordinates
+    # mandatory be greater than or equal to Zero
+    # and less than or equal to One
+    return coord[0]<=1.0 and coord[1]<=1.0 and 0.0<=coord[0] and 0.0<=coord[1]
+def drawSkeletonImg(image: np.ndarray, \
+                    lmark_coordinates: list, \
+                    connections_idxs: tuple, \
+                    thick: int=2, \
+                    color_line: tuple|None=None, \
+                    color_dot: tuple|None=None) -> np.ndarray:
+    img_wh: dict= {"wx": image.shape[1], "hy": image.shape[0]}
+
+
+    # drawing the lines between 2 landmark connections
+    if color_line!=None or color_dot!=None:
+        for lmark_idx_pair in connections_idxs:
+            pA: tuple= (
+                lmark_coordinates[  lmark_idx_pair[0]  ][0], # x
+                lmark_coordinates[  lmark_idx_pair[0]  ][1]  # y
+            )
+            pB: tuple= (
+                lmark_coordinates[  lmark_idx_pair[1]  ][0], # x
+                lmark_coordinates[  lmark_idx_pair[1]  ][1]  # y
+            )
+            if isOkPlot(pA) and isOkPlot(pB):
+                if color_dot!=None:
+                    cv2.circle(
+                        img=image,
+                        center=(
+                            int(pA[0]*img_wh['wx']),
+                            int(pA[1]*img_wh['hy'])
+                        ),
+                        radius=0,
+                        color=color_dot,
+                        thickness=thick*2
+                    )
+                    cv2.circle(
+                        img=image,
+                        center=(
+                            int(pB[0]*img_wh['wx']),
+                            int(pB[1]*img_wh['hy'])
+                        ),
+                        radius=0,
+                        color=color_dot,
+                        thickness=thick*2
+                    )
+                if color_line!=None:
+                    cv2.line(
+                        img=image,
+                        pt1=(int(pA[0]*img_wh['wx']), int(pA[1]*img_wh['hy'])),
+                        pt2=(int(pB[0]*img_wh['wx']), int(pB[1]*img_wh['hy'])),
+                        color=color_line,
+                        thickness=thick
+                    )
+            else:
+                raise NotImplementedError("Has landmark_coordinate<0.0 or 1.0<landmark_coordinate which is not allowed, it should be 0.0<= landmark_coordinate <=1.0, on both x and y coordinates")
+            del pA
+            del pB
+    return image
+def get_lmark_face(landmark):
+    return landmark[:len(WORTHY_FACE_IDX)]
+def get_lmark_pose(landmark):
+    return landmark[
+        len(WORTHY_FACE_IDX):
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX)
+    ]
+def get_lmark_lhand(landmark):
+    return landmark[
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+    ]
+def get_lmark_rhand(landmark):
+    return landmark[
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+    ]
+def drawFacePoseHand(img_write_to: np.ndarray, landmarks: np.ndarray, hasLandmarks: dict) -> np.ndarray:
+    if hasLandmarks[KEY_FACE] \
+        or hasLandmarks[KEY_POSE] \
+        or hasLandmarks[KEY_LHAND] \
+        or hasLandmarks[KEY_RHAND]:
+
+        # ---- face landmarks ----
+        if hasLandmarks[KEY_FACE]:
+            img_write_to= drawSkeletonImg(
+                image=img_write_to,
+                lmark_coordinates=get_lmark_face(landmarks).tolist(),
+                connections_idxs=FACE_CONNECTIONS,
+                thick=1,
+                color_dot=None,
+                color_line=(0, 153, 0), # 153/255= 0.6
+            )
+
+        # ---- pose landmarks ----
+        if hasLandmarks[KEY_POSE]:
+            img_write_to= drawSkeletonImg(
+                image=img_write_to,
+                lmark_coordinates=get_lmark_pose(landmarks).tolist(),
+                connections_idxs=POSE_CONNECTIONS,
+                thick=1,
+                color_dot=None,
+                color_line=(0, 0, 153), # 153/255= 0.6
+            )
+
+        # ---- left hand landmarks ----
+        if hasLandmarks[KEY_LHAND]:
+            img_write_to= drawSkeletonImg(
+                image=img_write_to,
+                lmark_coordinates=get_lmark_lhand(landmarks).tolist(),
+                connections_idxs=HAND_CONNECTIONS,
+                thick=1,
+                color_dot=None,
+                color_line=(255, 255, 255)
+            )
+
+        # ---- right hand landmarks ----
+        if hasLandmarks[KEY_RHAND]:
+            img_write_to= drawSkeletonImg(
+                image=img_write_to,
+                lmark_coordinates=get_lmark_rhand(landmarks).tolist(),
+                connections_idxs=HAND_CONNECTIONS,
+                thick=1,
+                color_dot=None,
+                color_line=(153, 204, 204), # 204/255= 0.8
+            )
+
+        # HERE ORDER OF LANDMARKS
+        # order of landmarks [...face..., ...pose..., ...left_hand..., ...right_hand...]
+    # return tuple(ndarray, list_of_shape_86_2)
+    return img_write_to
+def save_skeleton_landmark(
     landmarks: list,
     annotations: list,
-) -> list:
+) -> tuple:
     '''
     landmarks of shape (INT, QUANTITY_FRAME, 86, 2)
     annotations is a list(
@@ -300,28 +484,87 @@ def save_landmarks(
         )
     )
     '''
-    out_annotations: list= []
+    out_landmarks: list= []
+    out_skeletons: list= []
     for idx_video_qf in range(len(landmarks)):
         new_pfolder: str= f"{annotations[idx_video_qf][KEY_PFOLDER][:-8]}_{str(idx_video_qf+1).zfill(5)}"
         new_pfolder= f"{new_pfolder}_{annotations[idx_video_qf][KEY_PFOLDER]-7:}"
-        abs_pfolder: Path= MODEL_LANDMARK_DIR /new_pfolder
-        abs_pfolder.mkdir()
-        for idx_img, an_img_detail in enumerate(annotations[idx_video_qf]):
-            out_annotations.append({
-                KEY_PFOLDER: an_img_detail[KEY_PFOLDER]
+        abs_pfolder_landmark: Path= MODEL_LANDMARK_DIR /new_pfolder
+        abs_pfolder_landmark.mkdir()
+        abs_pfolder_skeleton: Path= MODEL_SKELETON_DIR /new_pfolder
+        abs_pfolder_skeleton.mkdir()
+        out_landmarks.append({
+            KEY_PFOLDER: new_pfolder,
+            KEY_LANDMARK: []
+        })
+        out_skeletons.append({
+            KEY_PFOLDER: new_pfolder,
+            KEY_SKELETON: []
+        })
+        assert len(annotations[idx_video_qf][KEY_LANDMARK])==QUANTITY_FRAME
+        for idx_img, an_img_detail in enumerate(annotations[idx_video_qf][KEY_LANDMARK]):
+            a_lm_skeleton_filename: str= str(idx_img+1).zfill(8)
+            with open(f"{abs_pfolder_landmark /a_lm_skeleton_filename}.npy", 'wb') as f:
+                np.save(f, landmarks[idx_video_qf][idx_img])
+            cv2.imwrite(
+                f"{abs_pfolder_skeleton /a_lm_skeleton_filename}.jpg",
+                drawFacePoseHand(
+                    np.zeros((IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8),
+                    landmarks=landmarks[idx_video_qf][idx_img],
+                    hasLandmarks=an_img_detail,
+                )
+            ) # TODO: skeleton
+            out_landmarks[-1][KEY_LANDMARK].append({
+                KEY_FILE: f'{a_lm_skeleton_filename}.npy',
+                KEY_FACE: an_img_detail[KEY_FACE],
+                KEY_POSE: an_img_detail[KEY_POSE],
+                KEY_LHAND: an_img_detail[KEY_LHAND],
+                KEY_RHAND: an_img_detail[KEY_RHAND],
             })
-    return out_annotations
+            out_skeletons[-1][KEY_SKELETON].append({
+                KEY_FILE: f'{a_lm_skeleton_filename}.jpg',
+                KEY_FACE: an_img_detail[KEY_FACE],
+                KEY_POSE: an_img_detail[KEY_POSE],
+                KEY_LHAND: an_img_detail[KEY_LHAND],
+                KEY_RHAND: an_img_detail[KEY_RHAND],
+            })
+    return (out_landmarks, out_skeletons)
+def init_directories() -> None:
+    err_msg: list= []
+    if not LANDMARK_dir.exists():
+        err_msg.append(f"Folder Not Found: {LANDMARK_dir}")
+    if MODEL_LANDMARK_DIR.exists():
+        err_msg.append(f"Please delete folder: {MODEL_LANDMARK_DIR}")
+    if MODEL_SKELETON_DIR.exists():
+        err_msg.append(f"Please delete folder: {MODEL_SKELETON_DIR}")
+    if 0<len(err_msg):
+        print("---------------------- error message ----------------------")
+        for msg in err_msg:
+            print(msg)
+        raise FileNotFoundError("Please see message above.")
+    else:
+        MODEL_LANDMARK_DIR.mkdir()
+        MODEL_SKELETON_DIR.mkdir()
 def main() -> None:
     ds_landmark: list
     with open(DS_DIR /"ds_landmark.json", 'r') as f:
         ds_landmark= loadJson(f)
-    landmarks_data_npy: list= []
+    landmarks_data: list= []
+    skeletons_data: list= []
     for a_gloss in ds_landmark:
-        landmarks_data_npy.append({
-            KEY_G: a_gloss[KEY_G],
-            KEY_LANDMARK: [],
-        })
         tmp_gloss_lm_presented, tmp_gloss_annotations= landmarks_of_gloss(a_gloss=a_gloss)
+        notation_landmarks, notation_skeletons= save_skeleton_landmark(
+            landmarks=tmp_gloss_lm_presented,
+            annotations=tmp_gloss_annotations,
+        )
+        landmarks_data.append({
+            KEY_G: a_gloss[KEY_G],
+            KEY_LANDMARK: notation_landmarks,
+        })
+        skeletons_data.append({
+            KEY_G: a_gloss[KEY_G],
+            KEY_SKELETON: notation_skeletons,
+        })
     print(len(ds_landmark))
 if __name__=="__main__":
     main()
