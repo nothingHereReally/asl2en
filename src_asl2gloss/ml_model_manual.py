@@ -390,6 +390,13 @@ def drawSkeletonImg(image: np.ndarray, \
             del pA
             del pB
     return image
+def flip_vertical_x_axis(landmarks) -> np.ndarray:
+    '''
+    landmarks be of shape (INT, ..., INT, 2)
+    '''
+    new_landmark= np.array(landmarks).copy()
+    new_landmark[..., 0]= 1 -new_landmark[..., 0]
+    return new_landmark
 def get_lmark_face(landmark):
     return landmark[:len(WORTHY_FACE_IDX)]
 def get_lmark_pose(landmark):
