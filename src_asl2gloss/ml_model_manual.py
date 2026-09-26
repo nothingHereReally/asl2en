@@ -1,6 +1,6 @@
 import cv2
 from pathlib import Path
-from json import load as loadJson
+from json import load as loadJson, dump as writeJson
 import math
 import numpy as np
 # import jax.numpy as jnp
@@ -488,7 +488,7 @@ def save_skeleton_landmark(
     out_skeletons: list= []
     for idx_video_qf in range(len(landmarks)):
         new_pfolder: str= f"{annotations[idx_video_qf][KEY_PFOLDER][:-8]}_{str(idx_video_qf+1).zfill(5)}"
-        new_pfolder= f"{new_pfolder}_{annotations[idx_video_qf][KEY_PFOLDER]-7:}"
+        new_pfolder= f"{new_pfolder}_{annotations[idx_video_qf][KEY_PFOLDER][-7:]}"
         abs_pfolder_landmark: Path= MODEL_LANDMARK_DIR /new_pfolder
         abs_pfolder_landmark.mkdir()
         abs_pfolder_skeleton: Path= MODEL_SKELETON_DIR /new_pfolder
@@ -513,7 +513,7 @@ def save_skeleton_landmark(
                     landmarks=landmarks[idx_video_qf][idx_img],
                     hasLandmarks=an_img_detail,
                 )
-            ) # TODO: skeleton
+            )
             out_landmarks[-1][KEY_LANDMARK].append({
                 KEY_FILE: f'{a_lm_skeleton_filename}.npy',
                 KEY_FACE: an_img_detail[KEY_FACE],
@@ -545,10 +545,7 @@ def init_directories() -> None:
     else:
         MODEL_LANDMARK_DIR.mkdir()
         MODEL_SKELETON_DIR.mkdir()
-def main() -> None:
-    ds_landmark: list
-    with open(DS_DIR /"ds_landmark.json", 'r') as f:
-        ds_landmark= loadJson(f)
+def process_dataset(ds_landmark: list) -> tuple:
     landmarks_data: list= []
     skeletons_data: list= []
     for a_gloss in ds_landmark:
@@ -565,6 +562,15 @@ def main() -> None:
             KEY_G: a_gloss[KEY_G],
             KEY_SKELETON: notation_skeletons,
         })
-    print(len(ds_landmark))
+    return landmarks_data, skeletons_data
+def main() -> None:
+    ds_landmark: list
+    with open(DS_DIR /"ds_landmark.json", 'r') as f:
+        ds_landmark= loadJson(f)
+    landmarks_data, skeletons_data= process_dataset(ds_landmark)
+    with open(f"{DS_DIR /'model_landmark'}.json", 'w') as f:
+        writeJson(landmarks_data, f, indent=4)
+    with open(f"{DS_DIR /'model_skeleton'}.json", 'w') as f:
+        writeJson(skeletons_data, f, indent=4)
 if __name__=="__main__":
     main()
