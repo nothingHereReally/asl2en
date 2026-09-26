@@ -1,7 +1,8 @@
 from pathlib import Path
 from json import load as loadJson
+import math
 import numpy as np
-from time import sleep
+# import jax.numpy as jnp
 
 
 PROJ_ROOT: Path= Path(__file__).parent.parent
@@ -248,18 +249,27 @@ def main() -> None:
     for a_gloss in ds_landmark:
         # a_gloss[KEY_G]
         for a_video in a_gloss[KEY_VIDS]:
+            gloss_lm_presented: list= []
+            gloss_annotations: list= []
             for a_start_end in a_video[KEY_LANDMARK]:
-                for an_img_details in a_start_end[KEY_LANDMARK]:
-                    with open(f"{LANDMARK_dir /a_start_end[KEY_PFOLDER] /an_img_details[KEY_FILE]}", 'rb') as f:
-                        lm_data_npy.append(
-                            np.load(f)
-                        )
+                if len(a_start_end[KEY_LANDMARK])<=QUANTITY_FRAME:
+                    tmp_lm, tmp_notation= q_imgs_less_than_or_equal(
+                        landmarks=a_start_end[KEY_LANDMARK],
+                        parent_folder=a_start_end[KEY_PFOLDER],
+                    )
+                    gloss_lm_presented.append(tmp_lm)
+                    gloss_annotations.append(tmp_notation)
+                else:
+                    tmp_lm, tmp_notation= q_imgs_greater_than(
+                        landmarks=a_start_end[KEY_LANDMARK],
+                        parent_folder=a_start_end[KEY_PFOLDER],
+                    )
+                    gloss_lm_presented.extend(tmp_lm)
+                    gloss_annotations.extend(tmp_notation)
     for a_landmark in lm_data_npy:
-        print(f"--> {a_landmark.shape} -- {a_landmark[-1]}")
+        # print(f"--> {a_landmark.shape} -- {a_landmark[-1]}")
         blah= a_landmark*2.1
         del blah
-    print(f"loaded numpy files {len(lm_data_npy)} --> now be sleeping for 10.5 seconds")
-    sleep(10.5)
     print(len(ds_landmark))
 if __name__=="__main__":
     main()
