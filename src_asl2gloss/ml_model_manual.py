@@ -564,6 +564,7 @@ def process_dataset(ds_landmark: list) -> tuple:
         })
     return landmarks_data, skeletons_data
 def main() -> None:
+    init_directories()
     ds_landmark: list
     with open(DS_DIR /"ds_landmark.json", 'r') as f:
         ds_landmark= loadJson(f)
