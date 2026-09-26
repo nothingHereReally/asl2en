@@ -92,7 +92,6 @@ def q_imgs_less_than_or_equal(
     annotations: list= []
 
     idx_init: int= idx_init_has_hand(landmarks)
-    assert idx_init!=-1
     ratio: int= math.ceil(QUANTITY_FRAME /(len(landmarks) -idx_init))
     past_npy: np.ndarray= np.zeros(LM_SHAPE_NORMALIZED)
     for a_landmark in landmarks[idx_init:]:
@@ -112,7 +111,6 @@ def q_imgs_less_than_or_equal(
             for _ in range(min(ratio, QUANTITY_FRAME-len(lm_data_npy))):
                 lm_data_npy.append(past_npy)
                 annotations.append(annotations[-1])
-    assert np.array(lm_data_npy).shape==(QUANTITY_FRAME, LM_SHAPE_NORMALIZED[0], LM_SHAPE_NORMALIZED[1])
     return (lm_data_npy, annotations)
 def greater_than_qf_p1(
     landmarks: list,
@@ -138,7 +136,6 @@ def greater_than_qf_p1(
         else:
             lm_data_npy.append(past_npy)
             annotations.append(annotations[-1])
-    assert np.array(lm_data_npy).shape==(QUANTITY_FRAME, LM_SHAPE_NORMALIZED[0], LM_SHAPE_NORMALIZED[1])
     return (lm_data_npy, annotations)
 def greater_than_qf_p2(
     landmarks: list,
@@ -190,7 +187,6 @@ def greater_than_qf_p2(
                         tmp_annotations[mod_what].append(past_notation)
         lm_data_npy_many.extend(tmp_lm_data)
         annotations_many.extend(tmp_annotations)
-        assert np.array(lm_data_npy_many).shape[1:]==(QUANTITY_FRAME, *LM_SHAPE_NORMALIZED)
     return (lm_data_npy_many, annotations_many)
 def greater_than_qf_p3(
     landmarks: list,
@@ -261,7 +257,6 @@ def q_imgs_greater_than(
     annotations_many: list= []
 
     idx_init: int= idx_init_has_hand(landmarks)
-    assert idx_init!=-1
     q_imgs_available: int= len(landmarks)-idx_init
     if q_imgs_available<=QUANTITY_FRAME:
         lm_data, annotation= q_imgs_less_than_or_equal(
@@ -292,7 +287,6 @@ def q_imgs_greater_than(
             landmarks=landmarks[idx_init:],
             parent_folder=parent_folder,
         )
-        assert np.array(lm_data).shape[1:]==(QUANTITY_FRAME, *LM_SHAPE_NORMALIZED)
         lm_data_npy_many.extend(lm_data)
         annotations_many.extend(annotation)
     return (lm_data_npy_many, annotations_many)
@@ -484,6 +478,7 @@ def save_skeleton_landmark(
         )
     )
     '''
+    assert np.array(landmarks).shape[1:]==(QUANTITY_FRAME, *LM_SHAPE_NORMALIZED)
     out_landmarks: list= []
     out_skeletons: list= []
     for idx_video_qf in range(len(landmarks)):
