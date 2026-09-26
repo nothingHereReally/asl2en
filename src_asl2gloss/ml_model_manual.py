@@ -97,8 +97,7 @@ def greater_than_qf_p2(
         KEY_RHAND: landmarks[0][KEY_RHAND],
     }
     how_many_qfs: int= math.floor(len(landmarks)/QUANTITY_FRAME)
-    remains: int= how_many_qfs*QUANTITY_FRAME
-    remains= len(landmarks) -remains
+    remains: int= len(landmarks) -how_many_qfs*QUANTITY_FRAME
     mod_list: tuple= tuple(range(how_many_qfs))
     load_lm_data: list= []
     for a_landmark in landmarks:
