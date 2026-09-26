@@ -538,7 +538,7 @@ def init_directories() -> None:
     if MODEL_SKELETON_DIR.exists():
         err_msg.append(f"Please delete folder: {MODEL_SKELETON_DIR}")
     if 0<len(err_msg):
-        print("---------------------- error message ----------------------")
+        print("---------------------- error message below ----------------------")
         for msg in err_msg:
             print(msg)
         raise FileNotFoundError("Please see message above.")
