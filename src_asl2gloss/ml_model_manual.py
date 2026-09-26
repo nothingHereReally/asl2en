@@ -120,7 +120,7 @@ def greater_than_qf_p2(
                             KEY_LHAND: landmarks[idx][KEY_LHAND],
                             KEY_RHAND: landmarks[idx][KEY_RHAND],
                         })
-                        past_npy= load_lm_data[idx]
+                        past_npy= load_lm_data[idx].copy()
                         past_notation= {
                             KEY_FACE: landmarks[idx][KEY_FACE],
                             KEY_POSE: landmarks[idx][KEY_POSE],
