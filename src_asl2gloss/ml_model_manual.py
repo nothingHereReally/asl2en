@@ -396,6 +396,20 @@ def flip_vertical_x_axis(landmarks) -> np.ndarray:
     '''
     new_landmark= np.array(landmarks).copy()
     new_landmark[..., 0]= 1 -new_landmark[..., 0]
+    lhand2rhand: np.ndarray= new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+    ,:].copy()
+    rhand2lhand: np.ndarray= new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+    ,:].copy()
+    new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+    ,:]= rhand2lhand # ie. past was right hand, now be left hand
+    new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+    ,:]= lhand2rhand # ie. past was left hand, now be right hand
     return new_landmark
 def get_lmark_face(landmark):
     return landmark[:len(WORTHY_FACE_IDX)]
