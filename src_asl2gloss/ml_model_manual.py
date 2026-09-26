@@ -42,8 +42,9 @@ def q_imgs_less_than_or_equal(
     for a_landmark in landmarks[idx_init:]:
         if has_atleast_1hand(a_landmark):
             with open(f"{LANDMARK_dir /parent_folder /a_landmark[KEY_FILE]}", 'rb') as f:
+                tmp_npy_data: np.ndarray= np.load(f)
                 for _ in range(min(ratio, QUANTITY_FRAME-len(lm_data_npy))):
-                    lm_data_npy.append(np.load(f))
+                    lm_data_npy.append(tmp_npy_data.copy())
                     annotations.append({
                         KEY_FACE: a_landmark[KEY_FACE],
                         KEY_POSE: a_landmark[KEY_POSE],
