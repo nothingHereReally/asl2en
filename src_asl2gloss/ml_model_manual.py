@@ -485,6 +485,7 @@ def save_skeleton_landmark(
         )
     )
     '''
+    flip_x_axis_landmarks: np.ndarray= flip_vertical_x_axis(landmarks=landmarks)
     assert np.array(landmarks).shape[1:]==(QUANTITY_FRAME, *LM_SHAPE_NORMALIZED)
     out_landmarks: list= []
     out_skeletons: list= []
@@ -495,12 +496,26 @@ def save_skeleton_landmark(
         abs_pfolder_landmark.mkdir()
         abs_pfolder_skeleton: Path= MODEL_SKELETON_DIR /new_pfolder
         abs_pfolder_skeleton.mkdir()
+        # ------------------------------------------
+        new_pfolder_flip: str= f"{new_pfolder}_flip"
+        abs_pfolder_landmark_flip: Path= MODEL_LANDMARK_DIR /new_pfolder_flip
+        abs_pfolder_landmark_flip.mkdir()
+        abs_pfolder_skeleton_flip: Path= MODEL_SKELETON_DIR /new_pfolder_flip
+        abs_pfolder_skeleton_flip.mkdir()
         out_landmarks.append({
             KEY_PFOLDER: new_pfolder,
             KEY_LANDMARK: []
         })
         out_skeletons.append({
             KEY_PFOLDER: new_pfolder,
+            KEY_SKELETON: []
+        })
+        out_landmarks.append({
+            KEY_PFOLDER: new_pfolder_flip,
+            KEY_LANDMARK: []
+        })
+        out_skeletons.append({
+            KEY_PFOLDER: new_pfolder_flip,
             KEY_SKELETON: []
         })
         assert len(annotations[idx_video_qf][KEY_LANDMARK])==QUANTITY_FRAME
@@ -516,19 +531,51 @@ def save_skeleton_landmark(
                     hasLandmarks=an_img_detail,
                 )
             )
-            out_landmarks[-1][KEY_LANDMARK].append({
+            # -------------------------------------------------------------------------------
+            an_img_detail_flip: dict= {
+                KEY_FACE: an_img_detail[KEY_FACE],
+                KEY_POSE: an_img_detail[KEY_POSE],
+                KEY_LHAND: an_img_detail[KEY_RHAND],
+                KEY_RHAND: an_img_detail[KEY_LHAND],
+            }
+            with open(f"{abs_pfolder_landmark_flip /a_lm_skeleton_filename}.npy", 'wb') as f:
+                np.save(f, flip_x_axis_landmarks[idx_video_qf][idx_img])
+            cv2.imwrite(
+                f"{abs_pfolder_skeleton_flip /a_lm_skeleton_filename}.jpg",
+                drawFacePoseHand(
+                    np.zeros((IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8),
+                    landmarks=flip_x_axis_landmarks[idx_video_qf][idx_img],
+                    hasLandmarks=an_img_detail_flip,
+                )
+            )
+            out_landmarks[-2][KEY_LANDMARK].append({
                 KEY_FILE: f'{a_lm_skeleton_filename}.npy',
                 KEY_FACE: an_img_detail[KEY_FACE],
                 KEY_POSE: an_img_detail[KEY_POSE],
                 KEY_LHAND: an_img_detail[KEY_LHAND],
                 KEY_RHAND: an_img_detail[KEY_RHAND],
             })
-            out_skeletons[-1][KEY_SKELETON].append({
+            out_skeletons[-2][KEY_SKELETON].append({
                 KEY_FILE: f'{a_lm_skeleton_filename}.jpg',
                 KEY_FACE: an_img_detail[KEY_FACE],
                 KEY_POSE: an_img_detail[KEY_POSE],
                 KEY_LHAND: an_img_detail[KEY_LHAND],
                 KEY_RHAND: an_img_detail[KEY_RHAND],
+            })
+            # --------------------------------------------
+            out_landmarks[-1][KEY_LANDMARK].append({
+                KEY_FILE: f'{a_lm_skeleton_filename}.npy',
+                KEY_FACE: an_img_detail_flip[KEY_FACE],
+                KEY_POSE: an_img_detail_flip[KEY_POSE],
+                KEY_LHAND: an_img_detail_flip[KEY_LHAND],
+                KEY_RHAND: an_img_detail_flip[KEY_RHAND],
+            })
+            out_skeletons[-1][KEY_SKELETON].append({
+                KEY_FILE: f'{a_lm_skeleton_filename}.jpg',
+                KEY_FACE: an_img_detail_flip[KEY_FACE],
+                KEY_POSE: an_img_detail_flip[KEY_POSE],
+                KEY_LHAND: an_img_detail_flip[KEY_LHAND],
+                KEY_RHAND: an_img_detail_flip[KEY_RHAND],
             })
     return (out_landmarks, out_skeletons)
 def init_directories() -> None:
