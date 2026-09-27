@@ -3404,7 +3404,7 @@ def process_lm_video(
                 drawFacePoseHand(
                     img_write_to=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
                     landmarks=lm_data_npy,
-                    hasLandmarks=video_details[KEY_LANDMARK][idx],
+                    hasLandmarks=landmark_annotations[-1][KEY_LANDMARK][-1],
                 )
             )
     return (
