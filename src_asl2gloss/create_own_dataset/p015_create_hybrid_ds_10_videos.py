@@ -851,6 +851,7 @@ HYBRID_DATA_SRC: list= [
         KEY_VIDS: [
             {
                 KEY_VFILE: "11326.mp4",
+                KEY_SPLIT: VAL_TRAIN,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
@@ -862,6 +863,7 @@ HYBRID_DATA_SRC: list= [
             },
             {
                 KEY_VFILE: "11311.mp4",
+                KEY_SPLIT: VAL_TRAIN,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
@@ -873,6 +875,7 @@ HYBRID_DATA_SRC: list= [
             },
             {
                 KEY_VFILE: "11314.mp4",
+                KEY_SPLIT: VAL_TRAIN,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
@@ -884,6 +887,7 @@ HYBRID_DATA_SRC: list= [
             },
             {
                 KEY_VFILE: "11316.mp4",
+                KEY_SPLIT: VAL_TRAIN,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
@@ -895,6 +899,7 @@ HYBRID_DATA_SRC: list= [
             },
             {
                 KEY_VFILE: "11305.mp4",
+                KEY_SPLIT: VAL_TRAIN,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
@@ -906,6 +911,7 @@ HYBRID_DATA_SRC: list= [
             },
             {
                 KEY_VFILE: "68870.mp4",
+                KEY_SPLIT: VAL_TRAIN,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
@@ -917,6 +923,7 @@ HYBRID_DATA_SRC: list= [
             },
             {
                 KEY_VFILE: "68024.mp4",
+                KEY_SPLIT: VAL_TRAIN,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
@@ -928,6 +935,7 @@ HYBRID_DATA_SRC: list= [
             },
             {
                 KEY_VFILE: "11327.mp4",
+                KEY_SPLIT: VAL_TRAIN,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
@@ -939,6 +947,7 @@ HYBRID_DATA_SRC: list= [
             },
             {
                 KEY_VFILE: "11328.mp4",
+                KEY_SPLIT: VAL_TEST,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
@@ -950,6 +959,7 @@ HYBRID_DATA_SRC: list= [
             },
             {
                 KEY_VFILE: "11329.mp4",
+                KEY_SPLIT: VAL_TEST,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
