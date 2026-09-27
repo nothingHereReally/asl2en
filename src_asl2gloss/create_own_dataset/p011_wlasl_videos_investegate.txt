@@ -732,7 +732,6 @@ feel( which 10 vids ): 16     --> 15 videos
     65696.mp4         s( 13 )   e( 33 )
     21436.mp4         s(  1 )   e( 53 )
 hurt( which 10 vids ): 17     --> 12 videos
-    28438.mp4         s(  1 )   e( 33 )
     70147.mp4         s( 52 )   e( 72 )  -- needs fixing( due2no hands )
     28453.mp4         s( 16 )   e( 37 )  -- needs fixing( due2no hands )
     28450.mp4         s( 29 )   e( 58 )
@@ -740,8 +739,9 @@ hurt( which 10 vids ): 17     --> 12 videos
     28441.mp4         s( 16 )   e( 42 )
     28443.mp4         s(  1 )   e( 53 )
     28444.mp4         s(  1 )   e( 53 )
-    28452.mp4         s( 26 )   e( 47 )
     28454.mp4         s( 25 )   e( 45 )
+    28452.mp4         s( 26 )   e( 47 )
+    28438.mp4         s(  1 )   e( 33 )
 fever( which 10 vids ): 18    --> 10 videos
     78219.mp4         s(  7 )   e( 43 )
     78220.mp4         s(  7 )   e( 28 )
