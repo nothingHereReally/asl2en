@@ -3424,7 +3424,7 @@ def process_dataset() -> tuple:
             KEY_G: a_gloss[KEY_G],
             KEY_VIDS: [],
         })
-        for idx_video, a_video in enumerate(a_gloss[KEY_VIDS]):
+        for a_video in a_gloss[KEY_VIDS]:
             ds_landmark[-1][KEY_VIDS].append({
                 KEY_VFILE: a_video[KEY_VFILE],
                 KEY_SPLIT: a_video[KEY_SPLIT],
