@@ -8,9 +8,9 @@ import numpy as np
 
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
 DS_DIR: Path= PROJ_ROOT /"dataset" /"clean_dataset"
-LANDMARK_dir: Path= DS_DIR /"ds_landmark"
-MODEL_LANDMARK_DIR: Path= DS_DIR /"model_landmark"
-MODEL_SKELETON_DIR: Path= DS_DIR /"model_skeleton"
+LANDMARK_dir: Path= DS_DIR /"fix_recent_n_classic_landmark"
+MODEL_LANDMARK_DIR: Path= DS_DIR /"ds_landmark"
+MODEL_SKELETON_DIR: Path= DS_DIR /"ds_skeleton"
 KEY_G: str= 'gloss'
 KEY_VIDS: str= 'videos'
 KEY_VFILE: str= 'video_file'
@@ -642,12 +642,12 @@ def process_dataset(ds_landmark: list) -> tuple:
 def main() -> None:
     init_directories()
     ds_landmark: list
-    with open(DS_DIR /"ds_landmark.json", 'r') as f:
+    with open(DS_DIR /"fix_recent_n_classic_landmark.json", 'r') as f:
         ds_landmark= loadJson(f)
     landmarks_data, skeletons_data= process_dataset(ds_landmark)
-    with open(f"{DS_DIR /'model_landmark'}.json", 'w') as f:
+    with open(f"{DS_DIR /'ds_landmark'}.json", 'w') as f:
         writeJson(landmarks_data, f, indent=4)
-    with open(f"{DS_DIR /'model_skeleton'}.json", 'w') as f:
+    with open(f"{DS_DIR /'ds_skeleton'}.json", 'w') as f:
         writeJson(skeletons_data, f, indent=4)
 if __name__=="__main__":
     main()
