@@ -22,6 +22,11 @@ KEY_LHAND: str= 'left_hand'
 KEY_RHAND: str= 'right_hand'
 KEY_LANDMARK: str= 'landmark'
 KEY_SKELETON: str= 'skeleton'
+# ---------------------
+KEY_SPLIT: str= 'split'
+VAL_TRAIN: str= 'train'
+VAL_TEST: str= 'test'
+# ---------------------
 QUANTITY_FRAME: int= 8
 MOD_PART_3: tuple= (3, 4, 5, 6, 7)
 LM_SHAPE_NORMALIZED: tuple= (86, 2)
@@ -303,6 +308,7 @@ def landmarks_of_gloss(a_gloss: dict) -> tuple:
                 gloss_lm_presented.append(tmp_lm)
                 gloss_annotations.append({
                     KEY_PFOLDER: a_start_end[KEY_PFOLDER],
+                    KEY_SPLIT: a_video[KEY_SPLIT],
                     KEY_LANDMARK: tmp_notation,
                 })
             else:
@@ -313,6 +319,7 @@ def landmarks_of_gloss(a_gloss: dict) -> tuple:
                 gloss_lm_presented.extend(tmp_lm)
                 gloss_annotations.extend([{
                     KEY_PFOLDER: a_start_end[KEY_PFOLDER],
+                    KEY_SPLIT: a_video[KEY_SPLIT],
                     KEY_LANDMARK: el,
                 } for el in tmp_notation])
     '''
@@ -320,6 +327,7 @@ def landmarks_of_gloss(a_gloss: dict) -> tuple:
     gloss_annotations is a list(
         each element is dict_keys(
             KEY_PFOLDER: str,
+            KEY_SPLIT: str(KEY_TRAIN|KEY_TEST),
             KEY_LANDMARK: list_of_len --> QUANTITY_FRAME --> each element is dict_keys(
                 KEY_FACE: bool,
                 KEY_POSE: bool,
@@ -490,6 +498,7 @@ def save_skeleton_landmark(
     annotations is a list(
         each element is dict_keys(
             KEY_PFOLDER: str,
+            KEY_SPLIT: str(KEY_TRAIN|KEY_TEST),
             KEY_LANDMARK: list_of_len --> QUANTITY_FRAME --> each element is dict_keys(
                 KEY_FACE: bool,
                 KEY_POSE: bool,
@@ -518,18 +527,22 @@ def save_skeleton_landmark(
         abs_pfolder_skeleton_flip.mkdir()
         out_landmarks.append({
             KEY_PFOLDER: new_pfolder,
+            KEY_SPLIT: annotations[idx_video_qf][KEY_SPLIT],
             KEY_LANDMARK: []
         })
         out_skeletons.append({
             KEY_PFOLDER: new_pfolder,
+            KEY_SPLIT: annotations[idx_video_qf][KEY_SPLIT],
             KEY_SKELETON: []
         })
         out_landmarks.append({
             KEY_PFOLDER: new_pfolder_flip,
+            KEY_SPLIT: annotations[idx_video_qf][KEY_SPLIT],
             KEY_LANDMARK: []
         })
         out_skeletons.append({
             KEY_PFOLDER: new_pfolder_flip,
+            KEY_SPLIT: annotations[idx_video_qf][KEY_SPLIT],
             KEY_SKELETON: []
         })
         assert len(annotations[idx_video_qf][KEY_LANDMARK])==QUANTITY_FRAME
