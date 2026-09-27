@@ -1074,7 +1074,7 @@ HYBRID_DATA_SRC: list= [
                 KEY_VFILE: "who_0003.mp4",
                 KEY_SPLIT: VAL_TEST,
                 KEY_DSFROM: VAL_RECENT,
-                DEL_LEFT_HAND: False,
+                DEL_LEFT_HAND: True,
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 20,
@@ -1086,7 +1086,7 @@ HYBRID_DATA_SRC: list= [
                 KEY_VFILE: "who_0005.mp4",
                 KEY_SPLIT: VAL_TEST,
                 KEY_DSFROM: VAL_RECENT,
-                DEL_LEFT_HAND: False,
+                DEL_LEFT_HAND: True,
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 18,
@@ -1590,7 +1590,7 @@ HYBRID_DATA_SRC: list= [
                 KEY_VFILE: "me_i_0001.mp4",
                 KEY_SPLIT: VAL_TEST,
                 KEY_DSFROM: VAL_RECENT,
-                DEL_LEFT_HAND: False,
+                DEL_LEFT_HAND: True,
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 18,
@@ -2461,7 +2461,7 @@ HYBRID_DATA_SRC: list= [
                 KEY_VFILE: "fever_0001.mp4",
                 KEY_SPLIT: VAL_TEST,
                 KEY_DSFROM: VAL_RECENT,
-                DEL_LEFT_HAND: False,
+                DEL_LEFT_HAND: True,
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 28,
@@ -2473,7 +2473,7 @@ HYBRID_DATA_SRC: list= [
                 KEY_VFILE: "fever_0002.mp4",
                 KEY_SPLIT: VAL_TEST,
                 KEY_DSFROM: VAL_RECENT,
-                DEL_LEFT_HAND: False,
+                DEL_LEFT_HAND: True,
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 35,
