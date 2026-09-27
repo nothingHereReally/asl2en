@@ -6,7 +6,7 @@ import numpy as np
 # import jax.numpy as jnp
 
 
-PROJ_ROOT: Path= Path(__file__).parent.parent
+PROJ_ROOT: Path= Path(__file__).parent.parent.parent
 DS_DIR: Path= PROJ_ROOT /"dataset" /"clean_dataset"
 LANDMARK_dir: Path= DS_DIR /"ds_landmark"
 MODEL_LANDMARK_DIR: Path= DS_DIR /"model_landmark"
