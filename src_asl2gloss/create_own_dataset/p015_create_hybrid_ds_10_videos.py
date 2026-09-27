@@ -3289,11 +3289,11 @@ def process_dataset() -> tuple:
             ds_landmark[-1][KEY_VIDS][-1][KEY_LANDMARK]= new_ann_landmark
             ds_skeleton[-1][KEY_VIDS][-1][KEY_SKELETON]= new_ann_skeleton
             if idx_video<int(len(a_gloss[KEY_VIDS])*.8): # 80% train; 20% test
-                ds_landmark[-1][KEY_VIDS][-1][KEY_SPLIT]= KEY_TRAIN
-                ds_skeleton[-1][KEY_VIDS][-1][KEY_SPLIT]= KEY_TRAIN
+                ds_landmark[-1][KEY_VIDS][-1][KEY_SPLIT]= VAL_TRAIN
+                ds_skeleton[-1][KEY_VIDS][-1][KEY_SPLIT]= VAL_TRAIN
             else:
-                ds_landmark[-1][KEY_VIDS][-1][KEY_SPLIT]= KEY_TEST
-                ds_skeleton[-1][KEY_VIDS][-1][KEY_SPLIT]= KEY_TEST
+                ds_landmark[-1][KEY_VIDS][-1][KEY_SPLIT]= VAL_TEST
+                ds_skeleton[-1][KEY_VIDS][-1][KEY_SPLIT]= VAL_TEST
     return ds_landmark, ds_skeleton
 def main():
     init_directories()
