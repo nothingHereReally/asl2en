@@ -13,8 +13,8 @@ LM_RECENT_DIR: Path= HYBRID_DS_DIR /"fix_most_recent_landmark"
 LM_NVSTGT_DIR: Path= HYBRID_DS_DIR /"investigate_landmark"
 SKLTN_RECENT_DIR: Path= HYBRID_DS_DIR /"fix_most_recent_skeleton"
 SKLTN_NVSTGT_DIR: Path= HYBRID_DS_DIR /"investigate_skeleton"
-LANDMARK_dir: Path= HYBRID_DS_DIR /"ds_landmark"
-SKELETON_dir: Path= HYBRID_DS_DIR /"ds_skeleton"
+LANDMARK_dir: Path= HYBRID_DS_DIR /"fix_recent_n_classic_landmark"
+SKELETON_dir: Path= HYBRID_DS_DIR /"fix_recent_n_classic_skeleton"
 FACE_CONNECTIONS: tuple= (
     (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
     (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
@@ -3474,9 +3474,9 @@ def process_dataset() -> tuple:
 def main():
     init_directories()
     ds_landmark, ds_skeleton= process_dataset()
-    with open(f"{HYBRID_DS_DIR /'ds_landmark'}.json", 'w') as f:
+    with open(f"{HYBRID_DS_DIR /'fix_recent_n_classic_landmark'}.json", 'w') as f:
         writeJson(ds_landmark, f, indent=4)
-    with open(f"{HYBRID_DS_DIR /'ds_skeleton'}.json", 'w') as f:
+    with open(f"{HYBRID_DS_DIR /'fix_recent_n_classic_skeleton'}.json", 'w') as f:
         writeJson(ds_skeleton, f, indent=4)
 if __name__=="__main__":
     main()
