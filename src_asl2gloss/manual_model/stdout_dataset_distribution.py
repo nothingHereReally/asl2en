@@ -235,7 +235,12 @@ def main() -> None:
     print(f"maximum images( at least 1 hand ) on a video: {ds_overall['max_img_hand']}")
     print(f"minimum images( 2 hands ) on a video: {ds_overall['min_img2hand']}")
     print(f"maximum images( 2 hands ) on a video: {ds_overall['max_img2hand']}")
+
     print(f"\ntrain count: {ds_overall['train_count']} -> per gloss is only {per_gloss_split_count[VAL_TRAIN]}")
     print(f"test count: {ds_overall['test_count']} -> per gloss is only {per_gloss_split_count[VAL_TEST]}")
+
+    print(f"\n-- train and test split --")
+    print(f"train per gloss: {int(per_gloss_split_count[VAL_TEST]/0.2*0.8)}")
+    print(f"test per gloss: {per_gloss_split_count[VAL_TEST]}")
 if __name__=="__main__":
     main()
