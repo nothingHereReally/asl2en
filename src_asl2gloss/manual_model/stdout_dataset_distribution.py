@@ -229,7 +229,8 @@ def main() -> None:
         print(f"  max images hand : {max_img_hand}")
         print(f"  min images 2hand: {min_img2hand}")
         print(f"  max images 2hand: {max_img2hand}")
-    print(f"minimum images on a video: {ds_overall['min_img']}")
+
+    print(f"\nminimum images on a video: {ds_overall['min_img']}")
     print(f"maximum images on a video: {ds_overall['max_img']}")
     print(f"minimum images( at least 1 hand ) on a video: {ds_overall['min_img_hand']}")
     print(f"maximum images( at least 1 hand ) on a video: {ds_overall['max_img_hand']}")
