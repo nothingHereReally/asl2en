@@ -164,6 +164,10 @@ def main() -> None:
         'train_count': 0,
         'test_count': 0,
     }
+    per_gloss_split_count: dict= {
+        VAL_TRAIN: 999_999,
+        VAL_TEST: 999_999,
+    }
     for a_gloss in ds_annotation:
         split_count: dict= split_counts(a_gloss)
         min_img: dict= min_images(a_gloss)
@@ -173,6 +177,10 @@ def main() -> None:
         min_img2hand: dict= min_images_2hand(a_gloss)
         max_img2hand: dict= max_images_2hand(a_gloss)
 
+        if split_count[VAL_TRAIN]<per_gloss_split_count[VAL_TRAIN]:
+            per_gloss_split_count[VAL_TRAIN]= split_count[VAL_TRAIN]
+        if split_count[VAL_TEST]<per_gloss_split_count[VAL_TEST]:
+            per_gloss_split_count[VAL_TEST]= split_count[VAL_TEST]
         ds_overall['train_count']+= split_count[VAL_TRAIN]
         ds_overall['test_count']+= split_count[VAL_TEST]
         if min_img["min"] < ds_overall["min_img"]["val"]:
@@ -227,7 +235,7 @@ def main() -> None:
     print(f"maximum images( at least 1 hand ) on a video: {ds_overall['max_img_hand']}")
     print(f"minimum images( 2 hands ) on a video: {ds_overall['min_img2hand']}")
     print(f"maximum images( 2 hands ) on a video: {ds_overall['max_img2hand']}")
-    print(f"\ntrain count: {ds_overall['train_count']}")
-    print(f"test count: {ds_overall['test_count']}")
+    print(f"\ntrain count: {ds_overall['train_count']} -> per gloss is only {per_gloss_split_count[VAL_TRAIN]}")
+    print(f"test count: {ds_overall['test_count']} -> per gloss is only {per_gloss_split_count[VAL_TEST]}")
 if __name__=="__main__":
     main()
