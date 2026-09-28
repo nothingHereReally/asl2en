@@ -239,6 +239,8 @@ def main() -> None:
 
     print(f"\ntrain count: {ds_overall['train_count']} -> per gloss is only {per_gloss_split_count[VAL_TRAIN]}")
     print(f"test count: {ds_overall['test_count']} -> per gloss is only {per_gloss_split_count[VAL_TEST]}")
+    print("----------------------------------------")
+    print(f"total: {ds_overall['train_count']+ds_overall['test_count']}")
 
     print(f"\n-- train and test split --")
     print(f"train per gloss: {int(per_gloss_split_count[VAL_TEST]/0.2*0.8)}")
