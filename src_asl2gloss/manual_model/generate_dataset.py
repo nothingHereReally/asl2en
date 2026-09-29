@@ -260,6 +260,7 @@ def q_imgs_greater_than(
 ) -> tuple:
     lm_data_npy_many: list= []
     annotations_many: list= []
+    from_what_process: list= []
 
     idx_init: int= idx_init_has_hand(landmarks)
     q_imgs_available: int= len(landmarks)-idx_init
@@ -270,6 +271,7 @@ def q_imgs_greater_than(
         )
         lm_data_npy_many.append(lm_data)
         annotations_many.append(annotation)
+        from_what_process.append('_from_lt_p0')
     else:
         # ---- part 1 ----
         lm_data, annotation= greater_than_qf_p1(
@@ -278,6 +280,7 @@ def q_imgs_greater_than(
         )
         lm_data_npy_many.append(lm_data)
         annotations_many.append(annotation)
+        from_what_process.append('_from_gt_p1')
 
         # ---- part 2 ----
         lm_data, annotation= greater_than_qf_p2(
@@ -286,6 +289,7 @@ def q_imgs_greater_than(
         )
         lm_data_npy_many.extend(lm_data)
         annotations_many.extend(annotation)
+        from_what_process.extend(['_from_gt_p2' for _ in range(len(annotation))])
 
         # ---- part 3 ----
         lm_data, annotation= greater_than_qf_p3(
@@ -294,7 +298,8 @@ def q_imgs_greater_than(
         )
         lm_data_npy_many.extend(lm_data)
         annotations_many.extend(annotation)
-    return (lm_data_npy_many, annotations_many)
+        from_what_process.extend(['_from_gt_p3' for _ in range(len(annotation))])
+    return (lm_data_npy_many, annotations_many, from_what_process)
 def landmarks_of_gloss(a_gloss: dict) -> tuple:
     gloss_lm_presented: list= []
     gloss_annotations: list= []
@@ -307,21 +312,21 @@ def landmarks_of_gloss(a_gloss: dict) -> tuple:
                 )
                 gloss_lm_presented.append(tmp_lm)
                 gloss_annotations.append({
-                    KEY_PFOLDER: a_start_end[KEY_PFOLDER],
+                    KEY_PFOLDER: f"{a_start_end[KEY_PFOLDER]}_from_lt_p0",
                     KEY_SPLIT: a_video[KEY_SPLIT],
                     KEY_LANDMARK: tmp_notation,
                 })
             else:
-                tmp_lm, tmp_notation= q_imgs_greater_than(
+                tmp_lm, tmp_notation, fromwhat_process= q_imgs_greater_than(
                     landmarks=a_start_end[KEY_LANDMARK],
                     parent_folder=a_start_end[KEY_PFOLDER],
                 )
                 gloss_lm_presented.extend(tmp_lm)
                 gloss_annotations.extend([{
-                    KEY_PFOLDER: a_start_end[KEY_PFOLDER],
+                    KEY_PFOLDER: f"{a_start_end[KEY_PFOLDER]}{fromwhat_process[idx]}",
                     KEY_SPLIT: a_video[KEY_SPLIT],
                     KEY_LANDMARK: el,
-                } for el in tmp_notation])
+                } for idx, el in enumerate(tmp_notation)])
     '''
     gloss_lm_presented of shape (INT, QUANTITY_FRAME, 86, 2)
     gloss_annotations is a list(
@@ -513,8 +518,8 @@ def save_skeleton_landmark(
     out_landmarks: list= []
     out_skeletons: list= []
     for idx_video_qf in range(len(landmarks)):
-        new_pfolder: str= f"{annotations[idx_video_qf][KEY_PFOLDER][:-8]}_{str(idx_video_qf+1).zfill(5)}"
-        new_pfolder= f"{new_pfolder}_{annotations[idx_video_qf][KEY_PFOLDER][-7:]}"
+        new_pfolder: str= f"{annotations[idx_video_qf][KEY_PFOLDER][:-8-11]}_{str(idx_video_qf+1).zfill(5)}"
+        new_pfolder= f"{new_pfolder}_{annotations[idx_video_qf][KEY_PFOLDER][-7-11:]}"
         abs_pfolder_landmark: Path= MODEL_LANDMARK_DIR /new_pfolder
         abs_pfolder_landmark.mkdir()
         abs_pfolder_skeleton: Path= MODEL_SKELETON_DIR /new_pfolder
