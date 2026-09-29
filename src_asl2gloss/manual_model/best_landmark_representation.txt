@@ -7,3 +7,12 @@ book
     book_07076_00264_019_067_from_gt_p3
     book_07097_00218_019_043_from_gt_p2
     book_07097_00220_019_043_from_gt_p2
+drink
+    drink_17724_00020_001_030_from_gt_p2  -- thumb|index
+    drink_68538_00030_032_055_from_gt_p1  -- allFingers 2x
+    drink_69302_00065_022_057_from_gt_p2  -- allFinters 1x
+    drink_17729_00107_020_048_from_gt_p1  -- thumb|index
+    drink_17725_00162_020_045_from_gt_p1  -- thumb|index|middle fingers
+    drink_17726_00177_023_062_from_gt_p1  -- veryRightMostSide all fingers
+    drink_17727_00195_019_053_from_gt_p1  -- rightSide all fingers
+    drink_17727_00198_019_053_from_gt_p2  -- rightSide all fingers
