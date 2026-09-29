@@ -223,6 +223,7 @@ def main() -> None:
         print(f"\nGloss: {a_gloss[KEY_G]}")
         print(f"  train count: {split_count[VAL_TRAIN]}")
         print(f"  test  count: {split_count[VAL_TEST]}")
+        print(f"  total count: {split_count[VAL_TRAIN]+split_count[VAL_TEST]}")
         print(f"  min images      : {min_img}")
         print(f"  max images      : {max_img}")
         print(f"  min images hand : {min_img_hand}")
