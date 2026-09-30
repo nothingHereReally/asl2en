@@ -54,7 +54,7 @@ before
     before_65167_00209_015_032_from_gt_p1 -- front, 2hands, palmInside, smallDelta
     before_65167_00211_015_032_from_gt_p2
     before_65167_00214_015_032_from_gt_p2
-sit( old is chair )
+chair
     chair_09853_00002_001_020_from_gt_p2 -- front, set, 2hands, midVirtical
     chair_09853_00005_001_020_from_gt_p2
     chair_09853_00007_001_020_from_gt_p2
