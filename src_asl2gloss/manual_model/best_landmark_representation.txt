@@ -179,6 +179,39 @@ who
     who_who_0005_00242_018_068_from_gt_p2
     who_who_0005_00244_018_068_from_gt_p2
 candy
+    candy_08923_00001_001_039_from_gt_p1 -- front good
+    candy_08923_00004_001_039_from_gt_p2
+    candy_08923_00006_001_039_from_gt_p2
+    candy_70326_00045_067_099_from_gt_p1 -- front good
+    candy_70326_00047_067_099_from_gt_p2
+    candy_70326_00049_067_099_from_gt_p2
+    candy_08929_00062_020_041_from_gt_p1 -- front good
+    candy_08929_00064_020_041_from_gt_p2
+    candy_08929_00066_020_041_from_gt_p2
+    candy_68790_00082_020_051_from_gt_p1 -- front good
+    candy_68790_00085_020_051_from_gt_p2
+    candy_68790_00086_020_051_from_gt_p2
+    candy_68790_00095_074_105_from_gt_p2 -- front good
+    candy_68790_00097_074_105_from_gt_p2
+    candy_68790_00098_074_105_from_gt_p2
+    candy_68018_00106_023_065_from_gt_p1 -- front good
+    candy_68018_00107_023_065_from_gt_p2
+    candy_68018_00109_023_065_from_gt_p2
+    candy_08916_00140_035_062_from_gt_p1 -- front good
+    candy_08916_00142_035_062_from_gt_p2
+    candy_08916_00144_035_062_from_gt_p2
+    candy_08919_00162_027_050_from_gt_p1 -- front good, long left arm
+    candy_08919_00166_027_050_from_gt_p3
+    candy_08919_00168_027_050_from_gt_p3
+    candy_08921_00171_006_035_from_gt_p1 -- front good
+    candy_08921_00173_006_035_from_gt_p2
+    candy_08921_00175_006_035_from_gt_p2
+    candy_65299_00200_025_045_from_gt_p1 -- front good
+    candy_65299_00202_025_045_from_gt_p2
+    candy_65299_00204_025_045_from_gt_p2
+    candy_08927_00218_015_046_from_gt_p1 -- front good
+    candy_08927_00220_015_046_from_gt_p2
+    candy_08927_00222_015_046_from_gt_p2
 cousin
 mine_my
 me_i
