@@ -149,6 +149,35 @@ clothes
     clothes_11329_00218_001_028_from_gt_p2
     clothes_11329_00220_001_028_from_gt_p2
 who
+    who_63240_00001_025_044_from_gt_p1 -- front good
+    who_63240_00003_025_044_from_gt_p2
+    who_63240_00004_025_044_from_gt_p2
+    who_63242_00018_024_032_from_gt_p2 -- has missing hands, filled by past
+    who_63242_00020_024_032_from_gt_p3
+    who_63228_00025_013_029_from_gt_p1 -- front good
+    who_63228_00026_013_029_from_gt_p2
+    who_63228_00028_013_029_from_gt_p2
+    who_63229_00035_019_032_from_gt_p1 -- front good
+    who_63229_00037_019_032_from_gt_p2
+    who_63229_00039_019_032_from_gt_p2
+    who_63234_00048_025_043_from_gt_p1 -- front good
+    who_63234_00050_025_043_from_gt_p2
+    who_63234_00052_025_043_from_gt_p2
+    who_63237_00062_002_046_from_gt_p1 -- front good
+    who_63237_00064_002_046_from_gt_p2
+    who_63237_00066_002_046_from_gt_p2
+    who_63232_00109_065_116_from_gt_p1 -- front good
+    who_63232_00111_065_116_from_gt_p2
+    who_63232_00113_065_116_from_gt_p2
+    who_70380_00161_001_027_from_gt_p1 -- front good
+    who_70380_00162_001_027_from_gt_p2
+    who_70380_00164_001_027_from_gt_p2
+    who_who_0003_00180_020_072_from_gt_p1 -- front good
+    who_who_0003_00183_020_072_from_gt_p2
+    who_who_0003_00185_020_072_from_gt_p2
+    who_who_0005_00238_018_068_from_gt_p1 -- front good
+    who_who_0005_00242_018_068_from_gt_p2
+    who_who_0005_00244_018_068_from_gt_p2
 candy
 cousin
 mine_my
