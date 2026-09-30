@@ -86,3 +86,34 @@ sit( old is chair )
     chair_09866_00280_028_064_from_gt_p1 -- front, set, 2hands, upper
     chair_09866_00282_028_064_from_gt_p2
     chair_09866_00284_028_064_from_gt_p2
+go
+    go_24948_00001_001_018_from_gt_p1 -- down2right
+    go_24948_00003_001_018_from_gt_p2
+    go_24948_00005_001_018_from_gt_p2
+    go_68292_00022_019_038_from_gt_p2 -- up2right
+    go_68292_00026_019_038_from_gt_p3
+    go_68292_00029_073_098_from_gt_p1
+    go_24965_00044_017_037_from_gt_p1 -- up2upperRight
+    go_24965_00046_017_037_from_gt_p2
+    go_24965_00048_017_037_from_gt_p2
+    go_24954_00062_001_061_from_gt_p1 -- center2front
+    go_24954_00064_001_061_from_gt_p2
+    go_24954_00066_001_061_from_gt_p2
+    go_24857_00135_001_035_from_gt_p1 -- points2left
+    go_24857_00138_001_035_from_gt_p2
+    go_24857_00140_001_035_from_gt_p2
+    go_69345_00160_015_039_from_gt_p1 -- up2downRight
+    go_69345_00162_015_039_from_gt_p2
+    go_69345_00164_015_039_from_gt_p2
+    go_24941_00172_016_032_from_gt_p1 -- up2right
+    go_24941_00174_016_032_from_gt_p2
+    go_24941_00176_016_032_from_gt_p2
+    go_24969_00182_027_060_from_gt_p1 -- up2right
+    go_24969_00184_027_060_from_gt_p2
+    go_24969_00186_027_060_from_gt_p2
+    go_24970_00203_028_060_from_gt_p1 -- up2right
+    go_24970_00205_028_060_from_gt_p2
+    go_24970_00207_028_060_from_gt_p2
+    go_24971_00221_021_039_from_gt_p2 -- up2left
+    go_24971_00223_021_039_from_gt_p2
+    go_24971_00225_021_039_from_gt_p2
