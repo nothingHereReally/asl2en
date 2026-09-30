@@ -117,3 +117,19 @@ go
     go_24971_00221_021_039_from_gt_p2 -- up2left
     go_24971_00223_021_039_from_gt_p2
     go_24971_00225_021_039_from_gt_p2
+clothes
+who
+candy
+cousin
+mine_my
+me_i
+stomach
+have
+need
+see
+feel
+hurt
+fever
+dizzy
+headache
+doctor
