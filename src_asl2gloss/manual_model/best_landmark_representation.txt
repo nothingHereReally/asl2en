@@ -54,3 +54,35 @@ before
     before_65167_00209_015_032_from_gt_p1 -- front, 2hands, palmInside, smallDelta
     before_65167_00211_015_032_from_gt_p2
     before_65167_00214_015_032_from_gt_p2
+sit( old is chair )
+    chair_09853_00002_001_020_from_gt_p2 -- front, set, 2hands, midVirtical
+    chair_09853_00005_001_020_from_gt_p2
+    chair_09853_00007_001_020_from_gt_p2
+    chair_09848_00018_018_060_from_gt_p2 -- front, set, 2hands, upper
+    chair_09848_00022_018_060_from_gt_p2
+    chair_09848_00025_018_060_from_gt_p2
+    chair_09869_00051_040_065_from_gt_p1 -- front, set, 2hands, upper
+    chair_09869_00054_040_065_from_gt_p2
+    chair_09869_00057_040_065_from_gt_p2
+    chair_09862_00066_021_078_from_gt_p1 -- front, set, 2hands, upper
+    chair_09862_00069_021_078_from_gt_p2
+    chair_09862_00071_021_078_from_gt_p2
+    chair_09847_00114_001_052_from_gt_p1 -- front, set, 2hands, upper
+    chair_09847_00116_001_052_from_gt_p2
+    chair_09847_00118_001_052_from_gt_p2
+    chair_68580_00166_013_040_from_gt_p1 -- front, set, 2hands, upper
+    chair_68580_00170_013_040_from_gt_p2
+    chair_68580_00171_013_040_from_gt_p2
+    chair_70263_00188_033_081_from_gt_p1 -- front, set, 2hands, upper
+    chair_70263_00190_033_081_from_gt_p2
+    chair_70263_00191_033_081_from_gt_p2
+    chair_68019_00219_017_047_from_gt_p1 -- front, set, 2hands, upper
+    chair_68019_00221_017_047_from_gt_p2
+    chair_68019_00222_017_047_from_gt_p2
+    chair_68019_00225_017_047_from_gt_p2
+    chair_09865_00252_007_048_from_gt_p2 -- front, set, 2hands, upper
+    chair_09865_00255_007_048_from_gt_p2
+    chair_09865_00256_007_048_from_gt_p2
+    chair_09866_00280_028_064_from_gt_p1 -- front, set, 2hands, upper
+    chair_09866_00282_028_064_from_gt_p2
+    chair_09866_00284_028_064_from_gt_p2
