@@ -25,3 +25,32 @@ computer
     computer_12326_00262_013_073_from_gt_p1 -- front, 2x, downClose, 2hands
     computer_computer_0004_00335_019_086_from_gt_p1 -- cameraDown, 2x, downClose, 2hands
     computer_computer_0005_00413_013_082_from_gt_p1 -- cameraDown, 2x, downClose, 2hands
+before
+    before_05730_00001_008_025_from_gt_p1 -- front, 2hands, palmInside, smallDelta
+    before_05730_00004_008_025_from_gt_p2
+    before_05730_00006_008_025_from_gt_p2
+    before_05733_00013_025_083_from_gt_p1 -- front, 2hands, palmInside, little2noDelta
+    before_05733_00016_025_083_from_gt_p2
+    before_05733_00018_025_083_from_gt_p2
+    before_05729_00068_013_036_from_gt_p1 -- front, 2hands, palmInside, goodDelta
+    before_05729_00070_013_036_from_gt_p2
+    before_05729_00072_013_036_from_gt_p3
+    before_05727_00077_024_055_from_gt_p1 -- front, 2hands, palmInside, goodDelta
+    before_05727_00079_024_055_from_gt_p2
+    before_05727_00081_024_055_from_gt_p2
+    before_05739_00089_001_052_from_gt_p1 -- front, 2hands, palmInside, goodDelta
+    before_05739_00091_001_052_from_gt_p2
+    before_05739_00093_001_052_from_gt_p2
+    before_05747_00141_022_046_from_gt_p1 -- front, 2hands, palmOut, smallDelta
+    before_05747_00143_022_046_from_gt_p2
+    before_05747_00145_022_046_from_gt_p2
+    before_05748_00153_021_055_from_gt_p1 -- front, 2hands, palmOut, smallDelta, glitchy
+    before_05750_00178_036_058_from_gt_p1 -- front, 2hands, palmOut, goodDelta
+    before_05750_00181_036_058_from_gt_p2
+    before_05750_00183_036_058_from_gt_p2
+    before_05744_00200_024_047_from_gt_p1 -- front, 2hands, palmInside, goodDelta
+    before_05744_00203_024_047_from_gt_p2
+    before_05744_00206_024_047_from_gt_p3
+    before_65167_00209_015_032_from_gt_p1 -- front, 2hands, palmInside, smallDelta
+    before_65167_00211_015_032_from_gt_p2
+    before_65167_00214_015_032_from_gt_p2
