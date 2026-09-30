@@ -118,6 +118,36 @@ go
     go_24971_00223_021_039_from_gt_p2
     go_24971_00225_021_039_from_gt_p2
 clothes
+    clothes_11326_00001_002_023_from_gt_p1 -- front
+    clothes_11326_00003_002_023_from_gt_p2
+    clothes_11326_00005_002_023_from_gt_p2
+    clothes_11311_00021_027_053_from_gt_p1 -- front
+    clothes_11311_00024_027_053_from_gt_p2
+    clothes_11311_00026_027_053_from_gt_p2
+    clothes_11314_00040_022_033_from_gt_p1 -- hand by hand
+    clothes_11314_00041_022_033_from_gt_p2
+    clothes_11314_00042_022_033_from_gt_p2
+    clothes_11316_00051_022_049_from_gt_p1 -- front
+    clothes_11316_00053_022_049_from_gt_p2
+    clothes_11316_00055_022_049_from_gt_p2
+    clothes_11305_00073_001_052_from_gt_p1 -- front lazy looking
+    clothes_11305_00075_001_052_from_gt_p2
+    clothes_11305_00077_001_052_from_gt_p2
+    clothes_68870_00128_012_035_from_gt_p2 -- front
+    clothes_68870_00129_012_035_from_gt_p3
+    clothes_68870_00130_012_035_from_gt_p3
+    clothes_68024_00134_012_050_from_gt_p1 -- front
+    clothes_68024_00136_012_050_from_gt_p2
+    clothes_68024_00141_012_050_from_gt_p2
+    clothes_11327_00178_018_049_from_gt_p1 -- front
+    clothes_11327_00179_018_049_from_gt_p2
+    clothes_11327_00182_018_049_from_gt_p2
+    clothes_11328_00190_001_029_from_gt_p1 -- front
+    clothes_11328_00192_001_029_from_gt_p2
+    clothes_11328_00194_001_029_from_gt_p2
+    clothes_11329_00215_001_028_from_gt_p1 -- front
+    clothes_11329_00218_001_028_from_gt_p2
+    clothes_11329_00220_001_028_from_gt_p2
 who
 candy
 cousin
