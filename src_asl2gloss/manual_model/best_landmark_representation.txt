@@ -428,6 +428,37 @@ see
     see_50127_00228_013_034_from_gt_p2
     see_50127_00230_013_034_from_gt_p2
 feel
+    feel_67653_00001_012_029_from_gt_p1 -- front good
+    feel_67653_00003_012_029_from_gt_p2
+    feel_67653_00005_012_029_from_gt_p2
+    feel_67653_00007_012_029_from_gt_p2
+    feel_21434_00013_018_059_from_gt_p1 -- front good
+    feel_21434_00014_018_059_from_gt_p2
+    feel_21434_00015_018_059_from_gt_p2
+    feel_69319_00042_023_056_from_gt_p1 -- front good
+    feel_69319_00044_023_056_from_gt_p2
+    feel_69319_00046_023_056_from_gt_p2
+    feel_21425_00063_001_049_from_gt_p1 -- front good
+    feel_21425_00065_001_049_from_gt_p2
+    feel_21425_00067_001_049_from_gt_p2
+    feel_21438_00094_021_033_from_gt_p1 -- front good
+    feel_21438_00096_021_033_from_gt_p2
+    feel_21438_00098_021_033_from_gt_p2
+    feel_21439_00106_023_050_from_gt_p1 -- front good
+    feel_21439_00109_023_050_from_gt_p2
+    feel_21439_00112_023_050_from_gt_p2
+    feel_21440_00128_022_050_from_gt_p1 -- front good
+    feel_21440_00130_022_050_from_gt_p2
+    feel_21440_00132_022_050_from_gt_p2
+    feel_21441_00153_013_048_from_gt_p1 -- front good
+    feel_21441_00155_013_048_from_gt_p2
+    feel_21441_00157_013_048_from_gt_p2
+    feel_65696_00184_013_033_from_gt_p1 -- front good
+    feel_65696_00186_013_033_from_gt_p2
+    feel_65696_00187_013_033_from_gt_p2
+    feel_21436_00202_001_053_from_gt_p1 -- front good
+    feel_21436_00204_001_053_from_gt_p2
+    feel_21436_00206_001_053_from_gt_p2
 hurt
 fever
 dizzy
