@@ -522,5 +522,35 @@ fever
     fever_fever_0002_00503_035_087_from_gt_p2
     fever_fever_0002_00505_035_087_from_gt_p2
 dizzy
+    dizzy_16980_00001_001_091_from_gt_p1 -- front good
+    dizzy_16980_00003_001_091_from_gt_p2
+    dizzy_16980_00005_001_091_from_gt_p2
+    dizzy_16982_00109_017_049_from_gt_p1 -- front good
+    dizzy_16982_00111_017_049_from_gt_p2
+    dizzy_16982_00113_017_049_from_gt_p2
+    dizzy_16986_00126_001_057_from_gt_p1 -- front good
+    dizzy_16986_00128_001_057_from_gt_p2
+    dizzy_16986_00130_001_057_from_gt_p2
+    dizzy_16987_00167_023_058_from_gt_p1 -- front good
+    dizzy_16987_00169_023_058_from_gt_p2
+    dizzy_16987_00171_023_058_from_gt_p2
+    dizzy_16988_00198_017_053_from_gt_p1 -- front good
+    dizzy_16988_00200_017_053_from_gt_p2
+    dizzy_16988_00202_017_053_from_gt_p2
+    dizzy_78227_00233_022_052_from_gt_p1 -- front good
+    dizzy_78227_00235_022_052_from_gt_p2
+    dizzy_78227_00237_022_052_from_gt_p2
+    dizzy_78228_00265_048_160_from_gt_p1 -- front good
+    dizzy_78228_00267_048_160_from_gt_p2
+    dizzy_78228_00269_048_160_from_gt_p2
+    dizzy_78229_00380_019_130_from_gt_p1 -- front good
+    dizzy_78229_00382_019_130_from_gt_p2
+    dizzy_78229_00384_019_130_from_gt_p2
+    dizzy_65501_00481_030_050_from_gt_p1 -- front good
+    dizzy_65501_00483_030_050_from_gt_p2
+    dizzy_65501_00485_030_050_from_gt_p2
+    dizzy_16985_00499_001_028_from_gt_p1 -- front good
+    dizzy_16985_00501_001_028_from_gt_p2
+    dizzy_16985_00503_001_028_from_gt_p2
 headache
 doctor
