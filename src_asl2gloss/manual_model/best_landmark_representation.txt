@@ -396,6 +396,37 @@ need
     need_67925_00269_013_039_from_gt_p2
     need_67925_00271_013_039_from_gt_p2
 see
+    see_50125_00001_001_030_from_gt_p1 -- front good
+    see_50125_00003_001_030_from_gt_p2
+    see_50125_00005_001_030_from_gt_p2
+    see_68444_00030_023_050_from_gt_p1 -- front good, real good
+    see_68444_00032_023_050_from_gt_p2
+    see_68444_00034_023_050_from_gt_p2
+    see_68444_00036_023_050_from_gt_p2
+    see_50128_00061_020_033_from_gt_p1 -- front good
+    see_50128_00062_020_033_from_gt_p2
+    see_50128_00064_020_033_from_gt_p2
+    see_50107_00074_017_053_from_gt_p1 -- front good
+    see_50107_00076_017_053_from_gt_p2
+    see_50107_00078_017_053_from_gt_p2
+    see_69460_00109_018_033_from_gt_p1 -- front good
+    see_69460_00111_018_033_from_gt_p2
+    see_69460_00113_018_033_from_gt_p3
+    see_50120_00117_039_059_from_gt_p1 -- front good
+    see_50120_00119_039_059_from_gt_p2
+    see_50120_00121_039_059_from_gt_p2
+    see_67178_00135_010_025_from_gt_p1 -- front good
+    see_67178_00137_010_025_from_gt_p2
+    see_67178_00138_010_025_from_gt_p3
+    see_50123_00143_001_055_from_gt_p1 -- front good
+    see_50123_00145_001_055_from_gt_p2
+    see_50123_00147_001_055_from_gt_p2
+    see_50126_00216_034_050_from_gt_p1 -- front good
+    see_50126_00218_034_050_from_gt_p2
+    see_50126_00220_034_050_from_gt_p2
+    see_50127_00226_013_034_from_gt_p1 -- front good
+    see_50127_00228_013_034_from_gt_p2
+    see_50127_00230_013_034_from_gt_p2
 feel
 hurt
 fever
