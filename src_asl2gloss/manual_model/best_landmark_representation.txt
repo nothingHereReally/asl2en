@@ -331,8 +331,8 @@ stomach
     stomach_54884_00196_013_040_from_gt_p1 -- front good
     stomach_54884_00198_013_040_from_gt_p2
     stomach_54884_00200_013_040_from_gt_p2
-    stomach_stomach_0001_00218_028_095_from_gt_p1 -- not good, looks like mine
-    stomach_stomach_0002_00297_044_095_from_gt_p2 -- not good, looks like mine
+    stomach_stomach_0001_00218_028_095_from_gt_p1 -- not good, looks like mine_my
+    stomach_stomach_0002_00297_044_095_from_gt_p2 -- not good, looks like mine_my
 have
     have_26773_00001_001_030_from_gt_p1 -- front good
     have_26773_00003_001_030_from_gt_p2
