@@ -306,6 +306,33 @@ me_i
     me_i_me_i_0001_00285_018_097_from_gt_p2
     me_i_me_i_0001_00287_018_097_from_gt_p2
 stomach
+    stomach_54870_00001_017_049_from_gt_p1 -- front good
+    stomach_54870_00003_017_049_from_gt_p2
+    stomach_54870_00005_017_049_from_gt_p2
+    stomach_54870_00007_017_049_from_gt_p2
+    stomach_54885_00018_009_042_from_gt_p1 -- front good
+    stomach_54885_00020_009_042_from_gt_p2
+    stomach_54885_00022_009_042_from_gt_p2
+    stomach_66560_00039_015_034_from_gt_p1 -- front good
+    stomach_66560_00041_015_034_from_gt_p2
+    stomach_66560_00043_015_034_from_gt_p2
+    stomach_54878_00055_031_063_from_gt_p1 -- front good
+    stomach_54878_00057_031_063_from_gt_p2
+    stomach_54878_00059_031_063_from_gt_p2
+    stomach_54880_00072_001_051_from_gt_p1 -- front good
+    stomach_54880_00074_001_051_from_gt_p2
+    stomach_54880_00076_001_051_from_gt_p2
+    stomach_54881_00117_006_019_from_gt_p1 -- front good
+    stomach_54881_00119_006_019_from_gt_p2
+    stomach_54881_00121_006_019_from_gt_p2
+    stomach_54883_00130_001_060_from_gt_p1 -- front good
+    stomach_54883_00132_001_060_from_gt_p2
+    stomach_54883_00134_001_060_from_gt_p2
+    stomach_54884_00196_013_040_from_gt_p1 -- front good
+    stomach_54884_00198_013_040_from_gt_p2
+    stomach_54884_00200_013_040_from_gt_p2
+    stomach_stomach_0001_00218_028_095_from_gt_p1 -- not good, looks like mine
+    stomach_stomach_0002_00297_044_095_from_gt_p2 -- not good, looks like mine
 have
 need
 see
