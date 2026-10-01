@@ -334,6 +334,36 @@ stomach
     stomach_stomach_0001_00218_028_095_from_gt_p1 -- not good, looks like mine
     stomach_stomach_0002_00297_044_095_from_gt_p2 -- not good, looks like mine
 have
+    have_26773_00001_001_030_from_gt_p1 -- front good
+    have_26773_00003_001_030_from_gt_p2
+    have_26773_00005_001_030_from_gt_p2
+    have_69088_00030_001_032_from_gt_p1 -- front good
+    have_69088_00032_001_032_from_gt_p2
+    have_69088_00034_001_032_from_gt_p2
+    have_26776_00064_012_045_from_gt_p1 -- front good
+    have_26776_00066_012_045_from_gt_p2
+    have_26776_00068_012_045_from_gt_p2
+    have_26757_00085_001_035_from_gt_p1 -- front good
+    have_26757_00087_001_035_from_gt_p2
+    have_26757_00089_001_035_from_gt_p2
+    have_69360_00110_024_042_from_gt_p1 -- front good
+    have_69360_00112_024_042_from_gt_p2
+    have_69360_00114_024_042_from_gt_p2
+    have_68069_00124_030_064_from_gt_p1 -- front good
+    have_68069_00126_030_064_from_gt_p2
+    have_68069_00128_030_064_from_gt_p2
+    have_70221_00149_027_055_from_gt_p1 -- front good
+    have_70221_00151_027_055_from_gt_p2
+    have_70221_00153_027_055_from_gt_p2
+    have_68984_00174_013_040_from_gt_p1 -- front good
+    have_68984_00176_013_040_from_gt_p2
+    have_68984_00178_013_040_from_gt_p2
+    have_26775_00196_014_043_from_gt_p1 -- front good
+    have_26775_00198_014_043_from_gt_p2
+    have_26775_00200_014_043_from_gt_p2
+    have_26766_00225_011_035_from_gt_p1 -- front good
+    have_26766_00227_011_035_from_gt_p2
+    have_26766_00230_011_035_from_gt_p2
 need
 see
 feel
