@@ -274,6 +274,37 @@ mine_my
     mine_my_69404_00295_015_043_from_gt_p2
     mine_my_69404_00297_015_043_from_gt_p2
 me_i
+    me_i_35267_00001_001_035_from_gt_p1 -- front good
+    me_i_35267_00003_001_035_from_gt_p2
+    me_i_35267_00005_001_035_from_gt_p2
+    me_i_35544_00026_018_042_from_gt_p1 -- front good
+    me_i_35544_00028_018_042_from_gt_p2
+    me_i_35544_00032_018_042_from_gt_p2
+    me_i_35544_00034_018_042_from_gt_p3
+    me_i_35544_00036_018_042_from_gt_p3
+    me_i_67879_00039_007_023_from_gt_p2 -- no hand, fixed using past landmark
+    me_i_35545_00048_024_041_from_gt_p1 -- front good
+    me_i_35545_00050_024_041_from_gt_p2
+    me_i_35545_00052_024_041_from_gt_p2
+    me_i_35545_00054_024_041_from_gt_p2
+    me_i_35546_00060_004_058_from_gt_p1 -- front good, long left arm
+    me_i_35546_00063_004_058_from_gt_p2
+    me_i_35546_00066_004_058_from_gt_p2
+    me_i_35547_00133_021_055_from_gt_p1 -- front good, real good
+    me_i_35547_00135_021_055_from_gt_p2
+    me_i_35547_00137_021_055_from_gt_p2
+    me_i_35547_00139_021_055_from_gt_p2
+    me_i_35547_00141_021_055_from_gt_p2
+    me_i_35549_00158_034_107_from_gt_p1 -- front good, has right arm not in place
+    me_i_35549_00160_034_107_from_gt_p2
+    me_i_35549_00162_034_107_from_gt_p2
+    me_i_35550_00229_014_042_from_gt_p1 -- no hand, fixed using past landmark
+    me_i_35548_00254_001_030_from_gt_p1 -- front good
+    me_i_35548_00256_001_030_from_gt_p2
+    me_i_35548_00258_001_030_from_gt_p2
+    me_i_me_i_0001_00283_018_097_from_gt_p1 -- front good
+    me_i_me_i_0001_00285_018_097_from_gt_p2
+    me_i_me_i_0001_00287_018_097_from_gt_p2
 stomach
 have
 need
