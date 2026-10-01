@@ -584,3 +584,31 @@ headache
     headache_65881_00215_014_032_from_gt_p2
     headache_65881_00217_014_032_from_gt_p2
 doctor
+    doctor_67579_00002_009_030_from_gt_p2 -- noHandFilledByPast
+    doctor_17015_00021_048_072_from_gt_p1 -- glitchy hand
+    doctor_17015_00023_048_072_from_gt_p2
+    doctor_17015_00025_048_072_from_gt_p2
+    doctor_17007_00033_001_043_from_gt_p1 -- correct doctor
+    doctor_17007_00035_001_043_from_gt_p2
+    doctor_17007_00037_001_043_from_gt_p2
+    doctor_70049_00067_026_054_from_gt_p1 -- front good
+    doctor_70049_00069_026_054_from_gt_p2
+    doctor_70049_00071_026_054_from_gt_p2
+    doctor_17017_00092_024_058_from_gt_p1 -- front good
+    doctor_17017_00094_024_058_from_gt_p2
+    doctor_17017_00096_024_058_from_gt_p2
+    doctor_65504_00117_015_041_from_gt_p1 -- correct doctor
+    doctor_65504_00119_015_041_from_gt_p2
+    doctor_65504_00121_015_041_from_gt_p2
+    doctor_17023_00136_022_048_from_gt_p1 -- front good
+    doctor_17023_00140_022_048_from_gt_p2
+    doctor_17023_00143_022_048_from_gt_p2
+    doctor_17014_00155_029_053_from_gt_p1 -- correct doctor
+    doctor_17014_00157_029_053_from_gt_p2
+    doctor_17014_00159_029_053_from_gt_p2
+    doctor_17020_00167_001_055_from_gt_p1 -- correct doctor
+    doctor_17020_00169_001_055_from_gt_p2
+    doctor_17020_00171_001_055_from_gt_p2
+    doctor_17022_00240_028_064_from_gt_p1 -- correct doctor
+    doctor_17022_00242_028_064_from_gt_p2
+    doctor_17022_00244_028_064_from_gt_p2
