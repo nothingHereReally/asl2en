@@ -460,6 +460,35 @@ feel
     feel_21436_00204_001_053_from_gt_p2
     feel_21436_00206_001_053_from_gt_p2
 hurt
+    hurt_70147_00001_052_072_from_gt_p1 -- front good
+    hurt_70147_00003_052_072_from_gt_p2
+    hurt_70147_00005_052_072_from_gt_p2
+    hurt_28453_00019_016_037_from_gt_p1 -- front, missingHandFilledByPast
+    hurt_28453_00022_016_037_from_gt_p2
+    hurt_28450_00039_029_058_from_gt_p1 -- front good
+    hurt_28450_00041_029_058_from_gt_p2
+    hurt_28450_00043_029_058_from_gt_p2
+    hurt_28445_00068_001_055_from_gt_p1 -- front good
+    hurt_28445_00070_001_055_from_gt_p2
+    hurt_28445_00072_001_055_from_gt_p2
+    hurt_28441_00141_016_042_from_gt_p1 -- front good
+    hurt_28441_00143_016_042_from_gt_p2
+    hurt_28441_00146_016_042_from_gt_p2
+    hurt_28443_00160_001_053_from_gt_p1 -- front good
+    hurt_28443_00162_001_053_from_gt_p2
+    hurt_28443_00164_001_053_from_gt_p2
+    hurt_28444_00218_001_053_from_gt_p1 -- front good
+    hurt_28444_00220_001_053_from_gt_p2
+    hurt_28444_00222_001_053_from_gt_p2
+    hurt_28454_00276_025_045_from_gt_p1 -- front good
+    hurt_28454_00278_025_045_from_gt_p2
+    hurt_28454_00280_025_045_from_gt_p2
+    hurt_28452_00294_026_047_from_gt_p1 -- front good
+    hurt_28452_00296_026_047_from_gt_p2
+    hurt_28452_00298_026_047_from_gt_p2
+    hurt_28438_00314_001_033_from_gt_p1 -- front good
+    hurt_28438_00316_001_033_from_gt_p2
+    hurt_28438_00318_001_033_from_gt_p2
 fever
 dizzy
 headache
