@@ -365,6 +365,36 @@ have
     have_26766_00227_011_035_from_gt_p2
     have_26766_00230_011_035_from_gt_p2
 need
+    need_37879_00001_001_035_from_gt_p1 -- front good
+    need_37879_00003_001_035_from_gt_p2
+    need_37879_00005_001_035_from_gt_p2
+    need_37891_00026_024_050_from_gt_p1 -- front good
+    need_37891_00028_024_050_from_gt_p2
+    need_37891_00030_024_050_from_gt_p2
+    need_37892_00045_017_046_from_gt_p1 -- front good
+    need_37892_00047_017_046_from_gt_p2
+    need_37892_00049_017_046_from_gt_p2
+    need_68544_00075_004_036_from_gt_p2 -- front good
+    need_68544_00077_004_036_from_gt_p2
+    need_68544_00080_004_036_from_gt_p2
+    need_37885_00091_001_055_from_gt_p1 -- front good
+    need_37885_00093_001_055_from_gt_p2
+    need_37885_00095_001_055_from_gt_p2
+    need_37887_00164_017_056_from_gt_p1 -- front good
+    need_37887_00166_017_056_from_gt_p2
+    need_37887_00168_017_056_from_gt_p2
+    need_37888_00182_017_060_from_gt_p1 -- front good
+    need_37888_00184_017_060_from_gt_p2
+    need_37888_00186_017_060_from_gt_p2
+    need_37889_00222_017_036_from_gt_p1 -- front good
+    need_37889_00225_017_036_from_gt_p2
+    need_37889_00227_017_036_from_gt_p2
+    need_37881_00239_028_057_from_gt_p2 -- front good
+    need_37881_00241_028_057_from_gt_p2
+    need_37881_00243_028_057_from_gt_p2
+    need_67925_00267_013_039_from_gt_p1 -- front good
+    need_67925_00269_013_039_from_gt_p2
+    need_67925_00271_013_039_from_gt_p2
 see
 feel
 hurt
