@@ -243,6 +243,36 @@ cousin
     cousin_67535_00189_017_032_from_gt_p2
     cousin_67535_00191_017_032_from_gt_p3
 mine_my
+    mine_my_37472_00001_001_026_from_gt_p1 -- front good
+    mine_my_37472_00003_001_026_from_gt_p2
+    mine_my_37472_00005_001_026_from_gt_p2
+    mine_my_37474_00016_010_093_from_gt_p1 -- front good
+    mine_my_37474_00018_010_093_from_gt_p2
+    mine_my_37474_00020_010_093_from_gt_p2
+    mine_my_37477_00123_031_049_from_gt_p1 -- front good
+    mine_my_37477_00126_031_049_from_gt_p2
+    mine_my_37477_00128_031_049_from_gt_p2
+    mine_my_36139_00137_012_050_from_gt_p1 -- front good
+    mine_my_36139_00139_012_050_from_gt_p2
+    mine_my_36139_00141_012_050_from_gt_p2
+    mine_my_36141_00181_001_027_from_gt_p1 -- front good
+    mine_my_36141_00183_001_027_from_gt_p2
+    mine_my_36141_00185_001_027_from_gt_p2
+    mine_my_36144_00200_015_033_from_gt_p1 -- front good
+    mine_my_36144_00202_015_033_from_gt_p2
+    mine_my_36144_00204_015_033_from_gt_p2
+    mine_my_36145_00214_018_048_from_gt_p1 -- front good
+    mine_my_36145_00216_018_048_from_gt_p2
+    mine_my_36145_00218_018_048_from_gt_p2
+    mine_my_36146_00246_029_049_from_gt_p1 -- front good
+    mine_my_36146_00248_029_049_from_gt_p2
+    mine_my_36146_00250_029_049_from_gt_p2
+    mine_my_37464_00264_004_033_from_gt_p1 -- front good
+    mine_my_37464_00266_004_033_from_gt_p2
+    mine_my_37464_00268_004_033_from_gt_p2
+    mine_my_69404_00293_015_043_from_gt_p1 -- front good
+    mine_my_69404_00295_015_043_from_gt_p2
+    mine_my_69404_00297_015_043_from_gt_p2
 me_i
 stomach
 have
