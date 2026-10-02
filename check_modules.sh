@@ -2,9 +2,9 @@
 
 
 
-if [ "$(pwd)/.venv/bin/pip" != "$(which pip)" ]; then
-    source .venv/bin/activate
-fi
+# if [ "$(pwd)/.venv/bin/pip" != "$(which pip)" ]; then
+#     source .venv/bin/activate
+# fi
 installed="$(pip freeze)"
 check() {
     local module="$1"
