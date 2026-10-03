@@ -309,7 +309,31 @@ VERIFIED_DS_DIR: list= [
         ]
     },
 ]
+def loadnpfiles(parent_folder: str, landmarks: list) -> np.ndarray:
+    out: list= []
+    for a_lm in landmarks:
+        with open(f"{LANDMARK_DIR /parent_folder /a_lm[KEY_FILE]}", 'rb') as f:
+            out.append(np.load(f))
+    return np.array(out)
 def main() -> None:
-    print('hello world')
+    ds_landmark: list= []
+    with open(f"{DS_DIR /'ds_landmark.json'}", 'r') as f:
+        ds_landmark= loadJson(f)
+    manual_model: list= []
+    labels: list= []
+    for idx, a_gloss in enumerate(VERIFIED_DS_DIR):
+        assert ds_landmark[idx][KEY_G]==a_gloss[KEY_G]
+        labels.append(ds_landmark[idx][KEY_G])
+        gloss_annotations: list= list(filter(
+            lambda x: x[KEY_PFOLDER] in a_gloss[KEY_LANDMARK],
+            ds_landmark[idx][KEY_LANDMARK]
+        ))
+        manual_model.append([
+            loadnpfiles(el[KEY_PFOLDER], el[KEY_LANDMARK])
+            for el in gloss_annotations
+        ])
+    labels[10]= 'mine'
+    labels[11]= 'i'
+    print(f"shape --> {np.array(manual_model).shape}")
 if __name__=="__main__":
     main()
