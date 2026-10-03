@@ -191,6 +191,19 @@ VERIFIED_DS_DIR: list= [
             'stomach_54884_00196_013_040_from_gt_p1',
         ]
     },
+    {
+        KEY_G: 'have',
+        KEY_LANDMARK: [
+            'have_69088_00030_001_032_from_gt_p1',
+            'have_26776_00064_012_045_from_gt_p1',
+            'have_26757_00085_001_035_from_gt_p1',
+            'have_68069_00124_030_064_from_gt_p1',
+            'have_70221_00149_027_055_from_gt_p1',
+            'have_68984_00174_013_040_from_gt_p1',
+            'have_26775_00196_014_043_from_gt_p1',
+            'have_26766_00225_011_035_from_gt_p1',
+        ]
+    },
 ]
 def main() -> None:
     print('hello world')
