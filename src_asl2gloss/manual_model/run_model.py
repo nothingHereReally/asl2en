@@ -1,9 +1,10 @@
 from pathlib import Path
+from json import load as loadJson
 
 
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
 DS_DIR: Path= PROJ_ROOT /"dataset" /"clean_dataset"
-MODEL_LANDMARK_DIR: Path= DS_DIR /"ds_landmark"
+LANDMARK_DIR: Path= DS_DIR /"ds_landmark"
 KEY_G: str= 'gloss'
 KEY_VIDS: str= 'videos'
 KEY_VFILE: str= 'video_file'
