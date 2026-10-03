@@ -152,6 +152,19 @@ VERIFIED_DS_DIR: list= [
             'cousin_67535_00187_017_032_from_gt_p1',
         ]
     },
+    {
+        KEY_G: 'mine_my',
+        KEY_LANDMARK: [
+            'mine_my_37472_00001_001_026_from_gt_p1',
+            'mine_my_37474_00016_010_093_from_gt_p1',
+            'mine_my_37477_00123_031_049_from_gt_p1',
+            'mine_my_36139_00137_012_050_from_gt_p1',
+            'mine_my_36145_00214_018_048_from_gt_p1',
+            'mine_my_36146_00246_029_049_from_gt_p1',
+            'mine_my_37464_00264_004_033_from_gt_p1',
+            'mine_my_69404_00293_015_043_from_gt_p1',
+        ]
+    },
 ]
 def main() -> None:
     print('hello world')
