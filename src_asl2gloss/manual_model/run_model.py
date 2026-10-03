@@ -269,6 +269,19 @@ VERIFIED_DS_DIR: list= [
             'fever_78226_00377_024_050_from_gt_p1',
         ]
     },
+    {
+        KEY_G: 'dizzy',
+        KEY_LANDMARK: [
+            'dizzy_16980_00001_001_091_from_gt_p1',
+            'dizzy_16982_00109_017_049_from_gt_p1',
+            'dizzy_16986_00126_001_057_from_gt_p1',
+            'dizzy_16987_00167_023_058_from_gt_p1',
+            'dizzy_16988_00198_017_053_from_gt_p1',
+            'dizzy_78227_00233_022_052_from_gt_p1',
+            'dizzy_78228_00265_048_160_from_gt_p1',
+            'dizzy_78229_00380_019_130_from_gt_p1',
+        ]
+    },
 ]
 def main() -> None:
     print('hello world')
