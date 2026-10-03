@@ -19,6 +19,21 @@ KEY_SKELETON: str= 'skeleton'
 KEY_SPLIT: str= 'split'
 VAL_TRAIN: str= 'train'
 VAL_TEST: str= 'test'
+VERIFIED_DS_DIR: list= [
+    {
+        KEY_G: 'book',
+        KEY_LANDMARK: [
+            'book_07071_00002_001_018_from_gt_p2',
+            'book_07071_00004_001_018_from_gt_p2',
+            'book_68011_00112_006_040_from_gt_p2',
+            'book_68011_00122_006_040_from_gt_p3',
+            'book_07076_00254_019_067_from_gt_p2',
+            'book_07076_00264_019_067_from_gt_p3',
+            'book_07097_00218_019_043_from_gt_p2',
+            'book_07097_00220_019_043_from_gt_p2',
+        ]
+    },
+]
 def main() -> None:
     print('hello world')
 if __name__=="__main__":
