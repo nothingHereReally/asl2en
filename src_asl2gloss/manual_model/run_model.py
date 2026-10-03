@@ -315,7 +315,18 @@ def loadnpfiles(parent_folder: str, landmarks: list) -> np.ndarray:
         with open(f"{LANDMARK_DIR /parent_folder /a_lm[KEY_FILE]}", 'rb') as f:
             out.append(np.load(f))
     return np.array(out)
-def main() -> None:
+def load_ds_samples() -> tuple:
+    '''
+    return (manual_model, labels)
+    manual_model has shape (22, 8, 8, 86, 2)
+    --> 22 gloss categories
+    -->  8 samples per gloss
+    -->  8 images to take
+    --> 86 landmarks per image
+    -->  2 coordinates per landmarks
+    labels is a list[str], the list of actual gloss themselves
+    eg. labels: list[str]= ['book', 'drink', ...]
+    '''
     ds_landmark: list= []
     with open(f"{DS_DIR /'ds_landmark.json'}", 'r') as f:
         ds_landmark= loadJson(f)
@@ -334,6 +345,10 @@ def main() -> None:
         ])
     labels[10]= 'mine'
     labels[11]= 'i'
+    return (manual_model, labels)
+def main() -> None:
+    manual_model, labels= load_ds_samples()
     print(f"shape --> {np.array(manual_model).shape}")
+    print("\n".join(labels))
 if __name__=="__main__":
     main()
