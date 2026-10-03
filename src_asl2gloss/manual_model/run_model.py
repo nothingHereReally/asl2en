@@ -46,6 +46,19 @@ VERIFIED_DS_DIR: list= [
             'drink_17727_00198_019_053_from_gt_p2',
         ]
     },
+    {
+        KEY_G: 'computer',
+        KEY_LANDMARK: [
+            'computer_12306_00002_001_052_from_gt_p2',
+            'computer_68028_00055_023_063_from_gt_p2',
+            'computer_12331_00183_024_051_from_gt_p1',
+            'computer_12331_00189_024_051_from_gt_p2',
+            'computer_12312_00237_047_081_from_gt_p1',
+            'computer_12326_00262_013_073_from_gt_p1',
+            'computer_computer_0004_00335_019_086_from_gt_p1',
+            'computer_computer_0005_00413_013_082_from_gt_p1',
+        ]
+    },
 ]
 def main() -> None:
     print('hello world')
