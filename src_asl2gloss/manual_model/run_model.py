@@ -217,6 +217,19 @@ VERIFIED_DS_DIR: list= [
             'need_67925_00267_013_039_from_gt_p1',
         ]
     },
+    {
+        KEY_G: 'see',
+        KEY_LANDMARK: [
+            'see_50125_00001_001_030_from_gt_p1',
+            'see_68444_00030_023_050_from_gt_p1',
+            'see_50128_00061_020_033_from_gt_p1',
+            'see_50107_00074_017_053_from_gt_p1',
+            'see_50120_00117_039_059_from_gt_p1',
+            'see_67178_00135_010_025_from_gt_p1',
+            'see_50123_00143_001_055_from_gt_p1',
+            'see_50126_00216_034_050_from_gt_p1',
+        ]
+    },
 ]
 def main() -> None:
     print('hello world')
