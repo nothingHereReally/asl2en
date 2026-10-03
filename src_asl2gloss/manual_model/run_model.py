@@ -126,6 +126,19 @@ VERIFIED_DS_DIR: list= [
             'who_who_0005_00238_018_068_from_gt_p1',
         ]
     },
+    {
+        KEY_G: 'candy',
+        KEY_LANDMARK: [
+            'candy_08923_00001_001_039_from_gt_p1',
+            'candy_70326_00045_067_099_from_gt_p1',
+            'candy_08929_00062_020_041_from_gt_p1',
+            'candy_68790_00095_074_105_from_gt_p2',
+            'candy_08916_00140_035_062_from_gt_p1',
+            'candy_08919_00162_027_050_from_gt_p1',
+            'candy_08921_00171_006_035_from_gt_p1',
+            'candy_08927_00218_015_046_from_gt_p1',
+        ]
+    },
 ]
 def main() -> None:
     print('hello world')
