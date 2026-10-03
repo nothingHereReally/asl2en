@@ -243,6 +243,19 @@ VERIFIED_DS_DIR: list= [
             'feel_21436_00202_001_053_from_gt_p1',
         ]
     },
+    {
+        KEY_G: 'hurt',
+        KEY_LANDMARK: [
+            'hurt_28450_00039_029_058_from_gt_p1',
+            'hurt_28445_00068_001_055_from_gt_p1',
+            'hurt_28441_00141_016_042_from_gt_p1',
+            'hurt_28443_00160_001_053_from_gt_p1',
+            'hurt_28444_00218_001_053_from_gt_p1',
+            'hurt_28454_00276_025_045_from_gt_p1',
+            'hurt_28452_00294_026_047_from_gt_p1',
+            'hurt_28438_00314_001_033_from_gt_p1',
+        ]
+    },
 ]
 def main() -> None:
     print('hello world')
