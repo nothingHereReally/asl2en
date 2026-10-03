@@ -72,6 +72,19 @@ VERIFIED_DS_DIR: list= [
             'before_65167_00209_015_032_from_gt_p1',
         ]
     },
+    {
+        KEY_G: 'chair',
+        KEY_LANDMARK: [
+            'chair_09853_00002_001_020_from_gt_p2',
+            'chair_09848_00018_018_060_from_gt_p2',
+            'chair_09869_00051_040_065_from_gt_p1',
+            'chair_09847_00114_001_052_from_gt_p1',
+            'chair_68580_00166_013_040_from_gt_p1',
+            'chair_70263_00188_033_081_from_gt_p1',
+            'chair_68019_00219_017_047_from_gt_p1',
+            'chair_09866_00280_028_064_from_gt_p1',
+        ]
+    },
 ]
 def main() -> None:
     print('hello world')
