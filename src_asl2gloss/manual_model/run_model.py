@@ -230,6 +230,19 @@ VERIFIED_DS_DIR: list= [
             'see_50126_00216_034_050_from_gt_p1',
         ]
     },
+    {
+        KEY_G: 'feel',
+        KEY_LANDMARK: [
+            'feel_67653_00001_012_029_from_gt_p1',
+            'feel_21434_00013_018_059_from_gt_p1',
+            'feel_69319_00042_023_056_from_gt_p1',
+            'feel_21425_00063_001_049_from_gt_p1',
+            'feel_21438_00094_021_033_from_gt_p1',
+            'feel_21439_00106_023_050_from_gt_p1',
+            'feel_21441_00153_013_048_from_gt_p1',
+            'feel_21436_00202_001_053_from_gt_p1',
+        ]
+    },
 ]
 def main() -> None:
     print('hello world')
