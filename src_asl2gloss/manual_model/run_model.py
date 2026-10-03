@@ -282,6 +282,19 @@ VERIFIED_DS_DIR: list= [
             'dizzy_78229_00380_019_130_from_gt_p1',
         ]
     },
+    {
+        KEY_G: 'headache',
+        KEY_LANDMARK: [
+            'headache_26832_00001_014_038_from_gt_p1',
+            'headache_26835_00013_031_061_from_gt_p1',
+            'headache_67747_00045_014_028_from_gt_p1',
+            'headache_26846_00082_029_061_from_gt_p1',
+            'headache_26839_00099_001_046_from_gt_p1',
+            'headache_26838_00176_001_041_from_gt_p1',
+            'headache_26841_00199_020_038_from_gt_p1',
+            'headache_65881_00213_014_032_from_gt_p1',
+        ]
+    },
 ]
 def main() -> None:
     print('hello world')
