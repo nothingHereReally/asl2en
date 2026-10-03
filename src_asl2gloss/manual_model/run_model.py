@@ -59,6 +59,19 @@ VERIFIED_DS_DIR: list= [
             'computer_computer_0005_00413_013_082_from_gt_p1',
         ]
     },
+    {
+        KEY_G: 'before',
+        KEY_LANDMARK: [
+            'before_05730_00001_008_025_from_gt_p1',
+            'before_05733_00013_025_083_from_gt_p1',
+            'before_05729_00068_013_036_from_gt_p1',
+            'before_05727_00077_024_055_from_gt_p1',
+            'before_05739_00089_001_052_from_gt_p1',
+            'before_05750_00178_036_058_from_gt_p1',
+            'before_05744_00200_024_047_from_gt_p1',
+            'before_65167_00209_015_032_from_gt_p1',
+        ]
+    },
 ]
 def main() -> None:
     print('hello world')
