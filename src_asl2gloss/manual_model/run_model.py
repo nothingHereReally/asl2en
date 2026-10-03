@@ -139,6 +139,19 @@ VERIFIED_DS_DIR: list= [
             'candy_08927_00218_015_046_from_gt_p1',
         ]
     },
+    {
+        KEY_G: 'cousin',
+        KEY_LANDMARK: [
+            'cousin_13640_00047_001_059_from_gt_p1',
+            'cousin_65415_00102_025_043_from_gt_p1',
+            'cousin_68592_00116_005_031_from_gt_p1',
+            'cousin_13647_00135_022_045_from_gt_p1',
+            'cousin_13648_00144_021_040_from_gt_p1',
+            'cousin_13632_00161_027_052_from_gt_p2',
+            'cousin_13633_00175_043_067_from_gt_p1',
+            'cousin_67535_00187_017_032_from_gt_p1',
+        ]
+    },
 ]
 def main() -> None:
     print('hello world')
