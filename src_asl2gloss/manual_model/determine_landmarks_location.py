@@ -384,12 +384,12 @@ def drawSkeletonImg(image: ndarray, \
                         color=tuple(
                             color_dot
                             if highlight_index!=None and highlight_index==lmark_idx_pair[0]
-                            else color_line
+                            else tuple(color_dot[-1*(idx+1)] for idx in range(len(color_dot)))
                         ),
                         thickness=int(
                             thick*10
                             if highlight_index!=None and highlight_index==lmark_idx_pair[0]
-                            else thick*2
+                            else thick*4
                         )
                     )
                     circle(
@@ -402,12 +402,12 @@ def drawSkeletonImg(image: ndarray, \
                         color=tuple(
                             color_dot
                             if highlight_index!=None and highlight_index==lmark_idx_pair[1]
-                            else color_line
+                            else tuple(color_dot[-1*(idx+1)] for idx in range(len(color_dot)))
                         ),
                         thickness=int(
                             thick*10
                             if highlight_index!=None and highlight_index==lmark_idx_pair[1]
-                            else thick*2
+                            else thick*4
                         )
                     )
 
