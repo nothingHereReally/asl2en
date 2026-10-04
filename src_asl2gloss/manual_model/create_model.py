@@ -127,6 +127,11 @@ HAND_CONNECTIONS: tuple= (
     (17, 18), (18, 19), (19, 20)      # pinky finger connections
 )
 QUANTITY_HAND_LMARK: int= 21
+IMGS_LM_SHAPE: tuple= (
+    8,
+    len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK*2, # 86
+    2
+)
 # -----------------------------------------------------
 VERIFIED_DS_DIR: list= [
     {
