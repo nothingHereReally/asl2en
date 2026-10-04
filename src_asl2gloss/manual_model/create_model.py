@@ -477,6 +477,15 @@ def load_ds_samples() -> tuple:
             loadnpfiles(el[KEY_PFOLDER], el[KEY_LANDMARK])
             for el in annotations[-1][KEY_LANDMARK]
         ])
+        # annotations[-1][KEY_LANDMARK]= [{
+        #     KEY_PFOLDER: el[KEY_PFOLDER],
+        #     KEY_LANDMARK: [{
+        #         KEY_FACE: lm_img_el[KEY_FACE],
+        #         KEY_POSE: lm_img_el[KEY_POSE],
+        #         KEY_LHAND: lm_img_el[KEY_LHAND],
+        #         KEY_RHAND: lm_img_el[KEY_RHAND],
+        #     } for lm_img_el in el[KEY_LANDMARK]]
+        # } for el in annotations[-1][KEY_LANDMARK]]
         annotations[-1][KEY_LANDMARK].extend([
         {
             KEY_PFOLDER: f"{many_imgs_el[KEY_PFOLDER]}__manual_flip",
