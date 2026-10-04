@@ -506,6 +506,19 @@ def load_ds_samples() -> tuple:
     annotations[10][KEY_G]= 'mine'
     annotations[11][KEY_G]= 'i'
     return (manual_model, annotations)
+def get_left_hand(input: np.ndarray) -> np.ndarray:
+    return input[
+        ...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK,
+        :
+    ].copy()
+def get_right_hand(input: np.ndarray) -> np.ndarray:
+    return input[
+        ...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:,
+        :
+    ].copy()
 def main() -> None:
     manual_model, annotations= load_ds_samples()
     with open("/tmp/asdf.json", "w") as f:
