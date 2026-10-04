@@ -1,4 +1,4 @@
-from json import load as loadJson
+from json import load as loadJson, dump as writeJson
 import numpy as np
 from pathlib import Path
 
@@ -126,6 +126,7 @@ HAND_CONNECTIONS: tuple= (
     (13, 14), (14, 15), (15, 16),     # ring finger connections
     (17, 18), (18, 19), (19, 20)      # pinky finger connections
 )
+QUANTITY_HAND_LMARK: int= 21
 # -----------------------------------------------------
 VERIFIED_DS_DIR: list= [
     {
@@ -415,6 +416,27 @@ VERIFIED_DS_DIR: list= [
         ]
     },
 ]
+def flip_vertical_x_axis(landmarks) -> np.ndarray:
+    '''
+    landmarks be of shape (INT, ..., INT, 2)
+    '''
+    new_landmark= np.array(landmarks).copy()
+    new_landmark[..., 0]= 1 -new_landmark[..., 0]
+    lhand2rhand: np.ndarray= new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+    ,:].copy()
+    rhand2lhand: np.ndarray= new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+    ,:].copy()
+    new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+    ,:]= rhand2lhand # ie. past was right hand, now be left hand
+    new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+    ,:]= lhand2rhand # ie. past was left hand, now be right hand
+    return new_landmark
 def loadnpfiles(parent_folder: str, landmarks: list) -> np.ndarray:
     out: list= []
     for a_lm in landmarks:
@@ -437,24 +459,44 @@ def load_ds_samples() -> tuple:
     with open(f"{DS_DIR /'ds_landmark.json'}", 'r') as f:
         ds_landmark= loadJson(f)
     manual_model: list= []
-    labels: list= []
+    annotations: list= []
     for idx, a_gloss in enumerate(VERIFIED_DS_DIR):
         assert ds_landmark[idx][KEY_G]==a_gloss[KEY_G]
-        labels.append(ds_landmark[idx][KEY_G])
-        gloss_annotations: list= list(filter(
-            lambda x: x[KEY_PFOLDER] in a_gloss[KEY_LANDMARK],
-            ds_landmark[idx][KEY_LANDMARK]
-        ))
+        annotations.append({
+            KEY_G: ds_landmark[idx][KEY_G],
+            KEY_LANDMARK: list(
+                {
+                    KEY_PFOLDER: el[KEY_PFOLDER],
+                    KEY_LANDMARK: el[KEY_LANDMARK],
+                }
+                for el in ds_landmark[idx][KEY_LANDMARK]
+                if el[KEY_PFOLDER] in a_gloss[KEY_LANDMARK]
+            )
+        })
         manual_model.append([
             loadnpfiles(el[KEY_PFOLDER], el[KEY_LANDMARK])
-            for el in gloss_annotations
+            for el in annotations[-1][KEY_LANDMARK]
         ])
-    labels[10]= 'mine'
-    labels[11]= 'i'
-    return (manual_model, labels)
+        annotations[-1][KEY_LANDMARK].extend([
+        {
+            KEY_PFOLDER: f"{many_imgs_el[KEY_PFOLDER]}__manual_flip",
+            KEY_LANDMARK: [{
+                KEY_FILE: lm_img_el[KEY_FILE],
+                KEY_FACE: lm_img_el[KEY_FACE],
+                KEY_POSE: lm_img_el[KEY_POSE],
+                KEY_LHAND: lm_img_el[KEY_RHAND],
+                KEY_RHAND: lm_img_el[KEY_LHAND],
+            } for lm_img_el in many_imgs_el[KEY_LANDMARK]],
+        } for many_imgs_el in annotations[-1][KEY_LANDMARK]])
+        manual_model[-1].extend(flip_vertical_x_axis(manual_model[-1]))
+    annotations[10][KEY_G]= 'mine'
+    annotations[11][KEY_G]= 'i'
+    return (manual_model, annotations)
 def main() -> None:
-    manual_model, labels= load_ds_samples()
+    manual_model, annotations= load_ds_samples()
+    with open("/tmp/asdf.json", "w") as f:
+        writeJson(annotations, f, indent=4)
     print(f"shape --> {np.array(manual_model).shape}")
-    print("\n".join(labels))
+    print("\n".join([el[KEY_G] for el in annotations]))
 if __name__=="__main__":
     main()
