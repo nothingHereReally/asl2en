@@ -1,5 +1,6 @@
 from json import load as loadJson, dump as writeJson
 import numpy as np
+import jax.numpy as jnp
 from pathlib import Path
 
 
@@ -17,6 +18,7 @@ KEY_LHAND: str= 'left_hand'
 KEY_RHAND: str= 'right_hand'
 KEY_LANDMARK: str= 'landmark'
 KEY_SKELETON: str= 'skeleton'
+QUANTITY_FRAME: int= 8
 # ---------------------
 KEY_SPLIT: str= 'split'
 VAL_TRAIN: str= 'train'
