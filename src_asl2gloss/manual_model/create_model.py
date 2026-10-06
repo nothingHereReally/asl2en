@@ -532,6 +532,76 @@ def get_right_hand(input: jnp.ndarray) -> jnp.ndarray:
         len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:,
         :
     ].copy()
+def hand_mse(
+    input: jnp.ndarray,
+    model: jnp.ndarray,
+    mask: jnp.ndarray,
+) -> jnp.ndarray:
+    '''
+    input -- shape of (QUANTITY_FRAME, 86, 2)
+    model -- shape of (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
+    mask  -- shape of (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86)
+    86 landmarks mandatory to follow this order
+    [...face_landmarks_36..., ...pose_landmarks_8..., ...left_hand_landmarks_21..., ...right_hand_landmarks_21...]
+    '''
+    left_hand_diff: jnp.ndarray= (
+        get_left_hand(model) -get_left_hand(input)
+    )**2
+    right_hand_diff: jnp.ndarray= (
+        get_right_hand(model) -get_right_hand(input)
+    )**2
+    left_hand_diff= jnp.sum( # due2now c^2, from c^2= a^2 +b^2
+        left_hand_diff,
+        axis=-1,
+        keepdims=False
+    ) # now be shape (..., SAMPLE_PER_GLOSS, QUANTITY_FRAME, 21), ie. removed X, Y cords axis
+    right_hand_diff= jnp.sum(
+        right_hand_diff,
+        axis=-1,
+        keepdims=False
+    ) # now be shape (..., SAMPLE_PER_GLOSS, QUANTITY_FRAME, 21), ie. removed X, Y cords axis
+    left_hand_diff= left_hand_diff *get_left_hand(mask)
+    right_hand_diff= right_hand_diff *get_right_hand(mask)
+    '''
+    now ----
+    left_hand_diff
+    right_hand_diff
+    ---------------
+    both has shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 21)
+    '''
+    left_hand_diff= jnp.mean(left_hand_diff, axis=-1, keepdims=False)
+    right_hand_diff= jnp.mean(right_hand_diff, axis=-1, keepdims=False)
+    '''
+    now ----
+    left_hand_diff
+    right_hand_diff
+    ---------------
+    both has shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME)
+    '''
+    left_hand_diff= left_hand_diff.at[..., 0].multiply(0.05)
+    right_hand_diff= right_hand_diff.at[..., 0].multiply(0.05)
+    left_hand_diff= left_hand_diff.at[..., 1].multiply(0.1)
+    right_hand_diff= right_hand_diff.at[..., 1].multiply(0.1)
+    left_hand_diff= left_hand_diff.at[..., -2].multiply(0.1)
+    right_hand_diff= right_hand_diff.at[..., -2].multiply(0.1)
+    left_hand_diff= left_hand_diff.at[..., -1].multiply(0.05)
+    right_hand_diff= right_hand_diff.at[..., -1].multiply(0.05)
+
+    left_hand_diff= jnp.mean(left_hand_diff, axis=-1, keepdims=True, where=left_hand_diff!=0.0)
+    right_hand_diff= jnp.mean(right_hand_diff, axis=-1, keepdims=True, where=right_hand_diff!=0.0)
+    '''
+    now ----
+    left_hand_diff
+    right_hand_diff
+    ---------------
+    both has shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, 1)
+    '''''
+    out: jnp.ndarray= jnp.concatenate([left_hand_diff, right_hand_diff], axis=-1)
+    out= jnp.mean(out, axis=-1, keepdims=False, where=out!=0.0)
+    '''
+    out now has shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+    '''
+    return out
 def main() -> None:
     manual_model, annotations= load_ds_samples()
     with open("/tmp/asdf.json", "w") as f:
