@@ -538,15 +538,21 @@ def mean_ignore_zero(input: jnp.ndarray, keepdims: bool=False) -> jnp.ndarray:
     # count= jnp.where(count==0, 1, count)
     count= jnp.maximum(count, 1)
     return out/count
+def weights_edges(input: jnp.ndarray) -> jnp.ndarray:
+    return input *jnp.ones(input.shape[-1]) \
+                             .at[0].set(0.05) \
+                             .at[1].set(0.1) \
+                             .at[-2].set(0.1) \
+                             .at[-1].set(0.05)
 def hand_mse(
     input: jnp.ndarray,
     model: jnp.ndarray,
     mask: jnp.ndarray,
 ) -> jnp.ndarray:
     '''
-    input -- shape of (QUANTITY_FRAME, 86, 2)
-    model -- shape of (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
-    mask  -- shape of (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86)
+    input -- shape of ( BATCH_SIZE,              1,                1, QUANTITY_FRAME, 86, 2)
+    model -- shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
+    mask  -- shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86)
     86 landmarks mandatory to follow this order
     [...face_landmarks_36..., ...pose_landmarks_8..., ...left_hand_landmarks_21..., ...right_hand_landmarks_21...]
     '''
@@ -560,12 +566,12 @@ def hand_mse(
         left_hand_diff,
         axis=-1,
         keepdims=False
-    ) # now be shape (..., SAMPLE_PER_GLOSS, QUANTITY_FRAME, 21), ie. removed X, Y cords axis
+    ) # now be shape (..., QUANTITY_FRAME, 21), ie. removed X, Y cords axis
     right_hand_diff= jnp.sum(
         right_hand_diff,
         axis=-1,
         keepdims=False
-    ) # now be shape (..., SAMPLE_PER_GLOSS, QUANTITY_FRAME, 21), ie. removed X, Y cords axis
+    ) # now be shape (..., QUANTITY_FRAME, 21), ie. removed X, Y cords axis
     left_hand_diff= left_hand_diff *get_left_hand(mask)
     right_hand_diff= right_hand_diff *get_right_hand(mask)
     '''
@@ -573,7 +579,7 @@ def hand_mse(
     left_hand_diff
     right_hand_diff
     ---------------
-    both has shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 21)
+    both has shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 21)
     '''
     left_hand_diff= jnp.mean(left_hand_diff, axis=-1, keepdims=False)
     right_hand_diff= jnp.mean(right_hand_diff, axis=-1, keepdims=False)
@@ -582,17 +588,10 @@ def hand_mse(
     left_hand_diff
     right_hand_diff
     ---------------
-    both has shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME)
+    both has shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME)
     '''
-    left_hand_diff= left_hand_diff.at[..., 0].multiply(0.05)
-    left_hand_diff= left_hand_diff.at[..., 1].multiply(0.1)
-    left_hand_diff= left_hand_diff.at[..., -2].multiply(0.1)
-    left_hand_diff= left_hand_diff.at[..., -1].multiply(0.05)
-    # --------------------------------------------------------
-    right_hand_diff= right_hand_diff.at[..., 0].multiply(0.05)
-    right_hand_diff= right_hand_diff.at[..., 1].multiply(0.1)
-    right_hand_diff= right_hand_diff.at[..., -2].multiply(0.1)
-    right_hand_diff= right_hand_diff.at[..., -1].multiply(0.05)
+    left_hand_diff= weights_edges(left_hand_diff)
+    right_hand_diff= weights_edges(right_hand_diff)
 
     # left_hand_diff= jnp.mean(left_hand_diff, axis=-1, keepdims=True, where=left_hand_diff!=0.0)
     # right_hand_diff= jnp.mean(right_hand_diff, axis=-1, keepdims=True, where=right_hand_diff!=0.0)
@@ -603,7 +602,7 @@ def hand_mse(
     left_hand_diff
     right_hand_diff
     ---------------
-    both has shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, 1)
+    both has shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, 1)
     '''''
     out: jnp.ndarray= jnp.concatenate([left_hand_diff, right_hand_diff], axis=-1)
     out= mean_ignore_zero(out, keepdims=False)
