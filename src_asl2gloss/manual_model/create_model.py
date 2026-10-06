@@ -556,6 +556,17 @@ def get_right_hand(input: jnp.ndarray) -> jnp.ndarray:
         len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:,
         :
     ].copy()
+def get_worthy10landmarks(input: jnp.ndarray) -> jnp.ndarray:
+    if input.shape[-1]!=2:
+        return input[
+            ...,
+            WORTHY_LM_IMPORTANT_IDX
+        ]
+    return input[
+        ...,
+        WORTHY_LM_IMPORTANT_IDX,
+        :
+    ]
 def mean_ignore_zero(input: jnp.ndarray, keepdims: bool=False) -> jnp.ndarray:
     out: jnp.ndarray= jnp.sum(input, axis=-1, keepdims=keepdims)
     count: jnp.ndarray= jnp.sum(input!=0.0, axis=-1, keepdims=keepdims)
