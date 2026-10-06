@@ -594,8 +594,10 @@ def hand_mse(
     right_hand_diff= right_hand_diff.at[..., -2].multiply(0.1)
     right_hand_diff= right_hand_diff.at[..., -1].multiply(0.05)
 
-    left_hand_diff= jnp.mean(left_hand_diff, axis=-1, keepdims=True, where=left_hand_diff!=0.0)
-    right_hand_diff= jnp.mean(right_hand_diff, axis=-1, keepdims=True, where=right_hand_diff!=0.0)
+    # left_hand_diff= jnp.mean(left_hand_diff, axis=-1, keepdims=True, where=left_hand_diff!=0.0)
+    # right_hand_diff= jnp.mean(right_hand_diff, axis=-1, keepdims=True, where=right_hand_diff!=0.0)
+    left_hand_diff= mean_ignore_zero(left_hand_diff, keepdims=True)
+    right_hand_diff= mean_ignore_zero(right_hand_diff, keepdims=True)
     '''
     now ----
     left_hand_diff
@@ -604,9 +606,9 @@ def hand_mse(
     both has shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, 1)
     '''''
     out: jnp.ndarray= jnp.concatenate([left_hand_diff, right_hand_diff], axis=-1)
-    out= jnp.mean(out, axis=-1, keepdims=False, where=out!=0.0)
+    out= mean_ignore_zero(out, keepdims=False)
     '''
-    out now has shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+    out, has shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
     return out
 def main() -> None:
