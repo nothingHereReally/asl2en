@@ -134,6 +134,28 @@ IMGS_LM_SHAPE: tuple= (
     len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK*2, # 86
     2
 )
+LM_IDX_TOP_LIP: int        =  0
+LM_IDX_TIP_OF_FOREHEAD: int=  3
+LM_IDX_RIGHT_MOST_EYE: int =  7
+LM_IDX_RIGHT_MOST_LIP: int =  8
+LM_IDX_RIGHT_EAR: int      = 19
+LM_IDX_LEFT_MOST_EYE: int  = 23
+LM_IDX_LEFT_MOST_LIP: int  = 24
+LM_IDX_LEFT_EAR: int       = 34
+LM_IDX_LEFT_ELBOW: int     = 38
+LM_IDX_RIGHT_ELBOW: int    = 39
+WORTHY_LM_IMPORTANT_IDX: tuple= (
+    LM_IDX_TOP_LIP,
+    LM_IDX_TIP_OF_FOREHEAD,
+    LM_IDX_RIGHT_MOST_EYE,
+    LM_IDX_RIGHT_MOST_LIP,
+    LM_IDX_RIGHT_EAR,
+    LM_IDX_LEFT_MOST_EYE,
+    LM_IDX_LEFT_MOST_LIP,
+    LM_IDX_LEFT_EAR,
+    LM_IDX_LEFT_ELBOW,
+    LM_IDX_RIGHT_ELBOW,
+)
 # -----------------------------------------------------
 VERIFIED_DS_DIR: list= [
     {
