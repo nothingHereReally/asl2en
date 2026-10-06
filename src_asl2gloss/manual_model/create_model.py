@@ -579,12 +579,13 @@ def hand_mse(
     both has shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME)
     '''
     left_hand_diff= left_hand_diff.at[..., 0].multiply(0.05)
-    right_hand_diff= right_hand_diff.at[..., 0].multiply(0.05)
     left_hand_diff= left_hand_diff.at[..., 1].multiply(0.1)
-    right_hand_diff= right_hand_diff.at[..., 1].multiply(0.1)
     left_hand_diff= left_hand_diff.at[..., -2].multiply(0.1)
-    right_hand_diff= right_hand_diff.at[..., -2].multiply(0.1)
     left_hand_diff= left_hand_diff.at[..., -1].multiply(0.05)
+    # --------------------------------------------------------
+    right_hand_diff= right_hand_diff.at[..., 0].multiply(0.05)
+    right_hand_diff= right_hand_diff.at[..., 1].multiply(0.1)
+    right_hand_diff= right_hand_diff.at[..., -2].multiply(0.1)
     right_hand_diff= right_hand_diff.at[..., -1].multiply(0.05)
 
     left_hand_diff= jnp.mean(left_hand_diff, axis=-1, keepdims=True, where=left_hand_diff!=0.0)
