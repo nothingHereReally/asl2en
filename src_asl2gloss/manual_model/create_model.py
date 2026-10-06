@@ -532,6 +532,12 @@ def get_right_hand(input: jnp.ndarray) -> jnp.ndarray:
         len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:,
         :
     ].copy()
+def mean_ignore_zero(input: jnp.ndarray, keepdims: bool=False) -> jnp.ndarray:
+    out: jnp.ndarray= jnp.sum(input, axis=-1, keepdims=keepdims)
+    count: jnp.ndarray= jnp.sum(input!=0.0, axis=-1, keepdims=keepdims)
+    # count= jnp.where(count==0, 1, count)
+    count= jnp.maximum(count, 1)
+    return out/count
 def hand_mse(
     input: jnp.ndarray,
     model: jnp.ndarray,
