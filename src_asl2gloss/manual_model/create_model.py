@@ -555,6 +555,8 @@ def hand_mse(
     mask  -- shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86)
     86 landmarks mandatory to follow this order
     [...face_landmarks_36..., ...pose_landmarks_8..., ...left_hand_landmarks_21..., ...right_hand_landmarks_21...]
+    --------------------------------------------------------------------------------------------------------------
+    output, has shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
     left_hand_diff: jnp.ndarray= (
         get_left_hand(model) -get_left_hand(input)
@@ -607,7 +609,7 @@ def hand_mse(
     out: jnp.ndarray= jnp.concatenate([left_hand_diff, right_hand_diff], axis=-1)
     out= mean_ignore_zero(out, keepdims=False)
     '''
-    out, has shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+    out, has shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
     return out
 def comparison_score(input: np.ndarray, model: jnp.ndarray, mask: jnp.ndarray) -> jnp.ndarray:
@@ -623,8 +625,9 @@ def comparison_score(input: np.ndarray, model: jnp.ndarray, mask: jnp.ndarray) -
     assert input.shape[1:]==IMGS_LM_SHAPE
     assert model.shape[-1*len(IMGS_LM_SHAPE):]==IMGS_LM_SHAPE
     assert model.shape[:-1]==mask.shape
+    input_exp: jnp.ndarray= jnp.expand_dims(input, axis=(1, 2))
     left_right_hand_mse: jnp.ndarray= hand_mse(
-        input=jnp.array(input),
+        input=input_exp,
         model=model,
         mask=mask,
     )
