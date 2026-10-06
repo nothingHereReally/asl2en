@@ -612,11 +612,17 @@ def hand_mse(
     return out
 def comparison_score(input: np.ndarray, model: jnp.ndarray, mask: jnp.ndarray) -> jnp.ndarray:
     '''
-    output shape is (QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+    input, shape of ------------------------ (BATCH_SIZE, QUANTITY_FRAME, 86, 2)
+    model, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
+    mask, shape of  (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86)
+    -------------------------------------------------------------
+    output shape is (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
-    assert input.shape==IMGS_LM_SHAPE
+    assert len(input.shape)==(len(IMGS_LM_SHAPE)+1)
+    assert len(model.shape)==(len(IMGS_LM_SHAPE)+3)
+    assert input.shape[1:]==IMGS_LM_SHAPE
     assert model.shape[-1*len(IMGS_LM_SHAPE):]==IMGS_LM_SHAPE
-    assert model.shape==mask.shape
+    assert model.shape[:-1]==mask.shape
     left_right_hand_mse: jnp.ndarray= hand_mse(
         input=jnp.array(input),
         model=model,
