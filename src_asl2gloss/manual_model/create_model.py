@@ -611,6 +611,19 @@ def hand_mse(
     out, has shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
     return out
+def comparison_score(input: np.ndarray, model: jnp.ndarray, mask: jnp.ndarray) -> jnp.ndarray:
+    '''
+    output shape is (QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+    '''
+    assert input.shape==IMGS_LM_SHAPE
+    assert model.shape[-1*len(IMGS_LM_SHAPE):]==IMGS_LM_SHAPE
+    assert model.shape==mask.shape
+    left_right_hand_mse: jnp.ndarray= hand_mse(
+        input=jnp.array(input),
+        model=model,
+        mask=mask,
+    )
+    return left_right_hand_mse
 def main() -> None:
     manual_model, annotations= load_ds_samples()
     with open("/tmp/asdf.json", "w") as f:
