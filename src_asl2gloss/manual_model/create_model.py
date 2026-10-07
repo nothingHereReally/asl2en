@@ -777,6 +777,46 @@ def relativity_mse(
     )
 
     return model_input_lhand
+def comparison_score(
+    input: np.ndarray,
+    model: jnp.ndarray,
+    mask: jnp.ndarray,
+    body2dots: jnp.ndarray,
+    weights: jnp.ndarray,
+) -> jnp.ndarray:
+    '''
+    input, shape of -------------------------- (BATCH_SIZE, QUANTITY_FRAME, 86, 2)
+    model, shape of - (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
+    mask, shape of -- (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86)
+    body2dots, shape  (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 2)
+    weights, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
+    -- on weights axis=-2 of value 2, for left and right hand repsectively
+    -- on weights axis=-1 of value 12 for 12 landmarks
+    -------------------------------------------------------------
+    output shape is (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+    '''
+    assert len(input.shape)==(len(IMGS_LM_SHAPE)+1)
+    assert len(model.shape)==(len(IMGS_LM_SHAPE)+3)
+    assert input.shape[1:]==IMGS_LM_SHAPE
+    assert model.shape[-1*len(IMGS_LM_SHAPE):]==IMGS_LM_SHAPE
+    assert model.shape[:-1]==mask.shape
+    input_exp: jnp.ndarray= jnp.expand_dims(input, axis=(1, 2))
+    left_right_hand_mse: jnp.ndarray= hand_mse(
+        input=input_exp,
+        model=model,
+        mask=mask,
+    ) # shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+    hand2body_mse: jnp.ndarray= relativity_mse(
+        input=input_exp,
+        model=model,
+        mask=mask,
+        model2dots=body2dots,
+        weights=weights,
+    ) # shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+    return mean_ignore_zero(
+        input=jnp.stack([left_right_hand_mse, hand2body_mse], axis=-1),
+        keepdims=False,
+    )
 def main() -> None:
     manual_model, annotations= load_ds_samples()
     with open("/tmp/asdf.json", "w") as f:
