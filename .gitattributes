@@ -182,3 +182,4 @@ model/tfboard_logs_v66_glasl/validation/events.out.tfevents.1787943696.megamind.
 model/aslvid2gloss_v67.keras filter=lfs diff=lfs merge=lfs -text
 model/tfboard_logs_v67_glasl/train/events.out.tfevents.1787972508.megamind.19243.0.v2 filter=lfs diff=lfs merge=lfs -text
 model/tfboard_logs_v67_glasl/validation/events.out.tfevents.1787973944.megamind.19243.1.v2 filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds/aslvid2gloss_v68.keras filter=lfs diff=lfs merge=lfs -text
