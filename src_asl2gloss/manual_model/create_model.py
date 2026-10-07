@@ -144,8 +144,14 @@ LM_IDX_LEFT_MOST_LIP: int  = 24
 LM_IDX_LEFT_EAR: int       = 34
 LM_IDX_LEFT_ELBOW: int     = 38
 LM_IDX_RIGHT_ELBOW: int    = 39
+# -----------------------------
 LM_IDX_LEFT_INDEXF_TIP: int= 52
 LM_IDX_RIGHT_INDEXF_TIP:int= 73
+LM_IDX_LEFT_SHOULDER: int  = 36
+LM_IDX_RIGHT_SHOULDER: int = 37
+LM_IDX_LEFT_HIP: int       = 42
+LM_IDX_RIGHT_HIP: int      = 43
+# -----------------------------
 WORTHY_LM_IMPORTANT_IDX: tuple= (
     LM_IDX_TOP_LIP,
     LM_IDX_TIP_OF_FOREHEAD,
