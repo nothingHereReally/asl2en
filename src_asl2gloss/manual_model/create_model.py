@@ -683,26 +683,100 @@ def hand_mse(
     out, has shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
     return out
-def comparison_score(input: np.ndarray, model: jnp.ndarray, mask: jnp.ndarray) -> jnp.ndarray:
+def relativity_mse(
+    input: jnp.ndarray,
+    model: jnp.ndarray,
+    mask: jnp.ndarray,
+    model2dots: jnp.ndarray,
+    weights: jnp.ndarray,
+) -> jnp.ndarray:
     '''
-    input, shape of ------------------------ (BATCH_SIZE, QUANTITY_FRAME, 86, 2)
-    model, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
-    mask, shape of  (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86)
+    input -- shape of ( BATCH_SIZE,              1,                1, QUANTITY_FRAME, 86,  2)
+    model -- shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86,  2)
+    mask  -- shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86)
+    body2dots, shape  (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2,  2)
+    weights, shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
     -------------------------------------------------------------
     output shape is (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
-    assert len(input.shape)==(len(IMGS_LM_SHAPE)+1)
-    assert len(model.shape)==(len(IMGS_LM_SHAPE)+3)
-    assert input.shape[1:]==IMGS_LM_SHAPE
-    assert model.shape[-1*len(IMGS_LM_SHAPE):]==IMGS_LM_SHAPE
-    assert model.shape[:-1]==mask.shape
-    input_exp: jnp.ndarray= jnp.expand_dims(input, axis=(1, 2))
-    left_right_hand_mse: jnp.ndarray= hand_mse(
-        input=input_exp,
-        model=model,
-        mask=mask,
+    input_lhand_index: jnp.ndarray= input[..., LM_IDX_LEFT_INDEXF_TIP, :]  # shape (..., 1, 2)
+    input_rhand_index: jnp.ndarray= input[..., LM_IDX_RIGHT_INDEXF_TIP, :] # shape (..., 1, 2)
+    input_12landmarks: jnp.ndarray= jnp.concatenate([
+        get_worthy10landmarks(input),
+        get2dots_frombody(input),
+    ], axis=-2) # shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 12, 2)
+    model_lhand_index: jnp.ndarray= model[..., LM_IDX_LEFT_INDEXF_TIP, :]  # shape (..., 1, 2)
+    model_rhand_index: jnp.ndarray= model[..., LM_IDX_RIGHT_INDEXF_TIP, :] # shape (..., 1, 2)
+    model_12landmarks: jnp.ndarray= jnp.concatenate([
+        get_worthy10landmarks(model),
+        model2dots,
+    ], axis=-2) # shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12, 2)
+    '''
+    below are
+    ---------
+    now do difference/subtraction on left/right hand on 12 landmarks
+    then multiply to weights
+    then multiply to mask4left/right hand
+    -------------------------------------
+    distance( c^2= a^2 +b^2 ) on left/right hand( index finger tip only ) to 12 landmarks chosen
+    '''
+    distance_input_lhand: jnp.ndarray= (input_12landmarks -input_lhand_index)**2
+    distance_input_rhand: jnp.ndarray= (input_12landmarks -input_rhand_index)**2
+    distance_model_lhand: jnp.ndarray= (model_12landmarks -model_lhand_index)**2
+    distance_model_rhand: jnp.ndarray= (model_12landmarks -model_rhand_index)**2
+    '''
+    distance_input_lhand shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 12, 2)
+    distance_input_rhand shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 12, 2)
+    distance_model_lhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12, 2)
+    distance_model_rhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12, 2)
+    '''
+    distance_input_lhand= jnp.sum(distance_input_lhand, axis=-1, keepdims=False)
+    distance_input_rhand= jnp.sum(distance_input_rhand, axis=-1, keepdims=False)
+    distance_model_lhand= jnp.sum(distance_model_lhand, axis=-1, keepdims=False)
+    distance_model_rhand= jnp.sum(distance_model_rhand, axis=-1, keepdims=False)
+    '''
+    distance_input_lhand shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 12)
+    distance_input_rhand shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 12)
+    distance_model_lhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
+    distance_model_rhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
+    '''
+    model_input_lhand: jnp.ndarray= (distance_input_lhand -distance_model_lhand)**2
+    model_input_rhand: jnp.ndarray= (distance_input_rhand -distance_model_rhand)**2
+    lhand_mask: jnp.ndarray= get_left_hand(mask)[..., 0]
+    rhand_mask: jnp.ndarray= get_right_hand(mask)[..., 0]
+    '''
+    lhand_mask        shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  1)
+    rhand_mask        shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  1)
+    model_input_lhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
+    model_input_rhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
+    weights, shape of          (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
+    -- on weights axis=-2 of value 2, for left and right hand repsectively
+    -- on weights axis=-1 of value 12 for 12 landmarks
+    '''
+    model_input_lhand= model_input_lhand *weights[..., 0, :] *lhand_mask
+    model_input_rhand= model_input_rhand *weights[..., 1, :] *rhand_mask
+    '''
+    model_input_lhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
+    model_input_rhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
+    '''
+    model_input_lhand=mean_ignore_zero( # result shape (..., QUANTITY_FRAME, 12)
+        input=jnp.stack([
+            model_input_lhand,
+            model_input_rhand,
+        ], axis=-1),
+        keepdims=False,
     )
-    return left_right_hand_mse
+    del model_input_rhand
+    model_input_lhand=mean_ignore_zero( # result shape (..., QUANTITY_FRAME)
+        input=model_input_lhand,
+        keepdims=False,
+    )
+    model_input_lhand=mean_ignore_zero( # result shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+        input=model_input_lhand,
+        keepdims=False,
+    )
+
+    return model_input_lhand
 def main() -> None:
     manual_model, annotations= load_ds_samples()
     with open("/tmp/asdf.json", "w") as f:
