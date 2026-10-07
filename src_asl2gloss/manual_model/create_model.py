@@ -750,8 +750,6 @@ def relativity_mse(
     model_input_lhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
     model_input_rhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
     weights, shape of          (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
-    -- on weights axis=-2 of value 2, for left and right hand repsectively
-    -- on weights axis=-1 of value 12 for 12 landmarks
     '''
     model_input_lhand= model_input_lhand *weights[..., 0, :] *lhand_mask
     model_input_rhand= model_input_rhand *weights[..., 1, :] *rhand_mask
