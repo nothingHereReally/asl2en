@@ -573,6 +573,29 @@ def get_worthy10landmarks(input: jnp.ndarray) -> jnp.ndarray:
         WORTHY_LM_IMPORTANT_IDX,
         :
     ]
+def get2dots_frombody(input: jnp.ndarray) -> jnp.ndarray:
+    '''
+    input -- shape of (..., 86, 2)
+    -------------------------------
+    returned shape is (...,  2, 2)
+    '''
+    shoulder_center: jnp.ndarray= (
+        input[..., LM_IDX_LEFT_SHOULDER, :] +
+        input[..., LM_IDX_RIGHT_SHOULDER, :]
+    )/2.0
+    hip_center: jnp.ndarray= (
+        input[..., LM_IDX_LEFT_HIP, :] +
+        input[..., LM_IDX_RIGHT_HIP, :]
+    )/2.0
+    shoulder_hip_center: jnp.ndarray= (shoulder_center +hip_center)/2.0
+    '''
+    shoulder_center and hip_center, both has shape (..., 1, 2)
+    so as shoulder_hip_center has shape (..., 1, 2)
+    '''
+    return jnp.concatenate([
+        (shoulder_center+shoulder_hip_center)/2.0,
+        (shoulder_hip_center+hip_center)/2.0,
+    ], axis=-2)
 def mean_ignore_zero(input: jnp.ndarray, keepdims: bool=False) -> jnp.ndarray:
     out: jnp.ndarray= jnp.sum(input, axis=-1, keepdims=keepdims)
     count: jnp.ndarray= jnp.sum(input!=0.0, axis=-1, keepdims=keepdims)
