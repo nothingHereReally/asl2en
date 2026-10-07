@@ -563,6 +563,13 @@ def get_right_hand(input: jnp.ndarray) -> jnp.ndarray:
         :
     ].copy()
 def get_worthy10landmarks(input: jnp.ndarray) -> jnp.ndarray:
+    '''
+    input can be of shape (..., 86, 2) or (..., 86)
+    ------------------------------
+    if input shape is (..., 86, 2)
+    then returned shape is (..., 10, 2)
+    else returned shape is (..., 10)
+    '''
     if input.shape[-1]!=2:
         return input[
             ...,
