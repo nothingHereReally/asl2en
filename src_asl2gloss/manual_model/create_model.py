@@ -246,14 +246,78 @@ VERIFIED_DS_DIR: list= [
     {
         KEY_G: 'drink',
         KEY_LANDMARK: [
-            'drink_17724_00020_001_030_from_gt_p2',
-            'drink_68538_00030_032_055_from_gt_p1',
-            'drink_69302_00065_022_057_from_gt_p2',
-            'drink_17729_00107_020_048_from_gt_p1',
-            'drink_17725_00162_020_045_from_gt_p1',
-            'drink_17726_00177_023_062_from_gt_p1',
-            'drink_17727_00195_019_053_from_gt_p1',
-            'drink_17727_00198_019_053_from_gt_p2',
+            {
+                KEY_PFOLDER: 'drink_17724_00020_001_030_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                    3,
+                    6,
+                ],
+            }, # -- right
+            {
+                KEY_PFOLDER: 'drink_68538_00030_032_055_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                    3,
+                    6,
+                ],
+            }, # -- right
+            {
+                KEY_PFOLDER: 'drink_69302_00065_022_057_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                    3,
+                    6,
+                ],
+            }, # -- right
+            {
+                KEY_PFOLDER: 'drink_17729_00107_020_048_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                    3,
+                    6,
+                ],
+            }, # -- right
+            {
+                KEY_PFOLDER: 'drink_17725_00162_020_045_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                    3,
+                    6,
+                ],
+            }, # -- right
+            {
+                KEY_PFOLDER: 'drink_17726_00177_023_062_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                    3,
+                    6,
+                ],
+            }, # -- right
+            {
+                KEY_PFOLDER: 'drink_17727_00195_019_053_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                    3,
+                    6,
+                ],
+            }, # -- right
+            {
+                KEY_PFOLDER: 'drink_17727_00198_019_053_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                    3,
+                    6,
+                ],
+            }, # -- right
         ]
     },
     {
