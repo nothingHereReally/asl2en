@@ -554,14 +554,78 @@ VERIFIED_DS_DIR: list= [
     {
         KEY_G: 'go',
         KEY_LANDMARK: [
-            'go_24948_00001_001_018_from_gt_p1',
-            'go_68292_00022_019_038_from_gt_p2',
-            'go_24965_00044_017_037_from_gt_p1',
-            'go_24954_00062_001_061_from_gt_p1',
-            'go_24857_00135_001_035_from_gt_p1',
-            'go_69345_00160_015_039_from_gt_p1',
-            'go_24941_00172_016_032_from_gt_p1',
-            'go_24971_00221_021_039_from_gt_p2',
+            {
+                KEY_PFOLDER: 'go_24948_00001_001_018_from_gt_p1',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'go_68292_00022_019_038_from_gt_p2',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'go_24965_00044_017_037_from_gt_p1',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'go_24954_00062_001_061_from_gt_p1',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'go_24857_00135_001_035_from_gt_p1',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'go_69345_00160_015_039_from_gt_p1',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'go_24941_00172_016_032_from_gt_p1',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'go_24971_00221_021_039_from_gt_p2',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
         ]
     },
     {
