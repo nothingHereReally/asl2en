@@ -1013,14 +1013,62 @@ VERIFIED_DS_DIR: list= [
     {
         KEY_G: 'stomach',
         KEY_LANDMARK: [
-            'stomach_54870_00001_017_049_from_gt_p1',
-            'stomach_54885_00018_009_042_from_gt_p1',
-            'stomach_66560_00039_015_034_from_gt_p1',
-            'stomach_54878_00055_031_063_from_gt_p1',
-            'stomach_54880_00072_001_051_from_gt_p1',
-            'stomach_54881_00117_006_019_from_gt_p1',
-            'stomach_54883_00130_001_060_from_gt_p1',
-            'stomach_54884_00196_013_040_from_gt_p1',
+            {
+                KEY_PFOLDER: 'stomach_54870_00001_017_049_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    11,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'stomach_54885_00018_009_042_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    11,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'stomach_66560_00039_015_034_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    11,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'stomach_54878_00055_031_063_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    11,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'stomach_54880_00072_001_051_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    11,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'stomach_54881_00117_006_019_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    11,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'stomach_54883_00130_001_060_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    11,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'stomach_54884_00196_013_040_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    11,
+                ],
+            },
         ]
     },
     {
