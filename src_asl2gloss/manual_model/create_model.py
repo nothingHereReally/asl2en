@@ -817,6 +817,21 @@ def comparison_score(
         input=jnp.stack([left_right_hand_mse, hand2body_mse], axis=-1),
         keepdims=False,
     )
+def create_mask(annotations: list) -> list:
+    '''
+    returns a list of shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 2)
+    '''
+    output: list= []
+    for a_gloss in annotations:
+        output.append([]) # --> represents an element from QUANTTIY_GLOSS
+        for a_start_end in a_gloss[KEY_LANDMARK]:
+            output[-1].append([]) # --> represents 1 ds element, SAMPLE_PER_GLOSS
+            for an_img in a_start_end[KEY_LANDMARK]:
+                output[-1][-1].append([
+                    1 if an_img[KEY_LHAND] else 0,
+                    1 if an_img[KEY_RHAND] else 0,
+                ]) # --> represents an element from QUANTITY_FRAME
+    return output
 def main() -> None:
     manual_model, annotations= load_ds_samples()
     with open("/tmp/asdf.json", "w") as f:
