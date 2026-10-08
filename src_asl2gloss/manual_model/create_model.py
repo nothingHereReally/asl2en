@@ -1411,14 +1411,62 @@ VERIFIED_DS_DIR: list= [
     {
         KEY_G: 'fever',
         KEY_LANDMARK: [
-            'fever_78219_00001_007_043_from_gt_p1',
-            'fever_78220_00036_007_028_from_gt_p1',
-            'fever_78221_00056_002_019_from_gt_p1',
-            'fever_78222_00068_004_014_from_gt_p1',
-            'fever_78223_00079_005_089_from_gt_p2',
-            'fever_78224_00196_023_116_from_gt_p1',
-            'fever_78225_00339_001_050_from_gt_p1',
-            'fever_78226_00377_024_050_from_gt_p1',
+            {
+                KEY_PFOLDER: 'fever_78219_00001_007_043_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'fever_78220_00036_007_028_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'fever_78221_00056_002_019_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'fever_78222_00068_004_014_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'fever_78223_00079_005_089_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'fever_78224_00196_023_116_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'fever_78225_00339_001_050_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
+        {
+                KEY_PFOLDER: 'fever_78226_00377_024_050_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
         ]
     },
     {
