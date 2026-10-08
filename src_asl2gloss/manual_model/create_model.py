@@ -830,14 +830,62 @@ VERIFIED_DS_DIR: list= [
     {
         KEY_G: 'cousin',
         KEY_LANDMARK: [
-            'cousin_13640_00047_001_059_from_gt_p1',
-            'cousin_65415_00102_025_043_from_gt_p1',
-            'cousin_68592_00116_005_031_from_gt_p1',
-            'cousin_13647_00135_022_045_from_gt_p1',
-            'cousin_13648_00144_021_040_from_gt_p1',
-            'cousin_13632_00161_027_052_from_gt_p2',
-            'cousin_13633_00175_043_067_from_gt_p1',
-            'cousin_67535_00187_017_032_from_gt_p1',
+            {
+                KEY_PFOLDER: 'cousin_13640_00047_001_059_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'cousin_65415_00102_025_043_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'cousin_68592_00116_005_031_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'cousin_13647_00135_022_045_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'cousin_13648_00144_021_040_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'cousin_13632_00161_027_052_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'cousin_13633_00175_043_067_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'cousin_67535_00187_017_032_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    1,
+                ],
+            },
         ]
     },
     {
