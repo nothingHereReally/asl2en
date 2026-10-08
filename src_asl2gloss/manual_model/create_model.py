@@ -1626,14 +1626,78 @@ VERIFIED_DS_DIR: list= [
     {
         KEY_G: 'doctor',
         KEY_LANDMARK: [
-            'doctor_17007_00035_001_043_from_gt_p2',
-            'doctor_70049_00067_026_054_from_gt_p1',
-            'doctor_17017_00096_024_058_from_gt_p2',
-            'doctor_65504_00119_015_041_from_gt_p2',
-            'doctor_17023_00136_022_048_from_gt_p1',
-            'doctor_17014_00155_029_053_from_gt_p1',
-            'doctor_17020_00171_001_055_from_gt_p2',
-            'doctor_17022_00242_028_064_from_gt_p2',
+            {
+                KEY_PFOLDER: 'doctor_17007_00035_001_043_from_gt_p2',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'doctor_70049_00067_026_054_from_gt_p1',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'doctor_17017_00096_024_058_from_gt_p2',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'doctor_65504_00119_015_041_from_gt_p2',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'doctor_17023_00136_022_048_from_gt_p1',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'doctor_17014_00155_029_053_from_gt_p1',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'doctor_17020_00171_001_055_from_gt_p2',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+        {
+                KEY_PFOLDER: 'doctor_17022_00242_028_064_from_gt_p2',
+                KEY_LHAND: [
+                    10,
+                ],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
         ]
     },
 ]
