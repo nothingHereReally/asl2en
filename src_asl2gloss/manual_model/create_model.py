@@ -1460,7 +1460,7 @@ VERIFIED_DS_DIR: list= [
                     1,
                 ],
             },
-        {
+            {
                 KEY_PFOLDER: 'fever_78226_00377_024_050_from_gt_p1',
                 KEY_LHAND: [],
                 KEY_RHAND: [
@@ -1535,7 +1535,7 @@ VERIFIED_DS_DIR: list= [
                     1,
                 ],
             },
-        {
+            {
                 KEY_PFOLDER: 'dizzy_78229_00380_019_130_from_gt_p1',
                 KEY_LHAND: [
                     1,
@@ -1689,7 +1689,7 @@ VERIFIED_DS_DIR: list= [
                     10,
                 ],
             },
-        {
+            {
                 KEY_PFOLDER: 'doctor_17022_00242_028_064_from_gt_p2',
                 KEY_LHAND: [
                     10,
