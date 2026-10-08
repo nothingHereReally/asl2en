@@ -1273,14 +1273,62 @@ VERIFIED_DS_DIR: list= [
     {
         KEY_G: 'feel',
         KEY_LANDMARK: [
-            'feel_67653_00001_012_029_from_gt_p1',
-            'feel_21434_00013_018_059_from_gt_p1',
-            'feel_69319_00042_023_056_from_gt_p1',
-            'feel_21425_00063_001_049_from_gt_p1',
-            'feel_21438_00094_021_033_from_gt_p1',
-            'feel_21439_00106_023_050_from_gt_p1',
-            'feel_21441_00153_013_048_from_gt_p1',
-            'feel_21436_00202_001_053_from_gt_p1',
+            {
+                KEY_PFOLDER: 'feel_67653_00001_012_029_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'feel_21434_00013_018_059_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'feel_69319_00042_023_056_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'feel_21425_00063_001_049_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'feel_21438_00094_021_033_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'feel_21439_00106_023_050_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'feel_21441_00153_013_048_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'feel_21436_00202_001_053_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
         ]
     },
     {
