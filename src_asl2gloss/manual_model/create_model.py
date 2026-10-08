@@ -952,14 +952,62 @@ VERIFIED_DS_DIR: list= [
     {
         KEY_G: 'me_i',
         KEY_LANDMARK: [
-            'me_i_35267_00001_001_035_from_gt_p1',
-            'me_i_35267_00003_001_035_from_gt_p2',
-            'me_i_35544_00026_018_042_from_gt_p1',
-            'me_i_35545_00048_024_041_from_gt_p1',
-            'me_i_35546_00060_004_058_from_gt_p1',
-            'me_i_35547_00133_021_055_from_gt_p1',
-            'me_i_35548_00254_001_030_from_gt_p1',
-            'me_i_me_i_0001_00283_018_097_from_gt_p1',
+            {
+                KEY_PFOLDER: 'me_i_35267_00001_001_035_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'me_i_35267_00003_001_035_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'me_i_35544_00026_018_042_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'me_i_35545_00048_024_041_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'me_i_35546_00060_004_058_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'me_i_35547_00133_021_055_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'me_i_35548_00254_001_030_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'me_i_me_i_0001_00283_018_097_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    10,
+                ],
+            },
         ]
     },
     {
