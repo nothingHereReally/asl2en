@@ -708,14 +708,62 @@ VERIFIED_DS_DIR: list= [
     {
         KEY_G: 'who',
         KEY_LANDMARK: [
-            'who_63240_00001_025_044_from_gt_p1',
-            'who_63228_00025_013_029_from_gt_p1',
-            'who_63229_00035_019_032_from_gt_p1',
-            'who_63234_00048_025_043_from_gt_p1',
-            'who_63232_00109_065_116_from_gt_p1',
-            'who_70380_00161_001_027_from_gt_p1',
-            'who_who_0003_00180_020_072_from_gt_p1',
-            'who_who_0005_00238_018_068_from_gt_p1',
+            {
+                KEY_PFOLDER: 'who_63240_00001_025_044_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'who_63228_00025_013_029_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'who_63229_00035_019_032_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'who_63234_00048_025_043_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'who_63232_00109_065_116_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'who_70380_00161_001_027_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'who_who_0003_00180_020_072_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                ],
+            },
+            {
+                KEY_PFOLDER: 'who_who_0005_00238_018_068_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [
+                    0,
+                ],
+            },
         ]
     },
     {
