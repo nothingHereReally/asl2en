@@ -1747,6 +1747,7 @@ def load_ds_samples() -> tuple:
     annotations: list= []
     for idx, a_gloss in enumerate(VERIFIED_DS_DIR):
         assert ds_landmark[idx][KEY_G]==a_gloss[KEY_G]
+        list_pfolders: list[str]= list(el[KEY_PFOLDER] for el in a_gloss[KEY_LANDMARK])
         annotations.append({
             KEY_G: ds_landmark[idx][KEY_G],
             KEY_LANDMARK: list(
@@ -1755,7 +1756,7 @@ def load_ds_samples() -> tuple:
                     KEY_LANDMARK: el[KEY_LANDMARK],
                 }
                 for el in ds_landmark[idx][KEY_LANDMARK]
-                if el[KEY_PFOLDER] in a_gloss[KEY_LANDMARK]
+                if el[KEY_PFOLDER] in list_pfolders
             )
         })
         manual_model.append([
