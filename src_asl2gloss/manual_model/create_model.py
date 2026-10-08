@@ -1753,6 +1753,14 @@ def load_ds_samples() -> tuple:
             KEY_LANDMARK: list(
                 {
                     KEY_PFOLDER: el[KEY_PFOLDER],
+                    KEY_LHAND: list(filter(
+                        lambda x: x[KEY_PFOLDER]==el[KEY_PFOLDER],
+                        a_gloss[KEY_LANDMARK]
+                    ))[0][KEY_LHAND],
+                    KEY_RHAND: list(filter(
+                        lambda x: x[KEY_PFOLDER]==el[KEY_PFOLDER],
+                        a_gloss[KEY_LANDMARK]
+                    ))[0][KEY_RHAND],
                     KEY_LANDMARK: el[KEY_LANDMARK],
                 }
                 for el in ds_landmark[idx][KEY_LANDMARK]
@@ -1766,6 +1774,14 @@ def load_ds_samples() -> tuple:
         annotations[-1][KEY_LANDMARK].extend([
         {
             KEY_PFOLDER: f"{many_imgs_el[KEY_PFOLDER]}__manual_flip",
+            KEY_LHAND: list(filter(
+                lambda x: x[KEY_PFOLDER]==many_imgs_el[KEY_PFOLDER],
+                a_gloss[KEY_LANDMARK]
+            ))[0][KEY_RHAND],
+            KEY_RHAND: list(filter(
+                lambda x: x[KEY_PFOLDER]==many_imgs_el[KEY_PFOLDER],
+                a_gloss[KEY_LANDMARK]
+            ))[0][KEY_LHAND],
             KEY_LANDMARK: [{
                 KEY_FILE: lm_img_el[KEY_FILE],
                 KEY_FACE: lm_img_el[KEY_FACE],
