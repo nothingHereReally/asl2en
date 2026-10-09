@@ -1958,20 +1958,33 @@ def relativity_mse(
     '''
     input -- shape of ( BATCH_SIZE,              1,                1, QUANTITY_FRAME, 86,  2)
     model -- shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86,  2)
-    mask  -- shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86)
+    mask  -- shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2)
     body2dots, shape  (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2,  2)
     weights, shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
-    -------------------------------------------------------------
+    --------------------------------------------------------------
     output shape is (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
-    input_lhand_index: jnp.ndarray= input[..., LM_IDX_LEFT_INDEXF_TIP, :]  # shape (..., 1, 2)
-    input_rhand_index: jnp.ndarray= input[..., LM_IDX_RIGHT_INDEXF_TIP, :] # shape (..., 1, 2)
+    input_lhand_index: jnp.ndarray= jnp.expand_dims(
+        input[..., LM_IDX_LEFT_INDEXF_TIP, :],
+        axis=-2,
+    )  # shape (..., 1, 2)
+    input_rhand_index: jnp.ndarray= jnp.expand_dims(
+        input[..., LM_IDX_RIGHT_INDEXF_TIP, :],
+        axis=-2,
+    ) # shape (..., 1, 2)
     input_12landmarks: jnp.ndarray= jnp.concatenate([
         get_worthy10landmarks(input),
         get2dots_frombody(input),
     ], axis=-2) # shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 12, 2)
-    model_lhand_index: jnp.ndarray= model[..., LM_IDX_LEFT_INDEXF_TIP, :]  # shape (..., 1, 2)
-    model_rhand_index: jnp.ndarray= model[..., LM_IDX_RIGHT_INDEXF_TIP, :] # shape (..., 1, 2)
+    # ----------------------------------------------
+    model_lhand_index: jnp.ndarray= jnp.expand_dims(
+        model[..., LM_IDX_LEFT_INDEXF_TIP, :],
+        axis=-2
+    )  # shape (..., 1, 2)
+    model_rhand_index: jnp.ndarray= jnp.expand_dims(
+        model[..., LM_IDX_RIGHT_INDEXF_TIP, :],
+        axis=-2
+    ) # shape (..., 1, 2)
     model_12landmarks: jnp.ndarray= jnp.concatenate([
         get_worthy10landmarks(model),
         model2dots,
@@ -2007,37 +2020,41 @@ def relativity_mse(
     '''
     model_input_lhand: jnp.ndarray= (distance_input_lhand -distance_model_lhand)**2
     model_input_rhand: jnp.ndarray= (distance_input_rhand -distance_model_rhand)**2
-    lhand_mask: jnp.ndarray= get_left_hand(mask)[..., 0]
-    rhand_mask: jnp.ndarray= get_right_hand(mask)[..., 0]
     '''
-    lhand_mask        shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  1)
-    rhand_mask        shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  1)
     model_input_lhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
     model_input_rhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
     weights, shape of          (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
+    mask, shape of             (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2)
     '''
-    model_input_lhand= model_input_lhand *weights[..., 0, :] *lhand_mask
-    model_input_rhand= model_input_rhand *weights[..., 1, :] *rhand_mask
+    model_input_lhand= model_input_lhand *weights[..., 0, :] *jnp.expand_dims(
+        mask[..., 0],
+        axis=-1,
+    )
+    model_input_rhand= model_input_rhand *weights[..., 1, :] *jnp.expand_dims(
+        mask[..., 1],
+        axis=-1,
+    )
     '''
     model_input_lhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
     model_input_rhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
     '''
-    model_input_lhand=mean_ignore_zero( # result shape (..., QUANTITY_FRAME, 12)
+    model_input_lhand= mean_ignore_zero(
         input=jnp.stack([
             model_input_lhand,
             model_input_rhand,
         ], axis=-1),
         keepdims=False,
-    )
+    ) # result shape (..., QUANTITY_FRAME, 12)
     del model_input_rhand
-    model_input_lhand=mean_ignore_zero( # result shape (..., QUANTITY_FRAME)
+    model_input_lhand= mean_ignore_zero(
         input=model_input_lhand,
         keepdims=False,
-    )
-    model_input_lhand=mean_ignore_zero( # result shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+    ) # result shape (..., QUANTITY_FRAME)
+    model_input_lhand= weights_edges(model_input_lhand)
+    model_input_lhand=mean_ignore_zero(
         input=model_input_lhand,
         keepdims=False,
-    )
+    ) # result shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
 
     return model_input_lhand
 def comparison_score(
