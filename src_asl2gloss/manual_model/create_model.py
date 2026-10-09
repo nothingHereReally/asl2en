@@ -2137,10 +2137,30 @@ def create_weights(annotations: list) -> list:
                         output[-1][-1][-1][1][idx_be_98_val]= 0.98
     return output
 def main() -> None:
-    manual_model, annotations= load_ds_samples()
+    ds_samples, annotations= load_ds_samples()
+    '''
+    comparison_score(
+        input, shape of -------------------------- (BATCH_SIZE, QUANTITY_FRAME, 86, 2)
+        model, shape of - (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
+        mask, shape of -- (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2)
+        body2dots, shape  (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 2)
+        weights, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
+        -- on weights axis=-2 of value 2, for left and right hand repsectively
+        -- on weights axis=-1 of value 12 for 12 landmarks
+    ) output shape is (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+    '''
+    ds_samples= jnp.expand_dims(jnp.array(ds_samples), axis=0)
+    mask: jnp.ndarray= jnp.array(create_mask(annotations), dtype=jnp.uint8)
+    mask= jnp.expand_dims(mask, axis=0)
+    ds_samples_body2dots: jnp.ndarray= get2dots_frombody(ds_samples)
+    weights: jnp.ndarray= jnp.array(create_weights(annotations))
+    weights= jnp.expand_dims(weights, axis=0)
+    print(f"ds_samples {ds_samples.shape}")
+    print(f"mask {mask.shape}")
+    print(f"ds_samples_body2dots {ds_samples_body2dots.shape}")
+    print(f"weights {weights.shape}")
     with open("/tmp/asdf.json", "w") as f:
         writeJson(annotations, f, indent=4)
-    print(f"shape --> {np.array(manual_model).shape}")
     print("\n".join([el[KEY_G] for el in annotations]))
 if __name__=="__main__":
     main()
