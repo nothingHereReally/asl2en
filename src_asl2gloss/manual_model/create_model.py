@@ -2088,6 +2088,30 @@ def create_mask(annotations: list) -> list:
                     1 if an_img[KEY_RHAND] else 0,
                 ]) # --> represents an element from QUANTITY_FRAME
     return output
+def create_weights(annotations: list) -> list:
+    '''
+    returns a list of shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
+    on axis=-2 represents left and right hand
+    on axis=-1 represents WORTHY_LM_IMPORTANT_IDX and 2 dots on body
+    '''
+    output: list= []
+    for a_gloss in annotations:
+        output.append([]) # --> represents an element from QUANTTIY_GLOSS
+        for a_start_end in a_gloss[KEY_LANDMARK]:
+            output[-1].append([]) # --> represents 1 ds element, SAMPLE_PER_GLOSS
+            for an_img in a_start_end[KEY_LANDMARK]:
+                output[-1][-1].append([
+                    [.02 for _ in range(12)],
+                    [.02 for _ in range(12)],
+                    # 1 if an_img[KEY_RHAND] else 0,
+                ]) # --> represents an element from QUANTITY_FRAME
+                if an_img[KEY_LHAND]:
+                    for idx_be_98_val in a_start_end[KEY_LHAND]:
+                        output[-1][-1][-1][0][idx_be_98_val]= 0.98
+                if an_img[KEY_RHAND]:
+                    for idx_be_98_val in a_start_end[KEY_RHAND]:
+                        output[-1][-1][-1][1][idx_be_98_val]= 0.98
+    return output
 def main() -> None:
     manual_model, annotations= load_ds_samples()
     with open("/tmp/asdf.json", "w") as f:
