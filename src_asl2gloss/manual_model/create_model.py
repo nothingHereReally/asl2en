@@ -2138,6 +2138,7 @@ def create_weights(annotations: list) -> list:
     return output
 def main() -> None:
     ds_samples, annotations= load_ds_samples()
+    ds_samples= jnp.expand_dims(jnp.array(ds_samples), axis=0)
     '''
     comparison_score(
         input, shape of -------------------------- (BATCH_SIZE, QUANTITY_FRAME, 86, 2)
@@ -2149,11 +2150,10 @@ def main() -> None:
         -- on weights axis=-1 of value 12 for 12 landmarks
     ) output shape is (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
-    ds_samples= jnp.expand_dims(jnp.array(ds_samples), axis=0)
     mask: jnp.ndarray= jnp.array(create_mask(annotations), dtype=jnp.uint8)
-    mask= jnp.expand_dims(mask, axis=0)
     ds_samples_body2dots: jnp.ndarray= get2dots_frombody(ds_samples)
     weights: jnp.ndarray= jnp.array(create_weights(annotations))
+    mask= jnp.expand_dims(mask, axis=0)
     weights= jnp.expand_dims(weights, axis=0)
     print(f"ds_samples {ds_samples.shape}")
     print(f"mask {mask.shape}")
