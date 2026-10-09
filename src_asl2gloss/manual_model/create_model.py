@@ -1881,10 +1881,15 @@ def hand_mse(
     '''
     input -- shape of ( BATCH_SIZE,              1,                1, QUANTITY_FRAME, 86, 2)
     model -- shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
-    mask  -- shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86)
+    mask  -- shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2)
     86 landmarks mandatory to follow this order
-    [...face_landmarks_36..., ...pose_landmarks_8..., ...left_hand_landmarks_21..., ...right_hand_landmarks_21...]
-    --------------------------------------------------------------------------------------------------------------
+    [
+        ...face_landmarks_36...,
+        ...pose_landmarks_8...,
+        ...left_hand_landmarks_21...,
+        ...right_hand_landmarks_21...,
+    ]
+    ----------------------------------
     output, has shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
     left_hand_diff: jnp.ndarray= (
@@ -1903,8 +1908,8 @@ def hand_mse(
         axis=-1,
         keepdims=False
     ) # now be shape (..., QUANTITY_FRAME, 21), ie. removed X, Y cords axis
-    left_hand_diff= left_hand_diff *get_left_hand(mask)
-    right_hand_diff= right_hand_diff *get_right_hand(mask)
+    left_hand_diff= left_hand_diff *jnp.expand_dims(mask[..., 0], axis=-1)
+    right_hand_diff= right_hand_diff *jnp.expand_dims(mask[..., 1], axis=-1)
     '''
     now ----
     left_hand_diff
@@ -1935,8 +1940,10 @@ def hand_mse(
     ---------------
     both has shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, 1)
     '''''
-    out: jnp.ndarray= jnp.concatenate([left_hand_diff, right_hand_diff], axis=-1)
-    out= mean_ignore_zero(out, keepdims=False)
+    out: jnp.ndarray= mean_ignore_zero(
+        jnp.concatenate([left_hand_diff, right_hand_diff], axis=-1),
+        keepdims=False,
+    )
     '''
     out, has shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
@@ -2043,7 +2050,7 @@ def comparison_score(
     '''
     input, shape of -------------------------- (BATCH_SIZE, QUANTITY_FRAME, 86, 2)
     model, shape of - (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
-    mask, shape of -- (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86)
+    mask, shape of -- (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2)
     body2dots, shape  (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 2)
     weights, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
     -- on weights axis=-2 of value 2, for left and right hand repsectively
