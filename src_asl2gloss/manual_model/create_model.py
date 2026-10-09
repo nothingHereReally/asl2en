@@ -2136,6 +2136,28 @@ def create_weights(annotations: list) -> list:
                     for idx_be_98_val in a_start_end[KEY_RHAND]:
                         output[-1][-1][-1][1][idx_be_98_val]= 0.98
     return output
+def test_model_on_self(
+    model: jnp.ndarray,
+    mask: jnp.ndarray,
+    body2dots: jnp.ndarray,
+    weights: jnp.ndarray,
+) -> None:
+    '''
+    model, shape of - (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
+    mask, shape of -- (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2)
+    body2dots, shape  (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 2)
+    weights, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
+    -- on weights axis=-2 of value 2, for left and right hand repsectively
+    -- on weights axis=-1 of value 12 for 12 landmarks
+    '''
+    result= comparison_score(
+        input=np.array(jnp.reshape(model, (-1, *model.shape[-3:]))),
+        model=model,
+        mask=mask,
+        body2dots=body2dots,
+        weights=weights,
+    )
+    print(f"shape ---- {result.shape}")
 def main() -> None:
     ds_samples, annotations= load_ds_samples()
     ds_samples= jnp.expand_dims(jnp.array(ds_samples), axis=0)
