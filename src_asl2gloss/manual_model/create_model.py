@@ -2079,7 +2079,7 @@ def comparison_score(
     assert len(model.shape)==(len(IMGS_LM_SHAPE)+3)
     assert input.shape[1:]==IMGS_LM_SHAPE
     assert model.shape[-1*len(IMGS_LM_SHAPE):]==IMGS_LM_SHAPE
-    assert model.shape[:-1]==mask.shape
+    assert model.shape[:-2]==mask.shape[:-1]
     input_exp: jnp.ndarray= jnp.expand_dims(input, axis=(1, 2))
     left_right_hand_mse: jnp.ndarray= hand_mse(
         input=input_exp,
