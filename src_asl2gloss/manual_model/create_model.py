@@ -2149,6 +2149,7 @@ def test_model_on_self(
     mask: jnp.ndarray,
     body2dots: jnp.ndarray,
     weights: jnp.ndarray,
+    annotations: dict,
 ) -> None:
     '''
     model, shape of - (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
@@ -2164,8 +2165,32 @@ def test_model_on_self(
         mask=mask,
         body2dots=body2dots,
         weights=weights,
-    )
-    print(f"shape ---- {result.shape}")
+    ) # returns jnp.ndarray shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+    index_result: list= sort_score(result) # returns list shape (BATCH_SIZE, QUANTITY_GLOSS)
+    correct: int= 0
+    count: int= 0
+    for a_gloss_idx in range(model.shape[1]):
+        for a_sample_per_gloss_idx in range(model.shape[2]):
+            ds_element_result: list= index_result[a_gloss_idx*model.shape[2] +a_sample_per_gloss_idx]
+            if ds_element_result[0]==a_gloss_idx:
+                top3: list= jnp.argsort(
+                    result[
+                        a_gloss_idx*model.shape[2] +a_sample_per_gloss_idx,
+                        index_result[a_gloss_idx*model.shape[2] +a_sample_per_gloss_idx][0],
+                        :
+                    ],
+                    axis=-1
+                )[:3].tolist()
+                print(f"correct -- {ds_element_result[0]} -- {annotations[a_gloss_idx][KEY_G]} -- {result[
+                    a_gloss_idx*model.shape[2] +a_sample_per_gloss_idx,
+                    index_result[a_gloss_idx*model.shape[2] +a_sample_per_gloss_idx][0],
+                    top3
+                ]}")
+                correct+= 1
+            else:
+                print(f"INcorrect -- {ds_element_result[0]} -- {annotations[a_gloss_idx][KEY_G]}")
+            count+= 1
+    print(f"correct: {correct/count *100} = {correct}/{count}")
 def main() -> None:
     ds_samples, annotations= load_ds_samples()
     ds_samples= jnp.expand_dims(jnp.array(ds_samples), axis=0)
