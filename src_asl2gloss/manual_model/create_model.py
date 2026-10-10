@@ -2276,8 +2276,8 @@ def test_all_data(
         incorrect: int= a_result['count'] -a_result['correct']
         print(
             f"\n{a_result[KEY_G]}\n" +
-            f"    correct: {a_result['correct']}/{a_result['count']}\n" +
-            f"    incorrect: {incorrect}/{a_result['count']}"
+            f"    correct: {a_result['correct']}/{a_result['count']} -- {a_result['correct']/a_result['count']*100}%\n" +
+            f"    incorrect: {incorrect}/{a_result['count']} -- {incorrect/a_result['count']*100}%"
         )
         if incorrect!=0:
             print(f"{a_result[KEY_G]} incorrect_pfolder")
