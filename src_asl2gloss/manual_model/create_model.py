@@ -2286,6 +2286,13 @@ def test_all_data(
     total_incorrect: int= total_count -total_correct
     print(f"total correct: {total_correct}/{total_count} = {total_correct/total_count *100}%")
     print(f"total incorrect: {total_incorrect}/{total_count} = {total_incorrect/total_count *100}%")
+    for a_result in result_details:
+        incorrect: int= a_result['count'] -a_result['correct']
+        print(
+            f"\n{a_result[KEY_G]}\n" +
+            f"    correct: {a_result['correct']}/{a_result['count']} -- {a_result['correct']/a_result['count']*100}%\n" +
+            f"    incorrect: {incorrect}/{a_result['count']} -- {incorrect/a_result['count']*100}%"
+        )
 def main() -> None:
     ds_samples, annotations, origin_annotations= load_ds_samples()
     ds_samples= jnp.expand_dims(jnp.array(ds_samples), axis=0)
