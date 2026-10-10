@@ -2210,10 +2210,13 @@ def main() -> None:
     weights: jnp.ndarray= jnp.array(create_weights(annotations))
     mask= jnp.expand_dims(mask, axis=0)
     weights= jnp.expand_dims(weights, axis=0)
-    print(f"ds_samples {ds_samples.shape}")
-    print(f"mask {mask.shape}")
-    print(f"ds_samples_body2dots {ds_samples_body2dots.shape}")
-    print(f"weights {weights.shape}")
+    test_model_on_self(
+        model=ds_samples,
+        mask=mask,
+        body2dots=ds_samples_body2dots,
+        weights=weights,
+        annotations=annotations,
+    )
     with open("/tmp/asdf.json", "w") as f:
         writeJson(annotations, f, indent=4)
     print("\n".join([el[KEY_G] for el in annotations]))
