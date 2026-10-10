@@ -2275,11 +2275,14 @@ def test_all_data(
         total_count+= a_result['count']
         incorrect: int= a_result['count'] -a_result['correct']
         print(
-            f"{a_result[KEY_G]} correct: {a_result['correct']}/{a_result['count']}; " +
-            f"incorrect: {incorrect}/{a_result['count']}"
+            f"\n{a_result[KEY_G]}\n" +
+            f"    correct: {a_result['correct']}/{a_result['count']}\n" +
+            f"    incorrect: {incorrect}/{a_result['count']}"
         )
         if incorrect!=0:
-            print(f"{a_result[KEY_G]} incorrect_pfolder: {a_result['incorrect_pfolder']}")
+            print(f"{a_result[KEY_G]} incorrect_pfolder")
+            for an_incorrect_pfolder in a_result['incorrect_pfolder']:
+                print(f"    {an_incorrect_pfolder}")
     total_incorrect: int= total_count -total_correct
     print(f"total correct: {total_correct}/{total_count} = {total_correct/total_count *100}%")
     print(f"total incorrect: {total_incorrect}/{total_count} = {total_incorrect/total_count *100}%")
