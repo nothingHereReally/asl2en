@@ -2159,7 +2159,7 @@ def test_model_on_self(
     mask: jnp.ndarray,
     body2dots: jnp.ndarray,
     weights: jnp.ndarray,
-    annotations: dict,
+    annotations: list,
 ) -> None:
     '''
     model, shape of - (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
@@ -2182,7 +2182,7 @@ def test_model_on_self(
     for a_gloss_idx in range(model.shape[1]):
         for a_sample_per_gloss_idx in range(model.shape[2]):
             ds_element_result: list= index_result[a_gloss_idx*model.shape[2] +a_sample_per_gloss_idx]
-            if ds_element_result[0]==a_gloss_idx:
+            if annotations[ds_element_result[0]][KEY_G]==annotations[a_gloss_idx][KEY_G]:
                 top3: list= jnp.argsort(
                     result[
                         a_gloss_idx*model.shape[2] +a_sample_per_gloss_idx,
