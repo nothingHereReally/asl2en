@@ -1751,11 +1751,15 @@ def load_ds_samples() -> tuple:
         ds_landmark= loadJson(f)
     manual_model: list= []
     annotations: list= []
-    for idx, a_gloss in enumerate(VERIFIED_DS_DIR):
-        assert ds_landmark[idx][KEY_G]==a_gloss[KEY_G]
+    ds_landmark_by_gloss: dict= {
+        el[KEY_G]: el # el is dict of keys( 'gloss': str, 'landmark': list[dict] )
+        for el in ds_landmark
+    }
+    for a_gloss in VERIFIED_DS_DIR:
+        ds_gloss: dict= ds_landmark_by_gloss[a_gloss[KEY_G]] # dict of keys( 'gloss': str, 'landmark': list[dict] )
         list_pfolders: list[str]= list(el[KEY_PFOLDER] for el in a_gloss[KEY_LANDMARK])
         annotations.append({
-            KEY_G: ds_landmark[idx][KEY_G],
+            KEY_G: get_model_gloss(ds_gloss[KEY_G]),
             KEY_LANDMARK: list(
                 {
                     KEY_PFOLDER: el[KEY_PFOLDER],
@@ -1769,7 +1773,7 @@ def load_ds_samples() -> tuple:
                     ))[0][KEY_RHAND],
                     KEY_LANDMARK: el[KEY_LANDMARK],
                 }
-                for el in ds_landmark[idx][KEY_LANDMARK]
+                for el in ds_gloss[KEY_LANDMARK]
                 if el[KEY_PFOLDER] in list_pfolders
             )
         })
@@ -1797,8 +1801,8 @@ def load_ds_samples() -> tuple:
             } for lm_img_el in many_imgs_el[KEY_LANDMARK]],
         } for many_imgs_el in annotations[-1][KEY_LANDMARK]])
         manual_model[-1].extend(flip_vertical_x_axis(manual_model[-1]))
-    annotations[10][KEY_G]= 'mine'
-    annotations[11][KEY_G]= 'i'
+    for a_gloss in ds_landmark:
+        a_gloss[KEY_G]= get_model_gloss(a_gloss[KEY_G])
     return (manual_model, annotations, ds_landmark)
 def get_left_hand(input: jnp.ndarray) -> jnp.ndarray:
     if input.shape[-1]!=2:
