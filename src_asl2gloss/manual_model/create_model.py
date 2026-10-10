@@ -1773,7 +1773,7 @@ def load_ds_samples() -> tuple:
         ])
         annotations[-1][KEY_LANDMARK].extend([
         {
-            KEY_PFOLDER: f"{many_imgs_el[KEY_PFOLDER]}__manual_flip",
+            KEY_PFOLDER: f"{many_imgs_el[KEY_PFOLDER]}_flip",
             KEY_LHAND: list(filter(
                 lambda x: x[KEY_PFOLDER]==many_imgs_el[KEY_PFOLDER],
                 a_gloss[KEY_LANDMARK]
