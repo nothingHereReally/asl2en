@@ -2136,6 +2136,14 @@ def create_weights(annotations: list) -> list:
                     for idx_be_98_val in a_start_end[KEY_RHAND]:
                         output[-1][-1][-1][1][idx_be_98_val]= 0.98
     return output
+def sort_score(score: jnp.ndarray) -> list:
+    '''
+    score has shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+    ----------
+    return is a list of shape (BATCH_SIZE, QUANTITY_GLOSS)
+    '''
+    result: jnp.ndarray= jnp.min(score, axis=-1)
+    return jnp.argsort(result, axis=-1, stable=True).tolist()
 def test_model_on_self(
     model: jnp.ndarray,
     mask: jnp.ndarray,
