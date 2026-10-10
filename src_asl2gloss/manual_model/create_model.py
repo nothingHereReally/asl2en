@@ -1793,7 +1793,7 @@ def load_ds_samples() -> tuple:
         manual_model[-1].extend(flip_vertical_x_axis(manual_model[-1]))
     annotations[10][KEY_G]= 'mine'
     annotations[11][KEY_G]= 'i'
-    return (manual_model, annotations)
+    return (manual_model, annotations, ds_landmark)
 def get_left_hand(input: jnp.ndarray) -> jnp.ndarray:
     if input.shape[-1]!=2:
         return input[
@@ -2191,8 +2191,100 @@ def test_model_on_self(
                 print(f"INcorrect -- {ds_element_result[0]} -- {annotations[a_gloss_idx][KEY_G]}")
             count+= 1
     print(f"correct: {correct/count *100} = {correct}/{count}")
+def test_all_data(
+    model: jnp.ndarray,
+    mask: jnp.ndarray,
+    body2dots: jnp.ndarray,
+    weights: jnp.ndarray,
+    annotations: list,
+) -> None:
+    '''
+    model, shape of - (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
+    mask, shape of -- (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2)
+    body2dots, shape  (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 2)
+    weights, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
+    -- on weights axis=-2 of value 2, for left and right hand repsectively
+    -- on weights axis=-1 of value 12 for 12 landmarks
+    '''
+    batch_size: int= 32
+    ds_elements: list= [] # be of shape (INT, QUANTITY_FRAME, 86, 2)
+    ds_labels: list[int]= [] # loadnpfiles(..)
+    ds_pfolders: list[str]= []
+    result_details: list= []
+    for idx_gloss, a_gloss in enumerate(annotations):
+        result_details.append({
+            KEY_G: a_gloss[KEY_G],
+            'correct': 0,
+            'count': 0,
+            'incorrect_pfolder': [],
+        })
+
+    def test_batch(
+        batch_elements: list,
+        batch_labels: list[int],
+        batch_pfolders: list[str],
+    ) -> None:
+        result= comparison_score(
+            input=np.array(batch_elements),
+            model=model,
+            mask=mask,
+            body2dots=body2dots,
+            weights=weights,
+        ) # returns jnp.ndarray shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+        index_result: list= sort_score(result) # returns list shape (BATCH_SIZE, QUANTITY_GLOSS)
+        for idx_batch, ds_element_result in enumerate(index_result):
+            expected_idx: int= batch_labels[idx_batch]
+            predicted_idx: int= ds_element_result[0]
+            result_details[expected_idx]['count']+= 1
+            if predicted_idx==expected_idx:
+                result_details[expected_idx]['correct']+= 1
+            else:
+                result_details[expected_idx]['incorrect_pfolder'].append(batch_pfolders[idx_batch])
+
+    for idx_gloss, a_gloss in enumerate(annotations):
+        for a_start_end in a_gloss[KEY_LANDMARK]:
+            while batch_size<=len(ds_labels):
+                test_batch(
+                    batch_elements=ds_elements[:batch_size],
+                    batch_labels=ds_labels[:batch_size],
+                    batch_pfolders=ds_pfolders[:batch_size],
+                )
+                ds_elements= ds_elements[batch_size:]
+                ds_labels=   ds_labels[batch_size:]
+                ds_pfolders= ds_pfolders[batch_size:]
+            ds_elements.append(loadnpfiles(
+                parent_folder=a_start_end[KEY_PFOLDER],
+                landmarks=a_start_end[KEY_LANDMARK],
+            ))
+            ds_labels.append(idx_gloss)
+            ds_pfolders.append(a_start_end[KEY_PFOLDER])
+    if len(ds_labels)!=0:
+        test_batch(
+            batch_elements=ds_elements,
+            batch_labels=ds_labels,
+            batch_pfolders=ds_pfolders,
+        )
+    del ds_elements
+    del ds_labels
+    del ds_pfolders
+
+    total_correct: int= 0
+    total_count: int= 0
+    for a_result in result_details:
+        total_correct+= a_result['correct']
+        total_count+= a_result['count']
+        incorrect: int= a_result['count'] -a_result['correct']
+        print(
+            f"{a_result[KEY_G]} correct: {a_result['correct']}/{a_result['count']}; " +
+            f"incorrect: {incorrect}/{a_result['count']}"
+        )
+        if incorrect!=0:
+            print(f"{a_result[KEY_G]} incorrect_pfolder: {a_result['incorrect_pfolder']}")
+    total_incorrect: int= total_count -total_correct
+    print(f"total correct: {total_correct}/{total_count} = {total_correct/total_count *100}%")
+    print(f"total incorrect: {total_incorrect}/{total_count} = {total_incorrect/total_count *100}%")
 def main() -> None:
-    ds_samples, annotations= load_ds_samples()
+    ds_samples, annotations, origin_annotations= load_ds_samples()
     ds_samples= jnp.expand_dims(jnp.array(ds_samples), axis=0)
     '''
     comparison_score(
@@ -2210,15 +2302,22 @@ def main() -> None:
     weights: jnp.ndarray= jnp.array(create_weights(annotations))
     mask= jnp.expand_dims(mask, axis=0)
     weights= jnp.expand_dims(weights, axis=0)
-    test_model_on_self(
+    # test_model_on_self(
+    #     model=ds_samples,
+    #     mask=mask,
+    #     body2dots=ds_samples_body2dots,
+    #     weights=weights,
+    #     annotations=annotations,
+    # )
+    test_all_data(
         model=ds_samples,
         mask=mask,
         body2dots=ds_samples_body2dots,
         weights=weights,
-        annotations=annotations,
+        annotations=origin_annotations,
     )
-    with open("/tmp/asdf.json", "w") as f:
-        writeJson(annotations, f, indent=4)
-    print("\n".join([el[KEY_G] for el in annotations]))
+    # with open("/tmp/asdf.json", "w") as f:
+    #     writeJson(annotations, f, indent=4)
+    # print("\n".join([el[KEY_G] for el in annotations]))
 if __name__=="__main__":
     main()
