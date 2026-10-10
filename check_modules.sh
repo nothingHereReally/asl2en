@@ -35,6 +35,7 @@ check tf_keras              "2.19.0"
 check torch                 "2.7.1"
 check torchaudio            "2.7.1"
 check torchvision           "0.22.1"
+check jax                   "0.7.1"
 
 
 # -- 10 modules -- old --
