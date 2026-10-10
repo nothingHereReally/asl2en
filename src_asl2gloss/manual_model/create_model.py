@@ -2206,6 +2206,7 @@ def test_all_data(
     mask: jnp.ndarray,
     body2dots: jnp.ndarray,
     weights: jnp.ndarray,
+    model_annotations: list[str],
     annotations: list,
 ) -> None:
     '''
@@ -2221,7 +2222,7 @@ def test_all_data(
     ds_labels: list[int]= [] # loadnpfiles(..)
     ds_pfolders: list[str]= []
     result_details: list= []
-    for idx_gloss, a_gloss in enumerate(annotations):
+    for a_gloss in annotations:
         result_details.append({
             KEY_G: a_gloss[KEY_G],
             'correct': 0,
@@ -2246,7 +2247,7 @@ def test_all_data(
             expected_idx: int= batch_labels[idx_batch]
             predicted_idx: int= ds_element_result[0]
             result_details[expected_idx]['count']+= 1
-            if predicted_idx==expected_idx:
+            if model_annotations[predicted_idx]==annotations[expected_idx][KEY_G]:
                 result_details[expected_idx]['correct']+= 1
             else:
                 result_details[expected_idx]['incorrect_pfolder'].append(batch_pfolders[idx_batch])
@@ -2334,6 +2335,7 @@ def main() -> None:
         mask=mask,
         body2dots=ds_samples_body2dots,
         weights=weights,
+        model_annotations=[el[KEY_G] for el in annotations],
         annotations=origin_annotations,
     )
     # with open("/tmp/asdf.json", "w") as f:
