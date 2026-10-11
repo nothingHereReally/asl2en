@@ -3012,6 +3012,23 @@ def init_folders_files() -> None:
         )
         raise FileNotFoundError('Please read above.')
     MODEL2SAVE_DIR.mkdir()
+def save_model(
+    ds_samples: jnp.ndarray,
+    mask: jnp.ndarray,
+    body2dots: jnp.ndarray,
+    weights: jnp.ndarray,
+    labels: list[str],
+) -> None:
+    with open(f"{MODEL2SAVE_DIR /"ds_samples.npy"}", 'wb') as f:
+        np.save(f, np.array(ds_samples.tolist()))
+    with open(f"{MODEL2SAVE_DIR /"mask.npy"}", 'wb') as f:
+        np.save(f, np.array(mask.tolist()))
+    with open(f"{MODEL2SAVE_DIR /"body2dots.npy"}", 'wb') as f:
+        np.save(f, np.array(body2dots.tolist()))
+    with open(f"{MODEL2SAVE_DIR /"weights.npy"}", 'wb') as f:
+        np.save(f, np.array(weights.tolist()))
+    with open(f"{MODEL2SAVE_DIR /"labels.json"}", 'w') as f:
+        writeJson(labels, f, indent=4)
 def main() -> None:
     init_folders_files()
     ds_samples, annotations, origin_annotations= load_ds_samples()
@@ -3054,6 +3071,13 @@ def main() -> None:
         body2dots=ds_samples_body2dots,
         weights=weights,
         model_annotations=labels,
+    )
+    save_model(
+        ds_samples=ds_samples,
+        mask=mask,
+        body2dots=ds_samples_body2dots,
+        weights=weights,
+        labels=labels,
     )
     # with open("/tmp/asdf.json", "w") as f:
     #     writeJson(annotations, f, indent=4)
