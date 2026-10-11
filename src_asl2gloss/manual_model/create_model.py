@@ -1943,6 +1943,51 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'hurt',
+        KEY_LANDMARK: [
+            {
+                KEY_PFOLDER: 'hurt_70147_00001_052_072_from_gt_p1',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'hurt_70147_00002_052_072_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'hurt_70147_00003_052_072_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'hurt_70147_00004_052_072_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'hurt_28453_00019_016_037_from_gt_p1',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'hurt_28453_00020_016_037_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'hurt_28453_00021_016_037_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'hurt_28453_00022_016_037_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+        ]
+    },
+    {
         KEY_G: 'fever',
         KEY_LANDMARK: [
             {
