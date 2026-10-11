@@ -2995,9 +2995,9 @@ def show_shapes(
     model_annotations: list[str],
 ) -> None:
     print(f"ds_samples shape {ds_samples.shape}")
-    print(f"mask shape {mask.shape}")
-    print(f"body2dots shape {body2dots.shape}")
-    print(f"weights shape {weights.shape}")
+    print(f"mask shape       {mask.shape}")
+    print(f"body2dots shape  {body2dots.shape}")
+    print(f"weights shape    {weights.shape}")
     print(f"model_annotations length {len(model_annotations)}")
 def main() -> None:
     ds_samples, annotations, origin_annotations= load_ds_samples()
