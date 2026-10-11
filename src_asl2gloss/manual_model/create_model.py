@@ -1758,6 +1758,7 @@ def load_ds_samples() -> tuple:
     for a_gloss in VERIFIED_DS_DIR:
         ds_gloss: dict= ds_landmark_by_gloss[a_gloss[KEY_G]] # dict of keys( 'gloss': str, 'landmark': list[dict] )
         list_pfolders: list[str]= list(el[KEY_PFOLDER] for el in a_gloss[KEY_LANDMARK])
+        assert len(list_pfolders)==len(VERIFIED_DS_DIR[0][KEY_LANDMARK])
         annotations.append({
             KEY_G: get_model_gloss(ds_gloss[KEY_G]),
             KEY_LANDMARK: list(
