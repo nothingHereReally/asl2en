@@ -1166,6 +1166,51 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'who',
+        KEY_LANDMARK: [
+            {
+                KEY_PFOLDER: 'who_63242_00017_024_032_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [0]
+            },
+            {
+                KEY_PFOLDER: 'who_63242_00018_024_032_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [0]
+            },
+            {
+                KEY_PFOLDER: 'who_63242_00019_024_032_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [0]
+            },
+            {
+                KEY_PFOLDER: 'who_63242_00020_024_032_from_gt_p3',
+                KEY_LHAND: [],
+                KEY_RHAND: [0]
+            },
+            {
+                KEY_PFOLDER: 'who_63229_00038_019_032_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [0]
+            },
+            {
+                KEY_PFOLDER: 'who_63229_00039_019_032_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [0]
+            },
+            {
+                KEY_PFOLDER: 'who_63229_00040_019_032_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [0]
+            },
+            {
+                KEY_PFOLDER: 'who_63232_00112_065_116_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [0]
+            },
+        ]
+    },
+    {
         KEY_G: 'candy',
         KEY_LANDMARK: [
             {
