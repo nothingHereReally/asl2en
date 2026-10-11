@@ -325,75 +325,133 @@ VERIFIED_DS_DIR: list= [
         KEY_LANDMARK: [
             {
                 KEY_PFOLDER: 'computer_12306_00002_001_052_from_gt_p2',
-                KEY_LHAND: [
-                    11,
-                ],
-                KEY_RHAND: [
-                    10,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
             {
                 KEY_PFOLDER: 'computer_68028_00055_023_063_from_gt_p2',
-                KEY_LHAND: [
-                    11,
-                ],
-                KEY_RHAND: [
-                    10,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
             {
                 KEY_PFOLDER: 'computer_12331_00183_024_051_from_gt_p1',
-                KEY_LHAND: [
-                    11,
-                ],
-                KEY_RHAND: [
-                    10,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
             {
                 KEY_PFOLDER: 'computer_12331_00189_024_051_from_gt_p2',
-                KEY_LHAND: [
-                    11,
-                ],
-                KEY_RHAND: [
-                    10,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
             {
                 KEY_PFOLDER: 'computer_12312_00237_047_081_from_gt_p1',
-                KEY_LHAND: [
-                    11,
-                ],
-                KEY_RHAND: [
-                    10,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
             {
                 KEY_PFOLDER: 'computer_12326_00262_013_073_from_gt_p1',
-                KEY_LHAND: [
-                    11,
-                ],
-                KEY_RHAND: [
-                    10,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
             {
                 KEY_PFOLDER: 'computer_computer_0004_00335_019_086_from_gt_p1',
-                KEY_LHAND: [
-                    11,
-                ],
-                KEY_RHAND: [
-                    10,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
             {
                 KEY_PFOLDER: 'computer_computer_0005_00413_013_082_from_gt_p1',
-                KEY_LHAND: [
-                    11,
-                ],
-                KEY_RHAND: [
-                    10,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+        ]
+    },
+    {
+        KEY_G: 'computer',
+        KEY_LANDMARK: [
+            {
+                KEY_PFOLDER: 'computer_68028_00059_023_063_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+            {
+                KEY_PFOLDER: 'computer_69054_00077_020_117_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+            {
+                KEY_PFOLDER: 'computer_69054_00079_020_117_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+            {
+                KEY_PFOLDER: 'computer_12331_00204_024_051_from_gt_p3',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+            {
+                KEY_PFOLDER: 'computer_12336_00206_021_053_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+            {
+                KEY_PFOLDER: 'computer_12336_00210_021_053_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+            {
+                KEY_PFOLDER: 'computer_12314_00224_014_039_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+            {
+                KEY_PFOLDER: 'computer_12326_00268_013_073_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+        ]
+    },
+    {
+        KEY_G: 'computer',
+        KEY_LANDMARK: [
+            {
+                KEY_PFOLDER: 'computer_12326_00267_013_073_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+            {
+                KEY_PFOLDER: 'computer_12326_00291_013_073_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+            {
+                KEY_PFOLDER: 'computer_12326_00306_013_073_from_gt_p3',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+            {
+                KEY_PFOLDER: 'computer_12326_00312_013_073_from_gt_p3',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+            {
+                KEY_PFOLDER: 'computer_computer_0004_00385_019_086_from_gt_p3',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+            {
+                KEY_PFOLDER: 'computer_computer_0004_00390_019_086_from_gt_p3',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+            {
+                KEY_PFOLDER: 'computer_computer_0005_00471_013_082_from_gt_p3',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+            {
+                KEY_PFOLDER: 'computer_computer_0005_00485_013_082_from_gt_p3',
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
         ]
     },
