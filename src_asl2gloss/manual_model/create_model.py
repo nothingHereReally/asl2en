@@ -758,6 +758,51 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'chair',
+        KEY_LANDMARK: [
+            {
+                KEY_PFOLDER: 'chair_68580_00179_013_040_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_68580_00184_013_040_from_gt_p3',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_70263_00193_033_081_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_70263_00201_033_081_from_gt_p3',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_70263_00205_033_081_from_gt_p3',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_68019_00247_017_047_from_gt_p3',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_09865_00263_007_048_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_09865_00272_007_048_from_gt_p3',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+        ]
+    },
+    {
         KEY_G: 'go',
         KEY_LANDMARK: [
             {
