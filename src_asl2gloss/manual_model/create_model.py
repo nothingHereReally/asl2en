@@ -668,6 +668,96 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'chair',
+        KEY_LANDMARK: [
+            {
+                KEY_PFOLDER: 'chair_09862_00066_021_078_from_gt_p1',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_09862_00067_021_078_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_09862_00068_021_078_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_09862_00069_021_078_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_68580_00169_013_040_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_68580_00170_013_040_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_68580_00172_013_040_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_70263_00190_033_081_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+        ]
+    },
+    {
+        KEY_G: 'chair',
+        KEY_LANDMARK: [
+            {
+                KEY_PFOLDER: 'chair_70263_00191_033_081_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_70263_00192_033_081_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_68019_00223_017_047_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_68019_00226_017_047_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_68019_00227_017_047_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_09865_00251_007_048_from_gt_p1',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_09865_00252_007_048_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'chair_09865_00253_007_048_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+        ]
+    },
+    {
         KEY_G: 'go',
         KEY_LANDMARK: [
             {
