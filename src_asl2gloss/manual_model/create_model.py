@@ -1455,6 +1455,51 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'me_i',
+        KEY_LANDMARK: [
+            {
+                KEY_PFOLDER: 'me_i_35549_00158_034_107_from_gt_p1',
+                KEY_LHAND: [10],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'me_i_35549_00159_034_107_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'me_i_35549_00160_034_107_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'me_i_35549_00161_034_107_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'me_i_35550_00229_014_042_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'me_i_35550_00230_014_042_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'me_i_35550_00231_014_042_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'me_i_35550_00232_014_042_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: [10]
+            },
+        ]
+    },
+    {
         KEY_G: 'stomach',
         KEY_LANDMARK: [
             {
