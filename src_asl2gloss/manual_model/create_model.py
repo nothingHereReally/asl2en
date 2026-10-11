@@ -2987,6 +2987,18 @@ def test_all_data(
             f"    correct: {a_result['correct']}/{a_result['count']} -- {a_result['correct']/a_result['count']*100}%\n" +
             f"    incorrect: {incorrect}/{a_result['count']} -- {incorrect/a_result['count']*100}%"
         )
+def show_shapes(
+    ds_samples: jnp.ndarray,
+    mask: jnp.ndarray,
+    body2dots: jnp.ndarray,
+    weights: jnp.ndarray,
+    model_annotations: list[str],
+) -> None:
+    print(f"ds_samples shape {ds_samples.shape}")
+    print(f"mask shape {mask.shape}")
+    print(f"body2dots shape {body2dots.shape}")
+    print(f"weights shape {weights.shape}")
+    print(f"model_annotations length {len(model_annotations)}")
 def main() -> None:
     ds_samples, annotations, origin_annotations= load_ds_samples()
     ds_samples= jnp.expand_dims(jnp.array(ds_samples), axis=0)
@@ -3021,6 +3033,13 @@ def main() -> None:
         weights=weights,
         model_annotations=labels,
         annotations=origin_annotations,
+    )
+    show_shapes(
+        ds_samples=ds_samples,
+        mask=mask,
+        body2dots=ds_samples_body2dots,
+        weights=weights,
+        model_annotations=labels,
     )
     # with open("/tmp/asdf.json", "w") as f:
     #     writeJson(annotations, f, indent=4)
