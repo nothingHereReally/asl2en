@@ -970,6 +970,141 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'clothes',
+        KEY_LANDMARK: [
+            {
+                KEY_PFOLDER: 'clothes_11326_00007_002_023_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_11326_00008_002_023_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_11326_00009_002_023_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_11311_00029_027_053_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_11311_00032_027_053_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_11311_00033_027_053_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_11314_00043_022_033_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_11314_00044_022_033_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+        ]
+    },
+    {
+        KEY_G: 'clothes',
+        KEY_LANDMARK: [
+            {
+                KEY_PFOLDER: 'clothes_11314_00045_022_033_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_68870_00130_012_035_from_gt_p3',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_68870_00132_012_035_from_gt_p3',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_68870_00133_012_035_from_gt_p3',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_68024_00134_012_050_from_gt_p1',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_68024_00135_012_050_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_68024_00136_012_050_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_68024_00137_012_050_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+        ]
+    },
+    {
+        KEY_G: 'clothes',
+        KEY_LANDMARK: [
+            {
+                KEY_PFOLDER: 'clothes_11327_00178_018_049_from_gt_p1',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_11327_00179_018_049_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_11327_00180_018_049_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_11327_00181_018_049_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_11328_00194_001_029_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_11328_00197_001_029_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_11328_00198_001_029_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+            {
+                KEY_PFOLDER: 'clothes_11329_00219_001_028_from_gt_p2',
+                KEY_LHAND: [10],
+                KEY_RHAND: [10]
+            },
+        ]
+    },
+    {
         KEY_G: 'who',
         KEY_LANDMARK: [
             {
