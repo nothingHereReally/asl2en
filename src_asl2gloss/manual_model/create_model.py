@@ -2053,75 +2053,133 @@ VERIFIED_DS_DIR: list= [
         KEY_LANDMARK: [
             {
                 KEY_PFOLDER: 'dizzy_16980_00001_001_091_from_gt_p1',
-                KEY_LHAND: [
-                    1,
-                ],
-                KEY_RHAND: [
-                    1,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
             {
                 KEY_PFOLDER: 'dizzy_16982_00109_017_049_from_gt_p1',
-                KEY_LHAND: [
-                    1,
-                ],
-                KEY_RHAND: [
-                    1,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
             {
                 KEY_PFOLDER: 'dizzy_16986_00126_001_057_from_gt_p1',
-                KEY_LHAND: [
-                    1,
-                ],
-                KEY_RHAND: [
-                    1,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
             {
                 KEY_PFOLDER: 'dizzy_16987_00167_023_058_from_gt_p1',
-                KEY_LHAND: [
-                    1,
-                ],
-                KEY_RHAND: [
-                    1,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
             {
                 KEY_PFOLDER: 'dizzy_16988_00198_017_053_from_gt_p1',
-                KEY_LHAND: [
-                    1,
-                ],
-                KEY_RHAND: [
-                    1,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
             {
                 KEY_PFOLDER: 'dizzy_78227_00233_022_052_from_gt_p1',
-                KEY_LHAND: [
-                    1,
-                ],
-                KEY_RHAND: [
-                    1,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
             {
                 KEY_PFOLDER: 'dizzy_78228_00265_048_160_from_gt_p1',
-                KEY_LHAND: [
-                    1,
-                ],
-                KEY_RHAND: [
-                    1,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
             },
             {
                 KEY_PFOLDER: 'dizzy_78229_00380_019_130_from_gt_p1',
-                KEY_LHAND: [
-                    1,
-                ],
-                KEY_RHAND: [
-                    1,
-                ],
+                KEY_LHAND: [],
+                KEY_RHAND: [],
+            },
+        ]
+    },
+    {
+        KEY_G: 'dizzy',
+        KEY_LANDMARK: [
+            {
+                KEY_PFOLDER: 'dizzy_16982_00113_017_049_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'dizzy_16982_00114_017_049_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'dizzy_16982_00117_017_049_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'dizzy_78228_00279_048_160_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'dizzy_78228_00280_048_160_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'dizzy_78228_00293_048_160_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'dizzy_78229_00398_019_130_from_gt_p3',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'dizzy_78229_00399_019_130_from_gt_p3',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+        ]
+    },
+    {
+        KEY_G: 'dizzy',
+        KEY_LANDMARK: [
+            {
+                KEY_PFOLDER: 'dizzy_78229_00400_019_130_from_gt_p3',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'dizzy_65501_00483_030_050_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'dizzy_65501_00485_030_050_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'dizzy_65501_00488_030_050_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'dizzy_65501_00490_030_050_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'dizzy_16985_00499_001_028_from_gt_p1',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'dizzy_16985_00500_001_028_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: []
+            },
+            {
+                KEY_PFOLDER: 'dizzy_16985_00501_001_028_from_gt_p2',
+                KEY_LHAND: [],
+                KEY_RHAND: []
             },
         ]
     },
