@@ -7,6 +7,7 @@ from pathlib import Path
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
 DS_DIR: Path= PROJ_ROOT /"dataset" /"clean_dataset"
 LANDMARK_DIR: Path= DS_DIR /"ds_landmark"
+MODEL2SAVE_DIR: Path= PROJ_ROOT /"src_asl2gloss" /"manual_model" /"model"
 KEY_G: str= 'gloss'
 KEY_VIDS: str= 'videos'
 KEY_VFILE: str= 'video_file'
@@ -2999,7 +3000,20 @@ def show_shapes(
     print(f"body2dots shape  {body2dots.shape}")
     print(f"weights shape    {weights.shape}")
     print(f"model_annotations length {len(model_annotations)}")
+def init_folders_files() -> None:
+    assert (DS_DIR /'ds_landmark.json').exists()
+    assert LANDMARK_DIR.exists()
+    if MODEL2SAVE_DIR.exists():
+        print(
+            f"-------------- error --------------" +
+            f"Delete: {MODEL2SAVE_DIR}\n" +
+            f"Please delete this folder and its contents.\n" +
+            f"This folder will be created for you."
+        )
+        raise FileNotFoundError('Please read above.')
+    MODEL2SAVE_DIR.mkdir()
 def main() -> None:
+    init_folders_files()
     ds_samples, annotations, origin_annotations= load_ds_samples()
     ds_samples= jnp.expand_dims(jnp.array(ds_samples), axis=0)
     '''
