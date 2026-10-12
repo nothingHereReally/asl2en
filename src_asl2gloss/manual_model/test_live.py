@@ -699,7 +699,7 @@ def main() -> None:
     weights= jnp.array(weights)
     labels= list(labels)
     # fph: Any= MPH_fph.process(cvtColor(src=image, code=COLOR_BGR2RGB))
-    # img_skeleton, lmark_face_pose_lr_hand= drawFacePoseHand(
+    # img_skeleton, lmark_face_pose_left_hand_right_hand= drawFacePoseHand(
     #     img_write_to=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
     #     lmark_mph=fph,
     #     orig_shape=img_loaded.shape
