@@ -443,12 +443,15 @@ def normalizeWorthyLandmarkWrapper(
     # )
     return out_landmark # ie. output shape (86, 2)
 def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> tuple:
+    assert lmark_mph.face_landmarks!=None
+    assert lmark_mph.pose_landmarks!=None
+    assert lmark_mph.left_hand_landmarks!=None
+    assert lmark_mph.right_hand_landmarks!=None
     landmark__face_pose_left_right_hand: list= np.zeros((
         len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +(QUANTITY_HAND_LMARK*2),
         2
     ), dtype=np.float32).tolist()
     # ---- face landmarks ----
-    if lmark_mph.face_landmarks != None:
         img_write_to= drawSkeletonImg(
             image=img_write_to,
             lmark_coordinates=[(el.x, el.y) for el in lmark_mph.face_landmarks],
@@ -459,7 +462,6 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
         )
 
     # ---- pose landmarks ----
-    if lmark_mph.pose_landmarks != None:
         img_write_to= drawSkeletonImg(
             image=img_write_to,
             lmark_coordinates=[(el.x, el.y) for el in lmark_mph.pose_landmarks],
@@ -470,7 +472,6 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
         )
 
     # ---- left hand landmarks ----
-    if lmark_mph.left_hand_landmarks != None:
         img_write_to= drawSkeletonImg(
             image=img_write_to,
             lmark_coordinates=[(el.x, el.y) for el in lmark_mph.left_hand_landmarks],
@@ -481,7 +482,6 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
         )
 
     # ---- right hand landmarks ----
-    if lmark_mph.right_hand_landmarks != None:
         img_write_to= drawSkeletonImg(
             image=img_write_to,
             lmark_coordinates=[(el.x, el.y) for el in lmark_mph.right_hand_landmarks],
