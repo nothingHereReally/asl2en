@@ -109,7 +109,7 @@ def load_model() -> tuple:
     with open(f"{MODEL_DIR /"weights.npy"}", 'rb') as f:
         weights: np.ndarray= np.load(f)
     with open(f"{MODEL_DIR /"labels.json"}", 'r') as f:
-        labels: list= loadJson(f)
+        labels: list[str]= loadJson(f)
     return (
         ds_samples,
         mask,
