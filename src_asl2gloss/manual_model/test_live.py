@@ -447,10 +447,9 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
     assert lmark_mph.pose_landmarks!=None
     assert lmark_mph.left_hand_landmarks!=None
     assert lmark_mph.right_hand_landmarks!=None
-    landmark__face_pose_left_right_hand: list= np.zeros((
-        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +(QUANTITY_HAND_LMARK*2),
-        2
-    ), dtype=np.float32).tolist()
+
+
+    landmark__face_pose_left_right_hand: list= list()
     # ---- face landmarks ----
     img_write_to= drawSkeletonImg(
         image=img_write_to,
@@ -460,6 +459,9 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
         color_dot=None,
         color_line=(0, 153, 0), # 153/255= 0.6
     )
+    for idx, el in enumerate(lmark_mph.face_landmarks.landmark):
+        if idx in WORTHY_FACE_IDX:
+            landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
 
     # ---- pose landmarks ----
     img_write_to= drawSkeletonImg(
@@ -470,6 +472,9 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
         color_dot=None,
         color_line=(0, 0, 153), # 153/255= 0.6
     )
+    for idx, el in enumerate(lmark_mph.pose_landmarks.landmark):
+        if idx in WORTHY_POSE_IDX:
+            landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
 
     # ---- left hand landmarks ----
     img_write_to= drawSkeletonImg(
@@ -480,6 +485,8 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
         color_dot=None,
         color_line=(255, 255, 255)
     )
+    for el in lmark_mph.left_hand_landmarks.landmark:
+        landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
 
     # ---- right hand landmarks ----
     img_write_to= drawSkeletonImg(
@@ -490,61 +497,26 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
         color_dot=None,
         color_line=(153, 204, 204), # 204/255= 0.8
     )
-
-    if lmark_mph.face_landmarks!=None \
-        or lmark_mph.pose_landmarks!=None \
-        or lmark_mph.left_hand_landmarks!=None \
-        or lmark_mph.right_hand_landmarks!=None:
-        landmark__face_pose_left_right_hand= list()
-        # here possible -2.0<= i[1].x <=2.0, mostly on pose
-        # here possible -2.0<= i[1].y <=2.0, mostly on pose
-        # that's why next force be 0.0<= all <=1.0
-
-        # ---- face landmarks ----
-        if lmark_mph.face_landmarks != None:
-            for idx, el in enumerate(lmark_mph.face_landmarks.landmark):
-                if idx in WORTHY_FACE_IDX:
-                    landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
-        else:
-            landmark__face_pose_left_right_hand.extend(np.zeros((len(WORTHY_FACE_IDX), 2)).tolist())
-
-        # ---- pose landmarks ----
-        if lmark_mph.pose_landmarks != None:
-            for idx, el in enumerate(lmark_mph.pose_landmarks.landmark):
-                if idx in WORTHY_POSE_IDX:
-                    landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
-        else:
-            landmark__face_pose_left_right_hand.extend(np.zeros((len(WORTHY_POSE_IDX), 2)).tolist())
-
-        # ---- left hand landmarks ----
-        if lmark_mph.left_hand_landmarks != None:
-            for el in lmark_mph.left_hand_landmarks.landmark:
-                landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
-        else:
-            landmark__face_pose_left_right_hand.extend(np.zeros((QUANTITY_HAND_LMARK, 2)).tolist())
-
-        # ---- right hand landmarks ----
-        if lmark_mph.right_hand_landmarks != None:
-            for el in lmark_mph.right_hand_landmarks.landmark:
-                landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
-        else:
-            landmark__face_pose_left_right_hand.extend(np.zeros((QUANTITY_HAND_LMARK, 2)).tolist())
+    for el in lmark_mph.right_hand_landmarks.landmark:
+        landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
 
 
-        landmark__face_pose_left_right_hand= normalizeWorthyLandmarkWrapper(
-            landmark__face_pose_left_right_hand,
-            orig_shape,
-            {
-                'face': lmark_mph.face_landmarks != None,
-                'pose': lmark_mph.pose_landmarks != None,
-                'left_hand': lmark_mph.left_hand_landmarks != None,
-                'right_hand': lmark_mph.right_hand_landmarks != None,
-            }
-        )
 
 
-        # HERE ORDER OF LANDMARKS
-        # order of landmarks [...face..., ...pose..., ...left_hand..., ...right_hand...]
+    landmark__face_pose_left_right_hand= normalizeWorthyLandmarkWrapper(
+        landmark__face_pose_left_right_hand,
+        orig_shape,
+        {
+            'face':       True,
+            'pose':       True,
+            'left_hand':  True,
+            'right_hand': True,
+        }
+    )
+
+
+    # HERE ORDER OF LANDMARKS
+    # order of landmarks [...face..., ...pose..., ...left_hand..., ...right_hand...]
     # return tuple(ndarray, list_of_shape_86_2)
     return (img_write_to, landmark__face_pose_left_right_hand)
 def get_left_hand(input: jnp.ndarray) -> jnp.ndarray:
