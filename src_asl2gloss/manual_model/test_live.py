@@ -14,6 +14,7 @@ MPH_fph: Holistic= Holistic(
     min_detection_confidence=0.68,
     min_tracking_confidence=0.68,
 )
+IMG_SIZE: int= 1_000
 FACE_CONNECTIONS: tuple= (
     (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
     (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
@@ -700,7 +701,7 @@ def main() -> None:
     labels= list(labels)
     # fph: Any= MPH_fph.process(cvtColor(src=image, code=COLOR_BGR2RGB))
     # img_skeleton, lmark_face_pose_left_hand_right_hand= drawFacePoseHand(
-    #     img_write_to=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+    #     img_write_to=image_data_here, dtype=uint8),
     #     lmark_mph=fph,
     #     orig_shape=img_loaded.shape
     # )
