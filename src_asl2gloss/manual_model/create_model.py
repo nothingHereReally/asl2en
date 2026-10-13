@@ -156,7 +156,7 @@ LM_IDX_RIGHT_SHOULDER: int = 37
 LM_IDX_LEFT_HIP: int       = 42
 LM_IDX_RIGHT_HIP: int      = 43
 # -----------------------------
-WORTHY_LM_IMPORTANT_IDX: tuple= (
+WORTHY_LM_IMPORTANT_IDX_V1: tuple= (
     LM_IDX_TOP_LIP,
     LM_IDX_TIP_OF_FOREHEAD,
     LM_IDX_RIGHT_MOST_EYE,
