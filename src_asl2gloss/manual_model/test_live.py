@@ -326,62 +326,62 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
 
     landmark__face_pose_left_right_hand: list= list()
     # ---- face landmarks ----
-    img_write_to= drawSkeletonImg(
-        image=img_write_to,
-        lmark_coordinates=landmarks_force_0_to_1(
-            [(el.x, el.y) for el in lmark_mph.face_landmarks.landmark]
-        ),
-        connections_idxs=FACE_CONNECTIONS,
-        thick=1,
-        color_dot=None,
-        color_line=(0, 153, 0), # 153/255= 0.6
-    )
     for idx, el in enumerate(lmark_mph.face_landmarks.landmark):
         if idx in WORTHY_FACE_IDX:
             landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
-
-    # ---- pose landmarks ----
     img_write_to= drawSkeletonImg(
         image=img_write_to,
         lmark_coordinates=landmarks_force_0_to_1(
-            [(el.x, el.y) for el in lmark_mph.pose_landmarks.landmark]
+            landmark__face_pose_left_right_hand
         ),
-        connections_idxs=POSE_CONNECTIONS,
-        thick=1,
+        connections_idxs=FACE_CONNECTIONS,
+        thick=10,
         color_dot=None,
-        color_line=(0, 0, 153), # 153/255= 0.6
+        color_line=(0, 153, 0), # 153/255= 0.6
     )
+
+    # ---- pose landmarks ----
     for idx, el in enumerate(lmark_mph.pose_landmarks.landmark):
         if idx in WORTHY_POSE_IDX:
             landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
+    img_write_to= drawSkeletonImg(
+        image=img_write_to,
+        lmark_coordinates=landmarks_force_0_to_1(
+            landmark__face_pose_left_right_hand[-1*len(WORTHY_POSE_IDX):]
+        ),
+        connections_idxs=POSE_CONNECTIONS,
+        thick=10,
+        color_dot=None,
+        color_line=(0, 0, 153), # 153/255= 0.6
+    )
 
     # ---- left hand landmarks ----
+    for el in lmark_mph.left_hand_landmarks.landmark:
+        landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
     img_write_to= drawSkeletonImg(
         image=img_write_to,
         lmark_coordinates=landmarks_force_0_to_1(
             [(el.x, el.y) for el in lmark_mph.left_hand_landmarks.landmark]
         ),
         connections_idxs=HAND_CONNECTIONS,
-        thick=1,
+        thick=10,
         color_dot=None,
         color_line=(255, 255, 255)
     )
-    for el in lmark_mph.left_hand_landmarks.landmark:
-        landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
 
     # ---- right hand landmarks ----
+    for el in lmark_mph.right_hand_landmarks.landmark:
+        landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
     img_write_to= drawSkeletonImg(
         image=img_write_to,
         lmark_coordinates=landmarks_force_0_to_1(
             [(el.x, el.y) for el in lmark_mph.right_hand_landmarks.landmark]
         ),
         connections_idxs=HAND_CONNECTIONS,
-        thick=1,
+        thick=10,
         color_dot=None,
         color_line=(153, 204, 204), # 204/255= 0.8
     )
-    for el in lmark_mph.right_hand_landmarks.landmark:
-        landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
 
 
 
