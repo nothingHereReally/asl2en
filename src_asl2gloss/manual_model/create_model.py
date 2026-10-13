@@ -168,10 +168,11 @@ WORTHY_LM_IMPORTANT_IDX_V1: tuple= (
     LM_IDX_LEFT_ELBOW,
     LM_IDX_RIGHT_ELBOW,
 )
-WORTHY_LM_IMPORTANT_IDX_V2: tuple= (
+WORTHY_LM_IMPORTANT_IDX: tuple= (
     LM_IDX_TOP_LIP,
     LM_IDX_TIP_OF_FOREHEAD,
     LM_IDX_UP_TIP_NOSE,
+    # -- on later process here to insert up and left body dots
     LM_IDX_LEFT_ARM_TIP,
     LM_IDX_RIGHT_ARM_TIP,
 )
