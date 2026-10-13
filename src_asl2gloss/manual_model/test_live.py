@@ -782,7 +782,10 @@ def main() -> None:
 
             # Display the image with skeleton
             display_frame= cv.cvtColor(img_with_skeleton, cv.COLOR_BGR2RGB)
-            display_frame= resize_image(display_frame, IMG_SIZE)
+            display_frame= cv.flip( # flip to mirror, left be right, right be left
+                resize_image(display_frame, IMG_SIZE),
+                1
+            )
             pygame_surface= pygame.surfarray.make_surface(display_frame.swapaxes(0, 1))
             screen.blit(pygame_surface, (0, 0))
             pygame.display.flip()
