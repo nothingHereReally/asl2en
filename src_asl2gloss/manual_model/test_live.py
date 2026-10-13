@@ -720,16 +720,72 @@ def main() -> None:
     body2dots= jnp.array(body2dots)
     weights= jnp.array(weights)
     labels= list(labels)
-    # fph: Any= MPH_fph.process(cvtColor(src=image, code=COLOR_BGR2RGB))
-    # img_skeleton, lmark_face_pose_left_hand_right_hand= drawFacePoseHand(
-    #     img_write_to=image_data_here, dtype=uint8),
-    #     lmark_mph=fph,
-    #     orig_shape=img_loaded.shape
-    # )
-    print(ds_samples.shape)
-    print(mask.shape)
-    print(body2dots.shape)
-    print(weights.shape)
-    print(len(labels))
+
+    cap: cv.VideoCapture= cv.VideoCapture(2)
+    if not cap.isOpened():
+        print("Error: Could not open camera")
+        return
+    pygame.init() # init pygame display
+    screen= pygame.display.set_mode((IMG_SIZE, IMG_SIZE))
+    pygame.display.set_caption("ASL Recognition")
+
+    landmark_buffer: list= []
+    no_landmark_count: int= 0
+    count_frames_skip: int= 0
+    try:
+        while True:
+            ret, frame= cap.read()
+            if not ret:
+                break
+
+            count_frames_skip+= 1
+            rgb_frame= cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+            results= MPH_fph.process(rgb_frame)
+
+            if has4parts_landmark(results):
+                img_with_skeleton, landmarks= drawFacePoseHand(frame, results, frame.shape[:2])
+                no_landmark_count= 0
+
+                if count_frames_skip >= 5: # 208ms per frame for a 24FPS webcam
+                    count_frames_skip= 0
+                    landmark_buffer.append(np.array(landmarks))
+                    if len(landmark_buffer) >= QUANTITY_FRAME:
+                        recent_landmarks= np.array(landmark_buffer[-QUANTITY_FRAME:])
+                        score= comparison_score(
+                            input=np.expand_dims(recent_landmarks, axis=0),
+                            model=ds_samples,
+                            mask=mask,
+                            body2dots=body2dots,
+                            weights=weights
+                        ) # returns jnp.ndarray shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+                        top_indices= sort_score(score)[0] # list of shape (BATCH_SIZE, QUANTITY_GLOSS) then [0]
+                        print("Top 5 Sign Classifications:")
+                        for i in range(5):
+                            idx= top_indices[i]
+                            print(f"{i+1}. {labels[idx]} (score: {min(score[0][idx]):.4f})")
+                        landmark_buffer= []
+            else:
+                no_landmark_count += 1
+                img_with_skeleton= frame
+
+                if no_landmark_count >= 3:
+                    print("No landmarks detected. Please slow down. Or there is no human being in front")
+                    no_landmark_count= 0
+
+            # Display the image with skeleton
+            display_frame= cv.cvtColor(img_with_skeleton, cv.COLOR_BGR2RGB)
+            pygame_surface= pygame.surfarray.make_surface(display_frame.swapaxes(0, 1))
+            screen.blit(pygame_surface, (0, 0))
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT: # Check quit event
+                    raise KeyboardInterrupt
+    except KeyboardInterrupt:
+        print("Exiting...")
+    finally:
+        cap.release()
+        pygame.quit()
+
 if __name__=="__main__":
     main()
