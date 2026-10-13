@@ -73,11 +73,14 @@ LM_IDX_TIP_OF_FOREHEAD: int=  3
 LM_IDX_RIGHT_MOST_EYE: int =  7
 LM_IDX_RIGHT_MOST_LIP: int =  8
 LM_IDX_RIGHT_EAR: int      = 19
+LM_IDX_UP_TIP_NOSE: int    = 20
 LM_IDX_LEFT_MOST_EYE: int  = 23
 LM_IDX_LEFT_MOST_LIP: int  = 24
 LM_IDX_LEFT_EAR: int       = 34
 LM_IDX_LEFT_ELBOW: int     = 38
 LM_IDX_RIGHT_ELBOW: int    = 39
+LM_IDX_LEFT_ARM_TIP: int   = 40
+LM_IDX_RIGHT_ARM_TIP: int  = 41
 # -----------------------------
 LM_IDX_LEFT_INDEXF_TIP: int= 52
 LM_IDX_RIGHT_INDEXF_TIP:int= 73
@@ -89,14 +92,10 @@ LM_IDX_RIGHT_HIP: int      = 43
 WORTHY_LM_IMPORTANT_IDX: tuple= (
     LM_IDX_TOP_LIP,
     LM_IDX_TIP_OF_FOREHEAD,
-    LM_IDX_RIGHT_MOST_EYE,
-    LM_IDX_RIGHT_MOST_LIP,
-    LM_IDX_RIGHT_EAR,
-    LM_IDX_LEFT_MOST_EYE,
-    LM_IDX_LEFT_MOST_LIP,
-    LM_IDX_LEFT_EAR,
-    LM_IDX_LEFT_ELBOW,
-    LM_IDX_RIGHT_ELBOW,
+    LM_IDX_UP_TIP_NOSE,
+    # -- on later process here to insert up and left body dots
+    LM_IDX_LEFT_ARM_TIP,
+    LM_IDX_RIGHT_ARM_TIP,
 )
 
 
@@ -421,13 +420,15 @@ def get_right_hand(input: jnp.ndarray) -> jnp.ndarray:
         len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:,
         :
     ].copy()
-def get_worthy10landmarks(input: jnp.ndarray) -> jnp.ndarray:
+def get_worthy5landmarks(input: jnp.ndarray) -> jnp.ndarray:
     '''
     input can be of shape (..., 86, 2) or (..., 86)
     ------------------------------
     if input shape is (..., 86, 2)
-    then returned shape is (..., 10, 2)
-    else returned shape is (..., 10)
+    then returned shape is (..., 5, 2)
+    else returned shape is (..., 5)
+    -------------------------------
+    meaning does not include 2 dots
     '''
     if input.shape[-1]!=2:
         return input[
@@ -446,15 +447,13 @@ def get2dots_frombody(input: jnp.ndarray) -> jnp.ndarray:
     returned shape is (...,  2, 2)
     '''
     shoulder_center: jnp.ndarray= (
-        input[..., LM_IDX_LEFT_SHOULDER, :] +
-        input[..., LM_IDX_RIGHT_SHOULDER, :]
+        input[..., LM_IDX_LEFT_SHOULDER:LM_IDX_LEFT_SHOULDER+1, :] +
+        input[..., LM_IDX_RIGHT_SHOULDER:LM_IDX_RIGHT_SHOULDER+1, :]
     )/2.0
     hip_center: jnp.ndarray= (
-        input[..., LM_IDX_LEFT_HIP, :] +
-        input[..., LM_IDX_RIGHT_HIP, :]
+        input[..., LM_IDX_LEFT_HIP:LM_IDX_LEFT_HIP+1, :] +
+        input[..., LM_IDX_RIGHT_HIP:LM_IDX_RIGHT_HIP+1, :]
     )/2.0
-    shoulder_center= jnp.expand_dims(shoulder_center, axis=-2)
-    hip_center= jnp.expand_dims(hip_center, axis=-2)
     shoulder_hip_center: jnp.ndarray= (shoulder_center +hip_center)/2.0
     '''
     shoulder_center and hip_center, both has shape (..., 1, 2)
@@ -559,11 +558,11 @@ def relativity_mse(
     weights: jnp.ndarray,
 ) -> jnp.ndarray:
     '''
-    input -- shape of ( BATCH_SIZE,              1,                1, QUANTITY_FRAME, 86,  2)
-    model -- shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86,  2)
+    input -- shape of ( BATCH_SIZE,              1,                1, QUANTITY_FRAME, 86, 2)
+    model -- shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
     mask  -- shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2)
-    body2dots, shape  (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2,  2)
-    weights, shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
+    body2dots, shape  (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 2)
+    weights, shape of (          1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 7)
     --------------------------------------------------------------
     output shape is (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
@@ -575,10 +574,15 @@ def relativity_mse(
         input[..., LM_IDX_RIGHT_INDEXF_TIP, :],
         axis=-2,
     ) # shape (..., 1, 2)
-    input_12landmarks: jnp.ndarray= jnp.concatenate([
-        get_worthy10landmarks(input),
+    input_7landmarks: jnp.ndarray= jnp.concatenate([
+        get_worthy5landmarks(input),
         get2dots_frombody(input),
-    ], axis=-2) # shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 12, 2)
+    ], axis=-2) # shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 7, 2)
+    input_7landmarks= jnp.concatenate([
+        input_7landmarks[..., :3,  :],
+        input_7landmarks[..., 5:,  :], # body2dots
+        input_7landmarks[..., 3:5, :], # for left and right arm tip
+    ], axis=-2)
     # ----------------------------------------------
     model_lhand_index: jnp.ndarray= jnp.expand_dims(
         model[..., LM_IDX_LEFT_INDEXF_TIP, :],
@@ -588,66 +592,65 @@ def relativity_mse(
         model[..., LM_IDX_RIGHT_INDEXF_TIP, :],
         axis=-2
     ) # shape (..., 1, 2)
-    model_12landmarks: jnp.ndarray= jnp.concatenate([
-        get_worthy10landmarks(model),
+    model_7landmarks: jnp.ndarray= jnp.concatenate([
+        get_worthy5landmarks(model),
         model2dots,
-    ], axis=-2) # shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12, 2)
+    ], axis=-2) # shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7, 2)
+    model_7landmarks= jnp.concatenate([
+        model_7landmarks[..., :3,  :],
+        model_7landmarks[..., 5:,  :], # body2dots
+        model_7landmarks[..., 3:5, :], # for left and right arm tip
+    ], axis=-2)
     '''
     below are
     ---------
-    now do difference/subtraction on left/right hand on 12 landmarks
+    now do difference/subtraction on left/right hand on 7 landmarks
     then multiply to weights
     then multiply to mask4left/right hand
     -------------------------------------
-    distance( c^2= a^2 +b^2 ) on left/right hand( index finger tip only ) to 12 landmarks chosen
+    distance( c^2= a^2 +b^2 ) on left/right hand( index finger tip only ) to 7 landmarks chosen
     '''
-    distance_input_lhand: jnp.ndarray= (input_12landmarks -input_lhand_index)**2
-    distance_input_rhand: jnp.ndarray= (input_12landmarks -input_rhand_index)**2
-    distance_model_lhand: jnp.ndarray= (model_12landmarks -model_lhand_index)**2
-    distance_model_rhand: jnp.ndarray= (model_12landmarks -model_rhand_index)**2
+    distance_input_lhand: jnp.ndarray= (input_7landmarks -input_lhand_index)**2
+    distance_input_rhand: jnp.ndarray= (input_7landmarks -input_rhand_index)**2
+    distance_model_lhand: jnp.ndarray= (model_7landmarks -model_lhand_index)**2
+    distance_model_rhand: jnp.ndarray= (model_7landmarks -model_rhand_index)**2
     '''
-    distance_input_lhand shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 12, 2)
-    distance_input_rhand shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 12, 2)
-    distance_model_lhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12, 2)
-    distance_model_rhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12, 2)
+    distance_input_lhand shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 7, 2)
+    distance_input_rhand shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 7, 2)
+    distance_model_lhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7, 2)
+    distance_model_rhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7, 2)
     '''
     distance_input_lhand= jnp.sum(distance_input_lhand, axis=-1, keepdims=False)
     distance_input_rhand= jnp.sum(distance_input_rhand, axis=-1, keepdims=False)
     distance_model_lhand= jnp.sum(distance_model_lhand, axis=-1, keepdims=False)
     distance_model_rhand= jnp.sum(distance_model_rhand, axis=-1, keepdims=False)
     '''
-    distance_input_lhand shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 12)
-    distance_input_rhand shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 12)
-    distance_model_lhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
-    distance_model_rhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
+    distance_input_lhand shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 7)
+    distance_input_rhand shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 7)
+    distance_model_lhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7)
+    distance_model_rhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7)
     '''
     model_input_lhand: jnp.ndarray= (distance_input_lhand -distance_model_lhand)**2
     model_input_rhand: jnp.ndarray= (distance_input_rhand -distance_model_rhand)**2
     '''
-    model_input_lhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
-    model_input_rhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
-    weights, shape of          (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
-    mask, shape of             (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2)
+    model_input_lhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7)
+    model_input_rhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7)
+    weights, shape of          (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 2, 7)
+    mask, shape of             (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 2)
     '''
-    model_input_lhand= model_input_lhand *weights[..., 0, :] *jnp.expand_dims(
-        mask[..., 0],
-        axis=-1,
-    )
-    model_input_rhand= model_input_rhand *weights[..., 1, :] *jnp.expand_dims(
-        mask[..., 1],
-        axis=-1,
-    )
+    model_input_lhand= model_input_lhand *weights[..., 0, :] *mask[..., 0:1]
+    model_input_rhand= model_input_rhand *weights[..., 1, :] *mask[..., 1:2]
     '''
-    model_input_lhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
-    model_input_rhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 12)
+    model_input_lhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7)
+    model_input_rhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7)
     '''
     model_input_lhand= mean_ignore_zero(
-        input=jnp.stack([
+        input=jnp.stack([ # jnp.stack(...) gives shape of (..., 7, 2)
             model_input_lhand,
             model_input_rhand,
         ], axis=-1),
         keepdims=False,
-    ) # result shape (..., QUANTITY_FRAME, 12)
+    ) # result shape (..., QUANTITY_FRAME, 7)
     del model_input_rhand
     model_input_lhand= mean_ignore_zero(
         input=model_input_lhand,
@@ -672,9 +675,9 @@ def comparison_score(
     model, shape of - (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
     mask, shape of -- (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2)
     body2dots, shape  (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 2)
-    weights, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
+    weights, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 7)
     -- on weights axis=-2 of value 2, for left and right hand repsectively
-    -- on weights axis=-1 of value 12 for 12 landmarks
+    -- on weights axis=-1 of value 7 for 7 landmarks
     -------------------------------------------------------------
     output shape is (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
