@@ -708,6 +708,11 @@ def sort_score(score: jnp.ndarray) -> list:
     '''
     result: jnp.ndarray= jnp.min(score, axis=-1)
     return jnp.argsort(result, axis=-1, stable=True).tolist()
+def has4parts_landmark(results) -> bool:
+    return results.face_landmarks != None and \
+           results.pose_landmarks != None and \
+           results.left_hand_landmarks != None and \
+           results.right_hand_landmarks != None
 def main() -> None:
     ds_samples, mask, body2dots, weights, labels= load_model()
     ds_samples= jnp.array(ds_samples)
