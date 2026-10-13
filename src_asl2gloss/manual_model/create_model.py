@@ -998,6 +998,26 @@ def get_worthy10landmarks(input: jnp.ndarray) -> jnp.ndarray:
     if input.shape[-1]!=2:
         return input[
             ...,
+            WORTHY_LM_IMPORTANT_IDX_V1
+        ]
+    return input[
+        ...,
+        WORTHY_LM_IMPORTANT_IDX_V1,
+        :
+    ]
+def get_worthy5landmarks(input: jnp.ndarray) -> jnp.ndarray:
+    '''
+    input can be of shape (..., 86, 2) or (..., 86)
+    ------------------------------
+    if input shape is (..., 86, 2)
+    then returned shape is (..., 5, 2)
+    else returned shape is (..., 5)
+    -------------------------------
+    meaning does not include 2 dots
+    '''
+    if input.shape[-1]!=2:
+        return input[
+            ...,
             WORTHY_LM_IMPORTANT_IDX
         ]
     return input[
