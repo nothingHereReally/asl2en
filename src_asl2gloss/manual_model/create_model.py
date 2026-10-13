@@ -1392,6 +1392,17 @@ def test_model_on_self(
                 print(f"INcorrect -- {ds_element_result[0]} -- {annotations[a_gloss_idx][KEY_G]}")
             count+= 1
     print(f"correct: {correct/count *100} = {correct}/{count}")
+def remove_flip_annotations(annotations: list) -> list:
+    out: list= []
+    for a_gloss in annotations:
+        out.append({
+            KEY_G: a_gloss[KEY_G],
+            KEY_LANDMARK: [
+                el for el in a_gloss[KEY_LANDMARK]
+                if not el[KEY_PFOLDER].endswith("_flip")
+            ],
+        })
+    return out
 def test_all_data(
     model: jnp.ndarray,
     mask: jnp.ndarray,
@@ -1408,6 +1419,7 @@ def test_all_data(
     -- on weights axis=-2 of value 2, for left and right hand repsectively
     -- on weights axis=-1 of value 7 for 7 landmarks
     '''
+    annotations= remove_flip_annotations(annotations)
     batch_size: int= 32
     ds_elements: list= [] # be of shape (INT, QUANTITY_FRAME, 86, 2)
     ds_labels: list[int]= [] # loadnpfiles(..)
@@ -1460,6 +1472,10 @@ def test_all_data(
             ))
             ds_labels.append(idx_gloss)
             ds_pfolders.append(a_start_end[KEY_PFOLDER])
+            # -- for flip
+            ds_elements.append(flip_vertical_x_axis(ds_elements[-1]))
+            ds_labels.append(idx_gloss)
+            ds_pfolders.append(f"{a_start_end[KEY_PFOLDER]}_flip")
     if len(ds_labels)!=0:
         test_batch(
             batch_elements=ds_elements,
