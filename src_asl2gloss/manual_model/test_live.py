@@ -716,6 +716,10 @@ def has4parts_landmark(results) -> bool:
            results.pose_landmarks != None and \
            results.left_hand_landmarks != None and \
            results.right_hand_landmarks != None
+def resize_image(image: np.ndarray, target_size: int) -> np.ndarray:
+    h, w= image.shape[:2]
+    scale= target_size /max(h, w)
+    return cv.resize(image, (int(w * scale), int(h * scale)))
 def main() -> None:
     ds_samples, mask, body2dots, weights, labels= load_model()
     ds_samples= jnp.array(ds_samples)
@@ -777,6 +781,7 @@ def main() -> None:
 
             # Display the image with skeleton
             display_frame= cv.cvtColor(img_with_skeleton, cv.COLOR_BGR2RGB)
+            display_frame= resize_image(display_frame, IMG_SIZE)
             pygame_surface= pygame.surfarray.make_surface(display_frame.swapaxes(0, 1))
             screen.blit(pygame_surface, (0, 0))
             pygame.display.flip()
