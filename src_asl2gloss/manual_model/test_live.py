@@ -769,7 +769,8 @@ def main() -> None:
                         print("Top 5 Sign Classifications:")
                         for i in range(5):
                             idx= top_indices[i]
-                            print(f"{i+1}. {labels[idx]} (score: {min(score[0][idx]):.4f})")
+                            print(f"    {i+1}. {labels[idx]} (score: {min(score[0][idx]):.4f})")
+                        print()
                         landmark_buffer= []
             else:
                 no_landmark_count += 1
