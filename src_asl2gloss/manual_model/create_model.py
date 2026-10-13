@@ -1502,8 +1502,12 @@ def test_all_data(
             for an_incorrect_pfolder in a_result['incorrect_pfolder']:
                 print(f"    {an_incorrect_pfolder}")
     total_incorrect: int= total_count -total_correct
+    print("-------------------------------")
+    print("-------------------------------")
     print(f"total correct: {total_correct}/{total_count} = {total_correct/total_count *100}%")
     print(f"total incorrect: {total_incorrect}/{total_count} = {total_incorrect/total_count *100}%")
+    print("-------------------------------")
+    print("-------------------------------")
     for a_result in result_details:
         incorrect: int= a_result['count'] -a_result['correct']
         print(
