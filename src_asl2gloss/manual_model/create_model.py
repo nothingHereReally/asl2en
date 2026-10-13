@@ -140,11 +140,14 @@ LM_IDX_TIP_OF_FOREHEAD: int=  3
 LM_IDX_RIGHT_MOST_EYE: int =  7
 LM_IDX_RIGHT_MOST_LIP: int =  8
 LM_IDX_RIGHT_EAR: int      = 19
+LM_IDX_UP_TIP_NOSE: int    = 20
 LM_IDX_LEFT_MOST_EYE: int  = 23
 LM_IDX_LEFT_MOST_LIP: int  = 24
 LM_IDX_LEFT_EAR: int       = 34
 LM_IDX_LEFT_ELBOW: int     = 38
 LM_IDX_RIGHT_ELBOW: int    = 39
+LM_IDX_LEFT_ARM_TIP: int   = 40
+LM_IDX_RIGHT_ARM_TIP: int  = 41
 # -----------------------------
 LM_IDX_LEFT_INDEXF_TIP: int= 52
 LM_IDX_RIGHT_INDEXF_TIP:int= 73
@@ -923,21 +926,15 @@ def load_ds_samples() -> tuple:
     }
     for a_gloss in VERIFIED_DS_DIR:
         ds_gloss: dict= ds_landmark_by_gloss[a_gloss[KEY_G]] # dict of keys( 'gloss': str, 'landmark': list[dict] )
-        list_pfolders: list[str]= list(el[KEY_PFOLDER] for el in a_gloss[KEY_LANDMARK])
+        list_pfolders: list[str]= a_gloss[KEY_LANDMARK]
         assert len(list_pfolders)==len(VERIFIED_DS_DIR[0][KEY_LANDMARK])
         annotations.append({
             KEY_G: get_model_gloss(ds_gloss[KEY_G]),
             KEY_LANDMARK: list(
                 {
                     KEY_PFOLDER: el[KEY_PFOLDER],
-                    KEY_LHAND: list(filter(
-                        lambda x: x[KEY_PFOLDER]==el[KEY_PFOLDER],
-                        a_gloss[KEY_LANDMARK]
-                    ))[0][KEY_LHAND],
-                    KEY_RHAND: list(filter(
-                        lambda x: x[KEY_PFOLDER]==el[KEY_PFOLDER],
-                        a_gloss[KEY_LANDMARK]
-                    ))[0][KEY_RHAND],
+                    KEY_LHAND: a_gloss[KEY_LHAND],
+                    KEY_RHAND: a_gloss[KEY_RHAND],
                     KEY_LANDMARK: el[KEY_LANDMARK],
                 }
                 for el in ds_gloss[KEY_LANDMARK]
@@ -951,14 +948,8 @@ def load_ds_samples() -> tuple:
         annotations[-1][KEY_LANDMARK].extend([
         {
             KEY_PFOLDER: f"{many_imgs_el[KEY_PFOLDER]}_flip",
-            KEY_LHAND: list(filter(
-                lambda x: x[KEY_PFOLDER]==many_imgs_el[KEY_PFOLDER],
-                a_gloss[KEY_LANDMARK]
-            ))[0][KEY_RHAND],
-            KEY_RHAND: list(filter(
-                lambda x: x[KEY_PFOLDER]==many_imgs_el[KEY_PFOLDER],
-                a_gloss[KEY_LANDMARK]
-            ))[0][KEY_LHAND],
+            KEY_LHAND: a_gloss[KEY_RHAND],
+            KEY_RHAND: a_gloss[KEY_LHAND],
             KEY_LANDMARK: [{
                 KEY_FILE: lm_img_el[KEY_FILE],
                 KEY_FACE: lm_img_el[KEY_FACE],
