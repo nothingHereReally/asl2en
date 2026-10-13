@@ -1301,8 +1301,8 @@ def create_mask(annotations: list) -> list:
     return output
 def create_weights(annotations: list) -> list:
     '''
-    returns a list of shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
-    on axis=-2 represents left and right hand
+    returns a list of shape (QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 7)
+    on axis=-2 represents left and right hand, in that order
     on axis=-1 represents WORTHY_LM_IMPORTANT_IDX and 2 dots on body
     '''
     output: list= []
@@ -1312,16 +1312,26 @@ def create_weights(annotations: list) -> list:
             output[-1].append([]) # --> represents 1 ds element, SAMPLE_PER_GLOSS
             for an_img in a_start_end[KEY_LANDMARK]:
                 output[-1][-1].append([
-                    [.02 for _ in range(12)],
-                    [.02 for _ in range(12)],
+                    [.02 for _ in range(len(WORTHY_LM_IMPORTANT_IDX)+2)],
+                    [.02 for _ in range(len(WORTHY_LM_IMPORTANT_IDX)+2)],
                     # 1 if an_img[KEY_RHAND] else 0,
                 ]) # --> represents an element from QUANTITY_FRAME
                 if an_img[KEY_LHAND]:
                     for idx_be_98_val in a_start_end[KEY_LHAND]:
-                        output[-1][-1][-1][0][idx_be_98_val]= 0.98
+                        if idx_be_98_val != LM_IDX_LEFT_ARM_TIP:
+                            output[-1][-1][-1][0][idx_be_98_val]= 0.98
+                            '''
+                            LM_IDX_LEFT_ARM_TIP, due to this should only be
+                            calculated with right hand
+                            '''
                 if an_img[KEY_RHAND]:
                     for idx_be_98_val in a_start_end[KEY_RHAND]:
-                        output[-1][-1][-1][1][idx_be_98_val]= 0.98
+                        if idx_be_98_val != LM_IDX_RIGHT_ARM_TIP:
+                            output[-1][-1][-1][1][idx_be_98_val]= 0.98
+                            '''
+                            LM_IDX_RIGHT_ARM_TIP, due to this should only be
+                            calculated with left hand
+                            '''
     return output
 def sort_score(score: jnp.ndarray) -> list:
     '''
