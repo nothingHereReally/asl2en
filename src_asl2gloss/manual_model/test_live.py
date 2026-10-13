@@ -4,6 +4,7 @@ from json import load as loadJson
 from mediapipe.python.solutions.holistic import Holistic
 import numpy as np
 from pathlib import Path
+import pygame
 
 
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
@@ -310,6 +311,13 @@ def normalizeLandmarks(landmarks: list[tuple[float, float]], original_shape: tup
 
 
     return landmarks
+def landmarks_force_0_to_1(landmarks: list) -> list:
+    return [
+        (
+            max(0.0, min(x, 1.0)),
+            max(0.0, min(y, 1.0)),
+        ) for x, y in landmarks
+    ]
 def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> tuple:
     assert lmark_mph.face_landmarks!=None
     assert lmark_mph.pose_landmarks!=None
@@ -321,7 +329,9 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
     # ---- face landmarks ----
     img_write_to= drawSkeletonImg(
         image=img_write_to,
-        lmark_coordinates=[(el.x, el.y) for el in lmark_mph.face_landmarks],
+        lmark_coordinates=landmarks_force_0_to_1(
+            [(el.x, el.y) for el in lmark_mph.face_landmarks.landmark]
+        ),
         connections_idxs=FACE_CONNECTIONS,
         thick=1,
         color_dot=None,
@@ -334,7 +344,9 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
     # ---- pose landmarks ----
     img_write_to= drawSkeletonImg(
         image=img_write_to,
-        lmark_coordinates=[(el.x, el.y) for el in lmark_mph.pose_landmarks],
+        lmark_coordinates=landmarks_force_0_to_1(
+            [(el.x, el.y) for el in lmark_mph.pose_landmarks.landmark]
+        ),
         connections_idxs=POSE_CONNECTIONS,
         thick=1,
         color_dot=None,
@@ -347,7 +359,9 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
     # ---- left hand landmarks ----
     img_write_to= drawSkeletonImg(
         image=img_write_to,
-        lmark_coordinates=[(el.x, el.y) for el in lmark_mph.left_hand_landmarks],
+        lmark_coordinates=landmarks_force_0_to_1(
+            [(el.x, el.y) for el in lmark_mph.left_hand_landmarks.landmark]
+        ),
         connections_idxs=HAND_CONNECTIONS,
         thick=1,
         color_dot=None,
@@ -359,7 +373,9 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
     # ---- right hand landmarks ----
     img_write_to= drawSkeletonImg(
         image=img_write_to,
-        lmark_coordinates=[(el.x, el.y) for el in lmark_mph.right_hand_landmarks],
+        lmark_coordinates=landmarks_force_0_to_1(
+            [(el.x, el.y) for el in lmark_mph.right_hand_landmarks.landmark]
+        ),
         connections_idxs=HAND_CONNECTIONS,
         thick=1,
         color_dot=None,
