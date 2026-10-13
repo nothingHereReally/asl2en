@@ -1546,9 +1546,9 @@ def main() -> None:
         model, shape of - (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
         mask, shape of -- (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2)
         body2dots, shape  (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 2)
-        weights, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
+        weights, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 7)
         -- on weights axis=-2 of value 2, for left and right hand repsectively
-        -- on weights axis=-1 of value 12 for 12 landmarks
+        -- on weights axis=-1 of value 7 for 7 landmarks
     ) output shape is (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
     mask: jnp.ndarray= jnp.array(create_mask(annotations), dtype=jnp.uint8)
