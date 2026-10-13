@@ -1011,15 +1011,13 @@ def get2dots_frombody(input: jnp.ndarray) -> jnp.ndarray:
     returned shape is (...,  2, 2)
     '''
     shoulder_center: jnp.ndarray= (
-        input[..., LM_IDX_LEFT_SHOULDER, :] +
-        input[..., LM_IDX_RIGHT_SHOULDER, :]
+        input[..., LM_IDX_LEFT_SHOULDER:LM_IDX_LEFT_SHOULDER+1, :] +
+        input[..., LM_IDX_RIGHT_SHOULDER:LM_IDX_RIGHT_SHOULDER+1, :]
     )/2.0
     hip_center: jnp.ndarray= (
-        input[..., LM_IDX_LEFT_HIP, :] +
-        input[..., LM_IDX_RIGHT_HIP, :]
+        input[..., LM_IDX_LEFT_HIP:LM_IDX_LEFT_HIP+1, :] +
+        input[..., LM_IDX_RIGHT_HIP:LM_IDX_RIGHT_HIP+1, :]
     )/2.0
-    shoulder_center= jnp.expand_dims(shoulder_center, axis=-2)
-    hip_center= jnp.expand_dims(hip_center, axis=-2)
     shoulder_hip_center: jnp.ndarray= (shoulder_center +hip_center)/2.0
     '''
     shoulder_center and hip_center, both has shape (..., 1, 2)
