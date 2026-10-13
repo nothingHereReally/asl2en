@@ -1356,9 +1356,9 @@ def test_model_on_self(
     model, shape of - (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
     mask, shape of -- (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2)
     body2dots, shape  (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 2)
-    weights, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
+    weights, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 7)
     -- on weights axis=-2 of value 2, for left and right hand repsectively
-    -- on weights axis=-1 of value 12 for 12 landmarks
+    -- on weights axis=-1 of value 7 for 7 landmarks
     '''
     result= comparison_score(
         input=np.array(jnp.reshape(model, (-1, *model.shape[-3:]))),
@@ -1404,9 +1404,9 @@ def test_all_data(
     model, shape of - (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
     mask, shape of -- (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2)
     body2dots, shape  (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 2)
-    weights, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 12)
+    weights, shape of (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME,  2, 7)
     -- on weights axis=-2 of value 2, for left and right hand repsectively
-    -- on weights axis=-1 of value 12 for 12 landmarks
+    -- on weights axis=-1 of value 7 for 7 landmarks
     '''
     batch_size: int= 32
     ds_elements: list= [] # be of shape (INT, QUANTITY_FRAME, 86, 2)
