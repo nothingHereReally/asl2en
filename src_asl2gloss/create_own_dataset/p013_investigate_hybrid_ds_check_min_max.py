@@ -113,7 +113,7 @@ def max_images_2hand(split: list) -> dict:
 
 
 def main() -> None:
-    for a_gloss in hybrid_ds_investigate:
+    for idx, a_gloss in enumerate(hybrid_ds_investigate):
         min_images_gloss: dict= min_images(a_gloss[KEY_VID])
         max_images_gloss: dict= max_images(a_gloss[KEY_VID])
 
@@ -123,7 +123,7 @@ def main() -> None:
         min_images_gloss_2hand: dict= min_images_2hand(a_gloss[KEY_VID])
         max_images_gloss_2hand: dict= max_images_2hand(a_gloss[KEY_VID])
 
-        print(f"------------- {a_gloss[KEY_G]} -------------")
+        print(f"------------- {str(idx+1).zfill(3)} -- {a_gloss[KEY_G]} -------------")
         print(f"minimum images on a video on: {min_images_gloss['min']} at index {min_images_gloss['index']} --> {
             a_gloss[KEY_VID][min_images_gloss['index']][KEY_VFILE]
         }")
