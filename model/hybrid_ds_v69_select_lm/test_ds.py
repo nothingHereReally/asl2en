@@ -204,21 +204,25 @@ def split_ds(annotations: list) -> tuple:
     labels: list= []
     for idx_gloss, a_gloss in enumerate(annotations):
         labels.append(a_gloss[KEY_G])
+        train_count: int= 0
+        test_count: int= 0
         for a_start_end in a_gloss[KEY_LANDMARK]:
-            if a_start_end[KEY_SPLIT] == VAL_TRAIN:
+            if a_start_end[KEY_SPLIT] == VAL_TRAIN and train_count<160:
                 ds_train.append({
                     KEY_G_IDX: idx_gloss,
                     KEY_G: a_gloss[KEY_G],
                     KEY_PFOLDER: a_start_end[KEY_PFOLDER],
                     KEY_LANDMARK: a_start_end[KEY_LANDMARK],
                 })
-            elif a_start_end[KEY_SPLIT] == VAL_TEST:
+                train_count+= 1
+            elif a_start_end[KEY_SPLIT] == VAL_TEST and test_count<40:
                 ds_test.append({
                     KEY_G_IDX: idx_gloss,
                     KEY_G: a_gloss[KEY_G],
                     KEY_PFOLDER: a_start_end[KEY_PFOLDER],
                     KEY_LANDMARK: a_start_end[KEY_LANDMARK],
                 })
+                test_count+= 1
     return (ds_train, ds_test, labels)
 def get_results(ds_train: list, ds_test: list, labels_str: list[str]) -> tuple:
     train_results: list= [{
