@@ -79,7 +79,7 @@ KEY_G: str= 'gloss'
 KEY_VID: str= 'videos'
 HYBRID_DATA_SRC: list= [
     {
-        KEY_G: '00_book',
+        KEY_G: 'book',
         KEY_VID: [
             '69241.mp4',
             '65225.mp4',
@@ -123,7 +123,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '01_drink',
+        KEY_G: 'drink',
         KEY_VID: [
             '69302.mp4',
             '70173.mp4',
@@ -156,7 +156,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '02_computer',
+        KEY_G: 'computer',
         KEY_VID: [
             '12306.mp4',
             '68028.mp4',
@@ -166,12 +166,12 @@ HYBRID_DATA_SRC: list= [
             '12314.mp4',
             '12312.mp4',
             '12326.mp4',
-            'computer_0004.mp4',
-            'computer_0005.mp4',
+            '81234.mp4',
+            '81235.mp4',
         ]
     },
     {
-        KEY_G: '03_before',
+        KEY_G: 'before',
         KEY_VID: [
             '05744.mp4',
             '05729.mp4',
@@ -187,7 +187,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '04_chair',
+        KEY_G: 'chair',
         KEY_VID: [
             '09847.mp4',
             '70230.mp4',
@@ -218,7 +218,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '05_go',
+        KEY_G: 'go',
         KEY_VID: [
             '24857.mp4',
             '69345.mp4',
@@ -243,7 +243,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '06_clothes',
+        KEY_G: 'clothes',
         KEY_VID: [
             '11305.mp4',
             '68870.mp4',
@@ -273,7 +273,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '07_who',
+        KEY_G: 'who',
         KEY_VID: [
             '63240.mp4',
             '63242.mp4',
@@ -285,10 +285,21 @@ HYBRID_DATA_SRC: list= [
             '70380.mp4',
             'who_0003.mp4',
             'who_0005.mp4',
+            # ------------ below latest version of who
+            '69534.mp4',
+            '68890.mp4',
+            '68183.mp4',
+            '63239.mp4',
+            '63241.mp4',
+            '63227.mp4',
+            '63230.mp4',
+            '66778.mp4',
+            '66779.mp4',
+            '63231.mp4',
         ]
     },
     {
-        KEY_G: '08_candy',
+        KEY_G: 'candy',
         KEY_VID: [
             '68018.mp4',
             '70326.mp4',
@@ -307,7 +318,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '09_cousin',
+        KEY_G: 'cousin',
         KEY_VID: [
             '65415.mp4',
             '70332.mp4',
@@ -335,7 +346,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '10_mine_my',
+        KEY_G: 'mine_my',
         KEY_VID: [
             '36139.mp4',
             '36141.mp4',
@@ -359,7 +370,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '11_me_i',
+        KEY_G: 'me_i',
         KEY_VID: [
             '35267.mp4',
             '35544.mp4',
@@ -370,11 +381,11 @@ HYBRID_DATA_SRC: list= [
             '35549.mp4',
             '35550.mp4',
             '35548.mp4',
-            'me_i_0001.mp4',
+            '81236.mp4',
         ]
     },
     {
-        KEY_G: '12_stomach',
+        KEY_G: 'stomach',
         KEY_VID: [
             '54870.mp4',
             '54885.mp4',
@@ -384,12 +395,12 @@ HYBRID_DATA_SRC: list= [
             '54881.mp4',
             '54883.mp4',
             '54884.mp4',
-            'stomach_0001.mp4',
-            'stomach_0002.mp4',
+            '81237.mp4',
+            '81238.mp4',
         ]
     },
     {
-        KEY_G: '13_have',
+        KEY_G: 'have',
         KEY_VID: [
             '26757.mp4',
             '69360.mp4',
@@ -411,7 +422,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '14_need',
+        KEY_G: 'need',
         KEY_VID: [
             '37879.mp4',
             '70237.mp4',
@@ -434,7 +445,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '15_see',
+        KEY_G: 'see',
         KEY_VID: [
             '50107.mp4',
             '69460.mp4',
@@ -450,7 +461,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '16_feel',
+        KEY_G: 'feel',
         KEY_VID: [
             '21425.mp4',
             '69319.mp4',
@@ -470,7 +481,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '17_hurt',
+        KEY_G: 'hurt',
         KEY_VID: [
             '28438.mp4',
             '70147.mp4',
@@ -487,7 +498,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '18_fever',
+        KEY_G: 'fever',
         KEY_VID: [
             '78219.mp4',
             '78220.mp4',
@@ -497,12 +508,12 @@ HYBRID_DATA_SRC: list= [
             '78224.mp4',
             '78225.mp4',
             '78226.mp4',
-            'fever_0001.mp4',
-            'fever_0002.mp4',
+            '81239.mp4',
+            '81240.mp4',
         ]
     },
     {
-        KEY_G: '19_dizzy',
+        KEY_G: 'dizzy',
         KEY_VID: [
             '16980.mp4',
             '65501.mp4',
@@ -518,7 +529,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '20_headache',
+        KEY_G: 'headache',
         KEY_VID: [
             '26832.mp4',
             '26835.mp4',
@@ -540,7 +551,7 @@ HYBRID_DATA_SRC: list= [
         ]
     },
     {
-        KEY_G: '21_doctor',
+        KEY_G: 'doctor',
         KEY_VID: [
             '17007.mp4',
             '68842.mp4',
