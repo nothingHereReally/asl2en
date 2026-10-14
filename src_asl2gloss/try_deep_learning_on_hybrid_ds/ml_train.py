@@ -4,7 +4,7 @@ from keras.src.optimizers import Adam
 
 from .constant import EPOCHS, VAL_TRAIN, VAL_TEST, PROJ_ROOT
 from .algo import calculate_steps_needed, get_data_landmark
-from .layers import data_in, data_out
+from .layers_select import data_in, data_out
 from .callbacks import d_lr, sTraining, tf_board
 
 
@@ -28,7 +28,7 @@ def main():
         validation_steps=calculate_steps_needed(VAL_TEST),
         validation_freq=1
     )
-    model_file_name: str= "aslvid2gloss_v68.keras"
+    model_file_name: str= "aslvid2gloss_v69.keras"
     print(f"Quantity images --> {model.input_shape[1]}")
     print(f"Quantity categories --> {model.output_shape[-1]}")
     print(f"model( --> {model_file_name} <-- )")
