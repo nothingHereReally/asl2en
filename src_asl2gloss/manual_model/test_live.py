@@ -15,7 +15,7 @@ MPH_fph: Holistic= Holistic(
     min_detection_confidence=0.68,
     min_tracking_confidence=0.68,
 )
-IMG_SIZE: int= 1_000
+IMG_SIZE: int= 800
 FACE_CONNECTIONS: tuple= (
     (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
     (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
