@@ -32,3 +32,30 @@ KEY_FACE: str= 'face'
 KEY_POSE: str= 'pose'
 KEY_LHAND: str= 'left_hand'
 KEY_RHAND: str= 'right_hand'
+LM_IDX_TOP_LIP: int        =  0
+LM_IDX_TIP_OF_FOREHEAD: int=  3
+LM_IDX_RIGHT_MOST_EYE: int =  7
+LM_IDX_RIGHT_MOST_LIP: int =  8
+LM_IDX_RIGHT_EAR: int      = 19
+LM_IDX_UP_TIP_NOSE: int    = 20
+LM_IDX_LEFT_MOST_EYE: int  = 23
+LM_IDX_LEFT_MOST_LIP: int  = 24
+LM_IDX_LEFT_EAR: int       = 34
+LM_IDX_LEFT_ELBOW: int     = 38
+LM_IDX_RIGHT_ELBOW: int    = 39
+LM_IDX_LEFT_ARM_TIP: int   = 40
+LM_IDX_RIGHT_ARM_TIP: int  = 41
+# -----------------------------
+LM_IDX_LEFT_SHOULDER: int  = 36
+LM_IDX_RIGHT_SHOULDER: int = 37
+LM_IDX_LEFT_HIP: int       = 42
+LM_IDX_RIGHT_HIP: int      = 43
+# -----------------------------
+WORTHY_LM_IMPORTANT_IDX: tuple= (
+    LM_IDX_TOP_LIP,
+    LM_IDX_TIP_OF_FOREHEAD,
+    LM_IDX_UP_TIP_NOSE,
+    # -- on later process here to insert up and left body dots
+    LM_IDX_LEFT_ARM_TIP,
+    LM_IDX_RIGHT_ARM_TIP,
+)
