@@ -768,6 +768,8 @@ fever( which 10 vids ): 18    --> 10 videos
     78224.mp4         s( 23 )   e( 116 )
     78225.mp4         s(  1 )   e( 50 )
     78226.mp4         s( 24 )   e( 50 )
+    81239.mp4         s( 28 )   e( 98 )
+    81240.mp4         s( 35 )   e( 87 )
     fever_0001.mp4    s( 28 )   e( 98 )
     fever_0002.mp4    s( 35 )   e( 87 )
 dizzy( which 10 vids ): 19    --> 11 videos
