@@ -576,8 +576,8 @@ computer( which 10 vids ): 2  --> 10 videos
     12314.mp4         s( 14 )   e( 39 )  -- needs fixing( due2no hands )
     12312.mp4         s( 47 )   e( 81 )
     12326.mp4         s( 13 )   e( 73 )
-    81234.mp4
-    81235.mp4
+    81234.mp4         s(  1 )   e( 119 )
+    81235.mp4         s(  1 )   e( 92 )
     computer_0004.mp4 s( 19 )   e( 86 )
     computer_0005.mp4 s( 13 )   e( 82 )
 before( which 10 vids ): 3    --> 11 videos
