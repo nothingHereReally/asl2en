@@ -1,4 +1,4 @@
-from json import load as loadJson, dump as writeJson
+from json import load as loadJson
 from pathlib import Path
 from keras.src.activations.activations import ReLU
 from keras.src.layers import Attention, Dense, Layer
