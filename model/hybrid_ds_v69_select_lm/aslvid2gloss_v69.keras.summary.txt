@@ -1,0 +1,53 @@
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                  ┃ Output Shape              ┃         Param # ┃ Connected to               ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)        │ (None, 8, 86, 2)          │               0 │ -                          │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ select49_from86 (SelectLM)    │ (None, 8, 98)             │               0 │ batch_vid[0][0]            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ mha_86 (MultiHeadAttention)   │ (None, 8, 98)             │          15,898 │ select49_from86[0][0],     │
+│                               │                           │                 │ select49_from86[0][0],     │
+│                               │                           │                 │ select49_from86[0][0]      │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ reduce_shape21                │ (None, 4, 21)             │         221,272 │ mha_86[0][0]               │
+│ (ShapeReduceViaAddAndAttenti… │                           │                 │                            │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ flatten (Flatten)             │ (None, 84)                │               0 │ reduce_shape21[0][0]       │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ dense_48 (Dense)              │ (None, 172)               │          14,620 │ flatten[0][0]              │
+├───────────────────────────────┼───────────────────────────┼─────────────────┼────────────────────────────┤
+│ batch_class (Dense)           │ (None, 22)                │           3,806 │ dense_48[0][0]             │
+└───────────────────────────────┴───────────────────────────┴─────────────────┴────────────────────────────┘
+ Total params: 255,596 (1.82 MB)
+ Trainable params: 255,596 (1.82 MB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/20
+327/327 ━━━━━━━━━━━━━━━━━━━━ 35s 48ms/step - accuracy: 0.2807 - loss: 3.3314 - val_accuracy: 0.5708 - val_loss: 1.3412 - learning_rate: 1.0000e-04
+Epoch 2/20
+327/327 ━━━━━━━━━━━━━━━━━━━━ 13s 41ms/step - accuracy: 0.5657 - loss: 1.2710 - val_accuracy: 0.6167 - val_loss: 1.0467 - learning_rate: 1.0000e-04
+Epoch 3/20
+327/327 ━━━━━━━━━━━━━━━━━━━━ 14s 42ms/step - accuracy: 0.7053 - loss: 0.8477 - val_accuracy: 0.6684 - val_loss: 0.8441 - learning_rate: 1.0000e-04
+Epoch 4/20
+327/327 ━━━━━━━━━━━━━━━━━━━━ 14s 43ms/step - accuracy: 0.7879 - loss: 0.6131 - val_accuracy: 0.6920 - val_loss: 0.8084 - learning_rate: 1.0000e-04
+Epoch 5/20
+327/327 ━━━━━━━━━━━━━━━━━━━━ 14s 44ms/step - accuracy: 0.8351 - loss: 0.4719 - val_accuracy: 0.7309 - val_loss: 0.8481 - learning_rate: 1.0000e-04
+Epoch 6/20
+327/327 ━━━━━━━━━━━━━━━━━━━━ 15s 47ms/step - accuracy: 0.8731 - loss: 0.3681 - val_accuracy: 0.7854 - val_loss: 0.7313 - learning_rate: 1.0000e-04
+Epoch 7/20
+326/327 ━━━━━━━━━━━━━━━━━━━━ 0s 26ms/step - accuracy: 0.8957 - loss: 0.3005
+Epoch 7: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+327/327 ━━━━━━━━━━━━━━━━━━━━ 16s 48ms/step - accuracy: 0.8957 - loss: 0.3002 - val_accuracy: 0.7830 - val_loss: 0.6979 - learning_rate: 1.0000e-04
+Epoch 8/20
+327/327 ━━━━━━━━━━━━━━━━━━━━ 14s 44ms/step - accuracy: 0.9253 - loss: 0.2219 - val_accuracy: 0.7951 - val_loss: 0.6886 - learning_rate: 1.0000e-05
+Epoch 9/20
+327/327 ━━━━━━━━━━━━━━━━━━━━ 14s 44ms/step - accuracy: 0.9386 - loss: 0.2003 - val_accuracy: 0.7969 - val_loss: 0.7122 - learning_rate: 1.0000e-05
+Epoch 10/20
+326/327 ━━━━━━━━━━━━━━━━━━━━ 0s 22ms/step - accuracy: 0.9363 - loss: 0.1977
+Epoch 10: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+327/327 ━━━━━━━━━━━━━━━━━━━━ 14s 44ms/step - accuracy: 0.9364 - loss: 0.1972 - val_accuracy: 0.7931 - val_loss: 0.6968 - learning_rate: 1.0000e-05
+Epoch 10: early stopping
+Restoring model weights from the end of the best epoch: 8.
+Quantity images --> 8
+Quantity categories --> 22
+model( --> aslvid2gloss_v69.keras <-- )
