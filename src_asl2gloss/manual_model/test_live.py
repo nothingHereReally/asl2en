@@ -510,8 +510,8 @@ def hand_mse(
         axis=-1,
         keepdims=False
     ) # now be shape (..., QUANTITY_FRAME, 21), ie. removed X, Y cords axis
-    left_hand_diff= left_hand_diff *jnp.expand_dims(mask[..., 0], axis=-1)
-    right_hand_diff= right_hand_diff *jnp.expand_dims(mask[..., 1], axis=-1)
+    left_hand_diff= jnp.sqrt(left_hand_diff) *jnp.expand_dims(mask[..., 0], axis=-1)
+    right_hand_diff= jnp.sqrt(right_hand_diff) *jnp.expand_dims(mask[..., 1], axis=-1)
     '''
     now ----
     left_hand_diff
@@ -620,18 +620,18 @@ def relativity_mse(
     distance_model_lhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7, 2)
     distance_model_rhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7, 2)
     '''
-    distance_input_lhand= jnp.sum(distance_input_lhand, axis=-1, keepdims=False)
-    distance_input_rhand= jnp.sum(distance_input_rhand, axis=-1, keepdims=False)
-    distance_model_lhand= jnp.sum(distance_model_lhand, axis=-1, keepdims=False)
-    distance_model_rhand= jnp.sum(distance_model_rhand, axis=-1, keepdims=False)
+    distance_input_lhand= jnp.sqrt(jnp.sum(distance_input_lhand, axis=-1, keepdims=False))
+    distance_input_rhand= jnp.sqrt(jnp.sum(distance_input_rhand, axis=-1, keepdims=False))
+    distance_model_lhand= jnp.sqrt(jnp.sum(distance_model_lhand, axis=-1, keepdims=False))
+    distance_model_rhand= jnp.sqrt(jnp.sum(distance_model_rhand, axis=-1, keepdims=False))
     '''
     distance_input_lhand shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 7)
     distance_input_rhand shape of (BATCH_SIZE,              1,                1, QUANTITY_FRAME, 7)
     distance_model_lhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7)
     distance_model_rhand shape of (         1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7)
     '''
-    model_input_lhand: jnp.ndarray= (distance_input_lhand -distance_model_lhand)**2
-    model_input_rhand: jnp.ndarray= (distance_input_rhand -distance_model_rhand)**2
+    model_input_lhand: jnp.ndarray= jnp.absolute(distance_input_lhand -distance_model_lhand)
+    model_input_rhand: jnp.ndarray= jnp.absolute(distance_input_rhand -distance_model_rhand)
     '''
     model_input_lhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7)
     model_input_rhand shape of (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 7)
