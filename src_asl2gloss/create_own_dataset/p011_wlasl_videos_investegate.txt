@@ -239,9 +239,7 @@ breaks pattern:
     dataset/wlasl/videos/70380.mp4
     dataset/glasl/video/who_0003.mp4
     dataset/glasl/video/who_0005.mp4
-corrupted file:
-    dataset/wlasl/videos/63236.mp4
-breaks pattern:
+7: who -- new version sign
     dataset/wlasl/videos/63219.mp4
     dataset/wlasl/videos/63233.mp4
     dataset/wlasl/videos/69534.mp4
@@ -252,13 +250,16 @@ breaks pattern:
     dataset/wlasl/videos/63226.mp4
     dataset/wlasl/videos/63227.mp4
     dataset/wlasl/videos/63230.mp4
-    dataset/wlasl/videos/63231.mp4
     dataset/wlasl/videos/66778.mp4
     dataset/wlasl/videos/66779.mp4
-    dataset/wlasl/videos/66780.mp4
     dataset/wlasl/videos/63225.mp4
     dataset/wlasl/videos/67066.mp4
     dataset/wlasl/videos/63238.mp4
+    dataset/wlasl/videos/63231.mp4
+corrupted file:
+    dataset/wlasl/videos/63236.mp4
+breaks pattern:
+    dataset/wlasl/videos/66780.mp4
 
 8: candy
     dataset/wlasl/videos/68018.mp4
