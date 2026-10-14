@@ -700,6 +700,8 @@ stomach( which 10 vids ): 12  --> 10 videos
     54881.mp4         s(  6 )   e( 19 )  -- needs fixing( due2rmNotNeeded hands )
     54883.mp4         s(  1 )   e( 60 )
     54884.mp4         s( 13 )   e( 40 )
+    81237.mp4         s(  1 )   e( 43 )
+    81238.mp4         s(  1 )   3( 41 )
     stomach_0001.mp4  s( 28 )   e( 95 )  -- needs fixing( due2rmNotNeeded hands )
     stomach_0002.mp4  s( 44 )   e( 95 )  -- needs fixing( due2rmNotNeeded hands )
 have( which 10 vids ): 13     --> 17 videos
