@@ -423,6 +423,98 @@ def flip_vertical_x_axis(landmarks) -> np.ndarray:
     new_landmark[...,
         len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
     ,:]= lhand2rhand # ie. past was left hand, now be right hand
+
+    # -- flip index pair face
+    # -- ( 12, 28 )
+    tmp= new_landmark[..., 12:13, :].copy()
+    new_landmark[..., 12:13, :]= new_landmark[..., 28:29, :].copy()
+    new_landmark[..., 28:29, :]= tmp
+
+    # -- ( 19, 34 )
+    tmp = new_landmark[..., 19:20, :].copy()
+    new_landmark[..., 19:20, :] = new_landmark[..., 34:35, :].copy()
+    new_landmark[..., 34:35, :] = tmp
+
+    # -- ( 11, 27 )
+    tmp = new_landmark[..., 11:12, :].copy()
+    new_landmark[..., 11:12, :] = new_landmark[..., 27:28, :].copy()
+    new_landmark[..., 27:28, :] = tmp
+
+    # -- ( 21, 35 )
+    tmp = new_landmark[..., 21:22, :].copy()
+    new_landmark[..., 21:22, :] = new_landmark[..., 35:36, :].copy()
+    new_landmark[..., 35:36, :] = tmp
+
+    # -- ( 14, 30 )
+    tmp = new_landmark[..., 14:15, :].copy()
+    new_landmark[..., 14:15, :] = new_landmark[..., 30:31, :].copy()
+    new_landmark[..., 30:31, :] = tmp
+
+    # -- ( 13, 29 )
+    tmp = new_landmark[..., 13:14, :].copy()
+    new_landmark[..., 13:14, :] = new_landmark[..., 29:30, :].copy()
+    new_landmark[..., 29:30, :] = tmp
+
+    # -- ( 10, 26 )
+    tmp = new_landmark[..., 10:11, :].copy()
+    new_landmark[..., 10:11, :] = new_landmark[..., 26:27, :].copy()
+    new_landmark[..., 26:27, :] = tmp
+
+    # -- ( 15, 31 )
+    tmp = new_landmark[..., 15:16, :].copy()
+    new_landmark[..., 15:16, :] = new_landmark[..., 31:32, :].copy()
+    new_landmark[..., 31:32, :] = tmp
+
+    # -- ( 18, 33 )
+    tmp = new_landmark[..., 18:19, :].copy()
+    new_landmark[..., 18:19, :] = new_landmark[..., 33:34, :].copy()
+    new_landmark[..., 33:34, :] = tmp
+
+    # -- (  7, 23 )
+    tmp = new_landmark[..., 7:8, :].copy()
+    new_landmark[..., 7:8, :] = new_landmark[..., 23:24, :].copy()
+    new_landmark[..., 23:24, :] = tmp
+
+    # -- ( 16, 32 )
+    tmp = new_landmark[..., 16:17, :].copy()
+    new_landmark[..., 16:17, :] = new_landmark[..., 32:33, :].copy()
+    new_landmark[..., 32:33, :] = tmp
+
+    # -- (  9, 25 )
+    tmp = new_landmark[..., 9:10, :].copy()
+    new_landmark[..., 9:10, :] = new_landmark[..., 25:26, :].copy()
+    new_landmark[..., 25:26, :] = tmp
+
+    # -- (  8, 24 )
+    tmp = new_landmark[..., 8:9, :].copy()
+    new_landmark[..., 8:9, :] = new_landmark[..., 24:25, :].copy()
+    new_landmark[..., 24:25, :] = tmp
+
+
+
+
+    # -- flip index pair pose
+    # -- ( 37, 36 )
+    tmp = new_landmark[..., 37:38, :].copy()
+    new_landmark[..., 37:38, :] = new_landmark[..., 36:37, :].copy()
+    new_landmark[..., 36:37, :] = tmp
+
+    # -- ( 43, 42 )
+    tmp = new_landmark[..., 43:44, :].copy()
+    new_landmark[..., 43:44, :] = new_landmark[..., 42:43, :].copy()
+    new_landmark[..., 42:43, :] = tmp
+
+    # -- ( 39, 38 )
+    tmp = new_landmark[..., 39:40, :].copy()
+    new_landmark[..., 39:40, :] = new_landmark[..., 38:39, :].copy()
+    new_landmark[..., 38:39, :] = tmp
+
+    # -- ( 41, 40 )
+    tmp = new_landmark[..., 41:42, :].copy()
+    new_landmark[..., 41:42, :] = new_landmark[..., 40:41, :].copy()
+    new_landmark[..., 40:41, :] = tmp
+
+
     return new_landmark
 def get_lmark_face(landmark):
     return landmark[:len(WORTHY_FACE_IDX)]
