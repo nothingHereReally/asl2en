@@ -335,7 +335,7 @@ HYBRID_DATA_SRC: list= [
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 19,
+                        KEY_IMGSTART: 24,
                         KEY_IMGEND: 53,
                     }
                 ]
@@ -442,26 +442,26 @@ HYBRID_DATA_SRC: list= [
                 ]
             },
             {
-                KEY_VFILE: "computer_0004.mp4",
+                KEY_VFILE: "81234.mp4",
                 KEY_SPLIT: VAL_TEST,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 19,
-                        KEY_IMGEND: 86,
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 119,
                     }
                 ]
             },
             {
-                KEY_VFILE: "computer_0005.mp4",
+                KEY_VFILE: "81235.mp4",
                 KEY_SPLIT: VAL_TEST,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 13,
-                        KEY_IMGEND: 82,
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 92,
                     }
                 ]
             },
@@ -477,7 +477,7 @@ HYBRID_DATA_SRC: list= [
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 8,
+                        KEY_IMGSTART: 10,
                         KEY_IMGEND: 25,
                     }
                 ]
@@ -1041,7 +1041,7 @@ HYBRID_DATA_SRC: list= [
                 DEL_LEFT_HAND: False,
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 2,
+                        KEY_IMGSTART: 1,
                         KEY_IMGEND: 46,
                     }
                 ]
@@ -1091,6 +1091,127 @@ HYBRID_DATA_SRC: list= [
                     {
                         KEY_IMGSTART: 18,
                         KEY_IMGEND: 68,
+                    }
+                ]
+            },
+            # ----------- for the 2nd pattern of who, verified by expert are below
+            {
+                KEY_VFILE: "69534.mp4",
+                KEY_SPLIT: VAL_TRAIN,
+                KEY_DSFROM: VAL_RECENT,
+                DEL_LEFT_HAND: True,
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 23,
+                    }
+                ]
+            },
+            {
+                KEY_VFILE: "68890.mp4",
+                KEY_SPLIT: VAL_TRAIN,
+                KEY_DSFROM: VAL_RECENT,
+                DEL_LEFT_HAND: True,
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 34,
+                    }
+                ]
+            },
+            {
+                KEY_VFILE: "68183.mp4",
+                KEY_SPLIT: VAL_TRAIN,
+                KEY_DSFROM: VAL_RECENT,
+                DEL_LEFT_HAND: True,
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 2,
+                        KEY_IMGEND: 23,
+                    }
+                ]
+            },
+            {
+                KEY_VFILE: "63239.mp4",
+                KEY_SPLIT: VAL_TRAIN,
+                KEY_DSFROM: VAL_RECENT,
+                DEL_LEFT_HAND: True,
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 46,
+                    }
+                ]
+            },
+            {
+                KEY_VFILE: "63241.mp4",
+                KEY_SPLIT: VAL_TRAIN,
+                KEY_DSFROM: VAL_RECENT,
+                DEL_LEFT_HAND: True,
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 34,
+                    }
+                ]
+            },
+            {
+                KEY_VFILE: "63227.mp4",
+                KEY_SPLIT: VAL_TRAIN,
+                KEY_DSFROM: VAL_RECENT,
+                DEL_LEFT_HAND: True,
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 18,
+                    }
+                ]
+            },
+            {
+                KEY_VFILE: "63230.mp4",
+                KEY_SPLIT: VAL_TRAIN,
+                KEY_DSFROM: VAL_RECENT,
+                DEL_LEFT_HAND: True,
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 18,
+                    }
+                ]
+            },
+            {
+                KEY_VFILE: "66778.mp4",
+                KEY_SPLIT: VAL_TRAIN,
+                KEY_DSFROM: VAL_RECENT,
+                DEL_LEFT_HAND: True,
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 24,
+                    }
+                ]
+            },
+            {
+                KEY_VFILE: "66779.mp4",
+                KEY_SPLIT: VAL_TEST,
+                KEY_DSFROM: VAL_RECENT,
+                DEL_LEFT_HAND: True,
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 19,
+                    }
+                ]
+            },
+            {
+                KEY_VFILE: "63231.mp4",
+                KEY_SPLIT: VAL_TEST,
+                KEY_DSFROM: VAL_RECENT,
+                DEL_LEFT_HAND: True,
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 56,
                     }
                 ]
             },
@@ -1587,7 +1708,7 @@ HYBRID_DATA_SRC: list= [
                 ]
             },
             {
-                KEY_VFILE: "me_i_0001.mp4",
+                KEY_VFILE: "81236.mp4",
                 KEY_SPLIT: VAL_TEST,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: True,
@@ -1700,26 +1821,26 @@ HYBRID_DATA_SRC: list= [
                 ]
             },
             {
-                KEY_VFILE: "stomach_0001.mp4",
+                KEY_VFILE: "81237.mp4",
                 KEY_SPLIT: VAL_TEST,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: True,
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 28,
-                        KEY_IMGEND: 95,
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 43,
                     }
                 ]
             },
             {
-                KEY_VFILE: "stomach_0002.mp4",
+                KEY_VFILE: "81238.mp4",
                 KEY_SPLIT: VAL_TEST,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: True,
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 44,
-                        KEY_IMGEND: 95,
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 41,
                     }
                 ]
             },
@@ -2458,7 +2579,7 @@ HYBRID_DATA_SRC: list= [
                 ]
             },
             {
-                KEY_VFILE: "fever_0001.mp4",
+                KEY_VFILE: "81239.mp4",
                 KEY_SPLIT: VAL_TEST,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: True,
@@ -2470,7 +2591,7 @@ HYBRID_DATA_SRC: list= [
                 ]
             },
             {
-                KEY_VFILE: "fever_0002.mp4",
+                KEY_VFILE: "81240.mp4",
                 KEY_SPLIT: VAL_TEST,
                 KEY_DSFROM: VAL_RECENT,
                 DEL_LEFT_HAND: True,
@@ -3439,7 +3560,7 @@ def process_dataset() -> tuple:
             lm_folder: str
             if a_video[KEY_DSFROM]==VAL_CLASSIC:
                 video_details_from= list(filter(
-                    lambda el: el[KEY_G][3:]==a_gloss[KEY_G],
+                    lambda el: el[KEY_G]==a_gloss[KEY_G],
                     ds_c_landmark
                 ))
                 lm_folder= video_details_from[0][KEY_G]
@@ -3450,10 +3571,10 @@ def process_dataset() -> tuple:
             # elif a_video[KEY_DSFROM]==VAL_RECENT:
             else:
                 video_details_from= list(filter(
-                    lambda el: el[KEY_G][3:]==a_gloss[KEY_G],
+                    lambda el: el[KEY_G]==a_gloss[KEY_G],
                     ds_ur_landmark
                 ))
-                lm_folder= video_details_from[0][KEY_G][3:]
+                lm_folder= video_details_from[0][KEY_G]
                 video_details_from= list(filter(
                     lambda el: el[KEY_VFILE]==a_video[KEY_VFILE],
                     video_details_from[0][KEY_VIDS]
