@@ -12,8 +12,8 @@ MODEL_DIR: Path= PROJ_ROOT /"src_asl2gloss" /"manual_model" /"model"
 MPH_fph: Holistic= Holistic(
     static_image_mode=False,
     model_complexity=2,
-    min_detection_confidence=0.68,
-    min_tracking_confidence=0.68,
+    min_detection_confidence=0.55,
+    min_tracking_confidence=0.55,
 )
 IMG_SIZE: int= 800
 FACE_CONNECTIONS: tuple= (
@@ -317,6 +317,34 @@ def landmarks_force_0_to_1(landmarks: list) -> list:
             max(0.0, min(y, 1.0)),
         ) for x, y in landmarks
     ]
+def rm_left_hand(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    out= np.array(landmarks)
+    out= np.concatenate([
+        out[..., :len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX), :],
+        out[..., len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:, :],
+    ], axis=-2)
+    out= np.array(normalizeLandmarks(
+        landmarks=out.tolist(),
+        original_shape=(300, 300, 3),
+    ))
+    out= np.concatenate([
+        out[..., :len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX), :],
+        np.zeros( (QUANTITY_HAND_LMARK, 2) ),
+        out[...,  len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):, :],
+    ], axis=-2).tolist()
+    return out
+def rm_right_hand(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    out= np.array(landmarks)
+    out= out[..., :len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK, :]
+    out= np.array(normalizeLandmarks(
+        landmarks=out.tolist(),
+        original_shape=(300, 300, 3),
+    ))
+    out= np.concatenate([
+        out,
+        np.zeros( (QUANTITY_HAND_LMARK, 2) ),
+    ], axis=-2).tolist()
+    return out
 def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> tuple:
     assert lmark_mph.face_landmarks!=None
     assert lmark_mph.pose_landmarks!=None
@@ -711,6 +739,15 @@ def sort_score(score: jnp.ndarray) -> list:
     '''
     result: jnp.ndarray= jnp.min(score, axis=-1)
     return jnp.argsort(result, axis=-1, stable=True).tolist()
+def extract_min_gloss_on_batch(score: jnp.ndarray) -> jnp.ndarray:
+    '''
+    score is jax.numpy.ndarray has shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
+    ---------
+    return is jax.numpy.ndarray of shape (QUANTITY_GLOSS,)
+    '''
+    out= jnp.min(score, axis=-1)
+    out= jnp.min(out, axis=0)
+    return out
 def has4parts_landmark(results) -> bool:
     return results.face_landmarks != None and \
            results.pose_landmarks != None and \
@@ -736,7 +773,9 @@ def main() -> None:
     screen= pygame.display.set_mode((IMG_SIZE, IMG_SIZE))
     pygame.display.set_caption("ASL Recognition")
 
-    landmark_buffer: list= []
+    landmark_left_right_hands: list= []
+    landmark_left_hand: list= []
+    landmark_right_hand: list= []
     no_landmark_count: int= 0
     count_frames_skip: int= 0
     try:
@@ -751,27 +790,40 @@ def main() -> None:
 
             if has4parts_landmark(results):
                 img_with_skeleton, landmarks= drawFacePoseHand(frame, results, frame.shape[:2])
+                right_hand_landmarks= rm_left_hand(landmarks)
+                left_hand_landmarks= rm_right_hand(landmarks)
                 no_landmark_count= 0
 
                 if count_frames_skip >= 5: # 208ms per frame for a 24FPS webcam
                     count_frames_skip= 0
-                    landmark_buffer.append(np.array(landmarks))
-                    if len(landmark_buffer) >= QUANTITY_FRAME:
-                        recent_landmarks= np.array(landmark_buffer[-QUANTITY_FRAME:])
+                    landmark_left_right_hands.append(np.array(landmarks))
+                    landmark_left_hand.append(np.array(left_hand_landmarks))
+                    landmark_right_hand.append(np.array(right_hand_landmarks))
+                    if len(landmark_left_right_hands) >= QUANTITY_FRAME:
+                        recent_lm_left_right= np.array(landmark_left_right_hands[-QUANTITY_FRAME:])
+                        recent_lm_left= np.array(landmark_left_hand[-QUANTITY_FRAME:])
+                        recent_lm_right= np.array(landmark_right_hand[-QUANTITY_FRAME:])
                         score= comparison_score(
-                            input=np.expand_dims(recent_landmarks, axis=0),
+                            input=np.stack([
+                                recent_lm_left_right,
+                                recent_lm_left,
+                                recent_lm_right,
+                            ], axis=0),
                             model=ds_samples,
                             mask=mask,
                             body2dots=body2dots,
                             weights=weights
                         ) # returns jnp.ndarray shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
-                        top_indices= sort_score(score)[0] # list of shape (BATCH_SIZE, QUANTITY_GLOSS) then [0]
+                        # top_indices= sort_score(score)[0] # list of shape (BATCH_SIZE, QUANTITY_GLOSS) then [0]
+                        extract_score_per_gloss: list[float]= extract_min_gloss_on_batch(score).tolist() # shape (BATCH_SIZE,)
+                        top_indices: list[int]= np.argsort(np.asarray(extract_score_per_gloss), stable=True).tolist()
+                        # TODO: sort_score(...) after do something blahhhhhhhhh
                         print("Top 5 Sign Classifications:")
                         for i in range(5):
                             idx= top_indices[i]
-                            print(f"    {i+1}. {labels[idx]} (score: {min(score[0][idx]):.4f})")
+                            print(f"    {i+1}. {labels[idx]} (score: {extract_score_per_gloss[idx]:.4f})")
                         print()
-                        landmark_buffer= []
+                        landmark_left_right_hands= []
             else:
                 no_landmark_count += 1
                 img_with_skeleton= frame
