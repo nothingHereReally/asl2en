@@ -204,8 +204,8 @@ VERIFIED_DS_DIR: list= [
             'drink_17729_00107_020_048_from_gt_p1',
             'drink_17725_00162_020_045_from_gt_p1',
             'drink_17726_00177_023_062_from_gt_p1',
-            'drink_17727_00195_019_053_from_gt_p1',
-            'drink_17727_00198_019_053_from_gt_p2',
+            'drink_17727_00196_024_053_from_gt_p2',
+            'drink_17727_00200_024_053_from_gt_p2',
         ]
     },
     {
@@ -219,8 +219,8 @@ VERIFIED_DS_DIR: list= [
             'computer_12331_00189_024_051_from_gt_p2',
             'computer_12312_00237_047_081_from_gt_p1',
             'computer_12326_00262_013_073_from_gt_p1',
-            'computer_computer_0004_00335_019_086_from_gt_p1',
-            'computer_computer_0005_00413_013_082_from_gt_p1',
+            'computer_81234_00335_001_119_from_gt_p1',
+            'computer_81235_00540_001_092_from_gt_p1',
         ]
     },
     {
@@ -247,10 +247,10 @@ VERIFIED_DS_DIR: list= [
             'computer_12326_00291_013_073_from_gt_p2',
             'computer_12326_00306_013_073_from_gt_p3',
             'computer_12326_00312_013_073_from_gt_p3',
-            'computer_computer_0004_00385_019_086_from_gt_p3',
-            'computer_computer_0004_00390_019_086_from_gt_p3',
-            'computer_computer_0005_00471_013_082_from_gt_p3',
-            'computer_computer_0005_00485_013_082_from_gt_p3',
+            'computer_81234_00337_001_119_from_gt_p2',
+            'computer_81234_00339_001_119_from_gt_p2',
+            'computer_81235_00542_001_092_from_gt_p2',
+            'computer_81235_00554_001_092_from_gt_p2',
         ]
     },
     {
@@ -258,14 +258,14 @@ VERIFIED_DS_DIR: list= [
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
-            'before_05730_00001_008_025_from_gt_p1',
-            'before_05733_00013_025_083_from_gt_p1',
-            'before_05729_00068_013_036_from_gt_p1',
-            'before_05727_00077_024_055_from_gt_p1',
-            'before_05739_00089_001_052_from_gt_p1',
-            'before_05750_00178_036_058_from_gt_p1',
-            'before_05744_00200_024_047_from_gt_p1',
-            'before_65167_00209_015_032_from_gt_p1',
+            'before_05730_00001_010_025_from_gt_p1',
+            'before_05733_00009_025_083_from_gt_p1',
+            'before_05729_00064_013_036_from_gt_p1',
+            'before_05727_00073_024_055_from_gt_p1',
+            'before_05739_00085_001_052_from_gt_p1',
+            'before_05750_00174_036_058_from_gt_p1',
+            'before_05744_00196_024_047_from_gt_p1',
+            'before_65167_00205_015_032_from_gt_p1',
         ]
     },
     {
@@ -273,14 +273,14 @@ VERIFIED_DS_DIR: list= [
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
-            'before_05730_00012_008_025_from_gt_p3',
-            'before_05729_00075_013_036_from_gt_p3',
+            'before_05730_00002_010_025_from_gt_p2',
+            'before_05729_00066_013_036_from_gt_p2',
+            'before_05727_00077_024_055_from_gt_p2',
             'before_05727_00084_024_055_from_gt_p3',
-            'before_05727_00086_024_055_from_gt_p3',
             'before_05739_00103_001_052_from_gt_p2',
             'before_05739_00109_001_052_from_gt_p2',
             'before_05739_00110_001_052_from_gt_p2',
-            'before_05747_00141_022_046_from_gt_p1',
+            'before_05747_00139_022_046_from_gt_p2',
         ]
     },
     {
@@ -290,8 +290,8 @@ VERIFIED_DS_DIR: list= [
         KEY_LANDMARK: [
             'before_05747_00142_022_046_from_gt_p2',
             'before_05747_00143_022_046_from_gt_p2',
-            'before_05747_00144_022_046_from_gt_p2',
-            'before_05748_00153_021_055_from_gt_p1',
+            'before_05747_00140_022_046_from_gt_p2',
+            'before_05748_00150_021_055_from_gt_p2',
             'before_05748_00154_021_055_from_gt_p2',
             'before_05748_00155_021_055_from_gt_p2',
             'before_05748_00156_021_055_from_gt_p2',
@@ -472,10 +472,10 @@ VERIFIED_DS_DIR: list= [
             'who_63228_00025_013_029_from_gt_p1',
             'who_63229_00035_019_032_from_gt_p1',
             'who_63234_00048_025_043_from_gt_p1',
-            'who_63232_00109_065_116_from_gt_p1',
-            'who_70380_00161_001_027_from_gt_p1',
-            'who_who_0003_00180_020_072_from_gt_p1',
-            'who_who_0005_00238_018_068_from_gt_p1',
+            'who_63232_00114_065_116_from_gt_p1',
+            'who_70380_00166_001_027_from_gt_p1',
+            'who_who_0003_00185_020_072_from_gt_p1',
+            'who_who_0005_00243_018_068_from_gt_p1',
         ]
     },
     {
@@ -490,7 +490,22 @@ VERIFIED_DS_DIR: list= [
             'who_63229_00038_019_032_from_gt_p2',
             'who_63229_00039_019_032_from_gt_p2',
             'who_63229_00040_019_032_from_gt_p2',
-            'who_63232_00112_065_116_from_gt_p2',
+            'who_63232_00117_065_116_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'who', # -- latest who, according to expert
+        KEY_LHAND: [0],
+        KEY_RHAND: [0],
+        KEY_LANDMARK: [
+            'who_69534_00288_001_023_from_gt_p1',
+            'who_68890_00310_001_034_from_gt_p1',
+            'who_68183_00331_002_023_from_gt_p1',
+            'who_63239_00352_001_046_from_gt_p2',
+            'who_63241_00405_001_034_from_gt_p2',
+            'who_63227_00425_001_018_from_gt_p2',
+            'who_63230_00440_001_018_from_gt_p2',
+            'who_66778_00448_001_024_from_gt_p1',
         ]
     },
     {
@@ -550,7 +565,7 @@ VERIFIED_DS_DIR: list= [
             'me_i_35546_00060_004_058_from_gt_p1',
             'me_i_35547_00133_021_055_from_gt_p1',
             'me_i_35548_00254_001_030_from_gt_p1',
-            'me_i_me_i_0001_00283_018_097_from_gt_p1',
+            'me_i_81236_00285_018_097_from_gt_p2',
         ]
     },
     {
@@ -588,14 +603,14 @@ VERIFIED_DS_DIR: list= [
         KEY_LHAND: [4],
         KEY_RHAND: [4],
         KEY_LANDMARK: [
-            'stomach_stomach_0001_00218_028_095_from_gt_p1',
-            'stomach_stomach_0001_00219_028_095_from_gt_p2',
-            'stomach_stomach_0001_00220_028_095_from_gt_p2',
-            'stomach_stomach_0001_00221_028_095_from_gt_p2',
-            'stomach_stomach_0002_00296_044_095_from_gt_p1',
-            'stomach_stomach_0002_00297_044_095_from_gt_p2',
-            'stomach_stomach_0002_00298_044_095_from_gt_p2',
-            'stomach_stomach_0002_00299_044_095_from_gt_p2',
+            'stomach_81237_00218_001_043_from_gt_p1',
+            'stomach_81237_00221_001_043_from_gt_p2',
+            'stomach_81237_00226_001_043_from_gt_p2',
+            'stomach_81237_00234_001_043_from_gt_p2',
+            'stomach_81238_00254_001_041_from_gt_p2',
+            'stomach_81238_00256_001_041_from_gt_p2',
+            'stomach_81238_00259_001_041_from_gt_p2',
+            'stomach_81238_00266_001_041_from_gt_p3',
         ]
     },
     {
