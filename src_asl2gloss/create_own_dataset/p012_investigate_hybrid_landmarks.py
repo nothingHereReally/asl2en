@@ -26,8 +26,8 @@ IMG_SIZE: int= 158
 MPH_fph: Holistic= Holistic(
     static_image_mode=False,
     model_complexity=2,
-    min_detection_confidence=0.68,
-    min_tracking_confidence=0.68,
+    min_detection_confidence=0.55,
+    min_tracking_confidence=0.55,
 )
 FACE_CONNECTIONS: tuple= (
     (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
