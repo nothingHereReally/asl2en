@@ -275,8 +275,7 @@ def process_each_gloss() -> tuple:
             KEY_VIDS: [],
         })
         for a_video in a_gloss[KEY_VIDS]:
-            old_vid_folder: str= f"{a_gloss[KEY_G]}_{Path(a_video[KEY_VFILE]).stem}"
-            vid_folder: str= f"{a_gloss[KEY_G][3:]}_{Path(a_video[KEY_VFILE]).stem}"
+            vid_folder: str=     f"{a_gloss[KEY_G]}_{Path(a_video[KEY_VFILE]).stem}"
             (LANDMARK_DIR /vid_folder).mkdir()
             (SKELETON_DIR /vid_folder).mkdir()
             past_lmark_parts: dict= {
@@ -292,7 +291,7 @@ def process_each_gloss() -> tuple:
             })
             for an_image_lmark in a_video[KEY_LMARK]:
                 old_img_lmark: np.ndarray
-                with open(f"{OLD_LANDMARK_DIR /old_vid_folder /an_image_lmark[KEY_FILE]}", 'rb') as f:
+                with open(f"{OLD_LANDMARK_DIR /vid_folder /an_image_lmark[KEY_FILE]}", 'rb') as f:
                     old_img_lmark= np.load(f)
                 new_lmark, new_notation= redo4new_lmark(
                     landmark=old_img_lmark,
