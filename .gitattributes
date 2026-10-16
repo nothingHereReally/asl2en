@@ -188,3 +188,6 @@ model/hybrid_ds/tfboard_logs/train/events.out.tfevents.1790915889.doxob.3460571.
 model/hybrid_ds_v69_select_lm/aslvid2gloss_v69.keras filter=lfs diff=lfs merge=lfs -text
 model/hybrid_ds_v69_select_lm/tfboard_logs/train/events.out.tfevents.1791956796.doxob.740415.0.v2 filter=lfs diff=lfs merge=lfs -text
 model/hybrid_ds_v69_select_lm/tfboard_logs/validation/events.out.tfevents.1791956826.doxob.740415.1.v2 filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v69_select_lm.0001/aslvid2gloss_v69.keras filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v69_select_lm.0001/tfboard_logs/train/events.out.tfevents.1792113532.doxob.2949800.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v69_select_lm.0001/tfboard_logs/validation/events.out.tfevents.1792113565.doxob.2949800.1.v2 filter=lfs diff=lfs merge=lfs -text
