@@ -674,18 +674,7 @@ def drawFacePoseHand2color(
     # order of landmarks [...face..., ...pose..., ...left_hand..., ...right_hand...]
     # return tuple(ndarray, list_of_shape_86_2)
     return img_write_to
-def main() -> None:
-    image_human: np.ndarray= np.array(imread(f"{IMG_ABS_PATH}"), dtype=np.uint8)
-    landmarks: list= extract_landmarks(
-        lmark_mph=MPH_fph.process(
-            cvtColor(src=image_human, code=COLOR_BGR2RGB)
-        ),
-        orig_shape=image_human.shape
-    )
-    landmarks_flip_mirror: list= flip_vertical_x_axis(landmarks).tolist()
-    imgs_folder: Path= get_tmp_folder()
-    imgs_folder_flip: Path= imgs_folder.parent /f"{imgs_folder.name}_flip"
-    imgs_folder_flip.mkdir()
+def create_images2folder(landmarks: list[tuple[float, float]], folder: Path) -> None:
     for idx in range(len(landmarks)):
         file_name: str= f"{str(idx).zfill(3)}"
         if idx<len(WORTHY_FACE_IDX):
@@ -702,18 +691,29 @@ def main() -> None:
             index=idx,
         )
         imwrite(
-            filename=f"{imgs_folder /file_name}",
+            filename=f"{folder /file_name}",
             img=img_by_landmark
         )
-        img_by_landmark_flip: np.ndarray= drawFacePoseHand2color(
-            img_write_to=np.zeros((IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8),
-            landmarks=landmarks_flip_mirror,
-            index=idx,
-        )
-        imwrite(
-            filename=f"{imgs_folder_flip /file_name}",
-            img=img_by_landmark_flip
-        )
+def main() -> None:
+    image_human: np.ndarray= np.array(imread(f"{IMG_ABS_PATH}"), dtype=np.uint8)
+    landmarks: list= extract_landmarks(
+        lmark_mph=MPH_fph.process(
+            cvtColor(src=image_human, code=COLOR_BGR2RGB)
+        ),
+        orig_shape=image_human.shape
+    )
+    landmarks_flip_mirror: list= flip_vertical_x_axis(landmarks).tolist()
+    imgs_folder: Path= get_tmp_folder()
+    imgs_folder_flip: Path= imgs_folder.parent /f"{imgs_folder.name}_flip"
+    imgs_folder_flip.mkdir()
+    create_images2folder(
+        landmarks=landmarks,
+        folder=imgs_folder,
+    )
+    create_images2folder(
+        landmarks=landmarks_flip_mirror,
+        folder=imgs_folder_flip,
+    )
     print(f"images folder --> {imgs_folder}")
     print(f"images folder flip --> {imgs_folder_flip}")
 if __name__=="__main__":
