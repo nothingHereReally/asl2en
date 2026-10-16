@@ -1,7 +1,7 @@
 from cv2 import COLOR_BGR2RGB, circle, cvtColor, imread, imwrite, line
 from tempfile import gettempdir
 from mediapipe.python.solutions.holistic import Holistic
-from numpy import array, ndarray, uint8, zeros, float32, random
+import numpy as np
 from pathlib import Path
 
 
@@ -11,9 +11,9 @@ from pathlib import Path
 PROJ_ROOT: Path= Path(__file__).resolve().parent.parent.parent
 IMG_ABS_PATH: Path= PROJ_ROOT /"src_asl2gloss" /"pics_others" /"human_whole_body.png"
 def get_tmp_folder() -> Path:
-    out: Path= Path(gettempdir()).resolve() /f"determine_landmarks_location__{random.randint(1, 1000)}"
+    out: Path= Path(gettempdir()).resolve() /f"determine_landmarks_location__{np.random.randint(1, 1000)}"
     while out.exists():
-        out= Path(gettempdir()).resolve() /f"determine_landmarks_location__{random.randint(1, 4_000)}"
+        out= Path(gettempdir()).resolve() /f"determine_landmarks_location__{np.random.randint(1, 4_000)}"
     out.mkdir()
     return out
 IMG_SIZE: int= 1_500
@@ -80,6 +80,119 @@ QUANTITY_HAND_LMARK: int= 21
 
 
 
+def flip_vertical_x_axis(landmarks) -> np.ndarray:
+    '''
+    landmarks be of shape (INT, ..., INT, 2)
+    '''
+    new_landmark= np.array(landmarks).copy()
+    new_landmark[..., 0]= 1 -new_landmark[..., 0]
+    lhand2rhand: np.ndarray= new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+    ,:].copy()
+    rhand2lhand: np.ndarray= new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+    ,:].copy()
+    new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+    ,:]= rhand2lhand # ie. past was right hand, now be left hand
+    new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+    ,:]= lhand2rhand # ie. past was left hand, now be right hand
+
+    # -- flip index pair face
+    # -- ( 12, 28 )
+    tmp= new_landmark[..., 12:13, :].copy()
+    new_landmark[..., 12:13, :]= new_landmark[..., 28:29, :].copy()
+    new_landmark[..., 28:29, :]= tmp
+
+    # -- ( 19, 34 )
+    tmp = new_landmark[..., 19:20, :].copy()
+    new_landmark[..., 19:20, :] = new_landmark[..., 34:35, :].copy()
+    new_landmark[..., 34:35, :] = tmp
+
+    # -- ( 11, 27 )
+    tmp = new_landmark[..., 11:12, :].copy()
+    new_landmark[..., 11:12, :] = new_landmark[..., 27:28, :].copy()
+    new_landmark[..., 27:28, :] = tmp
+
+    # -- ( 21, 35 )
+    tmp = new_landmark[..., 21:22, :].copy()
+    new_landmark[..., 21:22, :] = new_landmark[..., 35:36, :].copy()
+    new_landmark[..., 35:36, :] = tmp
+
+    # -- ( 14, 30 )
+    tmp = new_landmark[..., 14:15, :].copy()
+    new_landmark[..., 14:15, :] = new_landmark[..., 30:31, :].copy()
+    new_landmark[..., 30:31, :] = tmp
+
+    # -- ( 13, 29 )
+    tmp = new_landmark[..., 13:14, :].copy()
+    new_landmark[..., 13:14, :] = new_landmark[..., 29:30, :].copy()
+    new_landmark[..., 29:30, :] = tmp
+
+    # -- ( 10, 26 )
+    tmp = new_landmark[..., 10:11, :].copy()
+    new_landmark[..., 10:11, :] = new_landmark[..., 26:27, :].copy()
+    new_landmark[..., 26:27, :] = tmp
+
+    # -- ( 15, 31 )
+    tmp = new_landmark[..., 15:16, :].copy()
+    new_landmark[..., 15:16, :] = new_landmark[..., 31:32, :].copy()
+    new_landmark[..., 31:32, :] = tmp
+
+    # -- ( 18, 33 )
+    tmp = new_landmark[..., 18:19, :].copy()
+    new_landmark[..., 18:19, :] = new_landmark[..., 33:34, :].copy()
+    new_landmark[..., 33:34, :] = tmp
+
+    # -- (  7, 23 )
+    tmp = new_landmark[..., 7:8, :].copy()
+    new_landmark[..., 7:8, :] = new_landmark[..., 23:24, :].copy()
+    new_landmark[..., 23:24, :] = tmp
+
+    # -- ( 16, 32 )
+    tmp = new_landmark[..., 16:17, :].copy()
+    new_landmark[..., 16:17, :] = new_landmark[..., 32:33, :].copy()
+    new_landmark[..., 32:33, :] = tmp
+
+    # -- (  9, 25 )
+    tmp = new_landmark[..., 9:10, :].copy()
+    new_landmark[..., 9:10, :] = new_landmark[..., 25:26, :].copy()
+    new_landmark[..., 25:26, :] = tmp
+
+    # -- (  8, 24 )
+    tmp = new_landmark[..., 8:9, :].copy()
+    new_landmark[..., 8:9, :] = new_landmark[..., 24:25, :].copy()
+    new_landmark[..., 24:25, :] = tmp
+
+
+
+
+    # -- flip index pair pose
+    # -- ( 37, 36 )
+    tmp = new_landmark[..., 37:38, :].copy()
+    new_landmark[..., 37:38, :] = new_landmark[..., 36:37, :].copy()
+    new_landmark[..., 36:37, :] = tmp
+
+    # -- ( 43, 42 )
+    tmp = new_landmark[..., 43:44, :].copy()
+    new_landmark[..., 43:44, :] = new_landmark[..., 42:43, :].copy()
+    new_landmark[..., 42:43, :] = tmp
+
+    # -- ( 39, 38 )
+    tmp = new_landmark[..., 39:40, :].copy()
+    new_landmark[..., 39:40, :] = new_landmark[..., 38:39, :].copy()
+    new_landmark[..., 38:39, :] = tmp
+
+    # -- ( 41, 40 )
+    tmp = new_landmark[..., 41:42, :].copy()
+    new_landmark[..., 41:42, :] = new_landmark[..., 40:41, :].copy()
+    new_landmark[..., 40:41, :] = tmp
+
+
+    return new_landmark
 def part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
     # xs, ys= zip(*landmarks)
     xs= list(map(lambda el: el[0], landmarks))
@@ -246,11 +359,11 @@ def normalizeWorthyLandmarkWrapper(
     if hasLandmarks["face"]:
         out_landmark.extend(norm[:len(WORTHY_FACE_IDX)])
     else:
-        out_landmark.extend(zeros(
+        out_landmark.extend(np.zeros(
             (
                 len(WORTHY_FACE_IDX),
                 2
-            ), dtype=float32).tolist()
+            ), dtype=np.float32).tolist()
         )
 
     # -- pose landmarks --
@@ -265,11 +378,11 @@ def normalizeWorthyLandmarkWrapper(
                 :len(WORTHY_POSE_IDX)
             ])
     else:
-        out_landmark.extend(zeros(
+        out_landmark.extend(np.zeros(
             (
                 len(WORTHY_POSE_IDX),
                 2
-            ), dtype=float32).tolist())
+            ), dtype=np.float32).tolist())
 
     # -- left hand landmarks --
     if hasLandmarks["left_hand"]:
@@ -293,11 +406,11 @@ def normalizeWorthyLandmarkWrapper(
                 :QUANTITY_HAND_LMARK
             ])
     else:
-        out_landmark.extend(zeros(
+        out_landmark.extend(np.zeros(
             (
                 QUANTITY_HAND_LMARK,
                 2
-            ), dtype=float32).tolist())
+            ), dtype=np.float32).tolist())
 
     # -- right hand landmarks --
     if hasLandmarks["right_hand"]:
@@ -332,11 +445,11 @@ def normalizeWorthyLandmarkWrapper(
         else:
             out_landmark.extend(norm)
     else:
-        out_landmark.extend(zeros(
+        out_landmark.extend(np.zeros(
             (
                 QUANTITY_HAND_LMARK,
                 2
-            ), dtype=float32).tolist())
+            ), dtype=np.float32).tolist())
 
     # out_landmark shape:
     # (
@@ -351,13 +464,13 @@ def isOkPlot(coord: tuple) -> bool:
     # mandatory be greater than or equal to Zero
     # and less than or equal to One
     return coord[0]<=1.0 and coord[1]<=1.0 and 0.0<=coord[0] and 0.0<=coord[1]
-def drawSkeletonImg(image: ndarray, \
+def drawSkeletonImg(image: np.ndarray, \
                     lmark_coordinates: list, \
                     connections_idxs: tuple, \
                     thick: int=2, \
                     color_line: tuple|None=None, \
                     color_dot: tuple|None=None, \
-                    highlight_index: int|None=None) -> ndarray:
+                    highlight_index: int|None=None) -> np.ndarray:
     img_wh: dict= {"wx": image.shape[1], "hy": image.shape[0]}
 
 
@@ -436,10 +549,10 @@ def drawSkeletonImg(image: ndarray, \
             del pB
     return image
 def extract_landmarks(lmark_mph, orig_shape: tuple) -> list:
-    landmark__face_pose_left_right_hand: list= zeros((
+    landmark__face_pose_left_right_hand: list= np.zeros((
         len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +(QUANTITY_HAND_LMARK*2),
         2
-    ), dtype=float32).tolist()
+    ), dtype=np.float32).tolist()
     if lmark_mph.face_landmarks!=None \
         or lmark_mph.pose_landmarks!=None \
         or lmark_mph.left_hand_landmarks!=None \
@@ -455,7 +568,7 @@ def extract_landmarks(lmark_mph, orig_shape: tuple) -> list:
                 if idx in WORTHY_FACE_IDX:
                     landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
         else:
-            landmark__face_pose_left_right_hand.extend(zeros((len(WORTHY_FACE_IDX), 2)).tolist())
+            landmark__face_pose_left_right_hand.extend(np.zeros((len(WORTHY_FACE_IDX), 2)).tolist())
 
         # ---- pose landmarks ----
         if lmark_mph.pose_landmarks != None:
@@ -463,21 +576,21 @@ def extract_landmarks(lmark_mph, orig_shape: tuple) -> list:
                 if idx in WORTHY_POSE_IDX:
                     landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
         else:
-            landmark__face_pose_left_right_hand.extend(zeros((len(WORTHY_POSE_IDX), 2)).tolist())
+            landmark__face_pose_left_right_hand.extend(np.zeros((len(WORTHY_POSE_IDX), 2)).tolist())
 
         # ---- left hand landmarks ----
         if lmark_mph.left_hand_landmarks != None:
             for el in lmark_mph.left_hand_landmarks.landmark:
                 landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
         else:
-            landmark__face_pose_left_right_hand.extend(zeros((QUANTITY_HAND_LMARK, 2)).tolist())
+            landmark__face_pose_left_right_hand.extend(np.zeros((QUANTITY_HAND_LMARK, 2)).tolist())
 
         # ---- right hand landmarks ----
         if lmark_mph.right_hand_landmarks != None:
             for el in lmark_mph.right_hand_landmarks.landmark:
                 landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
         else:
-            landmark__face_pose_left_right_hand.extend(zeros((QUANTITY_HAND_LMARK, 2)).tolist())
+            landmark__face_pose_left_right_hand.extend(np.zeros((QUANTITY_HAND_LMARK, 2)).tolist())
 
 
         landmark__face_pose_left_right_hand= normalizeWorthyLandmarkWrapper(
@@ -495,12 +608,12 @@ def extract_landmarks(lmark_mph, orig_shape: tuple) -> list:
     # return tuple(ndarray, list_of_shape_86_2)
     return landmark__face_pose_left_right_hand
 def drawFacePoseHand2color(
-    img_write_to: ndarray,
+    img_write_to: np.ndarray,
     landmarks: list,
     index: int,
     color_dot: tuple=(23, 23, 255),
     color_the_rest: tuple=(110, 190, 245),
-) -> ndarray:
+) -> np.ndarray:
     # ---- face landmarks ----
     img_write_to= drawSkeletonImg(
         image=img_write_to,
@@ -562,14 +675,17 @@ def drawFacePoseHand2color(
     # return tuple(ndarray, list_of_shape_86_2)
     return img_write_to
 def main() -> None:
-    img_human: ndarray= array(imread(f"{IMG_ABS_PATH}"), dtype=uint8)
+    image_human: np.ndarray= np.array(imread(f"{IMG_ABS_PATH}"), dtype=np.uint8)
     landmarks: list= extract_landmarks(
         lmark_mph=MPH_fph.process(
-            cvtColor(src=img_human, code=COLOR_BGR2RGB)
+            cvtColor(src=image_human, code=COLOR_BGR2RGB)
         ),
-        orig_shape=img_human.shape
+        orig_shape=image_human.shape
     )
+    landmarks_flip_mirror: list= flip_vertical_x_axis(landmarks).tolist()
     imgs_folder: Path= get_tmp_folder()
+    imgs_folder_flip: Path= imgs_folder.parent /f"{imgs_folder.name}_flip"
+    imgs_folder_flip.mkdir()
     for idx in range(len(landmarks)):
         file_name: str= f"{str(idx).zfill(3)}"
         if idx<len(WORTHY_FACE_IDX):
@@ -580,8 +696,8 @@ def main() -> None:
             file_name= f"{file_name}_left_hand.jpg"
         else:
             file_name= f"{file_name}_right_hand.jpg"
-        img_by_landmark: ndarray= drawFacePoseHand2color(
-            img_write_to=zeros((IMG_SIZE, IMG_SIZE, 3), dtype=uint8),
+        img_by_landmark: np.ndarray= drawFacePoseHand2color(
+            img_write_to=np.zeros((IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8),
             landmarks=landmarks,
             index=idx,
         )
@@ -589,6 +705,16 @@ def main() -> None:
             filename=f"{imgs_folder /file_name}",
             img=img_by_landmark
         )
+        img_by_landmark_flip: np.ndarray= drawFacePoseHand2color(
+            img_write_to=np.zeros((IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8),
+            landmarks=landmarks_flip_mirror,
+            index=idx,
+        )
+        imwrite(
+            filename=f"{imgs_folder_flip /file_name}",
+            img=img_by_landmark_flip
+        )
     print(f"images folder --> {imgs_folder}")
+    print(f"images folder flip --> {imgs_folder_flip}")
 if __name__=="__main__":
     main()
