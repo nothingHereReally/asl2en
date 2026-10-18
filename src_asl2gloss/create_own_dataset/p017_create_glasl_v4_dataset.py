@@ -1659,16 +1659,116 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'mine_my',
         KEY_VIDS: [
-            'mine_my_0001.mp4',
-            'mine_my_0002.mp4',
-            'mine_my_0003.mp4',
-            'mine_my_0004.mp4',
-            'mine_my_0005.mp4',
-            'mine_my_0006.mp4',
-            'mine_my_0007.mp4',
-            'mine_my_0008.mp4',
-            'mine_my_0009.mp4',
-            'mine_my_0010.mp4',
+            {
+                KEY_FILE: 'mine_my_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 16,
+                    },
+                    {
+                        KEY_IMGSTART: 17,
+                        KEY_IMGEND: 46,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'mine_my_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 18,
+                    },
+                    {
+                        KEY_IMGSTART: 19,
+                        KEY_IMGEND: 35,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'mine_my_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 40,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'mine_my_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 34,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'mine_my_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 33,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'mine_my_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 31,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'mine_my_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 2,
+                        KEY_IMGEND: 28,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'mine_my_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 28,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'mine_my_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 28,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'mine_my_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 2,
+                        KEY_IMGEND: 28,
+                    },
+                ]
+            },
         ]
     },
     {
