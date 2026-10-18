@@ -467,16 +467,252 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'computer',
         KEY_VIDS: [
-            'computer_0001.mp4',
-            'computer_0002.mp4',
-            'computer_0003.mp4',
-            'computer_0004.mp4',
-            'computer_0005.mp4',
-            'computer_0006.mp4',
-            'computer_0007.mp4',
-            'computer_0008.mp4',
-            'computer_0009.mp4',
-            'computer_0010.mp4',
+            {
+                KEY_FILE: 'computer_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 33,
+                    },
+                    {
+                        KEY_IMGSTART: 34,
+                        KEY_IMGEND: 54,
+                    },
+                    {
+                        KEY_IMGSTART: 55,
+                        KEY_IMGEND: 72,
+                    },
+                    {
+                        KEY_IMGSTART: 73,
+                        KEY_IMGEND: 93,
+                    },
+                    {
+                        KEY_IMGSTART: 94,
+                        KEY_IMGEND: 119,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'computer_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 23,
+                    },
+                    {
+                        KEY_IMGSTART: 24,
+                        KEY_IMGEND: 46,
+                    },
+                    {
+                        KEY_IMGSTART: 47,
+                        KEY_IMGEND: 68,
+                    },
+                    {
+                        KEY_IMGSTART: 69,
+                        KEY_IMGEND: 92,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'computer_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 26,
+                    },
+                    {
+                        KEY_IMGSTART: 45,
+                        KEY_IMGEND: 66,
+                    },
+                    {
+                        KEY_IMGSTART: 67,
+                        KEY_IMGEND: 87,
+                    },
+                    {
+                        KEY_IMGSTART: 88,
+                        KEY_IMGEND: 108,
+                    },
+                    {
+                        KEY_IMGSTART: 109,
+                        KEY_IMGEND: 123,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'computer_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 28,
+                    },
+                    {
+                        KEY_IMGSTART: 29,
+                        KEY_IMGEND: 48,
+                    },
+                    {
+                        KEY_IMGSTART: 49,
+                        KEY_IMGEND: 67,
+                    },
+                    {
+                        KEY_IMGSTART: 68,
+                        KEY_IMGEND: 91,
+                    },
+                    {
+                        KEY_IMGSTART: 92,
+                        KEY_IMGEND: 109,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'computer_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 23,
+                    },
+                    {
+                        KEY_IMGSTART: 24,
+                        KEY_IMGEND: 43,
+                    },
+                    {
+                        KEY_IMGSTART: 44,
+                        KEY_IMGEND: 64,
+                    },
+                    {
+                        KEY_IMGSTART: 65,
+                        KEY_IMGEND: 86,
+                    },
+                    {
+                        KEY_IMGSTART: 87,
+                        KEY_IMGEND: 110,
+                    },
+                    {
+                        KEY_IMGSTART: 111,
+                        KEY_IMGEND: 121,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'computer_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 26,
+                    },
+                    {
+                        KEY_IMGSTART: 27,
+                        KEY_IMGEND: 48,
+                    },
+                    {
+                        KEY_IMGSTART: 49,
+                        KEY_IMGEND: 70,
+                    },
+                    {
+                        KEY_IMGSTART: 71,
+                        KEY_IMGEND: 89,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'computer_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 22,
+                    },
+                    {
+                        KEY_IMGSTART: 23,
+                        KEY_IMGEND: 45,
+                    },
+                    {
+                        KEY_IMGSTART: 46,
+                        KEY_IMGEND: 68,
+                    },
+                    {
+                        KEY_IMGSTART: 69,
+                        KEY_IMGEND: 91,
+                    },
+                    {
+                        KEY_IMGSTART: 92,
+                        KEY_IMGEND: 112,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'computer_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 29,
+                    },
+                    {
+                        KEY_IMGSTART: 30,
+                        KEY_IMGEND: 53,
+                    },
+                    {
+                        KEY_IMGSTART: 54,
+                        KEY_IMGEND: 73,
+                    },
+                    {
+                        KEY_IMGSTART: 74,
+                        KEY_IMGEND: 97,
+                    },
+                    {
+                        KEY_IMGSTART: 98,
+                        KEY_IMGEND: 109,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'computer_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 33,
+                    },
+                    {
+                        KEY_IMGSTART: 34,
+                        KEY_IMGEND: 59,
+                    },
+                    {
+                        KEY_IMGSTART: 60,
+                        KEY_IMGEND: 84,
+                    },
+                    {
+                        KEY_IMGSTART: 85,
+                        KEY_IMGEND: 109,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'computer_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 27,
+                    },
+                    {
+                        KEY_IMGSTART: 28,
+                        KEY_IMGEND: 54,
+                    },
+                    {
+                        KEY_IMGSTART: 55,
+                        KEY_IMGEND: 76,
+                    },
+                    {
+                        KEY_IMGSTART: 77,
+                        KEY_IMGEND: 101,
+                    },
+                    {
+                        KEY_IMGSTART: 102,
+                        KEY_IMGEND: 124,
+                    },
+                    {
+                        KEY_IMGSTART: 125,
+                        KEY_IMGEND: 135,
+                    },
+                ]
+            },
         ]
     },
     {
