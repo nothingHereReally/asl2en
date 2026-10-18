@@ -3760,50 +3760,49 @@ def process_videos_ds() -> tuple:
             KEY_VIDS: [],
         })
         for a_video in a_gloss[KEY_VIDS]:
-            ds_landmark[-1][KEY_VIDS].append({
-                KEY_FILE: a_video,
-                KEY_LANDMARK: [],
-            })
-            ds_skeleton[-1][KEY_VIDS].append({
-                KEY_FILE: a_video,
-                KEY_SKELETON: [],
-            })
-            landmark_abs_folder: Path= LANDMARK_DIR /a_video[:-4]
-            skeleton_abs_folder: Path= SKELETON_DIR /a_video[:-4]
-            landmark_abs_folder.mkdir()
-            skeleton_abs_folder.mkdir()
-            video_data: cv2.VideoCapture= cv2.VideoCapture(f"{VIDEO_DIR /a_video}")
-            for idx in range(int(video_data.get(cv2.CAP_PROP_FRAME_COUNT))):
-                has_img, image= video_data.read()
-                skeleton_landmark_filename: str= str(idx+1).zfill(8)
-                if has_img:
-                    image= cv2.cvtColor(src=image, code=cv2.COLOR_BGR2RGB)
-                    mph_fph_result: Any= MPH_fph.process(image)
-                    img_skeleton, lmark_face_pose_lr_hand= drawFacePoseHand(
-                        img_write_to=np.zeros( (IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8 ),
-                        lmark_mph=mph_fph_result,
-                        orig_shape=image.shape,
+            video_landmarks, video_annotations= extract_lm_from_video(a_video[KEY_FILE])
+            for a_start_end in a_video[KEY_IMG_VALID]:
+                pfolder_name: str= f"{a_video[KEY_FILE][:-4]}_{str(a_start_end[KEY_IMGSTART]).zfill(4)}_{str(a_start_end[KEY_IMGEND]).zfill(4)}"
+                landmark_abs_folder: Path= LANDMARK_DIR /pfolder_name
+                skeleton_abs_folder: Path= SKELETON_DIR /pfolder_name
+                landmark_abs_folder.mkdir()
+                skeleton_abs_folder.mkdir()
+                ds_landmark[-1][KEY_VIDS].append({
+                    KEY_PFOLDER: pfolder_name,
+                    KEY_LANDMARK: [],
+                })
+                ds_skeleton[-1][KEY_VIDS].append({
+                    KEY_PFOLDER: pfolder_name,
+                    KEY_SKELETON: [],
+                })
+                for idx_init0 in range(a_start_end[KEY_IMGEND] -a_start_end[KEY_IMGSTART]+1):
+                    landmark_skeleton_prefix: str= str(idx_init0+1).zfill(8)
+                    landmark= video_landmarks[     a_start_end[KEY_IMGSTART]-1   +idx_init0]
+                    annotation= video_annotations[ a_start_end[KEY_IMGSTART]-1   +idx_init0]
+                    with open(f"{landmark_abs_folder /landmark_skeleton_prefix}.npy", 'wb') as f:
+                        np.save(f, landmark)
+                    cv2.imwrite(
+                        filename=f"{skeleton_abs_folder /landmark_skeleton_prefix}.jpg",
+                        img=drawFacePoseHandFromLM(
+                            img_write_to=np.zeros( (IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8 ),
+                            landmark=landmark,
+                            hasLandmark=annotation,
+                        ),
                     )
                     ds_landmark[-1][KEY_VIDS][-1][KEY_LANDMARK].append({
-                        KEY_FILE: f"{skeleton_landmark_filename}.npy",
-                        KEY_FACE: mph_fph_result.face_landmarks != None,
-                        KEY_POSE: mph_fph_result.pose_landmarks != None,
-                        KEY_LHAND: mph_fph_result.left_hand_landmarks != None,
-                        KEY_RHAND: mph_fph_result.right_hand_landmarks != None,
+                        KEY_FILE: f"{landmark_skeleton_prefix}.npy",
+                        KEY_FACE: annotation[KEY_FACE],
+                        KEY_POSE: annotation[KEY_POSE],
+                        KEY_LHAND: annotation[KEY_LHAND],
+                        KEY_RHAND: annotation[KEY_RHAND],
                     })
                     ds_skeleton[-1][KEY_VIDS][-1][KEY_SKELETON].append({
-                        KEY_FILE: f"{skeleton_landmark_filename}.jpg",
-                        KEY_FACE: mph_fph_result.face_landmarks != None,
-                        KEY_POSE: mph_fph_result.pose_landmarks != None,
-                        KEY_LHAND: mph_fph_result.left_hand_landmarks != None,
-                        KEY_RHAND: mph_fph_result.right_hand_landmarks != None,
+                        KEY_FILE: f"{landmark_skeleton_prefix}.jpg",
+                        KEY_FACE: annotation[KEY_FACE],
+                        KEY_POSE: annotation[KEY_POSE],
+                        KEY_LHAND: annotation[KEY_LHAND],
+                        KEY_RHAND: annotation[KEY_RHAND],
                     })
-                    with open(f"{landmark_abs_folder /skeleton_landmark_filename}.npy", 'wb') as f:
-                        np.save(f, lmark_face_pose_lr_hand)
-                    cv2.imwrite(
-                        f"{skeleton_abs_folder /skeleton_landmark_filename}.jpg",
-                        img_skeleton,
-                    )
     return (ds_landmark, ds_skeleton)
 def main() -> None:
     init_dirs()
