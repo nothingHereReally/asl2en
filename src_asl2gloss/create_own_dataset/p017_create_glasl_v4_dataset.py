@@ -2485,16 +2485,136 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'feel',
         KEY_VIDS: [
-            'feel_0001.mp4',
-            'feel_0002.mp4',
-            'feel_0003.mp4',
-            'feel_0004.mp4',
-            'feel_0005.mp4',
-            'feel_0006.mp4',
-            'feel_0007.mp4',
-            'feel_0008.mp4',
-            'feel_0009.mp4',
-            'feel_0010.mp4',
+            {
+                KEY_FILE: 'feel_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 53,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'feel_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 17,
+                    },
+                    {
+                        KEY_IMGSTART: 18,
+                        KEY_IMGEND: 61,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'feel_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 16,
+                    },
+                    {
+                        KEY_IMGSTART: 17,
+                        KEY_IMGEND: 64,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'feel_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 63,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'feel_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 14,
+                    },
+                    {
+                        KEY_IMGSTART: 15,
+                        KEY_IMGEND: 63,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'feel_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 10,
+                    },
+                    {
+                        KEY_IMGSTART: 11,
+                        KEY_IMGEND: 51,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'feel_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 56,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'feel_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 16,
+                    },
+                    {
+                        KEY_IMGSTART: 17,
+                        KEY_IMGEND: 41,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'feel_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 41,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'feel_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 21,
+                    },
+                    {
+                        KEY_IMGSTART: 22,
+                        KEY_IMGEND: 55,
+                    },
+                ]
+            },
         ]
     },
     {
