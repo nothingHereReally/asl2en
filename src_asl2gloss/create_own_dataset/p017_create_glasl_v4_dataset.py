@@ -2842,16 +2842,136 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'dizzy',
         KEY_VIDS: [
-            'dizzy_0001.mp4',
-            'dizzy_0002.mp4',
-            'dizzy_0003.mp4',
-            'dizzy_0004.mp4',
-            'dizzy_0005.mp4',
-            'dizzy_0006.mp4',
-            'dizzy_0007.mp4',
-            'dizzy_0008.mp4',
-            'dizzy_0009.mp4',
-            'dizzy_0010.mp4',
+            {
+                KEY_FILE: 'dizzy_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 23,
+                    },
+                    {
+                        KEY_IMGSTART: 24,
+                        KEY_IMGEND: 39,
+                    },
+                    {
+                        KEY_IMGSTART: 40,
+                        KEY_IMGEND: 62,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'dizzy_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 8,
+                    },
+                    {
+                        KEY_IMGSTART: 13,
+                        KEY_IMGEND: 46,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'dizzy_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 23,
+                    },
+                    {
+                        KEY_IMGSTART: 24,
+                        KEY_IMGEND: 36,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'dizzy_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 23,
+                    },
+                    {
+                        KEY_IMGSTART: 24,
+                        KEY_IMGEND: 58,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'dizzy_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 35,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'dizzy_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 34,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'dizzy_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 19,
+                    },
+                    {
+                        KEY_IMGSTART: 20,
+                        KEY_IMGEND: 40,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'dizzy_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 33,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'dizzy_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 48,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'dizzy_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 53,
+                    },
+                ]
+            },
         ]
     },
     {
