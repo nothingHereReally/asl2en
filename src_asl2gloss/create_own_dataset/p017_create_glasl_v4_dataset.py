@@ -1131,16 +1131,136 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'clothes',
         KEY_VIDS: [
-            'clothes_0001.mp4',
-            'clothes_0002.mp4',
-            'clothes_0003.mp4',
-            'clothes_0004.mp4',
-            'clothes_0005.mp4',
-            'clothes_0006.mp4',
-            'clothes_0007.mp4',
-            'clothes_0008.mp4',
-            'clothes_0009.mp4',
-            'clothes_0010.mp4',
+            {
+                KEY_FILE: 'clothes_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 28,
+                    },
+                    {
+                        KEY_IMGSTART: 29,
+                        KEY_IMGEND: 62,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'clothes_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 22,
+                    },
+                    {
+                        KEY_IMGSTART: 23,
+                        KEY_IMGEND: 48,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'clothes_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 10,
+                    },
+                    {
+                        KEY_IMGSTART: 11,
+                        KEY_IMGEND: 46,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'clothes_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 11,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 57,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'clothes_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 55,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'clothes_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 21,
+                    },
+                    {
+                        KEY_IMGSTART: 22,
+                        KEY_IMGEND: 65,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'clothes_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 46,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'clothes_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 23,
+                    },
+                    {
+                        KEY_IMGSTART: 24,
+                        KEY_IMGEND: 46,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'clothes_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 17,
+                    },
+                    {
+                        KEY_IMGSTART: 18,
+                        KEY_IMGEND: 47,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'clothes_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 14,
+                    },
+                    {
+                        KEY_IMGSTART: 15,
+                        KEY_IMGEND: 39,
+                    },
+                ]
+            },
         ]
     },
     {
