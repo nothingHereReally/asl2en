@@ -1,6 +1,7 @@
 from cv2 import COLOR_BGR2RGB, circle, cvtColor, imread, imwrite, line
 from tempfile import gettempdir
 from mediapipe.python.solutions.holistic import Holistic
+import jax.numpy as jnp
 import numpy as np
 from pathlib import Path
 
@@ -69,6 +70,10 @@ HAND_CONNECTIONS: tuple= (
     (17, 18), (18, 19), (19, 20)      # pinky finger connections
 )
 QUANTITY_HAND_LMARK: int= 21
+LM_IDX_LEFT_SHOULDER: int  = 36
+LM_IDX_RIGHT_SHOULDER: int = 37
+LM_IDX_LEFT_HIP: int       = 42
+LM_IDX_RIGHT_HIP: int      = 43
 # ---- contants end ------
 # ------------------------
 # ------------------------
@@ -80,6 +85,29 @@ QUANTITY_HAND_LMARK: int= 21
 
 
 
+def get2dots_frombody(input: jnp.ndarray) -> jnp.ndarray:
+    '''
+    input -- shape of (..., 86, 2)
+    -------------------------------
+    returned shape is (...,  2, 2)
+    '''
+    shoulder_center: jnp.ndarray= (
+        input[..., LM_IDX_LEFT_SHOULDER:LM_IDX_LEFT_SHOULDER+1, :] +
+        input[..., LM_IDX_RIGHT_SHOULDER:LM_IDX_RIGHT_SHOULDER+1, :]
+    )/2.0
+    hip_center: jnp.ndarray= (
+        input[..., LM_IDX_LEFT_HIP:LM_IDX_LEFT_HIP+1, :] +
+        input[..., LM_IDX_RIGHT_HIP:LM_IDX_RIGHT_HIP+1, :]
+    )/2.0
+    shoulder_hip_center: jnp.ndarray= (shoulder_center +hip_center)/2.0
+    '''
+    shoulder_center and hip_center, both has shape (..., 1, 2)
+    so as shoulder_hip_center has shape (..., 1, 2)
+    '''
+    return jnp.concatenate([
+        (shoulder_center+shoulder_hip_center)/2.0,
+        (shoulder_hip_center+hip_center)/2.0,
+    ], axis=-2)
 def flip_vertical_x_axis(landmarks) -> np.ndarray:
     '''
     landmarks be of shape (INT, ..., INT, 2)
@@ -607,6 +635,129 @@ def extract_landmarks(lmark_mph, orig_shape: tuple) -> list:
     # order of landmarks [...face..., ...pose..., ...left_hand..., ...right_hand...]
     # return tuple(ndarray, list_of_shape_86_2)
     return landmark__face_pose_left_right_hand
+def drawFacePoseHandAnd2dots(
+    img_write_to: np.ndarray,
+    landmarks: list,
+    landmarks2dots: list,
+    color_up_dot: tuple=(23, 23, 255),
+    color_down_dot: tuple=(110, 190, 245),
+) -> np.ndarray:
+    # ---- face landmarks ----
+    img_write_to= drawSkeletonImg(
+        image=img_write_to,
+        lmark_coordinates=landmarks[:len(WORTHY_FACE_IDX)],
+        connections_idxs=FACE_CONNECTIONS,
+        thick=1,
+        color_dot=color_up_dot,
+        color_line=color_down_dot,
+        highlight_index=None,
+    )
+
+    # ---- pose landmarks ----
+    img_write_to= drawSkeletonImg(
+        image=img_write_to,
+        lmark_coordinates=landmarks[
+            len(WORTHY_FACE_IDX): len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX)
+        ],
+        connections_idxs=POSE_CONNECTIONS,
+        thick=1,
+        color_dot=color_up_dot,
+        color_line=color_down_dot,
+        highlight_index=None
+    )
+
+    # ---- left hand landmarks ----
+    img_write_to= drawSkeletonImg(
+        image=img_write_to,
+        lmark_coordinates=landmarks[
+            len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX): len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX)+QUANTITY_HAND_LMARK
+        ],
+        connections_idxs=HAND_CONNECTIONS,
+        thick=1,
+        color_dot=color_up_dot,
+        color_line=color_down_dot,
+        highlight_index=None
+    )
+
+    # ---- right hand landmarks ----
+    img_write_to= drawSkeletonImg(
+        image=img_write_to,
+        lmark_coordinates=landmarks[ len(WORTHY_FACE_IDX)+len(WORTHY_POSE_IDX)+QUANTITY_HAND_LMARK: ],
+        connections_idxs=HAND_CONNECTIONS,
+        thick=1,
+        color_dot=color_up_dot,
+        color_line=color_down_dot,
+        highlight_index=None
+    )
+
+    # -- line for 2 dots on body --
+    line(
+        img=img_write_to,
+        pt1=(
+            int(landmarks2dots[0][0]*img_write_to.shape[0]),
+            int(landmarks2dots[0][1]*img_write_to.shape[0]),
+        ),
+        pt2=(
+            int(landmarks2dots[1][0]*img_write_to.shape[0]),
+            int(landmarks2dots[1][1]*img_write_to.shape[0]),
+        ),
+        color=color_down_dot,
+        thickness=4
+    )
+
+    # -- upper dot --
+    assert img_write_to.shape[0]==img_write_to.shape[1]
+    circle(
+        img=img_write_to,
+        center=(
+            int(landmarks2dots[0][0]*img_write_to.shape[0]),
+            int(landmarks2dots[0][1]*img_write_to.shape[0]),
+        ),
+        radius=0,
+        color=color_up_dot,
+        thickness=25
+    )
+
+    # -- down dot --
+    circle(
+        img=img_write_to,
+        center=(
+            int(landmarks2dots[1][0]*img_write_to.shape[0]),
+            int(landmarks2dots[1][1]*img_write_to.shape[0]),
+        ),
+        radius=0,
+        color=color_down_dot,
+        thickness=10
+    )
+
+
+    # HERE ORDER OF LANDMARKS
+    # order of landmarks [...face..., ...pose..., ...left_hand..., ...right_hand...]
+    # return tuple(ndarray, list_of_shape_86_2)
+    return img_write_to
+def create_images_for2dots(
+    landmarks: list[tuple[float, float]],
+    landmarks_flip: list[tuple[float, float]],
+    abs_folder: Path,
+) -> None:
+    image: np.ndarray= drawFacePoseHandAnd2dots(
+        img_write_to=np.zeros( (IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8 ),
+        landmarks=landmarks,
+        landmarks2dots=get2dots_frombody(jnp.array(landmarks)).tolist(),
+    )
+    image_flip: np.ndarray= drawFacePoseHandAnd2dots(
+        img_write_to=np.zeros( (IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8 ),
+        landmarks=landmarks_flip,
+        landmarks2dots=get2dots_frombody(jnp.array(landmarks_flip)).tolist(),
+    )
+    imwrite(
+        filename=f"{abs_folder /"human_01_origin_with2dots_on_body.jpg"}",
+        img=image,
+    )
+    imwrite(
+        filename=f"{abs_folder /"human_02_flip_with2dots_on_body.jpg"}",
+        img=image_flip,
+    )
 def drawFacePoseHand2color(
     img_write_to: np.ndarray,
     landmarks: list,
@@ -705,7 +856,9 @@ def main() -> None:
     landmarks_flip_mirror: list= flip_vertical_x_axis(landmarks).tolist()
     imgs_folder: Path= get_tmp_folder()
     imgs_folder_flip: Path= imgs_folder.parent /f"{imgs_folder.name}_flip"
+    imgs_folder_for2dots: Path= imgs_folder.parent /f"{imgs_folder.name}_for2dots_body"
     imgs_folder_flip.mkdir()
+    imgs_folder_for2dots.mkdir()
     create_images2folder(
         landmarks=landmarks,
         folder=imgs_folder,
@@ -714,7 +867,13 @@ def main() -> None:
         landmarks=landmarks_flip_mirror,
         folder=imgs_folder_flip,
     )
+    create_images_for2dots(
+        landmarks=landmarks,
+        landmarks_flip=landmarks_flip_mirror,
+        abs_folder=imgs_folder_for2dots,
+    )
     print(f"images folder --> {imgs_folder}")
     print(f"images folder flip --> {imgs_folder_flip}")
+    print(f"images folder 2 dots body --> {imgs_folder_for2dots}")
 if __name__=="__main__":
     main()
