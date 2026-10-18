@@ -1909,16 +1909,136 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'stomach',
         KEY_VIDS: [
-            'stomach_0001.mp4',
-            'stomach_0002.mp4',
-            'stomach_0003.mp4',
-            'stomach_0004.mp4',
-            'stomach_0005.mp4',
-            'stomach_0006.mp4',
-            'stomach_0007.mp4',
-            'stomach_0008.mp4',
-            'stomach_0009.mp4',
-            'stomach_0010.mp4',
+            {
+                KEY_FILE: 'stomach_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 57,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'stomach_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 21,
+                    },
+                    {
+                        KEY_IMGSTART: 22,
+                        KEY_IMGEND: 44,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'stomach_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 21,
+                    },
+                    {
+                        KEY_IMGSTART: 22,
+                        KEY_IMGEND: 45,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'stomach_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 25,
+                    },
+                    {
+                        KEY_IMGSTART: 26,
+                        KEY_IMGEND: 43,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'stomach_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 25,
+                    },
+                    {
+                        KEY_IMGSTART: 26,
+                        KEY_IMGEND: 43,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'stomach_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 41,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'stomach_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 43,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'stomach_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 40,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'stomach_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 19,
+                    },
+                    {
+                        KEY_IMGSTART: 20,
+                        KEY_IMGEND: 40,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'stomach_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 36,
+                    },
+                ]
+            },
         ]
     },
     {
