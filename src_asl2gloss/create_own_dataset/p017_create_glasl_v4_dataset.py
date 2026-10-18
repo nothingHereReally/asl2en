@@ -1532,16 +1532,128 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'cousin',
         KEY_VIDS: [
-            'cousin_0001.mp4',
-            'cousin_0002.mp4',
-            'cousin_0003.mp4',
-            'cousin_0004.mp4',
-            'cousin_0005.mp4',
-            'cousin_0006.mp4',
-            'cousin_0007.mp4',
-            'cousin_0008.mp4',
-            'cousin_0009.mp4',
-            'cousin_0010.mp4',
+            {
+                KEY_FILE: 'cousin_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 16,
+                    },
+                    {
+                        KEY_IMGSTART: 17,
+                        KEY_IMGEND: 50,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'cousin_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 23,
+                    },
+                    {
+                        KEY_IMGSTART: 24,
+                        KEY_IMGEND: 46,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'cousin_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 17,
+                    },
+                    {
+                        KEY_IMGSTART: 18,
+                        KEY_IMGEND: 36,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'cousin_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 28,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'cousin_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 31,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'cousin_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 14,
+                    },
+                    {
+                        KEY_IMGSTART: 15,
+                        KEY_IMGEND: 37,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'cousin_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 12,
+                    },
+                    {
+                        KEY_IMGSTART: 13,
+                        KEY_IMGEND: 31,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'cousin_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 34,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'cousin_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 11,
+                    },
+                    {
+                        KEY_IMGSTART: 12,
+                        KEY_IMGEND: 35,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'cousin_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 14,
+                    },
+                    {
+                        KEY_IMGSTART: 15,
+                        KEY_IMGEND: 36,
+                    },
+                ]
+            },
         ]
     },
     {
