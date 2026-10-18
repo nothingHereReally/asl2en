@@ -996,16 +996,136 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'go',
         KEY_VIDS: [
-            'go_0001.mp4',
-            'go_0002.mp4',
-            'go_0003.mp4',
-            'go_0004.mp4',
-            'go_0005.mp4',
-            'go_0006.mp4',
-            'go_0007.mp4',
-            'go_0008.mp4',
-            'go_0009.mp4',
-            'go_0010.mp4',
+            {
+                KEY_FILE: 'go_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 28,
+                        KEY_IMGEND: 41,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'go_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 23,
+                        KEY_IMGEND: 35,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'go_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 12,
+                    },
+                    {
+                        KEY_IMGSTART: 23,
+                        KEY_IMGEND: 41,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'go_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 14,
+                    },
+                    {
+                        KEY_IMGSTART: 22,
+                        KEY_IMGEND: 44,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'go_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 18,
+                    },
+                    {
+                        KEY_IMGSTART: 23,
+                        KEY_IMGEND: 49,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'go_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 16,
+                    },
+                    {
+                        KEY_IMGSTART: 17,
+                        KEY_IMGEND: 44,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'go_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 50,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'go_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 19,
+                    },
+                    {
+                        KEY_IMGSTART: 20,
+                        KEY_IMGEND: 54,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'go_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 29,
+                        KEY_IMGEND: 42,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'go_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 19,
+                    },
+                    {
+                        KEY_IMGSTART: 30,
+                        KEY_IMGEND: 52,
+                    },
+                ]
+            },
         ]
     },
     {
