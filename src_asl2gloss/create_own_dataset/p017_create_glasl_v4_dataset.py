@@ -2747,16 +2747,96 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'fever',
         KEY_VIDS: [
-            'fever_0001.mp4',
-            'fever_0002.mp4',
-            'fever_0003.mp4',
-            'fever_0004.mp4',
-            'fever_0005.mp4',
-            'fever_0006.mp4',
-            'fever_0007.mp4',
-            'fever_0008.mp4',
-            'fever_0009.mp4',
-            'fever_0010.mp4',
+            {
+                KEY_FILE: 'fever_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 59,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'fever_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 31,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'fever_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 30,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'fever_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 36,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'fever_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 42,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'fever_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 31,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'fever_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 37,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'fever_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 34,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'fever_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 42,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'fever_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 36,
+                    },
+                ]
+            },
         ]
     },
     {
