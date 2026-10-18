@@ -2354,16 +2354,132 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'see',
         KEY_VIDS: [
-            'see_0001.mp4',
-            'see_0002.mp4',
-            'see_0003.mp4',
-            'see_0004.mp4',
-            'see_0005.mp4',
-            'see_0006.mp4',
-            'see_0007.mp4',
-            'see_0008.mp4',
-            'see_0009.mp4',
-            'see_0010.mp4',
+            {
+                KEY_FILE: 'see_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 42,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'see_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 46,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'see_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 56,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'see_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 23,
+                    },
+                    {
+                        KEY_IMGSTART: 24,
+                        KEY_IMGEND: 60,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'see_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 24,
+                    },
+                    {
+                        KEY_IMGSTART: 25,
+                        KEY_IMGEND: 55,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'see_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 43,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'see_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 25,
+                    },
+                    {
+                        KEY_IMGSTART: 26,
+                        KEY_IMGEND: 60,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'see_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 23,
+                    },
+                    {
+                        KEY_IMGSTART: 24,
+                        KEY_IMGEND: 53,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'see_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 27,
+                    },
+                    {
+                        KEY_IMGSTART: 28,
+                        KEY_IMGEND: 59,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'see_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 24,
+                    },
+                    {
+                        KEY_IMGSTART: 25,
+                        KEY_IMGEND: 57,
+                    },
+                ]
+            },
         ]
     },
     {
