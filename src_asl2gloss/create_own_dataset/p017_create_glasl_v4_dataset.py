@@ -718,16 +718,140 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'before',
         KEY_VIDS: [
-            'before_0001.mp4',
-            'before_0002.mp4',
-            'before_0003.mp4',
-            'before_0004.mp4',
-            'before_0005.mp4',
-            'before_0006.mp4',
-            'before_0007.mp4',
-            'before_0008.mp4',
-            'before_0009.mp4',
-            'before_0010.mp4',
+            {
+                KEY_FILE: 'before_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 52,
+                    },
+                    {
+                        KEY_IMGSTART: 53,
+                        KEY_IMGEND: 78,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'before_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 69,
+                    },
+                    {
+                        KEY_IMGSTART: 70,
+                        KEY_IMGEND: 92,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'before_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 32,
+                    },
+                    {
+                        KEY_IMGSTART: 33,
+                        KEY_IMGEND: 56,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'before_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 35,
+                    },
+                    {
+                        KEY_IMGSTART: 36,
+                        KEY_IMGEND: 58,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'before_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 42,
+                    },
+                    {
+                        KEY_IMGSTART: 43,
+                        KEY_IMGEND: 65,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'before_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 41,
+                    },
+                    {
+                        KEY_IMGSTART: 42,
+                        KEY_IMGEND: 69,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'before_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 33,
+                    },
+                    {
+                        KEY_IMGSTART: 34,
+                        KEY_IMGEND: 53,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'before_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 41,
+                    },
+                    {
+                        KEY_IMGSTART: 42,
+                        KEY_IMGEND: 55,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'before_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 37,
+                    },
+                    {
+                        KEY_IMGSTART: 38,
+                        KEY_IMGEND: 81,
+                    },
+                    {
+                        KEY_IMGSTART: 82,
+                        KEY_IMGEND: 98,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'before_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 42,
+                    },
+                    {
+                        KEY_IMGSTART: 43,
+                        KEY_IMGEND: 69,
+                    },
+                ]
+            },
         ]
     },
     {
