@@ -2175,16 +2175,180 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'need',
         KEY_VIDS: [
-            'need_0001.mp4',
-            'need_0002.mp4',
-            'need_0003.mp4',
-            'need_0004.mp4',
-            'need_0005.mp4',
-            'need_0006.mp4',
-            'need_0007.mp4',
-            'need_0008.mp4',
-            'need_0009.mp4',
-            'need_0010.mp4',
+            {
+                KEY_FILE: 'need_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 19,
+                    },
+                    {
+                        KEY_IMGSTART: 20,
+                        KEY_IMGEND: 33,
+                    },
+                    {
+                        KEY_IMGSTART: 34,
+                        KEY_IMGEND: 75,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'need_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 10,
+                    },
+                    {
+                        KEY_IMGSTART: 11,
+                        KEY_IMGEND: 25,
+                    },
+                    {
+                        KEY_IMGSTART: 26,
+                        KEY_IMGEND: 37,
+                    },
+                    {
+                        KEY_IMGSTART: 38,
+                        KEY_IMGEND: 50,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'need_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 11,
+                    },
+                    {
+                        KEY_IMGSTART: 12,
+                        KEY_IMGEND: 24,
+                    },
+                    {
+                        KEY_IMGSTART: 25,
+                        KEY_IMGEND: 60,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'need_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 18,
+                    },
+                    {
+                        KEY_IMGSTART: 19,
+                        KEY_IMGEND: 38,
+                    },
+                    {
+                        KEY_IMGSTART: 39,
+                        KEY_IMGEND: 60,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'need_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                    {
+                        KEY_IMGSTART: 21,
+                        KEY_IMGEND: 34,
+                    },
+                    {
+                        KEY_IMGSTART: 35,
+                        KEY_IMGEND: 63,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'need_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 22,
+                    },
+                    {
+                        KEY_IMGSTART: 23,
+                        KEY_IMGEND: 43,
+                    },
+                    {
+                        KEY_IMGSTART: 44,
+                        KEY_IMGEND: 62,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'need_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 21,
+                    },
+                    {
+                        KEY_IMGSTART: 22,
+                        KEY_IMGEND: 38,
+                    },
+                    {
+                        KEY_IMGSTART: 39,
+                        KEY_IMGEND: 55,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'need_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 23,
+                    },
+                    {
+                        KEY_IMGSTART: 24,
+                        KEY_IMGEND: 41,
+                    },
+                    {
+                        KEY_IMGSTART: 42,
+                        KEY_IMGEND: 60,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'need_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 18,
+                    },
+                    {
+                        KEY_IMGSTART: 19,
+                        KEY_IMGEND: 42,
+                    },
+                    {
+                        KEY_IMGSTART: 43,
+                        KEY_IMGEND: 58,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'need_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 2,
+                        KEY_IMGEND: 17,
+                    },
+                    {
+                        KEY_IMGSTART: 18,
+                        KEY_IMGEND: 30,
+                    },
+                    {
+                        KEY_IMGSTART: 31,
+                        KEY_IMGEND: 68,
+                    },
+                ]
+            },
         ]
     },
     {
