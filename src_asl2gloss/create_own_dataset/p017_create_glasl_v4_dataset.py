@@ -2620,16 +2620,128 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'hurt',
         KEY_VIDS: [
-            'hurt_0001.mp4',
-            'hurt_0002.mp4',
-            'hurt_0003.mp4',
-            'hurt_0004.mp4',
-            'hurt_0005.mp4',
-            'hurt_0006.mp4',
-            'hurt_0007.mp4',
-            'hurt_0008.mp4',
-            'hurt_0009.mp4',
-            'hurt_0010.mp4',
+            {
+                KEY_FILE: 'hurt_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 45,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'hurt_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 35,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'hurt_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 34,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'hurt_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 32,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'hurt_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 30,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'hurt_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 34,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'hurt_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 32,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'hurt_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 14,
+                    },
+                    {
+                        KEY_IMGSTART: 15,
+                        KEY_IMGEND: 42,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'hurt_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 39,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'hurt_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 11,
+                    },
+                    {
+                        KEY_IMGSTART: 12,
+                        KEY_IMGEND: 36,
+                    },
+                ]
+            },
         ]
     },
     {
