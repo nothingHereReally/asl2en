@@ -1266,16 +1266,132 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'who',
         KEY_VIDS: [
-            'who_0001.mp4',
-            'who_0002.mp4',
-            'who_0003.mp4',
-            'who_0004.mp4',
-            'who_0005.mp4',
-            'who_0006.mp4',
-            'who_0007.mp4',
-            'who_0008.mp4',
-            'who_0009.mp4',
-            'who_0010.mp4',
+            {
+                KEY_FILE: 'who_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 2,
+                        KEY_IMGEND: 17,
+                    },
+                    {
+                        KEY_IMGSTART: 18,
+                        KEY_IMGEND: 47,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'who_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 33,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'who_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 33,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'who_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 35,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'who_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 21,
+                    },
+                    {
+                        KEY_IMGSTART: 22,
+                        KEY_IMGEND: 45,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'who_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 4,
+                        KEY_IMGEND: 16,
+                    },
+                    {
+                        KEY_IMGSTART: 17,
+                        KEY_IMGEND: 38,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'who_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 17,
+                    },
+                    {
+                        KEY_IMGSTART: 18,
+                        KEY_IMGEND: 37,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'who_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 32,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'who_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 2,
+                        KEY_IMGEND: 18,
+                    },
+                    {
+                        KEY_IMGSTART: 19,
+                        KEY_IMGEND: 39,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'who_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 2,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 32,
+                    },
+                ]
+            },
         ]
     },
     {
