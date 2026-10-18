@@ -2977,16 +2977,132 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'headache',
         KEY_VIDS: [
-            'headache_0001.mp4',
-            'headache_0002.mp4',
-            'headache_0003.mp4',
-            'headache_0004.mp4',
-            'headache_0005.mp4',
-            'headache_0006.mp4',
-            'headache_0007.mp4',
-            'headache_0008.mp4',
-            'headache_0009.mp4',
-            'headache_0010.mp4',
+            {
+                KEY_FILE: 'headache_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 11,
+                    },
+                    {
+                        KEY_IMGSTART: 12,
+                        KEY_IMGEND: 38,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'headache_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 35,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'headache_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 31,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'headache_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 14,
+                    },
+                    {
+                        KEY_IMGSTART: 15,
+                        KEY_IMGEND: 29,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'headache_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 15,
+                    },
+                    {
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 39,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'headache_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 38,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'headache_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 14,
+                    },
+                    {
+                        KEY_IMGSTART: 15,
+                        KEY_IMGEND: 43,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'headache_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 46,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'headache_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 2,
+                        KEY_IMGEND: 12,
+                    },
+                    {
+                        KEY_IMGSTART: 13,
+                        KEY_IMGEND: 40,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'headache_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 12,
+                    },
+                    {
+                        KEY_IMGSTART: 13,
+                        KEY_IMGEND: 38,
+                    },
+                ]
+            },
         ]
     },
     {
