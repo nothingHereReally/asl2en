@@ -857,16 +857,140 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'chair',
         KEY_VIDS: [
-            'chair_0001.mp4',
-            'chair_0002.mp4',
-            'chair_0003.mp4',
-            'chair_0004.mp4',
-            'chair_0005.mp4',
-            'chair_0006.mp4',
-            'chair_0007.mp4',
-            'chair_0008.mp4',
-            'chair_0009.mp4',
-            'chair_0010.mp4',
+            {
+                KEY_FILE: 'chair_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 17,
+                    },
+                    {
+                        KEY_IMGSTART: 18,
+                        KEY_IMGEND: 37,
+                    },
+                    {
+                        KEY_IMGSTART: 38,
+                        KEY_IMGEND: 60,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'chair_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 14,
+                    },
+                    {
+                        KEY_IMGSTART: 15,
+                        KEY_IMGEND: 40,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'chair_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 16,
+                    },
+                    {
+                        KEY_IMGSTART: 17,
+                        KEY_IMGEND: 35,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'chair_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 14,
+                    },
+                    {
+                        KEY_IMGSTART: 15,
+                        KEY_IMGEND: 50,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'chair_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 41,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'chair_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 12,
+                    },
+                    {
+                        KEY_IMGSTART: 13,
+                        KEY_IMGEND: 43,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'chair_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 51,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'chair_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 34,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'chair_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 11,
+                    },
+                    {
+                        KEY_IMGSTART: 12,
+                        KEY_IMGEND: 41,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'chair_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 11,
+                    },
+                    {
+                        KEY_IMGSTART: 12,
+                        KEY_IMGEND: 50,
+                    },
+                ]
+            },
         ]
     },
     {
