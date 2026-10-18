@@ -3680,6 +3680,73 @@ def init_dirs() -> None:
         raise NotImplementedError(f"Please delete {SKELETON_DIR}, this will be created for you.")
     LANDMARK_DIR.mkdir()
     SKELETON_DIR.mkdir()
+def has3landmarks(mph_result) -> bool:
+    return mph_result.face_landmarks != None and \
+           mph_result.pose_landmarks != None and \
+           mph_result.left_hand_landmarks != None and \
+           mph_result.right_hand_landmarks != None
+def extract_lm_from_video(video_filename: str) -> tuple:
+    '''
+    video_filename, eg. file.mp4
+    --------------
+    return a tuple of (out_landmarks, out_annotations)
+    '''
+    video_data: cv2.VideoCapture= cv2.VideoCapture(f"{VIDEO_DIR /video_filename}")
+    out_landmarks: list= []
+    out_annotations: list= []
+    for _ in range(int(video_data.get(cv2.CAP_PROP_FRAME_COUNT))):
+        has_img, image= video_data.read()
+        if has_img:
+            image= cv2.cvtColor(src=image, code=cv2.COLOR_BGR2RGB)
+            mph_result: Any= MPH_fph.process(image)
+            norm_landmarks: list[tuple[float, float]]= extract_lm_from_mph(mph_result, orig_shape=image.shape) # list of shape (86, 2)
+            if len(out_landmarks) == 0 or has3landmarks(mph_result):
+                out_landmarks.append(norm_landmarks)
+                out_annotations.append({
+                    KEY_FACE: mph_result.face_landmarks != None,
+                    KEY_POSE: mph_result.pose_landmarks != None,
+                    KEY_LHAND: mph_result.left_hand_landmarks != None,
+                    KEY_RHAND: mph_result.right_hand_landmarks != None,
+                })
+            elif not has3landmarks(mph_result):
+                new_landmark: list= []
+                new_annotation: dict= {
+                    KEY_FACE: False,
+                    KEY_POSE: False,
+                    KEY_LHAND: False,
+                    KEY_RHAND: False,
+                }
+                if mph_result.face_landmarks == None:
+                    new_landmark.extend(get_face(np.array(out_landmarks[-1])).tolist())
+                    new_annotation[KEY_FACE]= out_annotations[-1][KEY_FACE]
+                else:
+                    new_landmark.extend(get_face(np.array(norm_landmarks)).tolist())
+                    new_annotation[KEY_FACE]= True
+
+                if mph_result.pose_landmarks == None:
+                    new_landmark.extend(get_pose(np.array(out_landmarks[-1])).tolist())
+                    new_annotation[KEY_POSE]= out_annotations[-1][KEY_POSE]
+                else:
+                    new_landmark.extend(get_pose(np.array(norm_landmarks)).tolist())
+                    new_annotation[KEY_POSE]= True
+
+                if mph_result.left_hand_landmarks == None:
+                    new_landmark.extend(get_left_hand(np.array(out_landmarks[-1])).tolist())
+                    new_annotation[KEY_LHAND]= out_annotations[-1][KEY_LHAND]
+                else:
+                    new_landmark.extend(get_left_hand(np.array(norm_landmarks)).tolist())
+                    new_annotation[KEY_LHAND]= True
+
+                if mph_result.right_hand_landmarks == None:
+                    new_landmark.extend(get_right_hand(np.array(out_landmarks[-1])).tolist())
+                    new_annotation[KEY_RHAND]= out_annotations[-1][KEY_RHAND]
+                else:
+                    new_landmark.extend(get_right_hand(np.array(norm_landmarks)).tolist())
+                    new_annotation[KEY_RHAND]= True
+                out_landmarks.append(new_landmark)
+                out_annotations.append(new_annotation)
+
+    return (out_landmarks, out_annotations)
 def process_videos_ds() -> tuple:
     ds_landmark: list= []
     ds_skeleton: list= []
