@@ -1397,16 +1397,136 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'candy',
         KEY_VIDS: [
-            'candy_0001.mp4',
-            'candy_0002.mp4',
-            'candy_0003.mp4',
-            'candy_0004.mp4',
-            'candy_0005.mp4',
-            'candy_0006.mp4',
-            'candy_0007.mp4',
-            'candy_0008.mp4',
-            'candy_0009.mp4',
-            'candy_0010.mp4',
+            {
+                KEY_FILE: 'candy_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 11,
+                    },
+                    {
+                        KEY_IMGSTART: 12,
+                        KEY_IMGEND: 36,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'candy_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 10,
+                    },
+                    {
+                        KEY_IMGSTART: 11,
+                        KEY_IMGEND: 37,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'candy_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 9,
+                    },
+                    {
+                        KEY_IMGSTART: 10,
+                        KEY_IMGEND: 33,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'candy_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 10,
+                    },
+                    {
+                        KEY_IMGSTART: 11,
+                        KEY_IMGEND: 38,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'candy_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 12,
+                    },
+                    {
+                        KEY_IMGSTART: 13,
+                        KEY_IMGEND: 32,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'candy_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 9,
+                    },
+                    {
+                        KEY_IMGSTART: 10,
+                        KEY_IMGEND: 32,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'candy_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 10,
+                    },
+                    {
+                        KEY_IMGSTART: 11,
+                        KEY_IMGEND: 32,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'candy_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 28,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'candy_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 11,
+                    },
+                    {
+                        KEY_IMGSTART: 12,
+                        KEY_IMGEND: 32,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'candy_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 11,
+                    },
+                    {
+                        KEY_IMGSTART: 12,
+                        KEY_IMGEND: 33,
+                    },
+                ]
+            },
         ]
     },
     {
