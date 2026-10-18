@@ -3108,16 +3108,124 @@ VIDEO_LIST: list= [
     {
         KEY_G: 'doctor',
         KEY_VIDS: [
-            'doctor_0001.mp4',
-            'doctor_0002.mp4',
-            'doctor_0003.mp4',
-            'doctor_0004.mp4',
-            'doctor_0005.mp4',
-            'doctor_0006.mp4',
-            'doctor_0007.mp4',
-            'doctor_0008.mp4',
-            'doctor_0009.mp4',
-            'doctor_0010.mp4',
+            {
+                KEY_FILE: 'doctor_0001.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 5,
+                        KEY_IMGEND: 42,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'doctor_0002.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 33,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'doctor_0003.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 20,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'doctor_0004.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 29,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'doctor_0005.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 13,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 36,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'doctor_0006.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 17,
+                    },
+                    {
+                        KEY_IMGSTART: 18,
+                        KEY_IMGEND: 25,
+                    },
+                    {
+                        KEY_IMGSTART: 35,
+                        KEY_IMGEND: 40,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'doctor_0007.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 2,
+                        KEY_IMGEND: 8,
+                    },
+                    {
+                        KEY_IMGSTART: 13,
+                        KEY_IMGEND: 19,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'doctor_0008.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 32,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'doctor_0009.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 16,
+                    },
+                    {
+                        KEY_IMGSTART: 17,
+                        KEY_IMGEND: 41,
+                    },
+                ]
+            },
+            {
+                KEY_FILE: 'doctor_0010.mp4',
+                KEY_IMG_VALID: [
+                    {
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 8,
+                    },
+                    {
+                        KEY_IMGSTART: 12,
+                        KEY_IMGEND: 23,
+                    },
+                    {
+                        KEY_IMGSTART: 25,
+                        KEY_IMGEND: 41,
+                    },
+                ]
+            },
         ]
     }
 ]
