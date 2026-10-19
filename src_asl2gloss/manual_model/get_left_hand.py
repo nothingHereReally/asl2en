@@ -6,7 +6,7 @@ import cv2
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
 DS_DIR: Path= PROJ_ROOT /"dataset" /"glasl"
 LHAND_FOLDER_ABS: Path= DS_DIR /"extracted_left_hand"
-wholebody_landmark_path: Path= DS_DIR /"glasl_v4_landmark_recent" /"fever_0010" /"00000007.npy"
+wholebody_landmark_path: Path= DS_DIR /"glasl_v4_landmark" /"fever_0010_0001_0036" /"00000007.npy"
 IMG_SIZE: int= 158
 HAND_CONNECTIONS: tuple= (
     (0, 1), (0, 5), (9, 13), (13, 17), (5, 9), (0, 17), # palm connections
