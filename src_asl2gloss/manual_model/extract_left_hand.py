@@ -128,7 +128,7 @@ def main() -> None:
         color_line=(110, 190, 245),
         highlight_index=None
     )
-    with open(f"{LHAND_FOLDER_ABS /'left_hand.py'}", 'wb') as f:
+    with open(f"{LHAND_FOLDER_ABS /'left_hand.npy'}", 'wb') as f:
         np.save(f, left_hand_lm)
     cv2.imwrite(
         filename=f"{LHAND_FOLDER_ABS /'left_hand.jpg'}",
