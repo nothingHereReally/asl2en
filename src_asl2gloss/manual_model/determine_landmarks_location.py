@@ -735,30 +735,7 @@ def drawFacePoseHandAnd2dots(
     # order of landmarks [...face..., ...pose..., ...left_hand..., ...right_hand...]
     # return tuple(ndarray, list_of_shape_86_2)
     return img_write_to
-def create_images_for2dots(
-    landmarks: list[tuple[float, float]],
-    landmarks_flip: list[tuple[float, float]],
-    abs_folder: Path,
-) -> None:
-    image: np.ndarray= drawFacePoseHandAnd2dots(
-        img_write_to=np.zeros( (IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8 ),
-        landmarks=landmarks,
-        landmarks2dots=get2dots_frombody(jnp.array(landmarks)).tolist(),
-    )
-    image_flip: np.ndarray= drawFacePoseHandAnd2dots(
-        img_write_to=np.zeros( (IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8 ),
-        landmarks=landmarks_flip,
-        landmarks2dots=get2dots_frombody(jnp.array(landmarks_flip)).tolist(),
-    )
-    imwrite(
-        filename=f"{abs_folder /"human_01_origin_with2dots_on_body.jpg"}",
-        img=image,
-    )
-    imwrite(
-        filename=f"{abs_folder /"human_02_flip_with2dots_on_body.jpg"}",
-        img=image_flip,
-    )
-
+def create_moved_lm_images(landmarks: list[tuple[float, float]], abs_folder: Path) -> None:
     # ---- for manually moving parts, left hand ----
     left_hand_skeleton= drawSkeletonImg(
         image=np.zeros( (IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8 ),
@@ -858,6 +835,31 @@ def create_images_for2dots(
         filename=f"{abs_folder /"human_05_left_right_hand_from_origin_to_center.jpg"}",
         img=left_right_hand_skeleton,
     )
+def create_images_for2dots(
+    landmarks: list[tuple[float, float]],
+    landmarks_flip: list[tuple[float, float]],
+    abs_folder: Path,
+) -> None:
+    image: np.ndarray= drawFacePoseHandAnd2dots(
+        img_write_to=np.zeros( (IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8 ),
+        landmarks=landmarks,
+        landmarks2dots=get2dots_frombody(jnp.array(landmarks)).tolist(),
+    )
+    image_flip: np.ndarray= drawFacePoseHandAnd2dots(
+        img_write_to=np.zeros( (IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8 ),
+        landmarks=landmarks_flip,
+        landmarks2dots=get2dots_frombody(jnp.array(landmarks_flip)).tolist(),
+    )
+    imwrite(
+        filename=f"{abs_folder /"human_01_origin_with2dots_on_body.jpg"}",
+        img=image,
+    )
+    imwrite(
+        filename=f"{abs_folder /"human_02_flip_with2dots_on_body.jpg"}",
+        img=image_flip,
+    )
+
+    create_moved_lm_images(landmarks, abs_folder)
 def drawFacePoseHand2color(
     img_write_to: np.ndarray,
     landmarks: list,
