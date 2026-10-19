@@ -759,7 +759,36 @@ def create_images_for2dots(
         img=image_flip,
     )
 
-    # ---- for manually moving parts ----
+    # ---- for manually moving parts, left hand ----
+    left_hand_skeleton= drawSkeletonImg(
+        image=np.zeros( (IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8 ),
+        lmark_coordinates=landmarks[36+8:-21],
+        connections_idxs=HAND_CONNECTIONS,
+        thick=2,
+        color_dot=(23, 56, 90),
+        color_line=(90, 23, 56),
+        highlight_index=None
+    )
+    left_hand_lm: jnp.ndarray= jnp.array(landmarks[36+8:-21])
+    left_hand_lm= left_hand_lm +(
+        left_hand_lm[0:1, :] -0.5
+    )*-1.0
+    # ---- left hand landmarks ----
+    left_hand_skeleton= drawSkeletonImg(
+        image=left_hand_skeleton,
+        lmark_coordinates=left_hand_lm.tolist(),
+        connections_idxs=HAND_CONNECTIONS,
+        thick=6,
+        color_dot=(23, 56, 90),
+        color_line=(90, 23, 56),
+        highlight_index=None
+    )
+    imwrite(
+        filename=f"{abs_folder /"human_03_left_hand_from_origin_to_center.jpg"}",
+        img=left_hand_skeleton,
+    )
+
+    # ---- for manually moving parts, right hand ----
     right_hand_skeleton= drawSkeletonImg(
         image=np.zeros( (IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8 ),
         lmark_coordinates=landmarks[-21:],
@@ -784,7 +813,7 @@ def create_images_for2dots(
         highlight_index=None
     )
     imwrite(
-        filename=f"{abs_folder /"human_03_right_hand_from_origin_to_center.jpg"}",
+        filename=f"{abs_folder /"human_04_right_hand_from_origin_to_center.jpg"}",
         img=right_hand_skeleton,
     )
 def drawFacePoseHand2color(
