@@ -7,7 +7,7 @@ from typing import Any
 from numpy import float32, float64
 
 
-from .constant import LANDMARK_SHAPE, LM_IDX_LEFT_HIP, LM_IDX_LEFT_SHOULDER, LM_IDX_RIGHT_HIP, LM_IDX_RIGHT_SHOULDER, QUANTITY_FRAME, LEN_GLOSS, WORTHY_LM_IMPORTANT_IDX
+from .constant import LANDMARK_SHAPE, LM_IDX_LEFT_HIP, LM_IDX_LEFT_SHOULDER, LM_IDX_RIGHT_HIP, LM_IDX_RIGHT_SHOULDER, LM_LEFT_HAND_NOT_TIP, LM_LEFT_HAND_TIP, LM_RIGHT_HAND_NOT_TIP, LM_RIGHT_HAND_TIP, QUANTITY_FRAME, LEN_GLOSS, LM_IMPORTANT_FACE_IDX
 
 
 @register_keras_serializable()
@@ -99,33 +99,92 @@ class SelectLM(Layer):
         super().__init__(**kwargs)
         self.name= name
     def build(self, input_shape):
-        pass
+        del input_shape
     def call(self, input):
-        out= ops.concatenate([
-            input[..., 44:, :],
+        # left_hand_tip: Any= input[..., LM_LEFT_HAND_TIP, :]
+        # right_hand_tip: Any= input[..., LM_RIGHT_HAND_TIP, :]
+        left_hand_tip: Any= ops.take(
+            input,
+            indices=LM_LEFT_HAND_TIP,
+            axis=-2,
+        )
+        right_hand_tip: Any= ops.take(
+            input,
+            indices=LM_RIGHT_HAND_TIP,
+            axis=-2,
+        )
+        left_hand_tip= ops.expand_dims(left_hand_tip, axis=-3)
+        right_hand_tip= ops.expand_dims(right_hand_tip, axis=-3)
+        the_rest= ops.concatenate([
+            # input[..., LM_IMPORTANT_FACE_IDX, :],
             ops.take(
                 input,
-                WORTHY_LM_IMPORTANT_IDX,
-                axis=-2
+                indices=LM_IMPORTANT_FACE_IDX,
+                axis=-2,
+            ),
+            input[..., 36:36+8, :],
+            # input[..., LM_LEFT_HAND_NOT_TIP, :],
+            ops.take(
+                input,
+                indices=LM_LEFT_HAND_NOT_TIP,
+                axis=-2,
+            ),
+            # input[..., LM_RIGHT_HAND_NOT_TIP, :],
+            ops.take(
+                input,
+                indices=LM_RIGHT_HAND_NOT_TIP,
+                axis=-2,
             ),
         ], axis=-2)
-        center_shoulder= (
-            input[..., LM_IDX_LEFT_SHOULDER:LM_IDX_LEFT_SHOULDER+1, :] +
-            input[..., LM_IDX_RIGHT_SHOULDER:LM_IDX_RIGHT_SHOULDER+1, :]
-        )/2.0
-        center_hip= (
-            input[..., LM_IDX_LEFT_HIP:LM_IDX_LEFT_HIP+1, :] +
-            input[..., LM_IDX_RIGHT_HIP:LM_IDX_RIGHT_HIP+1, :]
-        )/2.0
-        center_shoulder_hip= (center_shoulder + center_hip)/2.0
+        the_rest= ops.expand_dims(the_rest, axis=-2)
+
+        left_hand_tip= (left_hand_tip - the_rest)**2
+        left_hand_tip= ops.sum(left_hand_tip, axis=-1, keepdims=False)
+        left_hand_tip= left_hand_tip**0.5
+        shape: Any= ops.shape(left_hand_tip)
+        left_hand_tip= ops.reshape(left_hand_tip, (-1, shape[1], shape[2]*shape[3]))
+
+        right_hand_tip= (right_hand_tip - the_rest)**2
+        right_hand_tip= ops.sum(right_hand_tip, axis=-1, keepdims=False)
+        right_hand_tip= right_hand_tip**0.5
+        shape: Any= ops.shape(right_hand_tip)
+        right_hand_tip= ops.reshape(right_hand_tip, (-1, shape[1], shape[2]*shape[3]))
+
         out= ops.concatenate([
-            out,
-            (center_shoulder + center_shoulder_hip)/2.0,
-            (center_hip + center_shoulder_hip)/2.0,
-        ], axis=-2)
-        shape: Any= ops.shape(out)
-        out= ops.reshape(out, (-1, shape[1], shape[-2]*shape[3]))
+            left_hand_tip,
+            right_hand_tip,
+        ], axis=-1)
         return out
+        # out= ops.concatenate([
+        #     input[..., 44:, :], # -- left and right hand
+        #     input[..., 36:36+8, :], # -- pose landmarks
+        #     ops.take(
+        #         input,
+        #         indices=LM_IMPORTANT_FACE_IDX,
+        #         axis=-2,
+        #     ),
+        # ], axis=-2)
+        # center_shoulder= (
+        #     input[..., LM_IDX_LEFT_SHOULDER:LM_IDX_LEFT_SHOULDER+1, :] +
+        #     input[..., LM_IDX_RIGHT_SHOULDER:LM_IDX_RIGHT_SHOULDER+1, :]
+        # )/2.0
+        # center_hip= (
+        #     input[..., LM_IDX_LEFT_HIP:LM_IDX_LEFT_HIP+1, :] +
+        #     input[..., LM_IDX_RIGHT_HIP:LM_IDX_RIGHT_HIP+1, :]
+        # )/2.0
+        # center_shoulder_hip= (center_shoulder + center_hip)/2.0
+        # out= ops.concatenate([
+        #     out,
+        #     (center_shoulder + center_shoulder_hip)/2.0,
+        #     (center_hip + center_shoulder_hip)/2.0,
+        # ], axis=-2)
+        # shape: Any= ops.shape(out)
+        # out= ops.reshape(out, (-1, shape[1], shape[2]*shape[3]))
+        # return out
+        # out= input[..., 44:, :]
+        # shape: Any= ops.shape(out)
+        # out= ops.reshape(out, (-1, shape[1], shape[2]*shape[3]))
+        # return out
     def get_config(self):
         return {
             **super().get_config(),
@@ -223,12 +282,12 @@ class ShapeReduceViaAddAndAttention(Layer):
             "name":      self.name,
         }
 # ---------------------------------------------------------------------------
-data_in= Input(
+layer_in= Input(
     shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]),
     dtype=float32,
     name='batch_vid',
 )
-x= SelectLM(name='select49_from86')(data_in)
+x= SelectLM(name='select49_from86')(layer_in)
 # ---------------------------------------------------------------------------
 # x= ShapeReduce43ViaAttention(
 #     num_heads=8,
@@ -244,16 +303,16 @@ x= MultiHeadAttention(
     query=x,
     value=x,
     key=x,
-) # (QUANTITY_FRAME, LANDMARK_SHAPE[0]//2==43)
-x= ShapeReduceViaAddAndAttention(
-    target=21,
-    num_heads=8,
-    dropout=0.1
-)(x)
+) # (QUANTITY_FRAME, 61)
+# x= ShapeReduceViaAddAndAttention(
+#     target=21,
+#     num_heads=8,
+#     dropout=0.1
+# )(x)
 ann= Flatten()(x)
 ann= Dense(
     units=LANDMARK_SHAPE[0]*2,
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
 )(ann)
 # ---------------------------------------------------------------------------
-data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
+layer_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
