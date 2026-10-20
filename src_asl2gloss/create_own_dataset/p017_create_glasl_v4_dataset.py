@@ -15,6 +15,12 @@ KEY_G: str= 'gloss'
 KEY_VIDS: str= 'videos'
 KEY_LANDMARK: str= 'landmark'
 KEY_SKELETON: str= 'skeleton'
+# ---------------------------
+KEY_SPLIT: str= 'split'
+VAL_TRAIN: str= 'train'
+VAL_TEST: str= 'test'
+RATIO4TRAIN: float= 0.8
+# ---------------------------
 KEY_FILE: str= 'file'
 KEY_FACE: str= 'face'
 KEY_POSE: str= 'pose'
@@ -3759,7 +3765,7 @@ def process_videos_ds() -> tuple:
             KEY_G: a_gloss[KEY_G],
             KEY_VIDS: [],
         })
-        for a_video in a_gloss[KEY_VIDS]:
+        for idx_video, a_video in enumerate(a_gloss[KEY_VIDS]):
             video_landmarks, video_annotations= extract_lm_from_video(a_video[KEY_FILE])
             for a_start_end in a_video[KEY_IMG_VALID]:
                 pfolder_name: str= f"{a_video[KEY_FILE][:-4]}_{str(a_start_end[KEY_IMGSTART]).zfill(4)}_{str(a_start_end[KEY_IMGEND]).zfill(4)}"
@@ -3767,12 +3773,15 @@ def process_videos_ds() -> tuple:
                 skeleton_abs_folder: Path= SKELETON_DIR /pfolder_name
                 landmark_abs_folder.mkdir()
                 skeleton_abs_folder.mkdir()
+                split_what: str= VAL_TRAIN if idx_video<int(RATIO4TRAIN*len(a_gloss[KEY_VIDS])) else VAL_TEST
                 ds_landmark[-1][KEY_VIDS].append({
                     KEY_PFOLDER: pfolder_name,
+                    KEY_SPLIT: split_what,
                     KEY_LANDMARK: [],
                 })
                 ds_skeleton[-1][KEY_VIDS].append({
                     KEY_PFOLDER: pfolder_name,
+                    KEY_SPLIT: split_what,
                     KEY_SKELETON: [],
                 })
                 for idx_init0 in range(a_start_end[KEY_IMGEND] -a_start_end[KEY_IMGSTART]+1):
