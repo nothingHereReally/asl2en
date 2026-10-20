@@ -1,13 +1,14 @@
 from keras.src.activations.activations import ReLU
 from keras.src.layers import Attention, Flatten, Dense, Input, MultiHeadAttention, Layer
 from keras.src.activations import softmax
+from keras.src import ops
 from keras.src.saving import register_keras_serializable
 from typing import Any
 import tensorflow as tf
 from numpy import float32, float64
 
 
-from .constant import LANDMARK_SHAPE, QUANTITY_FRAME, LEN_GLOSS
+from .constant import LANDMARK_SHAPE, LM_IDX_LEFT_HIP, LM_IDX_LEFT_SHOULDER, LM_IDX_RIGHT_HIP, LM_IDX_RIGHT_SHOULDER, LM_LEFT_HAND_NOT_TIP, LM_LEFT_HAND_TIP, LM_RIGHT_HAND_NOT_TIP, LM_RIGHT_HAND_TIP, QUANTITY_FRAME, LEN_GLOSS, LM_IMPORTANT_FACE_IDX
 
 
 @register_keras_serializable()
@@ -184,6 +185,81 @@ class ShapeReduceViaAddAndAttention(Layer):
             "dropout":   self.dropout,
             "name":      self.name,
         }
+@register_keras_serializable()
+class SelectLM(Layer):
+    def __init__(self, name: str='select_landmark', **kwargs):
+        super().__init__(**kwargs)
+        self.name= name
+    def build(self, input_shape):
+        del input_shape
+    def call(self, input):
+        # left_hand_tip: Any= input[..., LM_LEFT_HAND_TIP, :]
+        # right_hand_tip: Any= input[..., LM_RIGHT_HAND_TIP, :]
+        left_hand_tip: Any= ops.take(
+            input,
+            indices=LM_LEFT_HAND_TIP,
+            axis=-2,
+        )
+        right_hand_tip: Any= ops.take(
+            input,
+            indices=LM_RIGHT_HAND_TIP,
+            axis=-2,
+        )
+        left_hand_tip= ops.expand_dims(left_hand_tip, axis=-3)
+        right_hand_tip= ops.expand_dims(right_hand_tip, axis=-3)
+        center_shoulder= (
+            input[..., LM_IDX_LEFT_SHOULDER:LM_IDX_LEFT_SHOULDER+1, :] +
+            input[..., LM_IDX_RIGHT_SHOULDER:LM_IDX_RIGHT_SHOULDER+1, :]
+        )/2.0
+        center_hip= (
+            input[..., LM_IDX_LEFT_HIP:LM_IDX_LEFT_HIP+1, :] +
+            input[..., LM_IDX_RIGHT_HIP:LM_IDX_RIGHT_HIP+1, :]
+        )/2.0
+        center_shoulder_hip= (center_shoulder + center_hip)/2.0
+        the_rest= ops.concatenate([
+            ops.take(
+                input,
+                indices=LM_IMPORTANT_FACE_IDX,
+                axis=-2,
+            ),
+            input[..., 36:36+8, :], # -- pose landmarks
+            (center_shoulder + center_shoulder_hip)/2.0, # -- upper dot on 2 dots
+            (center_hip + center_shoulder_hip)/2.0,      # -- lower dot on 2 dots
+            ops.take(
+                input,
+                indices=LM_LEFT_HAND_NOT_TIP,
+                axis=-2,
+            ),
+            ops.take(
+                input,
+                indices=LM_RIGHT_HAND_NOT_TIP,
+                axis=-2,
+            ),
+        ], axis=-2)
+        the_rest= ops.expand_dims(the_rest, axis=-2)
+
+        left_hand_tip= (left_hand_tip - the_rest)**2
+        left_hand_tip= ops.sum(left_hand_tip, axis=-1, keepdims=False)
+        left_hand_tip= left_hand_tip**0.5
+        shape: Any= ops.shape(left_hand_tip)
+        left_hand_tip= ops.reshape(left_hand_tip, (-1, shape[1], shape[2]*shape[3]))
+
+        right_hand_tip= (right_hand_tip - the_rest)**2
+        right_hand_tip= ops.sum(right_hand_tip, axis=-1, keepdims=False)
+        right_hand_tip= right_hand_tip**0.5
+        shape: Any= ops.shape(right_hand_tip)
+        right_hand_tip= ops.reshape(right_hand_tip, (-1, shape[1], shape[2]*shape[3]))
+
+        out= ops.concatenate([
+            left_hand_tip,
+            right_hand_tip,
+        ], axis=-1)
+        return out
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "name":      self.name,
+        }
 # ---------------------------------------------------------------------------
 data_in= Input(
     shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]),
@@ -191,10 +267,7 @@ data_in= Input(
     name='batch_vid',
 )
 # ---------------------------------------------------------------------------
-x= ShapeReduce43ViaAttention(
-    num_heads=8,
-    dropout=0.1, # (QUANTITY_FRAME, LANDMARK_SHAPE[0]//2==43)
-)(data_in)
+x= SelectLM()(data_in)
 x= MultiHeadAttention(
     num_heads=8,
     key_dim=43//8,
