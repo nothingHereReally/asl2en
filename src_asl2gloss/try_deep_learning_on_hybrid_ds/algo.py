@@ -162,17 +162,89 @@ def extract_ds_annotation_split(wlasl_or_glasl: str, split: str) -> list:
             ))
             out.extend([{
                 KEY_GID: idx_gloss,
-                KEY_PFOLDER: a_start_end[KEY_PFOLDER],
-                KEY_LANDMARK: a_start_end[KEY_LANDMARK],
-            })
+                KEY_PFOLDER_FROM: LANDMARK_DIR_GLASL,
+                KEY_PFOLDER: el[KEY_PFOLDER],
+                KEY_LANDMARK: el[KEY_LANDMARK],
+            } for el in approved_by_split])
+    elif wlasl_or_glasl == 'wlasl':
+        for idx_gloss, a_gloss in enumerate(wlasl_ds):
+            approved_by_split: list= list(filter(
+                lambda el: el[KEY_SPLIT]==split,
+                a_gloss[KEY_VIDS],
+            )) # -- element is dict 3keys( video_file, split, landmark:list[dict..] )
+            for a_video in approved_by_split:
+                out.extend([{
+                    KEY_GID: idx_gloss,
+                    KEY_PFOLDER_FROM: LANDMARK_DIR_WLASL,
+                    KEY_PFOLDER: el[KEY_PFOLDER],
+                    KEY_LANDMARK: el[KEY_LANDMARK],
+                } for el in a_video[KEY_LANDMARK]])
+    else:
+        raise ValueError(
+            f'wlasl_or_glasl can only be "wlasl" or' +
+            f'"glasl", given value: {wlasl_or_glasl}'
+        )
     return out
 
 
-def load_npfiles(landmark: dict) -> list:
+def calculate_steps_needed(train_test: str=VAL_TRAIN, batch_size: int=BATCH) -> int:
+    total_DS: int= 0
+    dataset: list= extract_ds_annotation_split(
+        wlasl_or_glasl='glasl',
+        split=train_test,
+    )
+    for a_video in dataset:
+        idx_init: int= idx_init_has_hand(a_video[KEY_LANDMARK])
+        if idx_init!=-1:
+            if len(a_video[KEY_LANDMARK])<=QUANTITY_FRAME:
+                total_DS+= 1
+            else:
+                len_available_images: int= len(a_video[KEY_LANDMARK])-idx_init
+                o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
+                total_DS+= 1 # for part 1
+                if QUANTITY_FRAME<len_available_images:
+                    total_DS+= int(
+                        o2t_mod *(len(a_video[KEY_LANDMARK]) -(idx_init+ QUANTITY_FRAME*o2t_mod))
+                    ) # for part 2
+                    for work4mod_what in MOD_PART_3: # for part 3
+                        if 0<int(len_available_images//work4mod_what):
+                            total_DS+= (len_available_images//work4mod_what) -QUANTITY_FRAME +1
+                        else:
+                            total_DS+= 1
+                else:
+                    total_DS+= 1
+    dataset= extract_ds_annotation_split(
+        wlasl_or_glasl='wlasl',
+        split=train_test,
+    )
+    for a_video in dataset:
+        idx_init: int= idx_init_has_hand(a_video[KEY_LANDMARK])
+        if idx_init!=-1:
+            if len(a_video[KEY_LANDMARK])<=QUANTITY_FRAME:
+                total_DS+= 1
+            else:
+                len_available_images: int= len(a_video[KEY_LANDMARK])-idx_init
+                o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
+                total_DS+= 1 # for part 1
+                if QUANTITY_FRAME<len_available_images:
+                    total_DS+= int(
+                        o2t_mod *(len(a_video[KEY_LANDMARK]) -(idx_init+ QUANTITY_FRAME*o2t_mod))
+                    ) # for part 2
+                    for work4mod_what in MOD_PART_3: # for part 3
+                        if 0<int(len_available_images//work4mod_what):
+                            total_DS+= (len_available_images//work4mod_what) -QUANTITY_FRAME +1
+                        else:
+                            total_DS+= 1
+                else:
+                    total_DS+= 1
+    return int(ceil(total_DS/float(batch_size)))
+
+
+def load_npfiles(landmark: dict) -> list[np.ndarray]:
     out: list= []
     for an_img_detail in landmark[KEY_LANDMARK]:
-        with open(f"{DS_LANDMARK_DIR /landmark[KEY_PFOLDER] /an_img_detail[KEY_FILE]}", 'rb') as f:
-            out.append(loadnp(f))
+        with open(f"{landmark[KEY_PFOLDER_FROM] /landmark[KEY_PFOLDER] /an_img_detail[KEY_FILE]}", 'rb') as f:
+            out.append(np.load(f))
     return out
 def load_elements_npfiles(elements: list) -> list:
     out: list= []
@@ -181,28 +253,288 @@ def load_elements_npfiles(elements: list) -> list:
     return out
 
 
+def has_atleast_1hand(annotation: dict) -> bool:
+    return (annotation[KEY_LHAND] or annotation[KEY_RHAND]) and \
+            annotation[KEY_FACE] and annotation[KEY_POSE]
+def idx_init_has_hand(landmarks: list) -> int:
+    for idx in range(len(landmarks)):
+        if has_atleast_1hand(landmarks[idx]):
+            return idx
+    return -1
+def q_imgs_less_than_or_equal(
+    landmarks: list,
+    parent_folder_from: Path,
+    parent_folder: str,
+) -> dict:
+    annotations: dict= {
+        KEY_PFOLDER_FROM: parent_folder_from,
+        KEY_PFOLDER: parent_folder,
+        KEY_LANDMARK: [],
+    }
+
+    idx_init: int= idx_init_has_hand(landmarks)
+    ratio: int= int(ceil(QUANTITY_FRAME / (len(landmarks)-idx_init)))
+    for landmark in landmarks[idx_init:]:
+        if has_atleast_1hand(landmark) and len(annotations[KEY_LANDMARK])<QUANTITY_FRAME:
+            annotations[KEY_LANDMARK].extend([
+                {
+                    KEY_FILE:  landmark[KEY_FILE],
+                    KEY_FACE:  landmark[KEY_FACE],
+                    KEY_POSE:  landmark[KEY_POSE],
+                    KEY_LHAND: landmark[KEY_LHAND],
+                    KEY_RHAND: landmark[KEY_RHAND],
+                }
+            ] * min(ratio, QUANTITY_FRAME -len(annotations[KEY_LANDMARK])))
+        elif len(annotations[KEY_LANDMARK])<QUANTITY_FRAME:
+            annotations[KEY_LANDMARK].extend([
+                {
+                    KEY_FILE:  annotations[KEY_LANDMARK][-1][KEY_FILE],
+                    KEY_FACE:  annotations[KEY_LANDMARK][-1][KEY_FACE],
+                    KEY_POSE:  annotations[KEY_LANDMARK][-1][KEY_POSE],
+                    KEY_LHAND: annotations[KEY_LANDMARK][-1][KEY_LHAND],
+                    KEY_RHAND: annotations[KEY_LANDMARK][-1][KEY_RHAND],
+                }
+            ] * min(ratio, QUANTITY_FRAME -len(annotations[KEY_LANDMARK])))
+
+    return annotations
+def greater_than_qf_p1(
+    landmarks: list,
+    parent_folder_from: Path,
+    parent_folder: str,
+) -> dict:
+    assert has_atleast_1hand(landmarks[0])
+    annotations: dict= {
+        KEY_PFOLDER_FROM: parent_folder_from,
+        KEY_PFOLDER: parent_folder,
+        KEY_LANDMARK: [],
+    }
+
+    ratio: int= floor(len(landmarks) / QUANTITY_FRAME)
+    for idx in range(QUANTITY_FRAME):
+        a_landmark = landmarks[idx * ratio]
+        if has_atleast_1hand(a_landmark):
+            annotations[KEY_LANDMARK].append({
+                KEY_FILE: a_landmark[KEY_FILE],
+                KEY_FACE: a_landmark[KEY_FACE],
+                KEY_POSE: a_landmark[KEY_POSE],
+                KEY_LHAND: a_landmark[KEY_LHAND],
+                KEY_RHAND: a_landmark[KEY_RHAND],
+            })
+        else:
+            annotations[KEY_LANDMARK].append({
+                KEY_FILE:  annotations[KEY_LANDMARK][-1][KEY_FILE],
+                KEY_FACE:  annotations[KEY_LANDMARK][-1][KEY_FACE],
+                KEY_POSE:  annotations[KEY_LANDMARK][-1][KEY_POSE],
+                KEY_LHAND: annotations[KEY_LANDMARK][-1][KEY_LHAND],
+                KEY_RHAND: annotations[KEY_LANDMARK][-1][KEY_RHAND],
+            })
+
+    return annotations
+def greater_than_qf_p2(
+    landmarks: list,
+    parent_folder_from: Path,
+    parent_folder: str,
+) -> list:
+    assert has_atleast_1hand(landmarks[0])
+    annotations_many: list= []
+
+    how_many_qfs: int= floor(len(landmarks)/QUANTITY_FRAME)
+    remains: int=      len(landmarks) - how_many_qfs*QUANTITY_FRAME
+    mod_list: tuple=   tuple(range(how_many_qfs))
+    past_notation: dict= {
+        KEY_FILE: landmarks[0][KEY_FILE],
+        KEY_FACE: landmarks[0][KEY_FACE],
+        KEY_POSE: landmarks[0][KEY_POSE],
+        KEY_LHAND: landmarks[0][KEY_LHAND],
+        KEY_RHAND: landmarks[0][KEY_RHAND],
+    }
+    for idx_init_only in range(remains+1):
+        tmp_annotations: list= [{
+            KEY_PFOLDER_FROM: parent_folder_from,
+            KEY_PFOLDER: parent_folder,
+            KEY_LANDMARK: [],
+        } for _ in range(how_many_qfs)]
+        for idx in range(
+            idx_init_only,
+            idx_init_only +(how_many_qfs*QUANTITY_FRAME)
+        ):
+            for mod_what in mod_list:
+                if (idx%how_many_qfs)==mod_what:
+                    if has_atleast_1hand(landmarks[idx]):
+                        tmp_annotations[mod_what][KEY_LANDMARK].append({
+                            KEY_FILE:  landmarks[idx][KEY_FILE],
+                            KEY_FACE:  landmarks[idx][KEY_FACE],
+                            KEY_POSE:  landmarks[idx][KEY_POSE],
+                            KEY_LHAND: landmarks[idx][KEY_LHAND],
+                            KEY_RHAND: landmarks[idx][KEY_RHAND],
+                        })
+                        past_notation= {
+                            KEY_FILE:  landmarks[idx][KEY_FILE],
+                            KEY_FACE:  landmarks[idx][KEY_FACE],
+                            KEY_POSE:  landmarks[idx][KEY_POSE],
+                            KEY_LHAND: landmarks[idx][KEY_LHAND],
+                            KEY_RHAND: landmarks[idx][KEY_RHAND],
+                        }
+                    else:
+                        tmp_annotations[mod_what][KEY_LANDMARK].append(past_notation.copy())
+        annotations_many.extend(tmp_annotations)
+    return annotations_many
+def greater_than_qf_p3(
+    landmarks: list,
+    parent_folder_from: Path,
+    parent_folder: str,
+) -> list:
+    assert has_atleast_1hand(landmarks[0])
+
+    annotations_many: list= []
+    groups_notation: list= [[] for _ in MOD_PART_3]
+    past_annotation: dict= {
+        KEY_FILE:  landmarks[0][KEY_FILE],
+        KEY_FACE:  landmarks[0][KEY_FACE],
+        KEY_POSE:  landmarks[0][KEY_POSE],
+        KEY_LHAND: landmarks[0][KEY_LHAND],
+        KEY_RHAND: landmarks[0][KEY_RHAND],
+    }
+
+    for idx, a_landmark in enumerate(landmarks):
+        for idx_mod, what_mod in enumerate(MOD_PART_3):
+            if ((idx + 1) % what_mod) == 0:
+                if has_atleast_1hand(a_landmark):
+                    past_annotation= {
+                        KEY_FILE: a_landmark[KEY_FILE],
+                        KEY_FACE: a_landmark[KEY_FACE],
+                        KEY_POSE: a_landmark[KEY_POSE],
+                        KEY_LHAND: a_landmark[KEY_LHAND],
+                        KEY_RHAND: a_landmark[KEY_RHAND],
+                    }
+                groups_notation[idx_mod].append(past_annotation.copy())
+
+    for group in groups_notation:
+        if len(group) <= QUANTITY_FRAME:
+            annotations: list= []
+            ratio: int= ceil(QUANTITY_FRAME / len(group))
+
+            for annotation in group:
+                if len(annotations)<QUANTITY_FRAME:
+                    annotations.extend(
+                        [annotation.copy()] * min(
+                            ratio, QUANTITY_FRAME - len(annotations)
+                        )
+                    )
+
+            annotations_many.append({
+                KEY_PFOLDER_FROM: parent_folder_from,
+                KEY_PFOLDER: parent_folder,
+                KEY_LANDMARK: annotations,
+            })
+        else:
+            for idx_init in range(len(group) - QUANTITY_FRAME + 1):
+                annotations_many.append({
+                    KEY_PFOLDER_FROM: parent_folder_from,
+                    KEY_PFOLDER: parent_folder,
+                    KEY_LANDMARK: group[
+                        idx_init:idx_init + QUANTITY_FRAME
+                    ],
+                })
+
+    return annotations_many
+def q_imgs_greater_than(
+    landmarks: list,
+    parent_folder_from: Path,
+    parent_folder: str,
+) -> list:
+    annotations_many: list= []
+
+    idx_init: int= idx_init_has_hand(landmarks)
+    q_imgs_available: int= len(landmarks)-idx_init
+    if q_imgs_available<=QUANTITY_FRAME:
+        annotation: dict= q_imgs_less_than_or_equal(
+            landmarks=landmarks[idx_init:],
+            parent_folder_from=parent_folder_from,
+            parent_folder=parent_folder,
+        )
+        annotations_many.append(annotation)
+    else:
+        # ---- part 1 ----
+        annotation: dict= greater_than_qf_p1(
+            landmarks=landmarks[idx_init:],
+            parent_folder_from=parent_folder_from,
+            parent_folder=parent_folder,
+        )
+        annotations_many.append(annotation)
+
+        # ---- part 2 ----
+        annotations: list= greater_than_qf_p2(
+            landmarks=landmarks[idx_init:],
+            parent_folder_from=parent_folder_from,
+            parent_folder=parent_folder,
+        )
+        annotations_many.extend(annotations)
+
+        # ---- part 3 ----
+        annotations= greater_than_qf_p3(
+            landmarks=landmarks[idx_init:],
+            parent_folder_from=parent_folder_from,
+            parent_folder=parent_folder,
+        )
+        annotations_many.extend(annotations)
+    return annotations_many
 def get_data_landmark(
-    train_val: str=VAL_TRAIN,
-    batch_size: int=ON_TRAINING_BATCH
+    train_test: str=VAL_TRAIN,
+    batch_size: int=BATCH
 ) -> Generator:
-    dataset: list= extract_ds_annotation_split(train_val)
+    dataset: list= extract_ds_annotation_split(
+        wlasl_or_glasl='wlasl',
+        split=train_test,
+    )
+    dataset.extend(extract_ds_annotation_split(
+        wlasl_or_glasl='glasl',
+        split=train_test,
+    ))
     dataset_idxs: tuple= tuple(sample(
         range(len(dataset)),
         len(dataset)
     ))
-    batch_videos: list= []
-    batch_class: list= []
+
+    batch_ds_elements: list= []
+    batch_ds_class: list= []
     while True:
         for idx_ds in dataset_idxs:
-            batch_class.append(dataset[idx_ds][KEY_GID])
-            batch_videos.append(dataset[idx_ds])
-            # ---- now ready ----
-            while batch_size<=len(batch_videos):
-                out_inputs: ndarray= array(
-                    load_elements_npfiles(batch_videos[:batch_size]),
+            an_element_ds: dict= dataset[idx_ds]
+            if len(an_element_ds[KEY_LANDMARK])<=QUANTITY_FRAME:
+                batch_ds_class.append(an_element_ds[KEY_GID])
+                batch_ds_elements.append(q_imgs_less_than_or_equal(
+                    landmarks=an_element_ds[KEY_LANDMARK],
+                    parent_folder_from=an_element_ds[KEY_PFOLDER_FROM],
+                    parent_folder=an_element_ds[KEY_PFOLDER],
+                ))
+            else:
+                result_from_many: list= q_imgs_greater_than(
+                    landmarks=an_element_ds[KEY_LANDMARK],
+                    parent_folder_from=an_element_ds[KEY_PFOLDER_FROM],
+                    parent_folder=an_element_ds[KEY_PFOLDER],
                 )
-                assert out_inputs.shape==(batch_size, QUANTITY_FRAME, 86, 2)
-                out_expected_outputs: ndarray= array(batch_class[:batch_size], dtype=uint16)
-                batch_videos= batch_videos[batch_size:]
-                batch_class= batch_class[batch_size:]
+                batch_ds_class.extend( [an_element_ds[KEY_GID]] * len(result_from_many) )
+                batch_ds_elements.extend(result_from_many)
+            # ---- now ready ----
+            while batch_size<=len(batch_ds_class):
+                out_inputs: np.ndarray= np.array(
+                    load_elements_npfiles(batch_ds_elements[:batch_size]),
+                )
+                out_inputs= np.concatenate([
+                    out_inputs,
+                    flip_vertical_x_axis(out_inputs)
+                ], axis=0)
+                out_expected_outputs: np.ndarray= np.array(batch_ds_class[:batch_size])
+                out_expected_outputs= np.concatenate([
+                    out_expected_outputs,
+                    out_expected_outputs,
+                ], axis=0)
+                assert out_inputs.shape==(batch_size*2, QUANTITY_FRAME, 86, 2)
+                assert out_expected_outputs.shape==(batch_size*2,)
+                assert out_inputs.shape[0]==out_expected_outputs.shape[0]
+
+                batch_ds_elements= batch_ds_elements[batch_size:]
+                batch_ds_class= batch_ds_class[batch_size:]
+
                 yield (out_inputs, out_expected_outputs)
