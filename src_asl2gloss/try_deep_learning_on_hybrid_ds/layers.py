@@ -1,11 +1,10 @@
 from keras.src.activations.activations import ReLU
-from keras.src.layers import Attention, Flatten, Dense, Input, MultiHeadAttention, Layer
+from keras.src.layers import Attention, Flatten, Dense, GlobalAveragePooling1D, Input, LayerNormalization, MultiHeadAttention, Layer
 from keras.src.activations import softmax
 from keras.src import ops
 from keras.src.saving import register_keras_serializable
+# from keras_hub.layers import SinePositionEncoding
 from typing import Any
-import tensorflow as tf
-from numpy import float32, float64
 
 
 from .constant import LANDMARK_SHAPE, LM_IDX_LEFT_HIP, LM_IDX_LEFT_SHOULDER, LM_IDX_RIGHT_HIP, LM_IDX_RIGHT_SHOULDER, LM_LEFT_HAND_NOT_TIP, LM_LEFT_HAND_TIP, LM_RIGHT_HAND_NOT_TIP, LM_RIGHT_HAND_TIP, QUANTITY_FRAME, LEN_GLOSS, LM_IMPORTANT_FACE_IDX
@@ -22,71 +21,63 @@ class ShapeReduce43ViaAttention(Layer):
         self.in_query= [Dense(
                 units=input_shape[-2], # 86
                 activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-                dtype=float64,
             ) for _ in range(self.num_heads)]
         self.in_value= [Dense(
                 units=input_shape[-2], # 86
                 activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-                dtype=float64,
             ) for _ in range(self.num_heads)]
         self.in_key= [Dense(
                 units=input_shape[-2], # 86
                 activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-                dtype=float64,
             ) for _ in range(self.num_heads)]
         self.in_attention= [Attention(
                 use_scale=True,
                 dropout=self.dropout,
-                dtype=float64,
             ) for _ in range(self.num_heads)]
         # -----------------------------------
         self.query= [Dense( # ---------------
                 units=input_shape[-2]//2, # 43
                 activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-                dtype=float64,
             ) for _ in range(self.num_heads)]
         self.value= [Dense(
                 units=input_shape[-2]//2, # 43
                 activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-                dtype=float64,
             ) for _ in range(self.num_heads)]
         self.key= [Dense(
                 units=input_shape[-2]//2, # 43
                 activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-                dtype=float64,
             ) for _ in range(self.num_heads)]
         self.attention= [Attention(
                 use_scale=True,
                 dropout=self.dropout,
-                dtype=float64,
             ) for _ in range(self.num_heads)]
     def call(self, data_self_att):
-        shape: Any= tf.shape(data_self_att) # shape(BATCH_SIZE, QUANTITY_FRAME, 86, 2)
-        data= tf.reshape(data_self_att, (-1, shape[-2]*shape[-1])) # shape(BATCH_SIZE*QUANTITY_FRAME, 86*2)
+        shape: Any= ops.shape(data_self_att) # shape(BATCH_SIZE, QUANTITY_FRAME, 86, 2)
+        data= ops.reshape(data_self_att, (-1, shape[-2]*shape[-1])) # shape(BATCH_SIZE*QUANTITY_FRAME, 86*2)
         query= [query_ann(data) for query_ann in self.in_query] # (-1, 172) -> shape(-1, 86)
         value= [value_ann(data) for value_ann in self.in_value] # (-1, 172) -> shape(-1, 86)
         key=   [key_ann(data)   for key_ann   in self.in_key]   # (-1, 172) -> shape(-1, 86)
-        query= [tf.reshape(query_ann, (-1, shape[-3], shape[-2])) for query_ann in query]
-        value= [tf.reshape(value_ann, (-1, shape[-3], shape[-2])) for value_ann in value]
-        key=   [tf.reshape(key_ann,   (-1, shape[-3], shape[-2])) for key_ann   in key]
+        query= [ops.reshape(query_ann, (-1, shape[-3], shape[-2])) for query_ann in query]
+        value= [ops.reshape(value_ann, (-1, shape[-3], shape[-2])) for value_ann in value]
+        key=   [ops.reshape(key_ann,   (-1, shape[-3], shape[-2])) for key_ann   in key]
         output= [attention(
             [query[idx], value[idx], key[idx]]
         ) for idx, attention in enumerate(self.in_attention)]
-        output= tf.reduce_sum(output, axis=0) # shape(BATCH_SIZE, QUANTITY_FRAME, 86)
+        output= ops.sum(output, axis=0) # shape(BATCH_SIZE, QUANTITY_FRAME, 86)
         # ----------------------------------------------------------------------
-        output= tf.reshape(output, (-1, shape[-2])) # shape(BATCH_SIZE*QUANTITY_FRAME, 86)
+        output= ops.reshape(output, (-1, shape[-2])) # shape(BATCH_SIZE*QUANTITY_FRAME, 86)
         query= [query_ann(output) for query_ann in self.query]
         value= [value_ann(output) for value_ann in self.value]
         key=   [key_ann(output)   for key_ann   in self.key]
-        query= [tf.reshape(query_ann, (-1, shape[-3], shape[-2]//2)) for query_ann in query]
-        value= [tf.reshape(value_ann, (-1, shape[-3], shape[-2]//2)) for value_ann in value]
-        key=   [tf.reshape(key_ann,   (-1, shape[-3], shape[-2]//2)) for key_ann   in key]
+        query= [ops.reshape(query_ann, (-1, shape[-3], shape[-2]//2)) for query_ann in query]
+        value= [ops.reshape(value_ann, (-1, shape[-3], shape[-2]//2)) for value_ann in value]
+        key=   [ops.reshape(key_ann,   (-1, shape[-3], shape[-2]//2)) for key_ann   in key]
         output= [attention(
             [query[idx], value[idx], key[idx]]
         ) for idx, attention in enumerate(self.attention)]
         # input_shape (BATCH_SIZE, QUANTITY_FRAME, 86, 2)
         # output_shape (BATCH_SIZE, QUANTITY_FRAME, 43=86//2)
-        return tf.reduce_sum(output, axis=0)
+        return ops.sum(output, axis=0)
     def get_config(self):
         return {
             **super().get_config(),
@@ -107,82 +98,211 @@ class ShapeReduceViaAddAndAttention(Layer):
         self.target_query= [Dense(
                 units=self.target,
                 activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-                dtype=float64,
             ) for _ in range(self.num_heads)]
         self.target_value= [Dense(
                 units=self.target,
                 activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-                dtype=float64,
             ) for _ in range(self.num_heads)]
         self.target_key= [Dense(
                 units=self.target,
                 activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-                dtype=float64,
             ) for _ in range(self.num_heads)]
         self.target_attention= [Attention(
                 use_scale=True,
                 dropout=self.dropout,
-                dtype=float64,
             ) for _ in range(self.num_heads)]
         # -----------------------------------
         self.query= [Dense(
                 units=self.target*input_shape[-2]//2,
                 activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-                dtype=float64,
             ) for _ in range(self.num_heads)]
         self.value= [Dense(
                 units=self.target*input_shape[-2]//2,
                 activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-                dtype=float64,
             ) for _ in range(self.num_heads)]
         self.key= [Dense(
                 units=self.target*input_shape[-2]//2,
                 activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-                dtype=float64,
             ) for _ in range(self.num_heads)]
         self.attention= [Attention(
                 use_scale=True,
                 dropout=self.dropout,
-                dtype=float64,
             ) for _ in range(self.num_heads)]
     def call(self, data_self_att):
-        origin_shape: Any= tf.shape(data_self_att) # shape(BATCH_SIZE, QUANTITY_FRAME, 43)
-        data= tf.reshape(data_self_att, (-1, origin_shape[-2]//2, 2, origin_shape[-1]))
-        data= tf.reduce_sum(data, axis=-2) # shape(BATCH_SIZE, QUANTITY_FRAME/2, 43)
-        shape: Any= tf.shape(data)
-        data=  tf.reshape(data, (-1, shape[-1])) # shape(BATCH_SIZE*QUANTITY_FRAME/2, 43)
+        origin_shape: Any= ops.shape(data_self_att) # shape(BATCH_SIZE, QUANTITY_FRAME, 43)
+        data= ops.reshape(data_self_att, (-1, origin_shape[-2]//2, 2, origin_shape[-1]))
+        data= ops.sum(data, axis=-2) # shape(BATCH_SIZE, QUANTITY_FRAME/2, 43)
+        shape: Any= ops.shape(data)
+        data=  ops.reshape(data, (-1, shape[-1])) # shape(BATCH_SIZE*QUANTITY_FRAME/2, 43)
         # ----------------------------------------------------------------------
         query= [query_ann(data) for query_ann in self.target_query]
         value= [value_ann(data) for value_ann in self.target_value]
         key=   [key_ann(data)   for key_ann   in self.target_key]
-        query= [tf.reshape(query_ann, (-1, shape[-2], self.target)) for query_ann in query]
-        value= [tf.reshape(value_ann, (-1, shape[-2], self.target)) for value_ann in value]
-        key=   [tf.reshape(key_ann,   (-1, shape[-2], self.target)) for key_ann   in key]
+        query= [ops.reshape(query_ann, (-1, shape[-2], self.target)) for query_ann in query]
+        value= [ops.reshape(value_ann, (-1, shape[-2], self.target)) for value_ann in value]
+        key=   [ops.reshape(key_ann,   (-1, shape[-2], self.target)) for key_ann   in key]
         output= [attention(
             [query[idx], value[idx], key[idx]]
         ) for idx, attention in enumerate(self.target_attention)]
-        output= tf.reduce_sum(output, axis=0)
-        shape= tf.shape(output) # (BATCH_SIZE, QUANTITY_FRAME/2, self.target)
+        output= ops.sum(output, axis=0)
+        shape=  ops.shape(output) # (BATCH_SIZE, QUANTITY_FRAME/2, self.target)
         # ----------------------------------------------------------------------
-        output= tf.reshape(output, (-1, shape[-2]*shape[-1])) # shape(BATCH_SIZE, QUANTITY_FRAME/2*self.target)
+        output= ops.reshape(output, (-1, shape[-2]*shape[-1])) # shape(BATCH_SIZE, QUANTITY_FRAME/2*self.target)
         query= [query_ann(output) for query_ann in self.query]
         value= [value_ann(output) for value_ann in self.value]
         key=   [key_ann(output)   for key_ann   in self.key]
-        query= [tf.reshape(query_ann, (-1, shape[-2], self.target)) for query_ann in query]
-        value= [tf.reshape(value_ann, (-1, shape[-2], self.target)) for value_ann in value]
-        key=   [tf.reshape(key_ann,   (-1, shape[-2], self.target)) for key_ann   in key]
+        query= [ops.reshape(query_ann, (-1, shape[-2], self.target)) for query_ann in query]
+        value= [ops.reshape(value_ann, (-1, shape[-2], self.target)) for value_ann in value]
+        key=   [ops.reshape(key_ann,   (-1, shape[-2], self.target)) for key_ann   in key]
         output= [attention(
             [query[idx], value[idx], key[idx]]
         ) for idx, attention in enumerate(self.attention)]
         # input_shape (BATCH_SIZE, QUANTITY_FRAME, 43)
         # output_shape (BATCH_SIZE, QUANTITY_FRAME/2, self.target)
-        return tf.reduce_sum(output, axis=0)
+        return ops.sum(output, axis=0)
     def get_config(self):
         return {
             **super().get_config(),
             "target":    self.target,
             "num_heads": self.num_heads,
             "dropout":   self.dropout,
+            "name":      self.name,
+        }
+# @register_keras_serializable()
+# class SinCosPostionalEncoding( Layer ):
+#     def __init__(
+#         self,
+#         name: str='positional_encoding',
+#         **kwargs
+#     ):
+#         super().__init__(**kwargs)
+#         self.name= name
+#     def build(self, input_shape):
+#         assert len(input_shape)==3
+#         self.positional_encoding= SinePositionEncoding(
+#             max_wavelength=10000,
+#         )
+#     def call(self, data_input):
+#         data= ops.add(
+#             data_input,
+#             self.positional_encoding(data_input)
+#         )
+#
+#         return data
+#     def get_config(self):
+#         return {
+#             **super().get_config(),
+#             "name":      self.name,
+#         }
+@register_keras_serializable()
+class EncoderTransformer( Layer ):
+    def __init__(
+        self,
+        num_heads: int=4,  # 8 on 'attention is all u need' (2017)
+        key_dim: int=43,   # 64 on 'attention is all u need' (2017)
+        value_dim: int=43, # --> so that 43*4= 172= 86*2
+        dropout: float=0.1,
+        ann_units: int=2048,
+        name: str='encoder_transformer',
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.num_heads= num_heads
+        self.key_dim=   key_dim
+        self.value_dim= value_dim
+        self.dropout=   dropout
+        self.ann_units= ann_units
+        self.name=      name
+    def build(self, input_shape):
+        # assert len(input_shape)==3
+        d_model= input_shape[-1]
+        self.multiHeadAtt= MultiHeadAttention(
+            num_heads=self.num_heads,
+            key_dim=self.key_dim,
+            value_dim=self.value_dim,
+            dropout=self.dropout,
+            use_bias=True,
+        )
+        self.normAfterMHA= LayerNormalization()
+        self.ann= Dense(
+            units=self.ann_units,
+            activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+        )
+        self.annBringBackShape= Dense(
+            units=d_model,
+            activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+        )
+        self.normAfterAnn= LayerNormalization()
+    def call(self, data_input):
+        data= self.multiHeadAtt(
+            query=data_input,
+            value=data_input,
+            key=data_input,
+        )
+        data= ops.add(data, data_input)
+        data_after_mha= self.normAfterMHA(data)
+
+        data= self.ann(data_after_mha)
+        data= self.annBringBackShape(data)
+        data= ops.add(data, data_after_mha)
+        data= self.normAfterAnn(data)
+
+        return data
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "num_heads": self.num_heads,
+            "key_dim":   self.key_dim,
+            "value_dim": self.value_dim,
+            "dropout":   self.dropout,
+            "ann_units": self.ann_units,
+            "name":      self.name,
+        }
+@register_keras_serializable()
+class NTimesEncoderTransformer(Layer):
+    def __init__(
+        self,
+        n_times: int=6,
+        num_heads: int=4,  # 8 on 'attention is all u need' (2017)
+        key_dim: int=43,   # 64 on 'attention is all u need' (2017)
+        value_dim: int=43, # --> so that 43*4= 172= 86*2
+        dropout: float=0.1,
+        ann_units: int=2048,
+        name: str='multi_encoder_in_sequence',
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.n_times=   n_times
+        self.num_heads= num_heads
+        self.key_dim=   key_dim
+        self.value_dim= value_dim
+        self.dropout=   dropout
+        self.ann_units= ann_units
+        self.name=      name
+    def build(self, input_shape):
+        # assert len(input_shape)==3
+        self.encoder_seq= [EncoderTransformer(
+            num_heads=self.num_heads,
+            key_dim=self.key_dim,
+            value_dim=self.value_dim,
+            dropout=self.dropout,
+            ann_units=self.ann_units,
+            name=f"enc_{idx}",
+        ) for idx in range(self.n_times)]
+    def call(self, data_input):
+        data= data_input
+        for encoder in self.encoder_seq:
+            data= encoder(data)
+        return data
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "n_times":   self.n_times,
+            "num_heads": self.num_heads,
+            "key_dim":   self.key_dim,
+            "value_dim": self.value_dim,
+            "dropout":   self.dropout,
+            "ann_units": self.ann_units,
             "name":      self.name,
         }
 @register_keras_serializable()
@@ -263,32 +383,28 @@ class SelectLM(Layer):
 # ---------------------------------------------------------------------------
 data_in= Input(
     shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]),
-    dtype=float32,
     name='batch_vid',
 )
 # ---------------------------------------------------------------------------
 x= SelectLM()(data_in)
-x= MultiHeadAttention(
-    num_heads=8,
-    key_dim=43//8,
+# x= SinCosPostionalEncoding(name='positional')(x)
+x= NTimesEncoderTransformer(
+    n_times=3,
+    num_heads=2,
+    key_dim=4,
+    value_dim=4,
     dropout=0.1,
-    use_bias=True,
-    name='mha_86',
-)(
-    query=x,
-    value=x,
-    key=x,
-) # (QUANTITY_FRAME, LANDMARK_SHAPE[0]//2==43)
-x= ShapeReduceViaAddAndAttention(
-    target=21,
-    num_heads=8,
-    dropout=0.1
+    ann_units=4,
+    name='multi_encoder_in_sequence',
+)(x) # (QUANTITY_FRAME, LANDMARK_SHAPE[0]*LANDMARK_SHAPE[1])
+x= GlobalAveragePooling1D(
+    data_format='channels_last',
+    keepdims=False,
 )(x)
 ann= Flatten()(x)
 ann= Dense(
     units=LANDMARK_SHAPE[0]*2,
     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-    dtype=float64,
 )(ann)
 # ---------------------------------------------------------------------------
 data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
