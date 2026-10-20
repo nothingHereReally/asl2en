@@ -1351,8 +1351,5 @@ def main() -> None:
     #     weights=weights,
     #     labels=labels,
     # )
-    # with open("/tmp/asdf.json", "w") as f:
-    #     writeJson(annotations, f, indent=4)
-    # print("\n".join([el[KEY_G] for el in annotations]))
 if __name__=="__main__":
     main()
