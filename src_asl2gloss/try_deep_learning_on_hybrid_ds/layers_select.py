@@ -115,21 +115,29 @@ class SelectLM(Layer):
         )
         left_hand_tip= ops.expand_dims(left_hand_tip, axis=-3)
         right_hand_tip= ops.expand_dims(right_hand_tip, axis=-3)
+        center_shoulder= (
+            input[..., LM_IDX_LEFT_SHOULDER:LM_IDX_LEFT_SHOULDER+1, :] +
+            input[..., LM_IDX_RIGHT_SHOULDER:LM_IDX_RIGHT_SHOULDER+1, :]
+        )/2.0
+        center_hip= (
+            input[..., LM_IDX_LEFT_HIP:LM_IDX_LEFT_HIP+1, :] +
+            input[..., LM_IDX_RIGHT_HIP:LM_IDX_RIGHT_HIP+1, :]
+        )/2.0
+        center_shoulder_hip= (center_shoulder + center_hip)/2.0
         the_rest= ops.concatenate([
-            # input[..., LM_IMPORTANT_FACE_IDX, :],
             ops.take(
                 input,
                 indices=LM_IMPORTANT_FACE_IDX,
                 axis=-2,
             ),
-            input[..., 36:36+8, :],
-            # input[..., LM_LEFT_HAND_NOT_TIP, :],
+            input[..., 36:36+8, :], # -- pose landmarks
+            (center_shoulder + center_shoulder_hip)/2.0, # -- upper dot on 2 dots
+            (center_hip + center_shoulder_hip)/2.0,      # -- lower dot on 2 dots
             ops.take(
                 input,
                 indices=LM_LEFT_HAND_NOT_TIP,
                 axis=-2,
             ),
-            # input[..., LM_RIGHT_HAND_NOT_TIP, :],
             ops.take(
                 input,
                 indices=LM_RIGHT_HAND_NOT_TIP,
@@ -155,36 +163,6 @@ class SelectLM(Layer):
             right_hand_tip,
         ], axis=-1)
         return out
-        # out= ops.concatenate([
-        #     input[..., 44:, :], # -- left and right hand
-        #     input[..., 36:36+8, :], # -- pose landmarks
-        #     ops.take(
-        #         input,
-        #         indices=LM_IMPORTANT_FACE_IDX,
-        #         axis=-2,
-        #     ),
-        # ], axis=-2)
-        # center_shoulder= (
-        #     input[..., LM_IDX_LEFT_SHOULDER:LM_IDX_LEFT_SHOULDER+1, :] +
-        #     input[..., LM_IDX_RIGHT_SHOULDER:LM_IDX_RIGHT_SHOULDER+1, :]
-        # )/2.0
-        # center_hip= (
-        #     input[..., LM_IDX_LEFT_HIP:LM_IDX_LEFT_HIP+1, :] +
-        #     input[..., LM_IDX_RIGHT_HIP:LM_IDX_RIGHT_HIP+1, :]
-        # )/2.0
-        # center_shoulder_hip= (center_shoulder + center_hip)/2.0
-        # out= ops.concatenate([
-        #     out,
-        #     (center_shoulder + center_shoulder_hip)/2.0,
-        #     (center_hip + center_shoulder_hip)/2.0,
-        # ], axis=-2)
-        # shape: Any= ops.shape(out)
-        # out= ops.reshape(out, (-1, shape[1], shape[2]*shape[3]))
-        # return out
-        # out= input[..., 44:, :]
-        # shape: Any= ops.shape(out)
-        # out= ops.reshape(out, (-1, shape[1], shape[2]*shape[3]))
-        # return out
     def get_config(self):
         return {
             **super().get_config(),

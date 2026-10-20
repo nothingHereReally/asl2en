@@ -28,7 +28,7 @@ def main():
         validation_steps=calculate_steps_needed(VAL_TEST),
         validation_freq=1
     )
-    model_file_name: str= "aslvid2gloss_v70.keras"
+    model_file_name: str= "aslvid2gloss_v71.keras"
     print(f"Quantity images --> {model.input_shape[1]}")
     print(f"Quantity categories --> {model.output_shape[-1]}")
     print(f"model( --> {model_file_name} <-- )")

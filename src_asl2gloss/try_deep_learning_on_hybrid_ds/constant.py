@@ -4,7 +4,7 @@ from pathlib import Path
 
 PROJ_ROOT: Path= Path(__file__).resolve().parent.parent.parent
 EPOCHS: int= 20
-BATCH: int= 16
+BATCH: int= 8
 QUANTITY_FRAME: int= 8
 MOD_PART_3: tuple= (2, 3, 4, 5, 6)
 LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2) # ie. (86, 2)
