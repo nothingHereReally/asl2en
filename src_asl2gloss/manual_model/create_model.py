@@ -796,7 +796,7 @@ VERIFIED_DS_DIR: list= [
 ]
 def flip_vertical_x_axis(landmarks) -> np.ndarray:
     '''
-    landmarks be of shape (INT, ..., INT, 2)
+    landmarks be of shape (INT, ..., 86, 2)
     '''
     new_landmark= np.array(landmarks).copy()
     new_landmark[..., 0]= 1 -new_landmark[..., 0]
@@ -915,9 +915,9 @@ def loadnpfiles(parent_folder: str, landmarks: list) -> np.ndarray:
     return np.array(out)
 def get_model_gloss(gloss: str) -> str:
     if gloss=='mine_my':
-        return 'mine'
+        return 'mine_my'
     if gloss=='me_i':
-        return 'i'
+        return 'me_i'
     return gloss
 def load_ds_samples() -> tuple:
     '''
