@@ -1,14 +1,25 @@
-from math import ceil
-from numpy import array, load as loadnp, ndarray, uint16
+from math import ceil, floor
+# from numpy import array, load as loadnp, ndarray, uint16
+import numpy as np
 from random import sample
 from typing import Generator
+from pathlib import Path
 
 
 from .constant import (
-    DS_LANDMARK_DIR,
-    ON_TRAINING_BATCH,
+    KEY_PFOLDER_FROM,
+    KEY_VIDS,
+    LANDMARK_DIR_WLASL,
+    LANDMARK_DIR_GLASL,
+    BATCH,
+    MOD_PART_3,
     QUANTITY_FRAME,
-    ds_landmark as DATASET,
+    QUANTITY_HAND_LMARK,
+    VAL_TEST,
+    WORTHY_FACE_IDX,
+    WORTHY_POSE_IDX,
+    wlasl_ds,
+    glasl_ds,
 
     KEY_GID,
     KEY_LANDMARK,
