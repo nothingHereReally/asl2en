@@ -281,6 +281,7 @@ class NTimesEncoderTransformer(Layer):
         self.name=      name
     def build(self, input_shape):
         # assert len(input_shape)==3
+        del input_shape
         self.encoder_seq= [EncoderTransformer(
             num_heads=self.num_heads,
             key_dim=self.key_dim,
@@ -305,6 +306,20 @@ class NTimesEncoderTransformer(Layer):
             "ann_units": self.ann_units,
             "name":      self.name,
         }
+@register_keras_serializable()
+class AttentionPooling(Layer):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def build(self, input_shape):
+        self.scoring_layer = Dense(1, activation="tanh")
+        del input_shape
+    def call(self, inputs):
+        # -- inputs shape (B, T, D)
+        scores= self.scoring_layer(inputs) # be shape (B, T, 1)
+        weights= ops.softmax(scores, axis=1) # norm via softmax still shape (B, T, 1)
+        # weights, accross what time is it most important
+        return ops.sum(inputs * weights, axis=1) # shape (B, D)
 @register_keras_serializable()
 class SelectLM(Layer):
     def __init__(self, name: str='select_landmark', **kwargs):
@@ -390,21 +405,22 @@ x= SelectLM()(data_in)
 # x= SinCosPostionalEncoding(name='positional')(x)
 x= NTimesEncoderTransformer(
     n_times=3,
-    num_heads=2,
+    num_heads=4,
     key_dim=4,
     value_dim=4,
     dropout=0.1,
-    ann_units=4,
+    ann_units=8,
     name='multi_encoder_in_sequence',
 )(x) # (QUANTITY_FRAME, LANDMARK_SHAPE[0]*LANDMARK_SHAPE[1])
-x= GlobalAveragePooling1D(
-    data_format='channels_last',
-    keepdims=False,
-)(x)
+# x= GlobalAveragePooling1D(
+#     data_format='channels_last',
+#     keepdims=False,
+# )(x)
+x= AttentionPooling()(x)
 ann= Flatten()(x)
-ann= Dense(
-    units=LANDMARK_SHAPE[0]*2,
-    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-)(ann)
+# ann= Dense(
+#     units=LANDMARK_SHAPE[0]*2,
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+# )(ann)
 # ---------------------------------------------------------------------------
 data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
