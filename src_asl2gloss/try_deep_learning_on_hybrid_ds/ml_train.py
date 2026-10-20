@@ -4,14 +4,14 @@ from keras.src.optimizers import Adam
 
 from .constant import EPOCHS, VAL_TRAIN, VAL_TEST, PROJ_ROOT
 from .algo import calculate_steps_needed, get_data_landmark
-from .layers_select import data_in, data_out
+from .layers_select import layer_in, layer_out
 from .callbacks import d_lr, sTraining, tf_board
 
 
 def main():
     model: Model= Model(
-        inputs=data_in,
-        outputs=data_out
+        inputs=layer_in,
+        outputs=layer_out
     )
     model.compile(
         optimizer=Adam(learning_rate=0.0001),
@@ -20,15 +20,15 @@ def main():
     )
     model.summary()
     model.fit(
-        x=get_data_landmark(train_val=VAL_TRAIN),
+        x=get_data_landmark(train_test=VAL_TRAIN),
         epochs=EPOCHS,
         callbacks=[d_lr, sTraining, tf_board],
-        validation_data=get_data_landmark(train_val=VAL_TEST),
+        validation_data=get_data_landmark(train_test=VAL_TEST),
         steps_per_epoch=calculate_steps_needed(VAL_TRAIN),
         validation_steps=calculate_steps_needed(VAL_TEST),
         validation_freq=1
     )
-    model_file_name: str= "aslvid2gloss_v69.keras"
+    model_file_name: str= "aslvid2gloss_v70.keras"
     print(f"Quantity images --> {model.input_shape[1]}")
     print(f"Quantity categories --> {model.output_shape[-1]}")
     print(f"model( --> {model_file_name} <-- )")
