@@ -239,21 +239,6 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
-        KEY_G: 'before',
-        KEY_LHAND: [],
-        KEY_RHAND: [],
-        KEY_LANDMARK: [
-            'before_05730_00002_010_025_from_gt_p2',
-            'before_05729_00066_013_036_from_gt_p2',
-            'before_05727_00077_024_055_from_gt_p2',
-            'before_05727_00084_024_055_from_gt_p3',
-            'before_05739_00103_001_052_from_gt_p2',
-            'before_05739_00109_001_052_from_gt_p2',
-            'before_05739_00110_001_052_from_gt_p2',
-            'before_05747_00139_022_046_from_gt_p2',
-        ]
-    },
-    {
         KEY_G: 'chair',
         KEY_LHAND: [],
         KEY_RHAND: [],
@@ -299,21 +284,6 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
-        KEY_G: 'clothes',
-        KEY_LHAND: [],
-        KEY_RHAND: [],
-        KEY_LANDMARK: [
-            'clothes_11326_00007_002_023_from_gt_p2',
-            'clothes_11326_00008_002_023_from_gt_p2',
-            'clothes_11326_00009_002_023_from_gt_p2',
-            'clothes_11311_00029_027_053_from_gt_p2',
-            'clothes_11311_00032_027_053_from_gt_p2',
-            'clothes_11311_00033_027_053_from_gt_p2',
-            'clothes_11314_00043_022_033_from_gt_p2',
-            'clothes_11314_00044_022_033_from_gt_p2',
-        ]
-    },
-    {
         KEY_G: 'who',
         KEY_LHAND: [0],
         KEY_RHAND: [0],
@@ -326,21 +296,6 @@ VERIFIED_DS_DIR: list= [
             'who_70380_00166_001_027_from_gt_p1',
             'who_who_0003_00185_020_072_from_gt_p1',
             'who_who_0005_00243_018_068_from_gt_p1',
-        ]
-    },
-    {
-        KEY_G: 'who',
-        KEY_LHAND: [0],
-        KEY_RHAND: [0],
-        KEY_LANDMARK: [
-            'who_63242_00017_024_032_from_gt_p1',
-            'who_63242_00018_024_032_from_gt_p2',
-            'who_63242_00019_024_032_from_gt_p2',
-            'who_63242_00020_024_032_from_gt_p3',
-            'who_63229_00038_019_032_from_gt_p2',
-            'who_63229_00039_019_032_from_gt_p2',
-            'who_63229_00040_019_032_from_gt_p2',
-            'who_63232_00117_065_116_from_gt_p2',
         ]
     },
     {
@@ -416,21 +371,6 @@ VERIFIED_DS_DIR: list= [
             'me_i_35547_00133_021_055_from_gt_p1',
             'me_i_35548_00254_001_030_from_gt_p1',
             'me_i_81236_00285_018_097_from_gt_p2',
-        ]
-    },
-    {
-        KEY_G: 'me_i',
-        KEY_LHAND: [3, 5, 6],
-        KEY_RHAND: [3, 5, 6],
-        KEY_LANDMARK: [
-            'me_i_35549_00158_034_107_from_gt_p1',
-            'me_i_35549_00159_034_107_from_gt_p2',
-            'me_i_35549_00160_034_107_from_gt_p2',
-            'me_i_35549_00161_034_107_from_gt_p2',
-            'me_i_35550_00229_014_042_from_gt_p1',
-            'me_i_35550_00230_014_042_from_gt_p2',
-            'me_i_35550_00231_014_042_from_gt_p2',
-            'me_i_35550_00232_014_042_from_gt_p2',
         ]
     },
     {
@@ -521,21 +461,6 @@ VERIFIED_DS_DIR: list= [
             'hurt_28454_00276_025_045_from_gt_p1',
             'hurt_28452_00294_026_047_from_gt_p1',
             'hurt_28438_00314_001_033_from_gt_p1',
-        ]
-    },
-    {
-        KEY_G: 'hurt',
-        KEY_LHAND: [],
-        KEY_RHAND: [],
-        KEY_LANDMARK: [
-            'hurt_70147_00001_052_072_from_gt_p1',
-            'hurt_70147_00002_052_072_from_gt_p2',
-            'hurt_70147_00003_052_072_from_gt_p2',
-            'hurt_70147_00004_052_072_from_gt_p2',
-            'hurt_28453_00019_016_037_from_gt_p1',
-            'hurt_28453_00020_016_037_from_gt_p2',
-            'hurt_28453_00021_016_037_from_gt_p2',
-            'hurt_28453_00022_016_037_from_gt_p2',
         ]
     },
     {
