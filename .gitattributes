@@ -200,3 +200,6 @@ model/hybrid_ds_v71__original_n_flip_n_2dots/aslvid2gloss_v71.keras filter=lfs d
 model/hybrid_ds_v72_original_n_flip_n_2dots_encoder_transformer/tfboard_logs/train/events.out.tfevents.1792532750.doxob.255442.0.v2 filter=lfs diff=lfs merge=lfs -text
 model/hybrid_ds_v72_original_n_flip_n_2dots_encoder_transformer/tfboard_logs/validation/events.out.tfevents.1792532777.doxob.255442.1.v2 filter=lfs diff=lfs merge=lfs -text
 model/hybrid_ds_v72_original_n_flip_n_2dots_encoder_transformer/aslvid2gloss_v72.keras filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v73_original_n_flip_n_2dots_encoder_transformer_att_pool/aslvid2gloss_v73.keras filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v73_original_n_flip_n_2dots_encoder_transformer_att_pool/tfboard_logs/train/events.out.tfevents.1792539077.doxob.496382.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v73_original_n_flip_n_2dots_encoder_transformer_att_pool/tfboard_logs/validation/events.out.tfevents.1792539096.doxob.496382.1.v2 filter=lfs diff=lfs merge=lfs -text
