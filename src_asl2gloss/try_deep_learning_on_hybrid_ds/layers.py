@@ -418,9 +418,9 @@ x= NTimesEncoderTransformer(
 # )(x)
 x= AttentionPooling()(x)
 ann= Flatten()(x)
-# ann= Dense(
-#     units=LANDMARK_SHAPE[0]*2,
-#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-# )(ann)
+ann= Dense(
+    units=LANDMARK_SHAPE[0]*2,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+)(ann)
 # ---------------------------------------------------------------------------
 data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
