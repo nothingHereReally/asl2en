@@ -2018,7 +2018,17 @@ def main() -> None:
         body2dots=ds_samples_body2dots,
         weights=weights,
         model_annotations=labels,
-        annotations=origin_annotations,
+        annotations=wlasl_landmark,
+        parent_folder_from=WLASL_LANDMARK_DIR,
+    )
+    test_all_data(
+        model=ds_samples,
+        mask=mask,
+        body2dots=ds_samples_body2dots,
+        weights=weights,
+        model_annotations=labels,
+        annotations=glasl_landmark,
+        parent_folder_from=GLASL_LANDMARK_DIR,
     )
     show_shapes(
         ds_samples=ds_samples,
