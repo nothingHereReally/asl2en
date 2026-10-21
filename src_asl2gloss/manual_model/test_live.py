@@ -757,6 +757,15 @@ def resize_image(image: np.ndarray, target_size: int) -> np.ndarray:
     h, w= image.shape[:2]
     scale= target_size /max(h, w)
     return cv.resize(image, (int(w * scale), int(h * scale)))
+def apply_clahe(image_rgb):
+    light, a, b= cv.split(
+        cv.cvtColor(image_rgb, cv.COLOR_RGB2LAB)
+    )
+    clahe= cv.createCLAHE(clipLimit=1.5, tileGridSize=(8,8)).apply(light)
+    return cv.cvtColor(
+        cv.merge((clahe, a, b)),
+        cv.COLOR_LAB2RGB
+    )
 def main() -> None:
     ds_samples, mask, body2dots, weights, labels= load_model()
     ds_samples= jnp.array(ds_samples)
@@ -786,10 +795,11 @@ def main() -> None:
 
             count_frames_skip+= 1
             rgb_frame= cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+            rgb_frame= apply_clahe(image_rgb=rgb_frame)
             results= MPH_fph.process(rgb_frame)
 
             if has4parts_landmark(results):
-                img_with_skeleton, landmarks= drawFacePoseHand(frame, results, frame.shape[:2])
+                img_with_skeleton, landmarks= drawFacePoseHand(rgb_frame, results, frame.shape[:2])
                 right_hand_landmarks= rm_left_hand(landmarks)
                 left_hand_landmarks= rm_right_hand(landmarks)
                 no_landmark_count= 0
@@ -826,16 +836,16 @@ def main() -> None:
                         landmark_left_right_hands= []
             else:
                 no_landmark_count += 1
-                img_with_skeleton= frame
+                img_with_skeleton= rgb_frame
 
                 if no_landmark_count >= 3:
                     print("No landmarks detected. Please slow down. Or there is no human being in front")
                     no_landmark_count= 0
 
             # Display the image with skeleton
-            display_frame= cv.cvtColor(img_with_skeleton, cv.COLOR_BGR2RGB)
+            # display_frame= cv.cvtColor(img_with_skeleton, cv.COLOR_BGR2RGB)
             display_frame= cv.flip( # flip to mirror, left be right, right be left
-                resize_image(display_frame, IMG_SIZE),
+                resize_image(img_with_skeleton, IMG_SIZE),
                 1
             )
             pygame_surface= pygame.surfarray.make_surface(display_frame.swapaxes(0, 1))
