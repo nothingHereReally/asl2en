@@ -5,12 +5,17 @@ from pathlib import Path
 
 
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
-DS_DIR: Path= PROJ_ROOT /"dataset" /"clean_dataset"
-LANDMARK_DIR: Path= DS_DIR /"ds_landmark"
+GLASL_DS_DIR: Path= PROJ_ROOT /"dataset" /"glasl"
+WLASL_DS_DIR: Path= PROJ_ROOT /"dataset" /"clean_dataset"
+GLASL_LANDMARK_DIR: Path= GLASL_DS_DIR /"glasl_v4_landmark_ds"
+WLASL_LANDMARK_DIR: Path= WLASL_DS_DIR /"ds_landmark"
 MODEL2SAVE_DIR: Path= PROJ_ROOT /"src_asl2gloss" /"manual_model" /"model"
 KEY_G: str= 'gloss'
 KEY_VIDS: str= 'videos'
 KEY_VFILE: str= 'video_file'
+KEY_PFOLDER_FROM: str= 'parent_folder_from'
+VAL_WLASL: str= 'wlasl'
+VAL_GLASL: str= 'glasl'
 KEY_PFOLDER: str= 'parent_folder'
 KEY_FILE: str= 'file'
 KEY_FACE: str= 'face'
@@ -180,6 +185,23 @@ WORTHY_LM_IMPORTANT_IDX: tuple= (
 VERIFIED_DS_DIR: list= [
     {
         KEY_G: 'book',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'book_0001_00063_0076_0104_from_gt_p2',
+            'book_0002_00140_0035_0062_from_gt_p2',
+            'book_0003_00206_0033_0060_from_gt_p2',
+            'book_0004_00296_0034_0062_from_gt_p2',
+            'book_0005_00391_0001_0038_from_gt_p2',
+            'book_0006_00486_0001_0031_from_gt_p2',
+            'book_0007_00572_0001_0033_from_gt_p2',
+            'book_0008_00655_0033_0057_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'book',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -195,6 +217,39 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'drink',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'drink_0001_00001_0001_0038_from_gt_p1',
+            'drink_0002_00074_0002_0032_from_gt_p1',
+            'drink_0003_00144_0001_0030_from_gt_p1',
+            'drink_0004_00231_0002_0025_from_gt_p1',
+            'drink_0005_00326_0001_0030_from_gt_p1',
+            'drink_0006_00416_0001_0033_from_gt_p1',
+            'drink_0007_00494_0001_0025_from_gt_p1',
+            'drink_0008_00597_0001_0031_from_gt_p1',
+        ]
+    },
+    {
+        KEY_G: 'drink',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'drink_0009_00686_0037_0099_from_gt_p1',
+            'drink_0010_00775_0001_0026_from_gt_p1',
+            'drink_0001_00005_0001_0038_from_gt_p2',
+            'drink_0001_00002_0001_0038_from_gt_p2',
+            'drink_0001_00006_0001_0038_from_gt_p2',
+            'drink_0001_00003_0001_0038_from_gt_p2',
+            'drink_0001_00007_0001_0038_from_gt_p2',
+            'drink_0001_00004_0001_0038_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'drink',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [0],
         KEY_RHAND: [0],
         KEY_LANDMARK: [
@@ -210,6 +265,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'computer',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -225,6 +281,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'computer',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -240,6 +297,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'computer',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -255,6 +313,23 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'before',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'before_0001_00003_0001_0052_from_gt_p2',
+            'before_0002_00068_0001_0069_from_gt_p1',
+            'before_0005_00257_0001_0042_from_gt_p2',
+            'before_0006_00296_0001_0041_from_gt_p1',
+            'before_0007_00353_0001_0033_from_gt_p3',
+            'before_0009_00410_0001_0037_from_gt_p1',
+            'before_0010_00495_0001_0042_from_gt_p1',
+            'before_0003_00177_0001_0032_from_gt_p1',
+        ]
+    },
+    {
+        KEY_G: 'before',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -270,6 +345,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'before',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -285,6 +361,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'before',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -300,6 +377,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'chair',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -315,6 +393,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'chair',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -330,6 +409,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'chair',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -345,6 +425,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'chair',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -360,6 +441,39 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'go',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'go_0001_00001_0001_0020_from_gt_p1',
+            'go_0002_00030_0001_0015_from_gt_p1',
+            'go_0003_00056_0001_0012_from_gt_p1',
+            'go_0004_00081_0001_0014_from_gt_p1',
+            'go_0005_00116_0001_0018_from_gt_p1',
+            'go_0006_00147_0001_0016_from_gt_p1',
+            'go_0007_00177_0001_0015_from_gt_p1',
+            'go_0008_00216_0001_0019_from_gt_p1',
+        ]
+    },
+    {
+        KEY_G: 'go',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'go_0009_00270_0029_0042_from_gt_p2',
+            'go_0010_00287_0001_0019_from_gt_p2',
+            'go_0001_00005_0001_0020_from_gt_p2',
+            'go_0001_00002_0001_0020_from_gt_p2',
+            'go_0001_00006_0001_0020_from_gt_p2',
+            'go_0001_00003_0001_0020_from_gt_p2',
+            'go_0001_00007_0001_0020_from_gt_p2',
+            'go_0001_00004_0001_0020_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'go',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -375,6 +489,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'go',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -390,6 +505,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'go',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -405,6 +521,23 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'clothes',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'clothes_0001_00001_0001_0028_from_gt_p1',
+            'clothes_0002_00044_0001_0022_from_gt_p1',
+            'clothes_0003_00079_0001_0010_from_gt_p1',
+            'clothes_0004_00119_0011_0020_from_gt_p1',
+            'clothes_0005_00163_0001_0020_from_gt_p1',
+            'clothes_0006_00204_0001_0021_from_gt_p1',
+            'clothes_0007_00262_0001_0020_from_gt_p1',
+            'clothes_0008_00293_0001_0023_from_gt_p1',
+        ]
+    },
+    {
+        KEY_G: 'clothes',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -420,6 +553,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'clothes',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -435,6 +569,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'clothes',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -450,6 +585,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'clothes',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -465,6 +601,23 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'who',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'who_0001_00001_0002_0017_from_gt_p1',
+            'who_0002_00038_0001_0013_from_gt_p1',
+            'who_0003_00066_0001_0015_from_gt_p1',
+            'who_0004_00092_0001_0015_from_gt_p1',
+            'who_0005_00122_0001_0021_from_gt_p1',
+            'who_0006_00149_0004_0016_from_gt_p1',
+            'who_0007_00181_0001_0017_from_gt_p1',
+            'who_0008_00207_0001_0032_from_gt_p1',
+        ]
+    },
+    {
+        KEY_G: 'who',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [0],
         KEY_RHAND: [0],
         KEY_LANDMARK: [
@@ -480,6 +633,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'who',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [0],
         KEY_RHAND: [0],
         KEY_LANDMARK: [
@@ -495,6 +649,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'who', # -- latest who, according to expert
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [0],
         KEY_RHAND: [0],
         KEY_LANDMARK: [
@@ -510,6 +665,23 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'candy',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'candy_0001_00011_0012_0036_from_gt_p1',
+            'candy_0002_00032_0011_0037_from_gt_p1',
+            'candy_0003_00058_0001_0009_from_gt_p3',
+            'candy_0005_00105_0001_0012_from_gt_p3',
+            'candy_0007_00161_0001_0010_from_gt_p3',
+            'candy_0008_00185_0001_0013_from_gt_p1',
+            'candy_0010_00252_0012_0033_from_gt_p2',
+            'candy_0004_00068_0001_0010_from_gt_p1',
+        ]
+    },
+    {
+        KEY_G: 'candy',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [0],
         KEY_RHAND: [0],
         KEY_LANDMARK: [
@@ -525,6 +697,23 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'cousin',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'cousin_0001_00001_0001_0016_from_gt_p1',
+            'cousin_0003_00074_0001_0017_from_gt_p1',
+            'cousin_0004_00098_0001_0028_from_gt_p1',
+            'cousin_0006_00152_0001_0014_from_gt_p1',
+            'cousin_0009_00240_0001_0011_from_gt_p1',
+            'cousin_0010_00263_0001_0014_from_gt_p2',
+            'cousin_0001_00003_0001_0016_from_gt_p2',
+            'cousin_0001_00002_0001_0016_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'cousin',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [0, 1],
         KEY_RHAND: [0, 1],
         KEY_LANDMARK: [
@@ -540,6 +729,23 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'mine_my',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'mine_my_0001_00001_0001_0016_from_gt_p1',
+            'mine_my_0002_00038_0001_0018_from_gt_p1',
+            'mine_my_0003_00060_0001_0020_from_gt_p1',
+            'mine_my_0004_00092_0001_0015_from_gt_p1',
+            'mine_my_0005_00120_0001_0015_from_gt_p1',
+            'mine_my_0006_00146_0001_0031_from_gt_p1',
+            'mine_my_0007_00178_0002_0028_from_gt_p1',
+            'mine_my_0008_00197_0001_0028_from_gt_p1',
+        ]
+    },
+    {
+        KEY_G: 'mine_my',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [3, 5, 6],
         KEY_RHAND: [3, 5, 6],
         KEY_LANDMARK: [
@@ -555,6 +761,23 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'me_i',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'me_i_0001_00001_0001_0020_from_gt_p1',
+            'me_i_0002_00032_0001_0015_from_gt_p1',
+            'me_i_0003_00063_0001_0018_from_gt_p1',
+            'me_i_0004_00091_0001_0017_from_gt_p1',
+            'me_i_0005_00115_0002_0027_from_gt_p1',
+            'me_i_0006_00143_0001_0020_from_gt_p1',
+            'me_i_0007_00172_0001_0015_from_gt_p1',
+            'me_i_0008_00200_0001_0017_from_gt_p1',
+        ]
+    },
+    {
+        KEY_G: 'me_i',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [3, 5, 6],
         KEY_RHAND: [3, 5, 6],
         KEY_LANDMARK: [
@@ -570,6 +793,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'me_i',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [3, 5, 6],
         KEY_RHAND: [3, 5, 6],
         KEY_LANDMARK: [
@@ -585,6 +809,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'stomach',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [4],
         KEY_RHAND: [4],
         KEY_LANDMARK: [
@@ -600,6 +825,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'stomach',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [4],
         KEY_RHAND: [4],
         KEY_LANDMARK: [
@@ -615,6 +841,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'have',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -630,6 +857,23 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'need',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'need_0001_00001_0001_0019_from_gt_p1',
+            'need_0002_00083_0026_0037_from_gt_p2',
+            'need_0003_00107_0001_0011_from_gt_p2',
+            'need_0004_00170_0019_0038_from_gt_p2',
+            'need_0005_00204_0001_0020_from_gt_p1',
+            'need_0006_00281_0023_0043_from_gt_p2',
+            'need_0007_00310_0001_0021_from_gt_p1',
+            'need_0008_00385_0042_0060_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'need',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -645,6 +889,23 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'see',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'see_0001_00001_0001_0042_from_gt_p1',
+            'see_0002_00036_0001_0013_from_gt_p2',
+            'see_0003_00059_0001_0020_from_gt_p1',
+            'see_0004_00106_0001_0023_from_gt_p1',
+            'see_0005_00163_0001_0024_from_gt_p1',
+            'see_0006_00204_0001_0015_from_gt_p1',
+            'see_0007_00240_0001_0025_from_gt_p1',
+            'see_0008_00277_0001_0023_from_gt_p1',
+        ]
+    },
+    {
+        KEY_G: 'see',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -660,6 +921,23 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'feel',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'feel_0001_00001_0001_0015_from_gt_p1',
+            'feel_0002_00054_0001_0017_from_gt_p1',
+            'feel_0003_00104_0001_0016_from_gt_p1',
+            'feel_0004_00137_0001_0015_from_gt_p1',
+            'feel_0005_00176_0001_0014_from_gt_p1',
+            'feel_0006_00220_0001_0010_from_gt_p1',
+            'feel_0007_00256_0001_0015_from_gt_p2',
+            'feel_0008_00289_0001_0016_from_gt_p1',
+        ]
+    },
+    {
+        KEY_G: 'feel',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [3],
         KEY_RHAND: [3],
         KEY_LANDMARK: [
@@ -675,6 +953,23 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'hurt',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'hurt_0001_00004_0001_0013_from_gt_p2',
+            'hurt_0003_00057_0001_0034_from_gt_p1',
+            'hurt_0004_00083_0001_0013_from_gt_p2',
+            'hurt_0006_00137_0001_0013_from_gt_p2',
+            'hurt_0007_00167_0001_0015_from_gt_p2',
+            'hurt_0008_00213_0015_0042_from_gt_p2',
+            'hurt_0009_00224_0001_0015_from_gt_p2',
+            'hurt_0010_00253_0001_0011_from_gt_p3',
+        ]
+    },
+    {
+        KEY_G: 'hurt',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -690,6 +985,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'hurt',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -705,6 +1001,23 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'fever',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'fever_0001_00001_0001_0059_from_gt_p1',
+            'fever_0002_00056_0001_0031_from_gt_p1',
+            'fever_0003_00088_0001_0030_from_gt_p1',
+            'fever_0004_00117_0001_0036_from_gt_p1',
+            'fever_0005_00148_0001_0042_from_gt_p1',
+            'fever_0006_00177_0001_0031_from_gt_p1',
+            'fever_0007_00209_0001_0037_from_gt_p1',
+            'fever_0008_00244_0001_0034_from_gt_p1',
+        ]
+    },
+    {
+        KEY_G: 'fever',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [1],
         KEY_RHAND: [1],
         KEY_LANDMARK: [
@@ -720,6 +1033,55 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'dizzy',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'dizzy_0001_00015_0001_0023_from_gt_p2',
+            'dizzy_0002_00054_0013_0046_from_gt_p1',
+            'dizzy_0003_00075_0001_0023_from_gt_p1',
+            'dizzy_0004_00109_0001_0023_from_gt_p1',
+            'dizzy_0005_00156_0001_0035_from_gt_p1',
+            'dizzy_0006_00181_0001_0020_from_gt_p1',
+            'dizzy_0007_00210_0001_0019_from_gt_p1',
+            'dizzy_0008_00242_0001_0020_from_gt_p1',
+        ]
+    },
+    {
+        KEY_G: 'dizzy',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'dizzy_0009_00286_0021_0048_from_gt_p1',
+            'dizzy_0010_00308_0001_0020_from_gt_p1',
+            'dizzy_0001_00001_0001_0023_from_gt_p1',
+            'dizzy_0001_00004_0001_0023_from_gt_p2',
+            'dizzy_0001_00002_0001_0023_from_gt_p2',
+            'dizzy_0001_00005_0001_0023_from_gt_p2',
+            'dizzy_0001_00003_0001_0023_from_gt_p2',
+            'dizzy_0001_00006_0001_0023_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'dizzy',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'dizzy_0001_00025_0024_0039_from_gt_p2',
+            'dizzy_0001_00026_0024_0039_from_gt_p3',
+            'dizzy_0001_00027_0024_0039_from_gt_p3',
+            'dizzy_0001_00028_0024_0039_from_gt_p3',
+            'dizzy_0001_00029_0024_0039_from_gt_p3',
+            'dizzy_0002_00072_0013_0046_from_gt_p3',
+            'dizzy_0003_00078_0001_0023_from_gt_p2',
+            'dizzy_0003_00080_0001_0023_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'dizzy',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -735,6 +1097,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'dizzy',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -750,6 +1113,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'dizzy',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -765,6 +1129,23 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'headache',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'headache_0004_00084_0001_0014_from_gt_p1',
+            'headache_0008_00196_0001_0046_from_gt_p1',
+            'headache_0009_00261_0013_0040_from_gt_p2',
+            'headache_0001_00001_0001_0011_from_gt_p1',
+            'headache_0002_00030_0001_0013_from_gt_p1',
+            'headache_0003_00062_0001_0015_from_gt_p1',
+            'headache_0005_00111_0001_0015_from_gt_p1',
+            'headache_0006_00134_0001_0013_from_gt_p1',
+        ]
+    },
+    {
+        KEY_G: 'headache',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [1, 2],
         KEY_RHAND: [1, 2],
         KEY_LANDMARK: [
@@ -780,6 +1161,23 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'doctor',
+        KEY_PFOLDER_FROM: VAL_GLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'doctor_0001_00021_0005_0042_from_gt_p2',
+            'doctor_0003_00057_0001_0020_from_gt_p1',
+            'doctor_0004_00073_0001_0029_from_gt_p1',
+            'doctor_0005_00098_0001_0013_from_gt_p1',
+            'doctor_0006_00132_0001_0017_from_gt_p1',
+            'doctor_0007_00144_0002_0008_from_lt_p0',
+            'doctor_0008_00146_0001_0032_from_gt_p1',
+            'doctor_0009_00166_0017_0041_from_gt_p1',
+        ]
+    },
+    {
+        KEY_G: 'doctor',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -907,18 +1305,16 @@ def flip_vertical_x_axis(landmarks) -> np.ndarray:
 
 
     return new_landmark
-def loadnpfiles(parent_folder: str, landmarks: list) -> np.ndarray:
+def loadnpfiles(
+    parent_folder: str,
+    landmarks: list,
+    landmark_dir: Path,
+) -> np.ndarray:
     out: list= []
     for a_lm in landmarks:
-        with open(f"{LANDMARK_DIR /parent_folder /a_lm[KEY_FILE]}", 'rb') as f:
+        with open(f"{landmark_dir /parent_folder /a_lm[KEY_FILE]}", 'rb') as f:
             out.append(np.load(f))
     return np.array(out)
-def get_model_gloss(gloss: str) -> str:
-    if gloss=='mine_my':
-        return 'mine_my'
-    if gloss=='me_i':
-        return 'me_i'
-    return gloss
 def load_ds_samples() -> tuple:
     '''
     return (manual_model, labels)
@@ -932,22 +1328,37 @@ def load_ds_samples() -> tuple:
     eg. labels: list[str]= ['book', 'drink', ...]
     '''
     ds_landmark: list= []
-    with open(f"{DS_DIR /'ds_landmark.json'}", 'r') as f:
+    glasl_landmark: list= []
+    with open(f"{WLASL_DS_DIR /'ds_landmark.json'}", 'r') as f:
         ds_landmark= loadJson(f)
+    with open(f"{GLASL_DS_DIR /'glasl_v4_landmark_ds.json'}", 'r') as f:
+        glasl_landmark= loadJson(f)
     manual_model: list= []
     annotations: list= []
     ds_landmark_by_gloss: dict= {
         el[KEY_G]: el # el is dict of keys( 'gloss': str, 'landmark': list[dict] )
         for el in ds_landmark
     }
+    glasl_landmark_by_gloss: dict= {
+        el[KEY_G]: el
+        for el in glasl_landmark
+    }
     for a_gloss in VERIFIED_DS_DIR:
-        ds_gloss: dict= ds_landmark_by_gloss[a_gloss[KEY_G]] # dict of keys( 'gloss': str, 'landmark': list[dict] )
+        ds_gloss: dict= {}
+        parent_folder_from: Path= PROJ_ROOT
+        if a_gloss[KEY_PFOLDER_FROM] == VAL_GLASL:
+            ds_gloss= glasl_landmark_by_gloss[a_gloss[KEY_G]]
+            parent_folder_from= GLASL_LANDMARK_DIR
+        elif a_gloss[KEY_PFOLDER_FROM] == VAL_WLASL:
+            ds_gloss= ds_landmark_by_gloss[a_gloss[KEY_G]] # dict of keys( 'gloss': str, 'landmark': list[dict] )
+            parent_folder_from= WLASL_LANDMARK_DIR
         list_pfolders: list[str]= a_gloss[KEY_LANDMARK]
         assert len(list_pfolders)==len(VERIFIED_DS_DIR[0][KEY_LANDMARK])
         annotations.append({
-            KEY_G: get_model_gloss(ds_gloss[KEY_G]),
+            KEY_G: ds_gloss[KEY_G],
             KEY_LANDMARK: list(
                 {
+                    KEY_PFOLDER_FROM: parent_folder_from,
                     KEY_PFOLDER: el[KEY_PFOLDER],
                     KEY_LHAND: a_gloss[KEY_LHAND],
                     KEY_RHAND: a_gloss[KEY_RHAND],
@@ -958,7 +1369,7 @@ def load_ds_samples() -> tuple:
             )
         })
         manual_model.append([
-            loadnpfiles(el[KEY_PFOLDER], el[KEY_LANDMARK])
+            loadnpfiles(el[KEY_PFOLDER], el[KEY_LANDMARK], el[KEY_PFOLDER_FROM])
             for el in annotations[-1][KEY_LANDMARK]
         ])
         annotations[-1][KEY_LANDMARK].extend([
@@ -975,9 +1386,7 @@ def load_ds_samples() -> tuple:
             } for lm_img_el in many_imgs_el[KEY_LANDMARK]],
         } for many_imgs_el in annotations[-1][KEY_LANDMARK]])
         manual_model[-1].extend(flip_vertical_x_axis(manual_model[-1]))
-    for a_gloss in ds_landmark:
-        a_gloss[KEY_G]= get_model_gloss(a_gloss[KEY_G])
-    return (manual_model, annotations, ds_landmark)
+    return (manual_model, annotations, ds_landmark, glasl_landmark)
 def get_left_hand(input: jnp.ndarray) -> jnp.ndarray:
     if input.shape[-1]!=2:
         return input[
@@ -1425,6 +1834,7 @@ def test_all_data(
     weights: jnp.ndarray,
     model_annotations: list[str],
     annotations: list,
+    parent_folder_from: Path,
 ) -> None:
     '''
     model, shape of - (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
@@ -1484,6 +1894,7 @@ def test_all_data(
             ds_elements.append(loadnpfiles(
                 parent_folder=a_start_end[KEY_PFOLDER],
                 landmarks=a_start_end[KEY_LANDMARK],
+                landmark_dir=parent_folder_from,
             ))
             ds_labels.append(idx_gloss)
             ds_pfolders.append(a_start_end[KEY_PFOLDER])
@@ -1543,8 +1954,10 @@ def show_shapes(
     print(f"weights shape    {weights.shape}")
     print(f"model_annotations length {len(model_annotations)}")
 def init_folders_files() -> None:
-    assert (DS_DIR /'ds_landmark.json').exists()
-    assert LANDMARK_DIR.exists()
+    assert (GLASL_DS_DIR /'glasl_v4_landmark_ds.json').exists()
+    assert (WLASL_DS_DIR /'ds_landmark.json').exists()
+    assert GLASL_LANDMARK_DIR.exists()
+    assert WLASL_LANDMARK_DIR.exists()
     if MODEL2SAVE_DIR.exists():
         print(
             f"-------------- error --------------" +
@@ -1573,7 +1986,7 @@ def save_model(
         writeJson(labels, f, indent=4)
 def main() -> None:
     init_folders_files()
-    ds_samples, annotations, origin_annotations= load_ds_samples()
+    ds_samples, annotations, wlasl_landmark, glasl_landmark= load_ds_samples()
     ds_samples= jnp.expand_dims(jnp.array(ds_samples), axis=0)
     '''
     comparison_score(
