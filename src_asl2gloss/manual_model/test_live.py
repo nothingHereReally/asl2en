@@ -758,6 +758,13 @@ def resize_image(image: np.ndarray, target_size: int) -> np.ndarray:
     scale= target_size /max(h, w)
     return cv.resize(image, (int(w * scale), int(h * scale)))
 def apply_clahe(image_rgb):
+    '''
+    image_rgb, 3D data,
+    CLAHE, Contrast Limited Adaptive Histogram Equalization
+    ie. have more contrast on image
+    -------------------------------
+    returned is image in rgb also
+    '''
     light, a, b= cv.split(
         cv.cvtColor(image_rgb, cv.COLOR_RGB2LAB)
     )
