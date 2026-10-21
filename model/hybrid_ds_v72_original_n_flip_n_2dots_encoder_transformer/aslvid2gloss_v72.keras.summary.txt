@@ -1,0 +1,60 @@
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)               │ (None, 8, 86, 2)            │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ select_landmark (SelectLM)           │ (None, 8, 510)              │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ multi_encoder_in_sequence            │ (None, 8, 510)              │          70,464 │
+│ (NTimesEncoderTransformer)           │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ global_average_pooling1d             │ (None, 510)                 │               0 │
+│ (GlobalAveragePooling1D)             │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ flatten (Flatten)                    │ (None, 510)                 │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dense_6 (Dense)                      │ (None, 172)                 │          87,892 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_class (Dense)                  │ (None, 22)                  │           3,806 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 162,162 (633.45 KB)
+ Trainable params: 162,162 (633.45 KB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 32s 20ms/step - accuracy: 0.3442 - loss: 2.3200 - val_accuracy: 0.4249 - val_loss: 1.7585 - learning_rate: 1.0000e-04
+Epoch 2/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 19s 19ms/step - accuracy: 0.5118 - loss: 1.5568 - val_accuracy: 0.6003 - val_loss: 1.4286 - learning_rate: 1.0000e-04
+Epoch 3/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 19s 19ms/step - accuracy: 0.6195 - loss: 1.2087 - val_accuracy: 0.6071 - val_loss: 1.0794 - learning_rate: 1.0000e-04
+Epoch 4/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 19s 19ms/step - accuracy: 0.6527 - loss: 1.0435 - val_accuracy: 0.6531 - val_loss: 1.1550 - learning_rate: 1.0000e-04
+Epoch 5/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 19s 20ms/step - accuracy: 0.7201 - loss: 0.8711 - val_accuracy: 0.6703 - val_loss: 0.9354 - learning_rate: 1.0000e-04
+Epoch 6/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 20s 20ms/step - accuracy: 0.7176 - loss: 0.7842 - val_accuracy: 0.6882 - val_loss: 1.0545 - learning_rate: 1.0000e-04
+Epoch 7/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 21s 21ms/step - accuracy: 0.7808 - loss: 0.6573 - val_accuracy: 0.7580 - val_loss: 0.7207 - learning_rate: 1.0000e-04
+Epoch 8/20
+983/985 ━━━━━━━━━━━━━━━━━━━━ 0s 14ms/step - accuracy: 0.7604 - loss: 0.6391
+Epoch 8: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+985/985 ━━━━━━━━━━━━━━━━━━━━ 23s 23ms/step - accuracy: 0.7599 - loss: 0.6395 - val_accuracy: 0.7059 - val_loss: 0.8894 - learning_rate: 1.0000e-04
+Epoch 9/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 23s 23ms/step - accuracy: 0.8122 - loss: 0.5452 - val_accuracy: 0.8714 - val_loss: 0.4215 - learning_rate: 1.0000e-05
+Epoch 10/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 0s 11ms/step - accuracy: 0.8720 - loss: 0.4172
+Epoch 10: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+985/985 ━━━━━━━━━━━━━━━━━━━━ 21s 22ms/step - accuracy: 0.8720 - loss: 0.4172 - val_accuracy: 0.8377 - val_loss: 0.5010 - learning_rate: 1.0000e-05
+Epoch 11/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 22s 22ms/step - accuracy: 0.8826 - loss: 0.4239 - val_accuracy: 0.9016 - val_loss: 0.4034 - learning_rate: 1.0000e-06
+Epoch 12/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step - accuracy: 0.9059 - loss: 0.3793
+Epoch 12: ReduceLROnPlateau reducing learning rate to 9.999999974752428e-08.
+985/985 ━━━━━━━━━━━━━━━━━━━━ 22s 22ms/step - accuracy: 0.9059 - loss: 0.3793 - val_accuracy: 0.8532 - val_loss: 0.4573 - learning_rate: 1.0000e-06
+Epoch 13/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 21s 22ms/step - accuracy: 0.9008 - loss: 0.4093 - val_accuracy: 0.9038 - val_loss: 0.4115 - learning_rate: 1.0000e-07
+Epoch 13: early stopping
+Restoring model weights from the end of the best epoch: 11.
+Quantity images --> 8
+Quantity categories --> 22
+model( --> aslvid2gloss_v72.keras <-- )
