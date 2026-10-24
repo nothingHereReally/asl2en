@@ -176,6 +176,16 @@ WORTHY_LM_IMPORTANT_IDX: tuple= (
     LM_IDX_LEFT_ARM_TIP,
     LM_IDX_RIGHT_ARM_TIP,
 )
+LEFT_ARM3DOTS: tuple= (
+    LM_IDX_LEFT_SHOULDER,
+    LM_IDX_LEFT_ELBOW,
+    LM_IDX_LEFT_ARM_TIP,
+)
+RIGHT_ARM3DOTS: tuple= (
+    LM_IDX_RIGHT_SHOULDER,
+    LM_IDX_RIGHT_ELBOW,
+    LM_IDX_RIGHT_ARM_TIP,
+)
 # -----------------------------------------------------
 VERIFIED_DS_DIR: list= [
     {
@@ -825,10 +835,22 @@ def hand_mse(
     output, has shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
     left_hand_diff: jnp.ndarray= (
-        get_left_hand(model) -get_left_hand(input)
+        jnp.concatenate([
+            get_left_hand(model),
+            model[..., LEFT_ARM3DOTS, :],
+        ], axis=-2) -jnp.concatenate([
+            get_left_hand(input),
+            input[..., LEFT_ARM3DOTS, :],
+        ], axis=-2)
     )**2
     right_hand_diff: jnp.ndarray= (
-        get_right_hand(model) -get_right_hand(input)
+        jnp.concatenate([
+            get_right_hand(model),
+            model[..., RIGHT_ARM3DOTS, :],
+        ], axis=-2) -jnp.concatenate([
+            get_right_hand(input),
+            input[..., RIGHT_ARM3DOTS, :],
+        ], axis=-2)
     )**2
     left_hand_diff= jnp.sum( # due2now c^2, from c^2= a^2 +b^2
         left_hand_diff,
