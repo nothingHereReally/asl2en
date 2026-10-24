@@ -1,0 +1,1277 @@
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)               │ (None, 8, 86, 2)            │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ select_landmark (SelectLM)           │ (None, 8, 510)              │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ multi_encoder_in_sequence            │ (None, 8, 510)              │          70,464 │
+│ (NTimesEncoderTransformer)           │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ global_average_pooling1d             │ (None, 510)                 │               0 │
+│ (GlobalAveragePooling1D)             │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ flatten (Flatten)                    │ (None, 510)                 │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ dense_6 (Dense)                      │ (None, 172)                 │          87,892 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_class (Dense)                  │ (None, 22)                  │           3,806 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 162,162 (633.45 KB)
+ Trainable params: 162,162 (633.45 KB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 32s 20ms/step - accuracy: 0.3442 - loss: 2.3200 - val_accuracy: 0.4249 - val_loss: 1.7585 - learning_rate: 1.0000e-04
+Epoch 2/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 19s 19ms/step - accuracy: 0.5118 - loss: 1.5568 - val_accuracy: 0.6003 - val_loss: 1.4286 - learning_rate: 1.0000e-04
+Epoch 3/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 19s 19ms/step - accuracy: 0.6195 - loss: 1.2087 - val_accuracy: 0.6071 - val_loss: 1.0794 - learning_rate: 1.0000e-04
+Epoch 4/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 19s 19ms/step - accuracy: 0.6527 - loss: 1.0435 - val_accuracy: 0.6531 - val_loss: 1.1550 - learning_rate: 1.0000e-04
+Epoch 5/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 19s 20ms/step - accuracy: 0.7201 - loss: 0.8711 - val_accuracy: 0.6703 - val_loss: 0.9354 - learning_rate: 1.0000e-04
+Epoch 6/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 20s 20ms/step - accuracy: 0.7176 - loss: 0.7842 - val_accuracy: 0.6882 - val_loss: 1.0545 - learning_rate: 1.0000e-04
+Epoch 7/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 21s 21ms/step - accuracy: 0.7808 - loss: 0.6573 - val_accuracy: 0.7580 - val_loss: 0.7207 - learning_rate: 1.0000e-04
+Epoch 8/20
+983/985 ━━━━━━━━━━━━━━━━━━━━ 0s 14ms/step - accuracy: 0.7604 - loss: 0.6391
+Epoch 8: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+985/985 ━━━━━━━━━━━━━━━━━━━━ 23s 23ms/step - accuracy: 0.7599 - loss: 0.6395 - val_accuracy: 0.7059 - val_loss: 0.8894 - learning_rate: 1.0000e-04
+Epoch 9/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 23s 23ms/step - accuracy: 0.8122 - loss: 0.5452 - val_accuracy: 0.8714 - val_loss: 0.4215 - learning_rate: 1.0000e-05
+Epoch 10/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 0s 11ms/step - accuracy: 0.8720 - loss: 0.4172
+Epoch 10: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+985/985 ━━━━━━━━━━━━━━━━━━━━ 21s 22ms/step - accuracy: 0.8720 - loss: 0.4172 - val_accuracy: 0.8377 - val_loss: 0.5010 - learning_rate: 1.0000e-05
+Epoch 11/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 22s 22ms/step - accuracy: 0.8826 - loss: 0.4239 - val_accuracy: 0.9016 - val_loss: 0.4034 - learning_rate: 1.0000e-06
+Epoch 12/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 0s 12ms/step - accuracy: 0.9059 - loss: 0.3793
+Epoch 12: ReduceLROnPlateau reducing learning rate to 9.999999974752428e-08.
+985/985 ━━━━━━━━━━━━━━━━━━━━ 22s 22ms/step - accuracy: 0.9059 - loss: 0.3793 - val_accuracy: 0.8532 - val_loss: 0.4573 - learning_rate: 1.0000e-06
+Epoch 13/20
+985/985 ━━━━━━━━━━━━━━━━━━━━ 21s 22ms/step - accuracy: 0.9008 - loss: 0.4093 - val_accuracy: 0.9038 - val_loss: 0.4115 - learning_rate: 1.0000e-07
+Epoch 13: early stopping
+Restoring model weights from the end of the best epoch: 11.
+Quantity images --> 8
+Quantity categories --> 22
+model( --> aslvid2gloss_v72.keras <-- )
+
+
+
+
+-- algo.py
+---------------------------------------------------
+from math import ceil, floor
+# from numpy import array, load as loadnp, ndarray, uint16
+import numpy as np
+from random import sample
+from typing import Generator
+from pathlib import Path
+
+
+from .constant import (
+    KEY_PFOLDER_FROM,
+    KEY_VIDS,
+    LANDMARK_DIR_WLASL,
+    LANDMARK_DIR_GLASL,
+    BATCH,
+    MOD_PART_3,
+    QUANTITY_FRAME,
+    QUANTITY_HAND_LMARK,
+    VAL_TEST,
+    WORTHY_FACE_IDX,
+    WORTHY_POSE_IDX,
+    wlasl_ds,
+    glasl_ds,
+
+    KEY_GID,
+    KEY_LANDMARK,
+
+    KEY_PFOLDER,
+    KEY_SPLIT,
+    VAL_TRAIN,
+
+    KEY_FILE,
+    KEY_FACE,
+    KEY_POSE,
+    KEY_LHAND,
+    KEY_RHAND,
+)
+
+
+def flip_vertical_x_axis(landmarks: np.ndarray) -> np.ndarray:
+    '''
+    landmarks be of shape (INT, ..., 86, 2)
+    '''
+    new_landmark= landmarks.copy()
+    new_landmark[..., 0]= 1 -new_landmark[..., 0]
+    lhand2rhand: np.ndarray= new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+    ,:].copy()
+    rhand2lhand: np.ndarray= new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+    ,:].copy()
+    new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+    ,:]= rhand2lhand # ie. past was right hand, now be left hand
+    new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+    ,:]= lhand2rhand # ie. past was left hand, now be right hand
+
+    # -- flip index pair face
+    # -- ( 12, 28 )
+    tmp= new_landmark[..., 12:13, :].copy()
+    new_landmark[..., 12:13, :]= new_landmark[..., 28:29, :].copy()
+    new_landmark[..., 28:29, :]= tmp
+
+    # -- ( 19, 34 )
+    tmp = new_landmark[..., 19:20, :].copy()
+    new_landmark[..., 19:20, :] = new_landmark[..., 34:35, :].copy()
+    new_landmark[..., 34:35, :] = tmp
+
+    # -- ( 11, 27 )
+    tmp = new_landmark[..., 11:12, :].copy()
+    new_landmark[..., 11:12, :] = new_landmark[..., 27:28, :].copy()
+    new_landmark[..., 27:28, :] = tmp
+
+    # -- ( 21, 35 )
+    tmp = new_landmark[..., 21:22, :].copy()
+    new_landmark[..., 21:22, :] = new_landmark[..., 35:36, :].copy()
+    new_landmark[..., 35:36, :] = tmp
+
+    # -- ( 14, 30 )
+    tmp = new_landmark[..., 14:15, :].copy()
+    new_landmark[..., 14:15, :] = new_landmark[..., 30:31, :].copy()
+    new_landmark[..., 30:31, :] = tmp
+
+    # -- ( 13, 29 )
+    tmp = new_landmark[..., 13:14, :].copy()
+    new_landmark[..., 13:14, :] = new_landmark[..., 29:30, :].copy()
+    new_landmark[..., 29:30, :] = tmp
+
+    # -- ( 10, 26 )
+    tmp = new_landmark[..., 10:11, :].copy()
+    new_landmark[..., 10:11, :] = new_landmark[..., 26:27, :].copy()
+    new_landmark[..., 26:27, :] = tmp
+
+    # -- ( 15, 31 )
+    tmp = new_landmark[..., 15:16, :].copy()
+    new_landmark[..., 15:16, :] = new_landmark[..., 31:32, :].copy()
+    new_landmark[..., 31:32, :] = tmp
+
+    # -- ( 18, 33 )
+    tmp = new_landmark[..., 18:19, :].copy()
+    new_landmark[..., 18:19, :] = new_landmark[..., 33:34, :].copy()
+    new_landmark[..., 33:34, :] = tmp
+
+    # -- (  7, 23 )
+    tmp = new_landmark[..., 7:8, :].copy()
+    new_landmark[..., 7:8, :] = new_landmark[..., 23:24, :].copy()
+    new_landmark[..., 23:24, :] = tmp
+
+    # -- ( 16, 32 )
+    tmp = new_landmark[..., 16:17, :].copy()
+    new_landmark[..., 16:17, :] = new_landmark[..., 32:33, :].copy()
+    new_landmark[..., 32:33, :] = tmp
+
+    # -- (  9, 25 )
+    tmp = new_landmark[..., 9:10, :].copy()
+    new_landmark[..., 9:10, :] = new_landmark[..., 25:26, :].copy()
+    new_landmark[..., 25:26, :] = tmp
+
+    # -- (  8, 24 )
+    tmp = new_landmark[..., 8:9, :].copy()
+    new_landmark[..., 8:9, :] = new_landmark[..., 24:25, :].copy()
+    new_landmark[..., 24:25, :] = tmp
+
+
+
+
+    # -- flip index pair pose
+    # -- ( 37, 36 )
+    tmp = new_landmark[..., 37:38, :].copy()
+    new_landmark[..., 37:38, :] = new_landmark[..., 36:37, :].copy()
+    new_landmark[..., 36:37, :] = tmp
+
+    # -- ( 43, 42 )
+    tmp = new_landmark[..., 43:44, :].copy()
+    new_landmark[..., 43:44, :] = new_landmark[..., 42:43, :].copy()
+    new_landmark[..., 42:43, :] = tmp
+
+    # -- ( 39, 38 )
+    tmp = new_landmark[..., 39:40, :].copy()
+    new_landmark[..., 39:40, :] = new_landmark[..., 38:39, :].copy()
+    new_landmark[..., 38:39, :] = tmp
+
+    # -- ( 41, 40 )
+    tmp = new_landmark[..., 41:42, :].copy()
+    new_landmark[..., 41:42, :] = new_landmark[..., 40:41, :].copy()
+    new_landmark[..., 40:41, :] = tmp
+
+
+    return new_landmark
+
+
+def extract_ds_annotation_split(wlasl_or_glasl: str, split: str) -> list:
+    out: list= []
+    assert split==VAL_TRAIN or split==VAL_TEST
+    if wlasl_or_glasl == 'glasl':
+        for idx_gloss, a_gloss in enumerate(glasl_ds):
+            approved_by_split: list= list(filter(
+                lambda el: el[KEY_SPLIT]==split,
+                a_gloss[KEY_VIDS],
+            ))
+            out.extend([{
+                KEY_GID: idx_gloss,
+                KEY_PFOLDER_FROM: LANDMARK_DIR_GLASL,
+                KEY_PFOLDER: el[KEY_PFOLDER],
+                KEY_LANDMARK: el[KEY_LANDMARK],
+            } for el in approved_by_split])
+    elif wlasl_or_glasl == 'wlasl':
+        for idx_gloss, a_gloss in enumerate(wlasl_ds):
+            approved_by_split: list= list(filter(
+                lambda el: el[KEY_SPLIT]==split,
+                a_gloss[KEY_VIDS],
+            )) # -- element is dict 3keys( video_file, split, landmark:list[dict..] )
+            for a_video in approved_by_split:
+                out.extend([{
+                    KEY_GID: idx_gloss,
+                    KEY_PFOLDER_FROM: LANDMARK_DIR_WLASL,
+                    KEY_PFOLDER: el[KEY_PFOLDER],
+                    KEY_LANDMARK: el[KEY_LANDMARK],
+                } for el in a_video[KEY_LANDMARK]])
+    else:
+        raise ValueError(
+            f'wlasl_or_glasl can only be "wlasl" or' +
+            f'"glasl", given value: {wlasl_or_glasl}'
+        )
+    return out
+
+
+def calculate_steps_needed(train_test: str=VAL_TRAIN, batch_size: int=BATCH) -> int:
+    total_DS: int= 0
+    dataset: list= extract_ds_annotation_split(
+        wlasl_or_glasl='glasl',
+        split=train_test,
+    )
+    for a_video in dataset:
+        idx_init: int= idx_init_has_hand(a_video[KEY_LANDMARK])
+        if idx_init!=-1:
+            if len(a_video[KEY_LANDMARK])<=QUANTITY_FRAME:
+                total_DS+= 1
+            else:
+                len_available_images: int= len(a_video[KEY_LANDMARK])-idx_init
+                o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
+                total_DS+= 1 # for part 1
+                if QUANTITY_FRAME<len_available_images:
+                    total_DS+= int(
+                        o2t_mod *(len(a_video[KEY_LANDMARK]) -(idx_init+ QUANTITY_FRAME*o2t_mod))
+                    ) # for part 2
+                    for work4mod_what in MOD_PART_3: # for part 3
+                        if 0<int(len_available_images//work4mod_what):
+                            total_DS+= (len_available_images//work4mod_what) -QUANTITY_FRAME +1
+                        else:
+                            total_DS+= 1
+                else:
+                    total_DS+= 1
+    dataset= extract_ds_annotation_split(
+        wlasl_or_glasl='wlasl',
+        split=train_test,
+    )
+    for a_video in dataset:
+        idx_init: int= idx_init_has_hand(a_video[KEY_LANDMARK])
+        if idx_init!=-1:
+            if len(a_video[KEY_LANDMARK])<=QUANTITY_FRAME:
+                total_DS+= 1
+            else:
+                len_available_images: int= len(a_video[KEY_LANDMARK])-idx_init
+                o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
+                total_DS+= 1 # for part 1
+                if QUANTITY_FRAME<len_available_images:
+                    total_DS+= int(
+                        o2t_mod *(len(a_video[KEY_LANDMARK]) -(idx_init+ QUANTITY_FRAME*o2t_mod))
+                    ) # for part 2
+                    for work4mod_what in MOD_PART_3: # for part 3
+                        if 0<int(len_available_images//work4mod_what):
+                            total_DS+= (len_available_images//work4mod_what) -QUANTITY_FRAME +1
+                        else:
+                            total_DS+= 1
+                else:
+                    total_DS+= 1
+    return int(ceil(total_DS/float(batch_size)))
+
+
+def load_npfiles(landmark: dict) -> list[np.ndarray]:
+    out: list= []
+    for an_img_detail in landmark[KEY_LANDMARK]:
+        with open(f"{landmark[KEY_PFOLDER_FROM] /landmark[KEY_PFOLDER] /an_img_detail[KEY_FILE]}", 'rb') as f:
+            out.append(np.load(f))
+    return out
+def load_elements_npfiles(elements: list) -> list:
+    out: list= []
+    for el in elements:
+        out.append(load_npfiles(el))
+    return out
+
+
+def has_atleast_1hand(annotation: dict) -> bool:
+    return (annotation[KEY_LHAND] or annotation[KEY_RHAND]) and \
+            annotation[KEY_FACE] and annotation[KEY_POSE]
+def idx_init_has_hand(landmarks: list) -> int:
+    for idx in range(len(landmarks)):
+        if has_atleast_1hand(landmarks[idx]):
+            return idx
+    return -1
+def q_imgs_less_than_or_equal(
+    landmarks: list,
+    parent_folder_from: Path,
+    parent_folder: str,
+) -> dict:
+    annotations: dict= {
+        KEY_PFOLDER_FROM: parent_folder_from,
+        KEY_PFOLDER: parent_folder,
+        KEY_LANDMARK: [],
+    }
+
+    idx_init: int= idx_init_has_hand(landmarks)
+    ratio: int= int(ceil(QUANTITY_FRAME / (len(landmarks)-idx_init)))
+    for landmark in landmarks[idx_init:]:
+        if has_atleast_1hand(landmark) and len(annotations[KEY_LANDMARK])<QUANTITY_FRAME:
+            annotations[KEY_LANDMARK].extend([
+                {
+                    KEY_FILE:  landmark[KEY_FILE],
+                    KEY_FACE:  landmark[KEY_FACE],
+                    KEY_POSE:  landmark[KEY_POSE],
+                    KEY_LHAND: landmark[KEY_LHAND],
+                    KEY_RHAND: landmark[KEY_RHAND],
+                }
+            ] * min(ratio, QUANTITY_FRAME -len(annotations[KEY_LANDMARK])))
+        elif len(annotations[KEY_LANDMARK])<QUANTITY_FRAME:
+            annotations[KEY_LANDMARK].extend([
+                {
+                    KEY_FILE:  annotations[KEY_LANDMARK][-1][KEY_FILE],
+                    KEY_FACE:  annotations[KEY_LANDMARK][-1][KEY_FACE],
+                    KEY_POSE:  annotations[KEY_LANDMARK][-1][KEY_POSE],
+                    KEY_LHAND: annotations[KEY_LANDMARK][-1][KEY_LHAND],
+                    KEY_RHAND: annotations[KEY_LANDMARK][-1][KEY_RHAND],
+                }
+            ] * min(ratio, QUANTITY_FRAME -len(annotations[KEY_LANDMARK])))
+
+    return annotations
+def greater_than_qf_p1(
+    landmarks: list,
+    parent_folder_from: Path,
+    parent_folder: str,
+) -> dict:
+    assert has_atleast_1hand(landmarks[0])
+    annotations: dict= {
+        KEY_PFOLDER_FROM: parent_folder_from,
+        KEY_PFOLDER: parent_folder,
+        KEY_LANDMARK: [],
+    }
+
+    ratio: int= floor(len(landmarks) / QUANTITY_FRAME)
+    for idx in range(QUANTITY_FRAME):
+        a_landmark = landmarks[idx * ratio]
+        if has_atleast_1hand(a_landmark):
+            annotations[KEY_LANDMARK].append({
+                KEY_FILE: a_landmark[KEY_FILE],
+                KEY_FACE: a_landmark[KEY_FACE],
+                KEY_POSE: a_landmark[KEY_POSE],
+                KEY_LHAND: a_landmark[KEY_LHAND],
+                KEY_RHAND: a_landmark[KEY_RHAND],
+            })
+        else:
+            annotations[KEY_LANDMARK].append({
+                KEY_FILE:  annotations[KEY_LANDMARK][-1][KEY_FILE],
+                KEY_FACE:  annotations[KEY_LANDMARK][-1][KEY_FACE],
+                KEY_POSE:  annotations[KEY_LANDMARK][-1][KEY_POSE],
+                KEY_LHAND: annotations[KEY_LANDMARK][-1][KEY_LHAND],
+                KEY_RHAND: annotations[KEY_LANDMARK][-1][KEY_RHAND],
+            })
+
+    return annotations
+def greater_than_qf_p2(
+    landmarks: list,
+    parent_folder_from: Path,
+    parent_folder: str,
+) -> list:
+    assert has_atleast_1hand(landmarks[0])
+    annotations_many: list= []
+
+    how_many_qfs: int= floor(len(landmarks)/QUANTITY_FRAME)
+    remains: int=      len(landmarks) - how_many_qfs*QUANTITY_FRAME
+    mod_list: tuple=   tuple(range(how_many_qfs))
+    past_notation: dict= {
+        KEY_FILE: landmarks[0][KEY_FILE],
+        KEY_FACE: landmarks[0][KEY_FACE],
+        KEY_POSE: landmarks[0][KEY_POSE],
+        KEY_LHAND: landmarks[0][KEY_LHAND],
+        KEY_RHAND: landmarks[0][KEY_RHAND],
+    }
+    for idx_init_only in range(remains+1):
+        tmp_annotations: list= [{
+            KEY_PFOLDER_FROM: parent_folder_from,
+            KEY_PFOLDER: parent_folder,
+            KEY_LANDMARK: [],
+        } for _ in range(how_many_qfs)]
+        for idx in range(
+            idx_init_only,
+            idx_init_only +(how_many_qfs*QUANTITY_FRAME)
+        ):
+            for mod_what in mod_list:
+                if (idx%how_many_qfs)==mod_what:
+                    if has_atleast_1hand(landmarks[idx]):
+                        tmp_annotations[mod_what][KEY_LANDMARK].append({
+                            KEY_FILE:  landmarks[idx][KEY_FILE],
+                            KEY_FACE:  landmarks[idx][KEY_FACE],
+                            KEY_POSE:  landmarks[idx][KEY_POSE],
+                            KEY_LHAND: landmarks[idx][KEY_LHAND],
+                            KEY_RHAND: landmarks[idx][KEY_RHAND],
+                        })
+                        past_notation= {
+                            KEY_FILE:  landmarks[idx][KEY_FILE],
+                            KEY_FACE:  landmarks[idx][KEY_FACE],
+                            KEY_POSE:  landmarks[idx][KEY_POSE],
+                            KEY_LHAND: landmarks[idx][KEY_LHAND],
+                            KEY_RHAND: landmarks[idx][KEY_RHAND],
+                        }
+                    else:
+                        tmp_annotations[mod_what][KEY_LANDMARK].append(past_notation.copy())
+        annotations_many.extend(tmp_annotations)
+    return annotations_many
+def greater_than_qf_p3(
+    landmarks: list,
+    parent_folder_from: Path,
+    parent_folder: str,
+) -> list:
+    assert has_atleast_1hand(landmarks[0])
+
+    annotations_many: list= []
+    groups_notation: list= [[] for _ in MOD_PART_3]
+    past_annotation: dict= {
+        KEY_FILE:  landmarks[0][KEY_FILE],
+        KEY_FACE:  landmarks[0][KEY_FACE],
+        KEY_POSE:  landmarks[0][KEY_POSE],
+        KEY_LHAND: landmarks[0][KEY_LHAND],
+        KEY_RHAND: landmarks[0][KEY_RHAND],
+    }
+
+    for idx, a_landmark in enumerate(landmarks):
+        for idx_mod, what_mod in enumerate(MOD_PART_3):
+            if ((idx + 1) % what_mod) == 0:
+                if has_atleast_1hand(a_landmark):
+                    past_annotation= {
+                        KEY_FILE: a_landmark[KEY_FILE],
+                        KEY_FACE: a_landmark[KEY_FACE],
+                        KEY_POSE: a_landmark[KEY_POSE],
+                        KEY_LHAND: a_landmark[KEY_LHAND],
+                        KEY_RHAND: a_landmark[KEY_RHAND],
+                    }
+                groups_notation[idx_mod].append(past_annotation.copy())
+
+    for group in groups_notation:
+        if len(group) <= QUANTITY_FRAME:
+            annotations: list= []
+            ratio: int= ceil(QUANTITY_FRAME / len(group))
+
+            for annotation in group:
+                if len(annotations)<QUANTITY_FRAME:
+                    annotations.extend(
+                        [annotation.copy()] * min(
+                            ratio, QUANTITY_FRAME - len(annotations)
+                        )
+                    )
+
+            annotations_many.append({
+                KEY_PFOLDER_FROM: parent_folder_from,
+                KEY_PFOLDER: parent_folder,
+                KEY_LANDMARK: annotations,
+            })
+        else:
+            for idx_init in range(len(group) - QUANTITY_FRAME + 1):
+                annotations_many.append({
+                    KEY_PFOLDER_FROM: parent_folder_from,
+                    KEY_PFOLDER: parent_folder,
+                    KEY_LANDMARK: group[
+                        idx_init:idx_init + QUANTITY_FRAME
+                    ],
+                })
+
+    return annotations_many
+def q_imgs_greater_than(
+    landmarks: list,
+    parent_folder_from: Path,
+    parent_folder: str,
+) -> list:
+    annotations_many: list= []
+
+    idx_init: int= idx_init_has_hand(landmarks)
+    q_imgs_available: int= len(landmarks)-idx_init
+    if q_imgs_available<=QUANTITY_FRAME:
+        annotation: dict= q_imgs_less_than_or_equal(
+            landmarks=landmarks[idx_init:],
+            parent_folder_from=parent_folder_from,
+            parent_folder=parent_folder,
+        )
+        annotations_many.append(annotation)
+    else:
+        # ---- part 1 ----
+        annotation: dict= greater_than_qf_p1(
+            landmarks=landmarks[idx_init:],
+            parent_folder_from=parent_folder_from,
+            parent_folder=parent_folder,
+        )
+        annotations_many.append(annotation)
+
+        # ---- part 2 ----
+        annotations: list= greater_than_qf_p2(
+            landmarks=landmarks[idx_init:],
+            parent_folder_from=parent_folder_from,
+            parent_folder=parent_folder,
+        )
+        annotations_many.extend(annotations)
+
+        # ---- part 3 ----
+        annotations= greater_than_qf_p3(
+            landmarks=landmarks[idx_init:],
+            parent_folder_from=parent_folder_from,
+            parent_folder=parent_folder,
+        )
+        annotations_many.extend(annotations)
+    return annotations_many
+def get_data_landmark(
+    train_test: str=VAL_TRAIN,
+    batch_size: int=BATCH
+) -> Generator:
+    dataset: list= extract_ds_annotation_split(
+        wlasl_or_glasl='wlasl',
+        split=train_test,
+    )
+    dataset.extend(extract_ds_annotation_split(
+        wlasl_or_glasl='glasl',
+        split=train_test,
+    ))
+    dataset_idxs: tuple= tuple(sample(
+        range(len(dataset)),
+        len(dataset)
+    ))
+
+    batch_ds_elements: list= []
+    batch_ds_class: list= []
+    while True:
+        for idx_ds in dataset_idxs:
+            an_element_ds: dict= dataset[idx_ds]
+            if len(an_element_ds[KEY_LANDMARK])<=QUANTITY_FRAME:
+                batch_ds_class.append(an_element_ds[KEY_GID])
+                batch_ds_elements.append(q_imgs_less_than_or_equal(
+                    landmarks=an_element_ds[KEY_LANDMARK],
+                    parent_folder_from=an_element_ds[KEY_PFOLDER_FROM],
+                    parent_folder=an_element_ds[KEY_PFOLDER],
+                ))
+            else:
+                result_from_many: list= q_imgs_greater_than(
+                    landmarks=an_element_ds[KEY_LANDMARK],
+                    parent_folder_from=an_element_ds[KEY_PFOLDER_FROM],
+                    parent_folder=an_element_ds[KEY_PFOLDER],
+                )
+                batch_ds_class.extend( [an_element_ds[KEY_GID]] * len(result_from_many) )
+                batch_ds_elements.extend(result_from_many)
+            # ---- now ready ----
+            while batch_size<=len(batch_ds_class):
+                out_inputs: np.ndarray= np.array(
+                    load_elements_npfiles(batch_ds_elements[:batch_size]),
+                )
+                out_inputs= np.concatenate([
+                    out_inputs,
+                    flip_vertical_x_axis(out_inputs)
+                ], axis=0)
+                out_expected_outputs: np.ndarray= np.array(batch_ds_class[:batch_size])
+                out_expected_outputs= np.concatenate([
+                    out_expected_outputs,
+                    out_expected_outputs,
+                ], axis=0)
+                assert out_inputs.shape==(batch_size*2, QUANTITY_FRAME, 86, 2)
+                assert out_expected_outputs.shape==(batch_size*2,)
+                assert out_inputs.shape[0]==out_expected_outputs.shape[0]
+
+                batch_ds_elements= batch_ds_elements[batch_size:]
+                batch_ds_class= batch_ds_class[batch_size:]
+
+                yield (out_inputs, out_expected_outputs)
+---------------------------------------------------
+
+
+
+
+-- callbacks.py
+---------------------------------------------------
+from keras.src.callbacks import ReduceLROnPlateau, EarlyStopping, TensorBoard
+from .constant import PROJ_ROOT
+
+
+d_lr: ReduceLROnPlateau= ReduceLROnPlateau(
+    monitor='val_accuracy',
+    factor=0.1,
+    patience=1,
+    verbose=1,
+    mode='max',
+    min_delta=0.001,
+    cooldown=1,
+    min_lr=1.0e-12
+)
+sTraining: EarlyStopping= EarlyStopping(
+    # monitor='val_accuracy',
+    monitor='val_loss',
+    min_delta=0.001,
+    patience=2,
+    verbose=1,
+    # mode='max',
+    mode='min',
+    restore_best_weights=True,
+)
+tf_board: TensorBoard= TensorBoard(
+    log_dir=f"{PROJ_ROOT /"model" /"tfboard_logs"}",
+    histogram_freq=1,
+    write_graph=False,
+    write_images=False,
+    write_steps_per_second=False,
+    update_freq='epoch'
+)
+---------------------------------------------------
+
+
+
+
+-- constant.py
+---------------------------------------------------
+from json import load as loadJson
+from pathlib import Path
+
+
+PROJ_ROOT: Path= Path(__file__).resolve().parent.parent.parent
+EPOCHS: int= 20
+BATCH: int= 8
+QUANTITY_FRAME: int= 8
+MOD_PART_3: tuple= (2, 3, 4, 5, 6)
+LANDMARK_SHAPE: tuple= (36 +8 +21*2, 2) # ie. (86, 2)
+'''
+face full is (468, 2) --> face worthy is (36, 2)
+pose full is (33, 2) --> pose worthy is (8, 2)
+left_hand is (21, 2)
+right_hand is (21, 2)
+'''
+LANDMARK_DIR_WLASL: Path= PROJ_ROOT /"dataset" /"clean_dataset" /"fix_recent_n_classic_landmark"
+LANDMARK_DIR_GLASL: Path= PROJ_ROOT /"dataset" /"glasl" /"glasl_v4_landmark"
+wlasl_ds: list= []
+with open(f"{PROJ_ROOT /"dataset" /"clean_dataset" /"fix_recent_n_classic_landmark.json"}", "r") as f:
+    wlasl_ds= loadJson(f)
+glasl_ds: list= []
+with open(f"{PROJ_ROOT /"dataset" /"glasl" /"glasl_v4_landmark.json"}", 'r') as f:
+    glasl_ds= loadJson(f)
+LEN_GLOSS: int= len(wlasl_ds)
+KEY_G: str= 'gloss'
+KEY_GID: str= 'gloss_id'
+KEY_VIDS: str= 'videos'
+KEY_LANDMARK: str= 'landmark'
+
+KEY_PFOLDER_FROM: str= 'parent_folder_from'
+KEY_PFOLDER: str= 'parent_folder'
+KEY_SPLIT: str= 'split'
+VAL_TRAIN: str= 'train'
+VAL_TEST: str= 'test'
+
+KEY_FILE: str= 'file'
+KEY_FACE: str= 'face'
+KEY_POSE: str= 'pose'
+KEY_LHAND: str= 'left_hand'
+KEY_RHAND: str= 'right_hand'
+LM_IDX_TOP_LIP: int        =  0
+LM_IDX_TIP_OF_FOREHEAD: int=  3
+LM_IDX_RIGHT_MOST_EYE: int =  7
+LM_IDX_RIGHT_MOST_LIP: int =  8
+LM_IDX_RIGHT_EAR: int      = 19
+LM_IDX_UP_TIP_NOSE: int    = 20
+LM_IDX_LEFT_MOST_EYE: int  = 23
+LM_IDX_LEFT_MOST_LIP: int  = 24
+LM_IDX_LEFT_EAR: int       = 34
+LM_IDX_LEFT_ELBOW: int     = 38
+LM_IDX_RIGHT_ELBOW: int    = 39
+LM_IDX_LEFT_ARM_TIP: int   = 40
+LM_IDX_RIGHT_ARM_TIP: int  = 41
+# -----------------------------
+LM_IDX_LEFT_SHOULDER: int  = 36
+LM_IDX_RIGHT_SHOULDER: int = 37
+LM_IDX_LEFT_HIP: int       = 42
+LM_IDX_RIGHT_HIP: int      = 43
+# -----------------------------
+LM_IDX_LEFT_HAND_F_THUMB: int= 48
+LM_IDX_LEFT_HAND_F_INDEX: int= 52
+LM_IDX_LEFT_HAND_F_MIDLE: int= 56
+LM_IDX_LEFT_HAND_F_RING: int = 60
+LM_IDX_LEFT_HAND_F_PINKY: int= 64
+# -----------------------------
+LM_IDX_RIGHT_HAND_F_THUMB: int= 48
+LM_IDX_RIGHT_HAND_F_INDEX: int= 52
+LM_IDX_RIGHT_HAND_F_MIDLE: int= 56
+LM_IDX_RIGHT_HAND_F_RING: int = 60
+LM_IDX_RIGHT_HAND_F_PINKY: int= 64
+# -----------------------------
+LM_IMPORTANT_FACE_IDX: tuple= (
+    LM_IDX_TIP_OF_FOREHEAD, # ok
+
+    LM_IDX_LEFT_MOST_EYE,   # ok
+    LM_IDX_RIGHT_MOST_EYE,  # ok
+
+    LM_IDX_LEFT_EAR,        # ok
+    LM_IDX_RIGHT_EAR,       # ok
+
+    LM_IDX_UP_TIP_NOSE,     # ok
+
+    LM_IDX_LEFT_MOST_LIP,   # ok
+    LM_IDX_RIGHT_MOST_LIP,  # ok
+    LM_IDX_TOP_LIP,         # ok
+)
+# LM_IMPORTANT_FACE_IDX: tuple= (
+#     LM_IDX_TOP_LIP,
+#     LM_IDX_TIP_OF_FOREHEAD,
+#     LM_IDX_UP_TIP_NOSE,
+#     # -- on later process here to insert up and left body dots
+#     LM_IDX_LEFT_ARM_TIP,
+#     LM_IDX_RIGHT_ARM_TIP,
+# )
+LM_LEFT_HAND_TIP: tuple= (
+    LM_IDX_LEFT_HAND_F_THUMB,
+    LM_IDX_LEFT_HAND_F_INDEX,
+    LM_IDX_LEFT_HAND_F_MIDLE,
+    LM_IDX_LEFT_HAND_F_RING,
+    LM_IDX_LEFT_HAND_F_PINKY,
+)
+LM_LEFT_HAND_NOT_TIP: tuple= (
+    44, 45, 46, 47,
+    49, 50, 51,
+    53, 54, 55,
+    57, 58, 59,
+    61, 62, 63,
+)
+LM_RIGHT_HAND_TIP: tuple= (
+    LM_IDX_RIGHT_HAND_F_THUMB,
+    LM_IDX_RIGHT_HAND_F_INDEX,
+    LM_IDX_RIGHT_HAND_F_MIDLE,
+    LM_IDX_RIGHT_HAND_F_RING,
+    LM_IDX_RIGHT_HAND_F_PINKY,
+)
+LM_RIGHT_HAND_NOT_TIP: tuple= (
+    65, 66, 67, 68,
+    70, 71, 72,
+    74, 75, 76,
+    78, 79, 80,
+    82, 83, 84,
+)
+WORTHY_FACE_IDX: tuple= (
+    0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
+    105, 107, 133, 145, 152, 159, 162, 168, 172, 195,
+    263, 291, 294, 300, 323, 332, 334, 336, 362, 374,
+    386, 389, 397
+)
+WORTHY_POSE_IDX: tuple= (11,12,13,14,15,16,23,24)
+QUANTITY_HAND_LMARK: int= 21
+GLOSS_ONE_HAND: tuple[bool]= (
+    False, # -- book
+    True,  # -- drink
+    False, # -- computer
+    False, # -- before
+    False, # -- chair
+    False, # -- go
+    False, # -- clothes
+    True,  # -- who
+    True,  # -- candy
+    True,  # -- cousin
+    True,  # -- mine_my
+    True,  # -- me_i
+    True,  # -- stomach
+    False, # -- have
+    True,  # -- need
+    True,  # -- see
+    True,  # -- feel
+    False, # -- hurt
+    True,  # -- fever
+    False, # -- dizzy
+    False, # -- headache
+    False, # -- doctor
+)
+---------------------------------------------------
+
+
+
+
+-- layers.py
+---------------------------------------------------
+from keras.src.activations.activations import ReLU
+from keras.src.layers import Attention, Flatten, Dense, GlobalAveragePooling1D, Input, LayerNormalization, MultiHeadAttention, Layer
+from keras.src.activations import softmax
+from keras.src import ops
+from keras.src.saving import register_keras_serializable
+# from keras_hub.layers import SinePositionEncoding
+from typing import Any
+
+
+from .constant import LANDMARK_SHAPE, LM_IDX_LEFT_HIP, LM_IDX_LEFT_SHOULDER, LM_IDX_RIGHT_HIP, LM_IDX_RIGHT_SHOULDER, LM_LEFT_HAND_NOT_TIP, LM_LEFT_HAND_TIP, LM_RIGHT_HAND_NOT_TIP, LM_RIGHT_HAND_TIP, QUANTITY_FRAME, LEN_GLOSS, LM_IMPORTANT_FACE_IDX
+
+
+@register_keras_serializable()
+class ShapeReduce43ViaAttention(Layer):
+    def __init__(self, num_heads: int, dropout: float, name: str='reduce_shape', **kwargs):
+        super().__init__(**kwargs)
+        self.num_heads=   num_heads
+        self.dropout=     dropout
+        self.name=        name
+    def build(self, input_shape):
+        self.in_query= [Dense(
+                units=input_shape[-2], # 86
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+            ) for _ in range(self.num_heads)]
+        self.in_value= [Dense(
+                units=input_shape[-2], # 86
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+            ) for _ in range(self.num_heads)]
+        self.in_key= [Dense(
+                units=input_shape[-2], # 86
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+            ) for _ in range(self.num_heads)]
+        self.in_attention= [Attention(
+                use_scale=True,
+                dropout=self.dropout,
+            ) for _ in range(self.num_heads)]
+        # -----------------------------------
+        self.query= [Dense( # ---------------
+                units=input_shape[-2]//2, # 43
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+            ) for _ in range(self.num_heads)]
+        self.value= [Dense(
+                units=input_shape[-2]//2, # 43
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+            ) for _ in range(self.num_heads)]
+        self.key= [Dense(
+                units=input_shape[-2]//2, # 43
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+            ) for _ in range(self.num_heads)]
+        self.attention= [Attention(
+                use_scale=True,
+                dropout=self.dropout,
+            ) for _ in range(self.num_heads)]
+    def call(self, data_self_att):
+        shape: Any= ops.shape(data_self_att) # shape(BATCH_SIZE, QUANTITY_FRAME, 86, 2)
+        data= ops.reshape(data_self_att, (-1, shape[-2]*shape[-1])) # shape(BATCH_SIZE*QUANTITY_FRAME, 86*2)
+        query= [query_ann(data) for query_ann in self.in_query] # (-1, 172) -> shape(-1, 86)
+        value= [value_ann(data) for value_ann in self.in_value] # (-1, 172) -> shape(-1, 86)
+        key=   [key_ann(data)   for key_ann   in self.in_key]   # (-1, 172) -> shape(-1, 86)
+        query= [ops.reshape(query_ann, (-1, shape[-3], shape[-2])) for query_ann in query]
+        value= [ops.reshape(value_ann, (-1, shape[-3], shape[-2])) for value_ann in value]
+        key=   [ops.reshape(key_ann,   (-1, shape[-3], shape[-2])) for key_ann   in key]
+        output= [attention(
+            [query[idx], value[idx], key[idx]]
+        ) for idx, attention in enumerate(self.in_attention)]
+        output= ops.sum(output, axis=0) # shape(BATCH_SIZE, QUANTITY_FRAME, 86)
+        # ----------------------------------------------------------------------
+        output= ops.reshape(output, (-1, shape[-2])) # shape(BATCH_SIZE*QUANTITY_FRAME, 86)
+        query= [query_ann(output) for query_ann in self.query]
+        value= [value_ann(output) for value_ann in self.value]
+        key=   [key_ann(output)   for key_ann   in self.key]
+        query= [ops.reshape(query_ann, (-1, shape[-3], shape[-2]//2)) for query_ann in query]
+        value= [ops.reshape(value_ann, (-1, shape[-3], shape[-2]//2)) for value_ann in value]
+        key=   [ops.reshape(key_ann,   (-1, shape[-3], shape[-2]//2)) for key_ann   in key]
+        output= [attention(
+            [query[idx], value[idx], key[idx]]
+        ) for idx, attention in enumerate(self.attention)]
+        # input_shape (BATCH_SIZE, QUANTITY_FRAME, 86, 2)
+        # output_shape (BATCH_SIZE, QUANTITY_FRAME, 43=86//2)
+        return ops.sum(output, axis=0)
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "num_heads": self.num_heads,
+            "dropout":   self.dropout,
+            "name":      self.name,
+        }
+@register_keras_serializable()
+class ShapeReduceViaAddAndAttention(Layer):
+    def __init__(self, target: int, num_heads: int, dropout: float, name: str='reduce_shape21', **kwargs):
+        super().__init__(**kwargs)
+        self.target=    target
+        self.num_heads= num_heads
+        self.dropout=   dropout
+        self.name=      name
+    def build(self, input_shape):
+        assert input_shape[-2]%2==0
+        self.target_query= [Dense(
+                units=self.target,
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+            ) for _ in range(self.num_heads)]
+        self.target_value= [Dense(
+                units=self.target,
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+            ) for _ in range(self.num_heads)]
+        self.target_key= [Dense(
+                units=self.target,
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+            ) for _ in range(self.num_heads)]
+        self.target_attention= [Attention(
+                use_scale=True,
+                dropout=self.dropout,
+            ) for _ in range(self.num_heads)]
+        # -----------------------------------
+        self.query= [Dense(
+                units=self.target*input_shape[-2]//2,
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+            ) for _ in range(self.num_heads)]
+        self.value= [Dense(
+                units=self.target*input_shape[-2]//2,
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+            ) for _ in range(self.num_heads)]
+        self.key= [Dense(
+                units=self.target*input_shape[-2]//2,
+                activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+            ) for _ in range(self.num_heads)]
+        self.attention= [Attention(
+                use_scale=True,
+                dropout=self.dropout,
+            ) for _ in range(self.num_heads)]
+    def call(self, data_self_att):
+        origin_shape: Any= ops.shape(data_self_att) # shape(BATCH_SIZE, QUANTITY_FRAME, 43)
+        data= ops.reshape(data_self_att, (-1, origin_shape[-2]//2, 2, origin_shape[-1]))
+        data= ops.sum(data, axis=-2) # shape(BATCH_SIZE, QUANTITY_FRAME/2, 43)
+        shape: Any= ops.shape(data)
+        data=  ops.reshape(data, (-1, shape[-1])) # shape(BATCH_SIZE*QUANTITY_FRAME/2, 43)
+        # ----------------------------------------------------------------------
+        query= [query_ann(data) for query_ann in self.target_query]
+        value= [value_ann(data) for value_ann in self.target_value]
+        key=   [key_ann(data)   for key_ann   in self.target_key]
+        query= [ops.reshape(query_ann, (-1, shape[-2], self.target)) for query_ann in query]
+        value= [ops.reshape(value_ann, (-1, shape[-2], self.target)) for value_ann in value]
+        key=   [ops.reshape(key_ann,   (-1, shape[-2], self.target)) for key_ann   in key]
+        output= [attention(
+            [query[idx], value[idx], key[idx]]
+        ) for idx, attention in enumerate(self.target_attention)]
+        output= ops.sum(output, axis=0)
+        shape=  ops.shape(output) # (BATCH_SIZE, QUANTITY_FRAME/2, self.target)
+        # ----------------------------------------------------------------------
+        output= ops.reshape(output, (-1, shape[-2]*shape[-1])) # shape(BATCH_SIZE, QUANTITY_FRAME/2*self.target)
+        query= [query_ann(output) for query_ann in self.query]
+        value= [value_ann(output) for value_ann in self.value]
+        key=   [key_ann(output)   for key_ann   in self.key]
+        query= [ops.reshape(query_ann, (-1, shape[-2], self.target)) for query_ann in query]
+        value= [ops.reshape(value_ann, (-1, shape[-2], self.target)) for value_ann in value]
+        key=   [ops.reshape(key_ann,   (-1, shape[-2], self.target)) for key_ann   in key]
+        output= [attention(
+            [query[idx], value[idx], key[idx]]
+        ) for idx, attention in enumerate(self.attention)]
+        # input_shape (BATCH_SIZE, QUANTITY_FRAME, 43)
+        # output_shape (BATCH_SIZE, QUANTITY_FRAME/2, self.target)
+        return ops.sum(output, axis=0)
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "target":    self.target,
+            "num_heads": self.num_heads,
+            "dropout":   self.dropout,
+            "name":      self.name,
+        }
+# @register_keras_serializable()
+# class SinCosPostionalEncoding( Layer ):
+#     def __init__(
+#         self,
+#         name: str='positional_encoding',
+#         **kwargs
+#     ):
+#         super().__init__(**kwargs)
+#         self.name= name
+#     def build(self, input_shape):
+#         assert len(input_shape)==3
+#         self.positional_encoding= SinePositionEncoding(
+#             max_wavelength=10000,
+#         )
+#     def call(self, data_input):
+#         data= ops.add(
+#             data_input,
+#             self.positional_encoding(data_input)
+#         )
+#
+#         return data
+#     def get_config(self):
+#         return {
+#             **super().get_config(),
+#             "name":      self.name,
+#         }
+@register_keras_serializable()
+class EncoderTransformer( Layer ):
+    def __init__(
+        self,
+        num_heads: int=4,  # 8 on 'attention is all u need' (2017)
+        key_dim: int=43,   # 64 on 'attention is all u need' (2017)
+        value_dim: int=43, # --> so that 43*4= 172= 86*2
+        dropout: float=0.1,
+        ann_units: int=2048,
+        name: str='encoder_transformer',
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.num_heads= num_heads
+        self.key_dim=   key_dim
+        self.value_dim= value_dim
+        self.dropout=   dropout
+        self.ann_units= ann_units
+        self.name=      name
+    def build(self, input_shape):
+        # assert len(input_shape)==3
+        d_model= input_shape[-1]
+        self.multiHeadAtt= MultiHeadAttention(
+            num_heads=self.num_heads,
+            key_dim=self.key_dim,
+            value_dim=self.value_dim,
+            dropout=self.dropout,
+            use_bias=True,
+        )
+        self.normAfterMHA= LayerNormalization()
+        self.ann= Dense(
+            units=self.ann_units,
+            activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+        )
+        self.annBringBackShape= Dense(
+            units=d_model,
+            activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+        )
+        self.normAfterAnn= LayerNormalization()
+    def call(self, data_input):
+        data= self.multiHeadAtt(
+            query=data_input,
+            value=data_input,
+            key=data_input,
+        )
+        data= ops.add(data, data_input)
+        data_after_mha= self.normAfterMHA(data)
+
+        data= self.ann(data_after_mha)
+        data= self.annBringBackShape(data)
+        data= ops.add(data, data_after_mha)
+        data= self.normAfterAnn(data)
+
+        return data
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "num_heads": self.num_heads,
+            "key_dim":   self.key_dim,
+            "value_dim": self.value_dim,
+            "dropout":   self.dropout,
+            "ann_units": self.ann_units,
+            "name":      self.name,
+        }
+@register_keras_serializable()
+class NTimesEncoderTransformer(Layer):
+    def __init__(
+        self,
+        n_times: int=6,
+        num_heads: int=4,  # 8 on 'attention is all u need' (2017)
+        key_dim: int=43,   # 64 on 'attention is all u need' (2017)
+        value_dim: int=43, # --> so that 43*4= 172= 86*2
+        dropout: float=0.1,
+        ann_units: int=2048,
+        name: str='multi_encoder_in_sequence',
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.n_times=   n_times
+        self.num_heads= num_heads
+        self.key_dim=   key_dim
+        self.value_dim= value_dim
+        self.dropout=   dropout
+        self.ann_units= ann_units
+        self.name=      name
+    def build(self, input_shape):
+        # assert len(input_shape)==3
+        self.encoder_seq= [EncoderTransformer(
+            num_heads=self.num_heads,
+            key_dim=self.key_dim,
+            value_dim=self.value_dim,
+            dropout=self.dropout,
+            ann_units=self.ann_units,
+            name=f"enc_{idx}",
+        ) for idx in range(self.n_times)]
+    def call(self, data_input):
+        data= data_input
+        for encoder in self.encoder_seq:
+            data= encoder(data)
+        return data
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "n_times":   self.n_times,
+            "num_heads": self.num_heads,
+            "key_dim":   self.key_dim,
+            "value_dim": self.value_dim,
+            "dropout":   self.dropout,
+            "ann_units": self.ann_units,
+            "name":      self.name,
+        }
+@register_keras_serializable()
+class SelectLM(Layer):
+    def __init__(self, name: str='select_landmark', **kwargs):
+        super().__init__(**kwargs)
+        self.name= name
+    def build(self, input_shape):
+        del input_shape
+    def call(self, input):
+        # left_hand_tip: Any= input[..., LM_LEFT_HAND_TIP, :]
+        # right_hand_tip: Any= input[..., LM_RIGHT_HAND_TIP, :]
+        left_hand_tip: Any= ops.take(
+            input,
+            indices=LM_LEFT_HAND_TIP,
+            axis=-2,
+        )
+        right_hand_tip: Any= ops.take(
+            input,
+            indices=LM_RIGHT_HAND_TIP,
+            axis=-2,
+        )
+        left_hand_tip= ops.expand_dims(left_hand_tip, axis=-3)
+        right_hand_tip= ops.expand_dims(right_hand_tip, axis=-3)
+        center_shoulder= (
+            input[..., LM_IDX_LEFT_SHOULDER:LM_IDX_LEFT_SHOULDER+1, :] +
+            input[..., LM_IDX_RIGHT_SHOULDER:LM_IDX_RIGHT_SHOULDER+1, :]
+        )/2.0
+        center_hip= (
+            input[..., LM_IDX_LEFT_HIP:LM_IDX_LEFT_HIP+1, :] +
+            input[..., LM_IDX_RIGHT_HIP:LM_IDX_RIGHT_HIP+1, :]
+        )/2.0
+        center_shoulder_hip= (center_shoulder + center_hip)/2.0
+        the_rest= ops.concatenate([
+            ops.take(
+                input,
+                indices=LM_IMPORTANT_FACE_IDX,
+                axis=-2,
+            ),
+            input[..., 36:36+8, :], # -- pose landmarks
+            (center_shoulder + center_shoulder_hip)/2.0, # -- upper dot on 2 dots
+            (center_hip + center_shoulder_hip)/2.0,      # -- lower dot on 2 dots
+            ops.take(
+                input,
+                indices=LM_LEFT_HAND_NOT_TIP,
+                axis=-2,
+            ),
+            ops.take(
+                input,
+                indices=LM_RIGHT_HAND_NOT_TIP,
+                axis=-2,
+            ),
+        ], axis=-2)
+        the_rest= ops.expand_dims(the_rest, axis=-2)
+
+        left_hand_tip= (left_hand_tip - the_rest)**2
+        left_hand_tip= ops.sum(left_hand_tip, axis=-1, keepdims=False)
+        left_hand_tip= left_hand_tip**0.5
+        shape: Any= ops.shape(left_hand_tip)
+        left_hand_tip= ops.reshape(left_hand_tip, (-1, shape[1], shape[2]*shape[3]))
+
+        right_hand_tip= (right_hand_tip - the_rest)**2
+        right_hand_tip= ops.sum(right_hand_tip, axis=-1, keepdims=False)
+        right_hand_tip= right_hand_tip**0.5
+        shape: Any= ops.shape(right_hand_tip)
+        right_hand_tip= ops.reshape(right_hand_tip, (-1, shape[1], shape[2]*shape[3]))
+
+        out= ops.concatenate([
+            left_hand_tip,
+            right_hand_tip,
+        ], axis=-1)
+        return out
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "name":      self.name,
+        }
+# ---------------------------------------------------------------------------
+data_in= Input(
+    shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]),
+    name='batch_vid',
+)
+# ---------------------------------------------------------------------------
+x= SelectLM()(data_in)
+# x= SinCosPostionalEncoding(name='positional')(x)
+x= NTimesEncoderTransformer(
+    # n_times=6,
+    # num_heads=8,
+    # key_dim=64,
+    # value_dim=64,
+    # dropout=0.1,
+    # ann_units=2048,
+    n_times=3,
+    num_heads=2,
+    key_dim=4,
+    value_dim=4,
+    dropout=0.1,
+    ann_units=4,
+    name='multi_encoder_in_sequence',
+)(x) # (QUANTITY_FRAME, LANDMARK_SHAPE[0]*LANDMARK_SHAPE[1])
+x= GlobalAveragePooling1D(
+    data_format='channels_last',
+    keepdims=False,
+)(x)
+ann= Flatten()(x)
+ann= Dense(
+    units=LANDMARK_SHAPE[0]*2,
+    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+)(ann)
+# ---------------------------------------------------------------------------
+data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
+---------------------------------------------------
+
+
+
+
+-- ml_train.py
+---------------------------------------------------
+from keras.src.losses import sparse_categorical_crossentropy
+from keras.src.models import Model
+from keras.src.optimizers import Adam
+
+from .constant import EPOCHS, VAL_TRAIN, VAL_TEST, PROJ_ROOT
+from .algo import calculate_steps_needed, get_data_landmark
+from .layers import data_in, data_out
+from .callbacks import d_lr, sTraining, tf_board
+
+
+def main():
+    model: Model= Model(
+        inputs=data_in,
+        outputs=data_out
+    )
+    model.compile(
+        optimizer=Adam(learning_rate=0.0001),
+        loss=sparse_categorical_crossentropy,
+        metrics=['accuracy']
+    )
+    model.summary()
+    model.fit(
+        x=get_data_landmark(train_test=VAL_TRAIN),
+        epochs=EPOCHS,
+        callbacks=[d_lr, sTraining, tf_board],
+        validation_data=get_data_landmark(train_test=VAL_TEST),
+        steps_per_epoch=calculate_steps_needed(VAL_TRAIN),
+        validation_steps=calculate_steps_needed(VAL_TEST),
+        validation_freq=1
+    )
+    model_file_name: str= "aslvid2gloss_v72.keras"
+    print(f"Quantity images --> {model.input_shape[1]}")
+    print(f"Quantity categories --> {model.output_shape[-1]}")
+    print(f"model( --> {model_file_name} <-- )")
+    model.save(f"{PROJ_ROOT /"model" /model_file_name}")
+
+
+if __name__=="__main__":
+    main()
+---------------------------------------------------

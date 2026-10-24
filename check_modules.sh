@@ -2,9 +2,9 @@
 
 
 
-if [ "$(pwd)/.venv/bin/pip" != "$(which pip)" ]; then
-    source .venv/bin/activate
-fi
+# if [ "$(pwd)/.venv/bin/pip" != "$(which pip)" ]; then
+#     source .venv/bin/activate
+# fi
 installed="$(pip freeze)"
 check() {
     local module="$1"
@@ -35,6 +35,22 @@ check tf_keras              "2.19.0"
 check torch                 "2.7.1"
 check torchaudio            "2.7.1"
 check torchvision           "0.22.1"
+check jax                   "0.7.1"
+
+
+# pip install torch==2.7.1 torchaudio==2.7.1 torchvision==0.22.1
+# pip install happytransformer==3.0.0
+# pip install "tensorflow[and-cuda]==2.19.1"
+# pip install tf_keras==2.19.0
+# pip install keras-hub==0.31.1
+# pip install keras==3.15.1
+# pip install opencv-contrib-python==4.11.0.86 opencv-python==4.12.0.88
+# pip install pygame==2.6.1
+# pip install "tensorflow[and-cuda]==2.19.1"
+# pip install "jax[cuda12]==0.7.1"
+# pip install mediapipe==0.10.21
+# pip install protobuf==4.25.9
+# pip install numpy==2.3.2
 
 
 # -- 10 modules -- old --

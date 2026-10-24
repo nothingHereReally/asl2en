@@ -1,0 +1,4 @@
+original: pose=True, face=True, left_hand=True, right_hand=True
+clahe_mild: pose=True, face=True, left_hand=True, right_hand=True
+bilateral_mild: pose=True, face=True, left_hand=True, right_hand=True
+sharpen_strong: pose=True, face=True, left_hand=True, right_hand=True
