@@ -97,6 +97,16 @@ WORTHY_LM_IMPORTANT_IDX: tuple= (
     LM_IDX_LEFT_ARM_TIP,
     LM_IDX_RIGHT_ARM_TIP,
 )
+LEFT_ARM3DOTS: tuple= (
+    LM_IDX_LEFT_SHOULDER,
+    LM_IDX_LEFT_ELBOW,
+    LM_IDX_LEFT_ARM_TIP,
+)
+RIGHT_ARM3DOTS: tuple= (
+    LM_IDX_RIGHT_SHOULDER,
+    LM_IDX_RIGHT_ELBOW,
+    LM_IDX_RIGHT_ARM_TIP,
+)
 
 
 def load_model() -> tuple:
@@ -523,10 +533,22 @@ def hand_mse(
     output, has shape (BATCH_SIZE, QUANTITY_GLOSS, SAMPLE_PER_GLOSS)
     '''
     left_hand_diff: jnp.ndarray= (
-        get_left_hand(model) -get_left_hand(input)
+        jnp.concatenate([
+            get_left_hand(model),
+            model[..., LEFT_ARM3DOTS, :],
+        ], axis=-2) -jnp.concatenate([
+            get_left_hand(input),
+            input[..., LEFT_ARM3DOTS, :],
+        ], axis=-2)
     )**2
     right_hand_diff: jnp.ndarray= (
-        get_right_hand(model) -get_right_hand(input)
+        jnp.concatenate([
+            get_right_hand(model),
+            model[..., RIGHT_ARM3DOTS, :],
+        ], axis=-2) -jnp.concatenate([
+            get_right_hand(input),
+            input[..., RIGHT_ARM3DOTS, :],
+        ], axis=-2)
     )**2
     left_hand_diff= jnp.sum( # due2now c^2, from c^2= a^2 +b^2
         left_hand_diff,
@@ -780,6 +802,7 @@ def main() -> None:
     body2dots= jnp.array(body2dots)
     weights= jnp.array(weights)
     labels= list(labels)
+    do_clahe: bool= False
 
     cap: cv.VideoCapture= cv.VideoCapture(2)
     if not cap.isOpened():
@@ -802,7 +825,8 @@ def main() -> None:
 
             count_frames_skip+= 1
             rgb_frame= cv.cvtColor(frame, cv.COLOR_BGR2RGB)
-            rgb_frame= apply_clahe(image_rgb=rgb_frame)
+            if do_clahe:
+                rgb_frame= apply_clahe(image_rgb=rgb_frame)
             results= MPH_fph.process(rgb_frame)
 
             if has4parts_landmark(results):
@@ -834,7 +858,6 @@ def main() -> None:
                         # top_indices= sort_score(score)[0] # list of shape (BATCH_SIZE, QUANTITY_GLOSS) then [0]
                         extract_score_per_gloss: list[float]= extract_min_gloss_on_batch(score).tolist() # shape (BATCH_SIZE,)
                         top_indices: list[int]= np.argsort(np.asarray(extract_score_per_gloss), stable=True).tolist()
-                        # TODO: sort_score(...) after do something blahhhhhhhhh
                         print("Top 5 Sign Classifications:")
                         for i in range(5):
                             idx= top_indices[i]
