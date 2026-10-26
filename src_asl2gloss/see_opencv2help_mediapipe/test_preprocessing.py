@@ -91,4 +91,30 @@ def main():
 
 
 if __name__ == "__main__":
+    '''
+    https://developers.google.com/edge/mediapipe/solutions/vision/holistic_landmarker
+    https://github.com/google-ai-edge/mediapipe/blob/master/docs/solutions/holistic.md
+    First, we estimate the human pose (top of Fig 2)...
+    from google mediapipe: The documentation confirms
+    ---- that MediaPipe's pipeline includes input
+    ---- processing such as rotation, resizing, normalization,
+    ---- and color-space conversion.
+
+
+    https://journals.sagepub.com/doi/pdf/10.3233/FAIA251460
+    Supported: Under suitable image conditions,
+    ---- additional preprocessing may be unnecessary,
+    ---- and some transformations can degrade
+    ---- pose-estimation results.
+    opencv preprocessing provides little to no
+    ---- benefit to MediaPipe when lighting is good.
+
+
+    https://journals.sagepub.com/doi/pdf/10.3233/FAIA251460
+    authors apply their testing framework to MediaPipe Holistic
+    ---- and investigate how transformations affect pose-estimation
+    ---- outputs. The study demonstrates that changes in image
+    ---- input can expose failures or inconsistencies, rather
+    ---- than guaranteeing better predictions
+    '''
     main()
