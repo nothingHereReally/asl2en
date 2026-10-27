@@ -996,9 +996,9 @@ def process_videos_ds() -> tuple:
 def main() -> None:
     init_dirs()
     ds_landmark, ds_skeleton= process_videos_ds()
-    with open(f"{DS_DIR /"glasl_v4_landmark.json"}", 'w') as f:
+    with open(f"{DS_DIR /"investigate_landmark.json"}", 'w') as f:
         writeJson(ds_landmark, f, indent=4)
-    with open(f"{DS_DIR /"glasl_v4_skeleton.json"}", 'w') as f:
+    with open(f"{DS_DIR /"investigate_skeleton.json"}", 'w') as f:
         writeJson(ds_skeleton, f, indent=4)
 if __name__=="__main__":
     main()
