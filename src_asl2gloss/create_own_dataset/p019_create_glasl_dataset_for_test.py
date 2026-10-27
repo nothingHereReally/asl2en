@@ -947,7 +947,7 @@ def process_videos_ds() -> tuple:
         })
         for idx_video, a_video in enumerate(a_gloss[KEY_VIDS]):
             video_landmarks, video_annotations= extract_lm_from_video(a_video)
-            pfolder_name: str= f"{a_gloss[KEY_G]}_{a_video[:-4]}"
+            pfolder_name: str= f"{a_video[:-4]}"
             landmark_abs_folder: Path= LANDMARK_DIR /pfolder_name
             skeleton_abs_folder: Path= SKELETON_DIR /pfolder_name
             landmark_abs_folder.mkdir()
