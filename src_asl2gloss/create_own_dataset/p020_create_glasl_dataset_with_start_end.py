@@ -1081,11 +1081,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 2,
-                        KEY_IMGEND: 17,
-                    },
-                    {
-                        KEY_IMGSTART: 18,
-                        KEY_IMGEND: 47,
+                        KEY_IMGEND: 60,
                     },
                 ]
             },
@@ -1094,11 +1090,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 13,
-                    },
-                    {
-                        KEY_IMGSTART: 14,
-                        KEY_IMGEND: 33,
+                        KEY_IMGEND: 61,
                     },
                 ]
             },
@@ -1107,11 +1099,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 15,
-                    },
-                    {
-                        KEY_IMGSTART: 16,
-                        KEY_IMGEND: 33,
+                        KEY_IMGEND: 22,
                     },
                 ]
             },
@@ -1120,11 +1108,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 15,
-                    },
-                    {
-                        KEY_IMGSTART: 16,
-                        KEY_IMGEND: 35,
+                        KEY_IMGEND: 59,
                     },
                 ]
             },
@@ -1133,11 +1117,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 21,
-                    },
-                    {
-                        KEY_IMGSTART: 22,
-                        KEY_IMGEND: 45,
+                        KEY_IMGEND: 48,
                     },
                 ]
             },
@@ -1146,11 +1126,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 4,
-                        KEY_IMGEND: 16,
-                    },
-                    {
-                        KEY_IMGSTART: 17,
-                        KEY_IMGEND: 38,
+                        KEY_IMGEND: 45,
                     },
                 ]
             },
@@ -1159,11 +1135,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 17,
-                    },
-                    {
-                        KEY_IMGSTART: 18,
-                        KEY_IMGEND: 37,
+                        KEY_IMGEND: 61,
                     },
                 ]
             },
@@ -1172,7 +1144,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 32,
+                        KEY_IMGEND: 62,
                     },
                 ]
             },
@@ -1180,12 +1152,8 @@ VIDEO_LIST: list= [
                 KEY_FILE: 'who_0009.mp4',
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 2,
-                        KEY_IMGEND: 18,
-                    },
-                    {
-                        KEY_IMGSTART: 19,
-                        KEY_IMGEND: 39,
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 64,
                     },
                 ]
             },
@@ -1193,12 +1161,8 @@ VIDEO_LIST: list= [
                 KEY_FILE: 'who_0010.mp4',
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 2,
-                        KEY_IMGEND: 13,
-                    },
-                    {
-                        KEY_IMGSTART: 14,
-                        KEY_IMGEND: 32,
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 55,
                     },
                 ]
             },
