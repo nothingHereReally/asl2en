@@ -91,24 +91,12 @@ VIDEO_LIST: list= [
                 KEY_FILE: 'book_0001.mp4',
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 1,
-                        KEY_IMGEND: 42,
+                        KEY_IMGSTART: 20,
+                        KEY_IMGEND: 45,
                     },
                     {
-                        KEY_IMGSTART: 43,
-                        KEY_IMGEND: 75,
-                    },
-                    {
-                        KEY_IMGSTART: 76,
-                        KEY_IMGEND: 104,
-                    },
-                    {
-                        KEY_IMGSTART: 105,
-                        KEY_IMGEND: 134,
-                    },
-                    {
-                        KEY_IMGSTART: 135,
-                        KEY_IMGEND: 149,
+                        KEY_IMGSTART: 46,
+                        KEY_IMGEND: 76,
                     },
                 ]
             },
@@ -117,19 +105,11 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 34,
+                        KEY_IMGEND: 27,
                     },
                     {
-                        KEY_IMGSTART: 35,
-                        KEY_IMGEND: 62,
-                    },
-                    {
-                        KEY_IMGSTART: 63,
-                        KEY_IMGEND: 88,
-                    },
-                    {
-                        KEY_IMGSTART: 89,
-                        KEY_IMGEND: 107,
+                        KEY_IMGSTART: 28,
+                        KEY_IMGEND: 54,
                     },
                 ]
             },
@@ -138,23 +118,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 32,
-                    },
-                    {
-                        KEY_IMGSTART: 33,
-                        KEY_IMGEND: 60,
-                    },
-                    {
-                        KEY_IMGSTART: 61,
-                        KEY_IMGEND: 88,
-                    },
-                    {
-                        KEY_IMGSTART: 89,
-                        KEY_IMGEND: 116,
-                    },
-                    {
-                        KEY_IMGSTART: 117,
-                        KEY_IMGEND: 130,
+                        KEY_IMGEND: 24,
                     },
                 ]
             },
@@ -162,24 +126,12 @@ VIDEO_LIST: list= [
                 KEY_FILE: 'book_0004.mp4',
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 1,
-                        KEY_IMGEND: 33,
+                        KEY_IMGSTART: 4,
+                        KEY_IMGEND: 25,
                     },
                     {
-                        KEY_IMGSTART: 34,
-                        KEY_IMGEND: 62,
-                    },
-                    {
-                        KEY_IMGSTART: 63,
-                        KEY_IMGEND: 85,
-                    },
-                    {
-                        KEY_IMGSTART: 86,
-                        KEY_IMGEND: 118,
-                    },
-                    {
-                        KEY_IMGSTART: 119,
-                        KEY_IMGEND: 129,
+                        KEY_IMGSTART: 26,
+                        KEY_IMGEND: 50,
                     },
                 ]
             },
@@ -188,19 +140,11 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 38,
+                        KEY_IMGEND: 30,
                     },
                     {
-                        KEY_IMGSTART: 39,
-                        KEY_IMGEND: 66,
-                    },
-                    {
-                        KEY_IMGSTART: 67,
-                        KEY_IMGEND: 95,
-                    },
-                    {
-                        KEY_IMGSTART: 96,
-                        KEY_IMGEND: 111,
+                        KEY_IMGSTART: 31,
+                        KEY_IMGEND: 51,
                     },
                 ]
             },
@@ -208,24 +152,12 @@ VIDEO_LIST: list= [
                 KEY_FILE: 'book_0006.mp4',
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 1,
-                        KEY_IMGEND: 31,
+                        KEY_IMGSTART: 9,
+                        KEY_IMGEND: 26,
                     },
                     {
-                        KEY_IMGSTART: 32,
-                        KEY_IMGEND: 57,
-                    },
-                    {
-                        KEY_IMGSTART: 58,
-                        KEY_IMGEND: 83,
-                    },
-                    {
-                        KEY_IMGSTART: 84,
-                        KEY_IMGEND: 112,
-                    },
-                    {
-                        KEY_IMGSTART: 113,
-                        KEY_IMGEND: 131,
+                        KEY_IMGSTART: 27,
+                        KEY_IMGEND: 55,
                     },
                 ]
             },
@@ -233,20 +165,12 @@ VIDEO_LIST: list= [
                 KEY_FILE: 'book_0007.mp4',
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 1,
-                        KEY_IMGEND: 33,
+                        KEY_IMGSTART: 3,
+                        KEY_IMGEND: 30,
                     },
                     {
-                        KEY_IMGSTART: 34,
-                        KEY_IMGEND: 63,
-                    },
-                    {
-                        KEY_IMGSTART: 64,
-                        KEY_IMGEND: 89,
-                    },
-                    {
-                        KEY_IMGSTART: 90,
-                        KEY_IMGEND: 103,
+                        KEY_IMGSTART: 31,
+                        KEY_IMGEND: 56,
                     },
                 ]
             },
@@ -255,23 +179,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 32,
-                    },
-                    {
-                        KEY_IMGSTART: 33,
-                        KEY_IMGEND: 57,
-                    },
-                    {
-                        KEY_IMGSTART: 58,
-                        KEY_IMGEND: 90,
-                    },
-                    {
-                        KEY_IMGSTART: 91,
-                        KEY_IMGEND: 117,
-                    },
-                    {
-                        KEY_IMGSTART: 118,
-                        KEY_IMGEND: 139,
+                        KEY_IMGEND: 35,
                     },
                 ]
             },
@@ -279,20 +187,8 @@ VIDEO_LIST: list= [
                 KEY_FILE: 'book_0009.mp4',
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 1,
-                        KEY_IMGEND: 39,
-                    },
-                    {
-                        KEY_IMGSTART: 40,
-                        KEY_IMGEND: 66,
-                    },
-                    {
-                        KEY_IMGSTART: 67,
-                        KEY_IMGEND: 95,
-                    },
-                    {
-                        KEY_IMGSTART: 96,
-                        KEY_IMGEND: 114,
+                        KEY_IMGSTART: 41,
+                        KEY_IMGEND: 56,
                     },
                 ]
             },
@@ -300,20 +196,8 @@ VIDEO_LIST: list= [
                 KEY_FILE: 'book_0010.mp4',
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 1,
-                        KEY_IMGEND: 35,
-                    },
-                    {
-                        KEY_IMGSTART: 36,
-                        KEY_IMGEND: 66,
-                    },
-                    {
-                        KEY_IMGSTART: 67,
-                        KEY_IMGEND: 93,
-                    },
-                    {
-                        KEY_IMGSTART: 94,
-                        KEY_IMGEND: 109,
+                        KEY_IMGSTART: 40,
+                        KEY_IMGEND: 61,
                     },
                 ]
             },
