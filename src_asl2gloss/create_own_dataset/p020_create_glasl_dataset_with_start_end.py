@@ -1176,10 +1176,10 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 11,
+                        KEY_IMGEND: 10,
                     },
                     {
-                        KEY_IMGSTART: 12,
+                        KEY_IMGSTART: 18,
                         KEY_IMGEND: 36,
                     },
                 ]
@@ -1189,11 +1189,11 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 10,
+                        KEY_IMGEND: 12,
                     },
                     {
-                        KEY_IMGSTART: 11,
-                        KEY_IMGEND: 37,
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 49,
                     },
                 ]
             },
@@ -1202,11 +1202,11 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 9,
+                        KEY_IMGEND: 12,
                     },
                     {
-                        KEY_IMGSTART: 10,
-                        KEY_IMGEND: 33,
+                        KEY_IMGSTART: 32,
+                        KEY_IMGEND: 42,
                     },
                 ]
             },
@@ -1215,11 +1215,11 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 10,
+                        KEY_IMGEND: 11,
                     },
                     {
-                        KEY_IMGSTART: 11,
-                        KEY_IMGEND: 38,
+                        KEY_IMGSTART: 19,
+                        KEY_IMGEND: 37,
                     },
                 ]
             },
@@ -1228,11 +1228,11 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 12,
+                        KEY_IMGEND: 10,
                     },
                     {
-                        KEY_IMGSTART: 13,
-                        KEY_IMGEND: 32,
+                        KEY_IMGSTART: 11,
+                        KEY_IMGEND: 34,
                     },
                 ]
             },
@@ -1241,11 +1241,11 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 9,
+                        KEY_IMGEND: 8,
                     },
                     {
-                        KEY_IMGSTART: 10,
-                        KEY_IMGEND: 32,
+                        KEY_IMGSTART: 16,
+                        KEY_IMGEND: 53,
                     },
                 ]
             },
@@ -1254,11 +1254,11 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 10,
+                        KEY_IMGEND: 15,
                     },
                     {
-                        KEY_IMGSTART: 11,
-                        KEY_IMGEND: 32,
+                        KEY_IMGSTART: 25,
+                        KEY_IMGEND: 35,
                     },
                 ]
             },
@@ -1267,11 +1267,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 13,
-                    },
-                    {
-                        KEY_IMGSTART: 14,
-                        KEY_IMGEND: 28,
+                        KEY_IMGEND: 35,
                     },
                 ]
             },
@@ -1280,11 +1276,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 11,
-                    },
-                    {
-                        KEY_IMGSTART: 12,
-                        KEY_IMGEND: 32,
+                        KEY_IMGEND: 16,
                     },
                 ]
             },
@@ -1293,11 +1285,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 11,
-                    },
-                    {
-                        KEY_IMGSTART: 12,
-                        KEY_IMGEND: 33,
+                        KEY_IMGEND: 31,
                     },
                 ]
             },
