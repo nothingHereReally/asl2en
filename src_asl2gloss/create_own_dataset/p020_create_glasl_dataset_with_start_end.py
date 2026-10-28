@@ -2890,8 +2890,16 @@ VIDEO_LIST: list= [
                 KEY_FILE: 'doctor_0001.mp4',
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 5,
-                        KEY_IMGEND: 42,
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 11,
+                    },
+                    {
+                        KEY_IMGSTART: 12,
+                        KEY_IMGEND: 41,
+                    },
+                    {
+                        KEY_IMGSTART: 42,
+                        KEY_IMGEND: 67,
                     },
                 ]
             },
@@ -2900,7 +2908,15 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 33,
+                        KEY_IMGEND: 16,
+                    },
+                    {
+                        KEY_IMGSTART: 17,
+                        KEY_IMGEND: 49,
+                    },
+                    {
+                        KEY_IMGSTART: 50,
+                        KEY_IMGEND: 83,
                     },
                 ]
             },
@@ -2909,7 +2925,15 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 20,
+                        KEY_IMGEND: 10,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 36,
+                    },
+                    {
+                        KEY_IMGSTART: 41,
+                        KEY_IMGEND: 63,
                     },
                 ]
             },
@@ -2918,7 +2942,15 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 29,
+                        KEY_IMGEND: 9,
+                    },
+                    {
+                        KEY_IMGSTART: 14,
+                        KEY_IMGEND: 41,
+                    },
+                    {
+                        KEY_IMGSTART: 44,
+                        KEY_IMGEND: 61,
                     },
                 ]
             },
@@ -2927,11 +2959,11 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 13,
+                        KEY_IMGEND: 26,
                     },
                     {
-                        KEY_IMGSTART: 14,
-                        KEY_IMGEND: 36,
+                        KEY_IMGSTART: 30,
+                        KEY_IMGEND: 48,
                     },
                 ]
             },
@@ -2939,16 +2971,16 @@ VIDEO_LIST: list= [
                 KEY_FILE: 'doctor_0006.mp4',
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 1,
-                        KEY_IMGEND: 17,
+                        KEY_IMGSTART: 9,
+                        KEY_IMGEND: 36,
                     },
                     {
-                        KEY_IMGSTART: 18,
-                        KEY_IMGEND: 25,
+                        KEY_IMGSTART: 37,
+                        KEY_IMGEND: 60,
                     },
                     {
-                        KEY_IMGSTART: 35,
-                        KEY_IMGEND: 40,
+                        KEY_IMGSTART: 61,
+                        KEY_IMGEND: 81,
                     },
                 ]
             },
@@ -2956,12 +2988,12 @@ VIDEO_LIST: list= [
                 KEY_FILE: 'doctor_0007.mp4',
                 KEY_IMG_VALID: [
                     {
-                        KEY_IMGSTART: 2,
-                        KEY_IMGEND: 8,
+                        KEY_IMGSTART: 1,
+                        KEY_IMGEND: 31,
                     },
                     {
-                        KEY_IMGSTART: 13,
-                        KEY_IMGEND: 19,
+                        KEY_IMGSTART: 32,
+                        KEY_IMGEND: 80,
                     },
                 ]
             },
@@ -2970,7 +3002,11 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 32,
+                        KEY_IMGEND: 35,
+                    },
+                    {
+                        KEY_IMGSTART: 36,
+                        KEY_IMGEND: 71,
                     },
                 ]
             },
@@ -2979,11 +3015,11 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 16,
+                        KEY_IMGEND: 30,
                     },
                     {
-                        KEY_IMGSTART: 17,
-                        KEY_IMGEND: 41,
+                        KEY_IMGSTART: 31,
+                        KEY_IMGEND: 70,
                     },
                 ]
             },
@@ -2992,15 +3028,11 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 8,
+                        KEY_IMGEND: 32,
                     },
                     {
-                        KEY_IMGSTART: 12,
-                        KEY_IMGEND: 23,
-                    },
-                    {
-                        KEY_IMGSTART: 25,
-                        KEY_IMGEND: 41,
+                        KEY_IMGSTART: 33,
+                        KEY_IMGEND: 64,
                     },
                 ]
             },
