@@ -2486,7 +2486,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 59,
+                        KEY_IMGEND: 63,
                     },
                 ]
             },
@@ -2504,7 +2504,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 30,
+                        KEY_IMGEND: 49,
                     },
                 ]
             },
@@ -2513,7 +2513,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 36,
+                        KEY_IMGEND: 38,
                     },
                 ]
             },
@@ -2522,7 +2522,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 42,
+                        KEY_IMGEND: 58,
                     },
                 ]
             },
@@ -2531,7 +2531,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 31,
+                        KEY_IMGEND: 41,
                     },
                 ]
             },
@@ -2540,7 +2540,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 37,
+                        KEY_IMGEND: 35,
                     },
                 ]
             },
@@ -2549,7 +2549,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 34,
+                        KEY_IMGEND: 57,
                     },
                 ]
             },
@@ -2558,7 +2558,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 42,
+                        KEY_IMGEND: 65,
                     },
                 ]
             },
@@ -2567,7 +2567,7 @@ VIDEO_LIST: list= [
                 KEY_IMG_VALID: [
                     {
                         KEY_IMGSTART: 1,
-                        KEY_IMGEND: 36,
+                        KEY_IMGEND: 62,
                     },
                 ]
             },
