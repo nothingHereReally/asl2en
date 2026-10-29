@@ -1,16 +1,16 @@
-from json import dump as writeJson
-from mediapipe.python.solutions.holistic import Holistic
+from json import dump as writeJson, load as loadJson
 from pathlib import Path
-from typing import Any
 import cv2
 import numpy as np
 
 
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
-DS_DIR: Path= PROJ_ROOT /"dataset" /"glasl"
-VIDEO_DIR: Path= DS_DIR /"glasl_v4"
-LANDMARK_DIR: Path= DS_DIR /"glasl_v4_landmark"
-SKELETON_DIR: Path= DS_DIR /"glasl_v4_skeleton"
+DS_DIR: Path= PROJ_ROOT /"dataset" /"glasl_verified"
+VIDEO_DIR: Path= DS_DIR /"videos"
+IN_LANDMARK_DIR: Path= DS_DIR /"investigate_landmark"
+IN_SKELETON_DIR: Path= DS_DIR /"investigate_skeleton"
+OUT_LANDMARK_DIR: Path= DS_DIR /"ds_landmark"
+OUT_SKELETON_DIR: Path= DS_DIR /"ds_skeleton"
 KEY_G: str= 'gloss'
 KEY_VIDS: str= 'videos'
 KEY_LANDMARK: str= 'landmark'
@@ -29,14 +29,11 @@ KEY_RHAND: str= 'right_hand'
 KEY_IMG_VALID: str= 'valid_images'
 KEY_IMGSTART: str= 'start' # counting is 1, 2, 3, ..., NOT --> 0, 1, 2, ....
 KEY_IMGEND: str= 'end'     # counting is 1, 2, 3, ..., NOT --> 0, 1, 2, ....
+KEY_PFOLDER_FROM: str= 'parent_folder_from'
 KEY_PFOLDER: str= 'parent_folder'
 IMG_SIZE: int= 158
-MPH_fph: Holistic= Holistic(
-    static_image_mode=True,
-    model_complexity=2,
-    min_detection_confidence=0.55,
-    min_tracking_confidence=0.55,
-)
+QUANTITY_FRAME: int= 8
+MOD_PART_3: tuple= (2, 3, 4, 5, 6)
 FACE_CONNECTIONS: tuple= (
     (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
     (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
@@ -3047,272 +3044,6 @@ def get_left_hand(landmark: np.ndarray) -> np.ndarray:
     return landmark[..., 36+8:36+8+21, :].copy()
 def get_right_hand(landmark: np.ndarray) -> np.ndarray:
     return landmark[..., -21:, :].copy()
-def part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
-    # xs, ys= zip(*landmarks)
-    xs= list(map(lambda el: el[0], landmarks))
-    ys= list(map(lambda el: el[1], landmarks))
-    min_x, min_y= min(xs), min(ys)
-    xNeedForward: bool= min_x<0.0
-    yNeedForward: bool= min_y<0.0
-    if xNeedForward or yNeedForward:
-        landmarks= [(
-            x -min_x    if xNeedForward    else x,
-            y -min_y    if yNeedForward    else y
-        ) for x, y in landmarks]
-    del xs, ys, min_x, min_y, xNeedForward, yNeedForward
-
-    max_xy: float= max(
-        max(x for x, _ in landmarks),
-        max(y for _, y in landmarks)
-    )
-    if max_xy>1:
-        landmarks= [(
-            x/max_xy,
-            y/max_xy
-        ) for x, y in landmarks]
-
-    return landmarks
-def part2_beSquareRatioOnImage(landmarks: list[tuple[float, float]], original_shape: tuple[int, int]) -> list[tuple[float, float]]:
-    height, width= original_shape
-    if height==width:
-        return landmarks
-
-    if width<height: # portrait, change2withRespect2Height
-        scale: float= width/height
-        return [(
-            x*scale,
-            y
-        ) for x, y in landmarks]
-
-    # landscape, change2withRespect2Width
-    scale: float= height/width
-    return [(
-        x,
-        y*scale
-    ) for x, y in landmarks]
-def part3_zoomInOutForPadding(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
-    ### 2) zoom in/out with padding 0.05 each side( with respecting orig aspect ratio )
-    # zoom in/out for padding be 10% each side with respect to original aspect ratio
-    # ie.:
-    # ---- top/bottom pad 0.02, leftSide( fromPerspectiveOfSomeoneReadingThis ) pad 0.02: if wx < hy
-    # ---- top pad 0.02, leftSide/right pad 0.02: if hy < wx
-    # pad: float= 0.05
-    pad: float= 4.0/158.0
-    # xs, ys = zip(*landmarks)
-    xs: list= list(map(lambda el: el[0], landmarks))
-    ys: list= list(map(lambda el: el[1], landmarks))
-    # xs= list(filter(lambda el: el!=0, xs))
-    # ys= list(filter(lambda el: el!=0, ys))
-    if len(xs)==0 or len(ys)==0:
-        return landmarks
-    min_x, min_y=    min(xs), min(ys)
-    max_x, max_y=    max(xs), max(ys)
-    scale: float= (1  -2*pad)/max(
-        max_x -min_x,
-        max_y -min_y
-    )
-    return [(
-        # (x -min_x)    *scale    +pad  if x!=0 else x,
-        # (y -min_y)    *scale    +pad  if y!=0 else y
-        (x -min_x)    *scale    +pad,
-        (y -min_y)    *scale    +pad
-    ) for x, y in landmarks]
-def part4_centerLandmarkVerticallyHorizontally(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
-    ### 3) center landmark with same aspect ratio as original
-    # center horizontally and vertically, since done padding then just
-    # move to right/down
-    # xs, ys = zip(*landmarks)
-    xs: list= list(map(lambda el: el[0], landmarks))
-    ys: list= list(map(lambda el: el[1], landmarks))
-    # xs= list(filter(lambda el: el!=0, xs))
-    # ys= list(filter(lambda el: el!=0, ys))
-    if len(xs)==0 or len(ys)==0:
-        return landmarks
-    shift_x: float=  0.5    -(min(xs) +max(xs))  /2
-    shift_y: float=  0.5    -(min(ys) +max(ys))  /2
-
-    return [(
-        # x +shift_x  if x!=0 else x,
-        # y +shift_y  if y!=0 else y
-        x +shift_x,
-        y +shift_y
-    ) for x, y in landmarks]
-def normalizeLandmarks(landmarks: list[tuple[float, float]], original_shape: tuple) -> list[tuple[float, float]]:
-    '''
-    landmarks is an array eg. of shape (86, 2)
-    original_shape is tuple (HEIGHT, WIDTH)
-    '''
-    # lmark_fph.face_landmarks.landmark
-    # lmark_fph.pose_landmarks.landmark
-    # lmark_fph.left_hand_landmarks.landmark
-    # lmark_fph.right_hand_landmarks.landmark
-    # logic resize to --> 480 x 480 x 3
-    #     0) all coords be greater than|= 0.0 and less than|= 1.0
-    #         a) lmarks x,y overwrite to [0.0, 1.0] only
-    #         b) has x < 0.0 then ALL_x+abs(min(x_neg)), ie. move right
-    #         b) has y < 0.0 then ALL_y+abs(min(y_neg)), ie. move down
-    #         c) ALL_coords_x_y/highest_value
-    #         d) eg. 1.74 then ALL_coords_x_y/1.74
-    #         e) for all be scaled down with same aspect ratio as orig
-    #         f) NOW all( x, y ) are 0.0 to 1.0 value only
-    #     1) from old img ratio to new square img ratio
-    #         a) if owx < ohy: all_x= all_x* (480*owx/ohy)/480
-    #         b) if ohy < owx: all_y= all_y* (480*ohy/owx)/480
-    #     2) zoom in/out with padding 0.05 each side( with respecting orig aspect ratio )
-    #         a) if too far zoom in
-    #         b) if too close zoom out
-    #         c) goal lowest val 0.05 both(x,y) .ie padding
-    #         d) goal highest val 0.95 both(x,y)
-    #         e) ie. max(lm_wx, lm_hy) == 0.9
-    #     3) center landmark with same aspect ratio as original
-    #         a) min_wx_hy= min( wx, hy ); max_wx_hy= max( wx, hy )
-    #         b) min_wx_hy as mn; max_wx_hy as mx
-    #         c) if mn is wx, all X +( (mx-mn)/(mx*2) )
-    #         d) if mn is hy, all Y +( (mx-mn)/(mx*2) )
-    assert 1<len(original_shape) # incorrect use of normalizeLandmarks(...), mandatory 1<len(original_shape)
-    landmarks= part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(landmarks)
-    landmarks= part2_beSquareRatioOnImage(
-        landmarks,
-        (original_shape[0], original_shape[1])
-    )
-    landmarks= part3_zoomInOutForPadding(landmarks)
-    landmarks= part4_centerLandmarkVerticallyHorizontally(landmarks)
-
-
-    return landmarks
-def normalizeWorthyLandmarkWrapper(
-    landmarks: list[tuple[float, float]], # order --> face_pose_left_right_hand
-    original_shape: tuple,
-    hasLandmarks: dict
-) -> list[tuple[float, float]]:
-    if not (hasLandmarks["face"] or hasLandmarks["pose"] or hasLandmarks["left_hand"] or hasLandmarks["right_hand"]):
-        return landmarks
-    norm: list= []
-    if hasLandmarks['face']:
-        norm.extend(landmarks[
-            :len(WORTHY_FACE_IDX)
-        ])
-    if hasLandmarks['pose']:
-        norm.extend(landmarks[
-            len(WORTHY_FACE_IDX):
-            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX)
-        ])
-    if hasLandmarks['left_hand']:
-        norm.extend(landmarks[
-            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
-            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
-        ])
-    if hasLandmarks['right_hand']:
-        norm.extend(landmarks[
-            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
-        ])
-    norm= normalizeLandmarks(landmarks=norm, original_shape=original_shape)
-
-    out_landmark: list= []
-    # -- face landmarks --
-    if hasLandmarks["face"]:
-        out_landmark.extend(norm[:len(WORTHY_FACE_IDX)])
-    else:
-        out_landmark.extend(np.zeros(
-            (
-                len(WORTHY_FACE_IDX),
-                2
-            )).tolist()
-        )
-
-    # -- pose landmarks --
-    if hasLandmarks["pose"]:
-        if hasLandmarks["face"]:
-            out_landmark.extend(norm[
-                len(WORTHY_FACE_IDX):
-                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX)
-            ])
-        else:
-            out_landmark.extend(norm[
-                :len(WORTHY_POSE_IDX)
-            ])
-    else:
-        out_landmark.extend(np.zeros(
-            (
-                len(WORTHY_POSE_IDX),
-                2
-            )).tolist())
-
-    # -- left hand landmarks --
-    if hasLandmarks["left_hand"]:
-        if hasLandmarks["face"] and hasLandmarks["pose"]:
-            out_landmark.extend(norm[
-                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
-                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
-            ])
-        elif hasLandmarks["face"]:
-            out_landmark.extend(norm[
-                len(WORTHY_FACE_IDX):
-                len(WORTHY_FACE_IDX) +QUANTITY_HAND_LMARK
-            ])
-        elif hasLandmarks["pose"]:
-            out_landmark.extend(norm[
-                len(WORTHY_POSE_IDX):
-                len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
-            ])
-        else:
-            out_landmark.extend(norm[
-                :QUANTITY_HAND_LMARK
-            ])
-    else:
-        out_landmark.extend(np.zeros(
-            (
-                QUANTITY_HAND_LMARK,
-                2
-            )).tolist())
-
-    # -- right hand landmarks --
-    if hasLandmarks["right_hand"]:
-        if hasLandmarks["face"] and hasLandmarks["pose"] and hasLandmarks["left_hand"]:
-            out_landmark.extend(norm[
-                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
-            ])
-        elif hasLandmarks["face"] and hasLandmarks["pose"]:
-            out_landmark.extend(norm[
-                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
-            ])
-        elif hasLandmarks["face"] and hasLandmarks["left_hand"]:
-            out_landmark.extend(norm[
-                len(WORTHY_FACE_IDX) +QUANTITY_HAND_LMARK:
-            ])
-        elif hasLandmarks["pose"] and hasLandmarks["left_hand"]:
-            out_landmark.extend(norm[
-                len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
-            ])
-        elif hasLandmarks["face"]:
-            out_landmark.extend(norm[
-                len(WORTHY_FACE_IDX):
-            ])
-        elif hasLandmarks["pose"]:
-            out_landmark.extend(norm[
-                len(WORTHY_POSE_IDX):
-            ])
-        elif hasLandmarks["left_hand"]:
-            out_landmark.extend(norm[
-                QUANTITY_HAND_LMARK:
-            ])
-        else:
-            out_landmark.extend(norm)
-    else:
-        out_landmark.extend(np.zeros(
-            (
-                QUANTITY_HAND_LMARK,
-                2
-            )).tolist())
-
-    # out_landmark shape:
-    # (
-    #     len(WORTHY_FACE_IDX)
-    #     +len(WORTHY_POSE_IDX)
-    #     +QUANTITY_HAND_LMARK *2,
-    #     2
-    # )
-    return out_landmark # ie. output shape (86, 2)
 def isOkPlot(coord: tuple) -> bool:
     # x and y coordinates
     # mandatory be greater than or equal to Zero
@@ -3373,63 +3104,6 @@ def drawSkeletonImg(image: np.ndarray, \
             del pA
             del pB
     return image
-def extract_lm_from_mph(lmark_mph, orig_shape: tuple) -> list[tuple[float, float]]:
-    landmark__face_pose_left_right_hand: list= np.zeros((
-        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +(QUANTITY_HAND_LMARK*2),
-        2
-    )).tolist()
-    if lmark_mph.face_landmarks!=None \
-        or lmark_mph.pose_landmarks!=None \
-        or lmark_mph.left_hand_landmarks!=None \
-        or lmark_mph.right_hand_landmarks!=None:
-        landmark__face_pose_left_right_hand= list()
-        # here possible -2.0<= i[1].x <=2.0, mostly on pose
-        # here possible -2.0<= i[1].y <=2.0, mostly on pose
-        # that's why next force be 0.0<= all <=1.0
-
-        # ---- face landmarks ----
-        if lmark_mph.face_landmarks != None:
-            for idx, el in enumerate(lmark_mph.face_landmarks.landmark):
-                if idx in WORTHY_FACE_IDX:
-                    landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
-        else:
-            landmark__face_pose_left_right_hand.extend(np.zeros((len(WORTHY_FACE_IDX), 2)).tolist())
-
-        # ---- pose landmarks ----
-        if lmark_mph.pose_landmarks != None:
-            for idx, el in enumerate(lmark_mph.pose_landmarks.landmark):
-                if idx in WORTHY_POSE_IDX:
-                    landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
-        else:
-            landmark__face_pose_left_right_hand.extend(np.zeros((len(WORTHY_POSE_IDX), 2)).tolist())
-
-        # ---- left hand landmarks ----
-        if lmark_mph.left_hand_landmarks != None:
-            for el in lmark_mph.left_hand_landmarks.landmark:
-                landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
-        else:
-            landmark__face_pose_left_right_hand.extend(np.zeros((QUANTITY_HAND_LMARK, 2)).tolist())
-
-        # ---- right hand landmarks ----
-        if lmark_mph.right_hand_landmarks != None:
-            for el in lmark_mph.right_hand_landmarks.landmark:
-                landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
-        else:
-            landmark__face_pose_left_right_hand.extend(np.zeros((QUANTITY_HAND_LMARK, 2)).tolist())
-
-
-        landmark__face_pose_left_right_hand= normalizeWorthyLandmarkWrapper(
-            landmark__face_pose_left_right_hand,
-            orig_shape,
-            {
-                'face': lmark_mph.face_landmarks != None,
-                'pose': lmark_mph.pose_landmarks != None,
-                'left_hand': lmark_mph.left_hand_landmarks != None,
-                'right_hand': lmark_mph.right_hand_landmarks != None,
-            }
-        )
-    # return list of length 86, each is tuple of length 2
-    return landmark__face_pose_left_right_hand
 def drawFacePoseHandFromLM(img_write_to: np.ndarray, landmark: list[tuple[float, float]], hasLandmark: dict) -> np.ndarray:
     # ---- face landmarks ----
     if hasLandmark[KEY_FACE]:
@@ -3484,83 +3158,72 @@ def drawFacePoseHandFromLM(img_write_to: np.ndarray, landmark: list[tuple[float,
 
 
 def init_dirs() -> None:
-    if LANDMARK_DIR.exists():
-        raise NotImplementedError(f"Please delete {LANDMARK_DIR}, this will be created for you.")
-    if SKELETON_DIR.exists():
-        raise NotImplementedError(f"Please delete {SKELETON_DIR}, this will be created for you.")
-    LANDMARK_DIR.mkdir()
-    SKELETON_DIR.mkdir()
-def has3landmarks(mph_result) -> bool:
-    return mph_result.face_landmarks != None and \
-           mph_result.pose_landmarks != None and \
-           mph_result.left_hand_landmarks != None and \
-           mph_result.right_hand_landmarks != None
-def extract_lm_from_video(video_filename: str) -> tuple:
+    err: list[str]= []
+    if not IN_LANDMARK_DIR.exists():
+        err.append(f"Missing {IN_LANDMARK_DIR} folder.")
+    if not IN_SKELETON_DIR.exists():
+        err.append(f"Missing {IN_SKELETON_DIR} folder.")
+
+    if not OUT_LANDMARK_DIR.exists():
+        err.append(f"Please delete {OUT_LANDMARK_DIR}, this will be created for you.")
+    if not OUT_SKELETON_DIR.exists():
+        err.append(f"Please delete {OUT_SKELETON_DIR}, this will be created for you.")
+    OUT_LANDMARK_DIR.mkdir()
+    OUT_SKELETON_DIR.mkdir()
+def get_past_annotations() -> list:
+    with open(DS_DIR /"investigate_landmark.json", 'r') as f:
+        ds_landmark= loadJson(f)
+    return ds_landmark
+def has_atleast1hand(annotations: dict) -> bool:
+    return annotations[KEY_FACE] and \
+           annotations[KEY_POSE] and \
+           (annotations[KEY_LHAND] or \
+           annotations[KEY_RHAND])
+# video_landmarks, video_annotations= (
+#     IN_LANDMARK_DIR,
+#     a_video[KEY_FILE][:-4],
+#     past_landmark[idx_gloss][KEY_VIDS][idx_video][KEY_LANDMARK],
+# )
+def get_past_landmarks(
+    abs_root_path: Path,
+    parent_folder: str,
+    landmarks: list[dict],
+) -> list:
     '''
-    video_filename, eg. file.mp4
-    --------------
-    return a tuple of (out_landmarks, out_annotations)
+    returns (landmarks, annotations)
+    landmarks is a list[numpy.ndarray]
+    annotations is a list[dict]
     '''
-    video_data: cv2.VideoCapture= cv2.VideoCapture(f"{VIDEO_DIR /video_filename}")
     out_landmarks: list= []
-    out_annotations: list= []
-    for _ in range(int(video_data.get(cv2.CAP_PROP_FRAME_COUNT))):
-        has_img, image= video_data.read()
-        if has_img:
-            image= cv2.cvtColor(src=image, code=cv2.COLOR_BGR2RGB)
-            mph_result: Any= MPH_fph.process(image)
-            norm_landmarks: list[tuple[float, float]]= extract_lm_from_mph(mph_result, orig_shape=image.shape) # list of shape (86, 2)
-            if len(out_landmarks) == 0 or has3landmarks(mph_result):
-                out_landmarks.append(norm_landmarks)
-                out_annotations.append({
-                    KEY_FACE: mph_result.face_landmarks != None,
-                    KEY_POSE: mph_result.pose_landmarks != None,
-                    KEY_LHAND: mph_result.left_hand_landmarks != None,
-                    KEY_RHAND: mph_result.right_hand_landmarks != None,
-                })
-            elif not has3landmarks(mph_result):
-                new_landmark: list= []
-                new_annotation: dict= {
-                    KEY_FACE: False,
-                    KEY_POSE: False,
-                    KEY_LHAND: False,
-                    KEY_RHAND: False,
-                }
-                if mph_result.face_landmarks == None:
-                    new_landmark.extend(get_face(np.array(out_landmarks[-1])).tolist())
-                    new_annotation[KEY_FACE]= out_annotations[-1][KEY_FACE]
-                else:
-                    new_landmark.extend(get_face(np.array(norm_landmarks)).tolist())
-                    new_annotation[KEY_FACE]= True
+    for idx, an_img_landmark in enumerate(landmarks):
+        if has_atleast1hand(an_img_landmark) or idx == 0:
+            with open(abs_root_path /parent_folder /an_img_landmark[KEY_FILE], 'rb') as f:
+                out_landmarks.append( np.load(f) )
+        else:
+            out_landmarks.append(out_landmarks[-1].copy())
 
-                if mph_result.pose_landmarks == None:
-                    new_landmark.extend(get_pose(np.array(out_landmarks[-1])).tolist())
-                    new_annotation[KEY_POSE]= out_annotations[-1][KEY_POSE]
-                else:
-                    new_landmark.extend(get_pose(np.array(norm_landmarks)).tolist())
-                    new_annotation[KEY_POSE]= True
-
-                if mph_result.left_hand_landmarks == None:
-                    new_landmark.extend(get_left_hand(np.array(out_landmarks[-1])).tolist())
-                    new_annotation[KEY_LHAND]= out_annotations[-1][KEY_LHAND]
-                else:
-                    new_landmark.extend(get_left_hand(np.array(norm_landmarks)).tolist())
-                    new_annotation[KEY_LHAND]= True
-
-                if mph_result.right_hand_landmarks == None:
-                    new_landmark.extend(get_right_hand(np.array(out_landmarks[-1])).tolist())
-                    new_annotation[KEY_RHAND]= out_annotations[-1][KEY_RHAND]
-                else:
-                    new_landmark.extend(get_right_hand(np.array(norm_landmarks)).tolist())
-                    new_annotation[KEY_RHAND]= True
-                out_landmarks.append(new_landmark)
-                out_annotations.append(new_annotation)
-
-    return (out_landmarks, out_annotations)
+    return out_landmarks
 def process_videos_ds() -> tuple:
     ds_landmark: list= []
     ds_skeleton: list= []
-    for a_gloss in VIDEO_LIST:
+    '''
+    TODO: later blah blah
+    del left hand
+        drink
+        who
+        candy
+        cousin
+        feel
+        mine_my
+        me_i
+        stomach
+        need
+        see
+        feel
+        fever
+    '''
+    past_landmark: list= get_past_annotations()
+    for idx_gloss, a_gloss in enumerate(VIDEO_LIST):
         ds_landmark.append({
             KEY_G: a_gloss[KEY_G],
             KEY_VIDS: [],
@@ -3570,28 +3233,34 @@ def process_videos_ds() -> tuple:
             KEY_VIDS: [],
         })
         for idx_video, a_video in enumerate(a_gloss[KEY_VIDS]):
-            video_landmarks, video_annotations= extract_lm_from_video(a_video[KEY_FILE])
+            video_annotations: dict= past_landmark[idx_gloss][KEY_VIDS][idx_video]
+            video_landmarks: list= get_past_landmarks(
+                IN_LANDMARK_DIR,
+                a_video[KEY_FILE][:-4],
+                video_annotations[KEY_LANDMARK],
+            )
+            assert a_video[KEY_FILE] == video_annotations[KEY_FILE]
+            assert a_video[KEY_IMG_VALID][-1][KEY_IMGEND] <= len(video_annotations[KEY_LANDMARK])
             for a_start_end in a_video[KEY_IMG_VALID]:
                 pfolder_name: str= f"{a_video[KEY_FILE][:-4]}_{str(a_start_end[KEY_IMGSTART]).zfill(4)}_{str(a_start_end[KEY_IMGEND]).zfill(4)}"
-                landmark_abs_folder: Path= LANDMARK_DIR /pfolder_name
-                skeleton_abs_folder: Path= SKELETON_DIR /pfolder_name
+                landmark_abs_folder: Path= OUT_LANDMARK_DIR /pfolder_name
+                skeleton_abs_folder: Path= OUT_SKELETON_DIR /pfolder_name
                 landmark_abs_folder.mkdir()
                 skeleton_abs_folder.mkdir()
-                split_what: str= VAL_TRAIN if idx_video<int(RATIO4TRAIN*len(a_gloss[KEY_VIDS])) else VAL_TEST
                 ds_landmark[-1][KEY_VIDS].append({
                     KEY_PFOLDER: pfolder_name,
-                    KEY_SPLIT: split_what,
+                    KEY_SPLIT: video_annotations[KEY_SPLIT],
                     KEY_LANDMARK: [],
                 })
                 ds_skeleton[-1][KEY_VIDS].append({
                     KEY_PFOLDER: pfolder_name,
-                    KEY_SPLIT: split_what,
+                    KEY_SPLIT: video_annotations[KEY_SPLIT],
                     KEY_SKELETON: [],
                 })
                 for idx_init0 in range(a_start_end[KEY_IMGEND] -a_start_end[KEY_IMGSTART]+1):
                     landmark_skeleton_prefix: str= str(idx_init0+1).zfill(8)
                     landmark= video_landmarks[     a_start_end[KEY_IMGSTART]-1   +idx_init0]
-                    annotation= video_annotations[ a_start_end[KEY_IMGSTART]-1   +idx_init0]
+                    annotation= video_annotations[KEY_LANDMARK][ a_start_end[KEY_IMGSTART]-1   +idx_init0]
                     with open(f"{landmark_abs_folder /landmark_skeleton_prefix}.npy", 'wb') as f:
                         np.save(f, landmark)
                     cv2.imwrite(
@@ -3620,9 +3289,9 @@ def process_videos_ds() -> tuple:
 def main() -> None:
     init_dirs()
     ds_landmark, ds_skeleton= process_videos_ds()
-    with open(f"{DS_DIR /"glasl_v4_landmark.json"}", 'w') as f:
+    with open(f"{DS_DIR /"ds_landmark.json"}", 'w') as f:
         writeJson(ds_landmark, f, indent=4)
-    with open(f"{DS_DIR /"glasl_v4_skeleton.json"}", 'w') as f:
+    with open(f"{DS_DIR /"ds_skeleton.json"}", 'w') as f:
         writeJson(ds_skeleton, f, indent=4)
 if __name__=="__main__":
     main()
