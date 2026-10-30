@@ -448,6 +448,119 @@ def q_imgs_greater_than(
         annotations_many.extend(annotations)
         process_from.extend(['from_gt_p3' for _ in range(len(annotations))])
     return (annotations_many, process_from)
+def flip_vertical_x_axis(landmarks) -> np.ndarray:
+    '''
+    landmarks be of shape (INT, ..., 86, 2)
+    '''
+    new_landmark= np.array(landmarks).copy()
+    new_landmark[..., 0]= 1 -new_landmark[..., 0]
+    lhand2rhand: np.ndarray= new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+    ,:].copy()
+    rhand2lhand: np.ndarray= new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+    ,:].copy()
+    new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+    ,:]= rhand2lhand # ie. past was right hand, now be left hand
+    new_landmark[...,
+        len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+    ,:]= lhand2rhand # ie. past was left hand, now be right hand
+
+    # -- flip index pair face
+    # -- ( 12, 28 )
+    tmp= new_landmark[..., 12:13, :].copy()
+    new_landmark[..., 12:13, :]= new_landmark[..., 28:29, :].copy()
+    new_landmark[..., 28:29, :]= tmp
+
+    # -- ( 19, 34 )
+    tmp = new_landmark[..., 19:20, :].copy()
+    new_landmark[..., 19:20, :] = new_landmark[..., 34:35, :].copy()
+    new_landmark[..., 34:35, :] = tmp
+
+    # -- ( 11, 27 )
+    tmp = new_landmark[..., 11:12, :].copy()
+    new_landmark[..., 11:12, :] = new_landmark[..., 27:28, :].copy()
+    new_landmark[..., 27:28, :] = tmp
+
+    # -- ( 21, 35 )
+    tmp = new_landmark[..., 21:22, :].copy()
+    new_landmark[..., 21:22, :] = new_landmark[..., 35:36, :].copy()
+    new_landmark[..., 35:36, :] = tmp
+
+    # -- ( 14, 30 )
+    tmp = new_landmark[..., 14:15, :].copy()
+    new_landmark[..., 14:15, :] = new_landmark[..., 30:31, :].copy()
+    new_landmark[..., 30:31, :] = tmp
+
+    # -- ( 13, 29 )
+    tmp = new_landmark[..., 13:14, :].copy()
+    new_landmark[..., 13:14, :] = new_landmark[..., 29:30, :].copy()
+    new_landmark[..., 29:30, :] = tmp
+
+    # -- ( 10, 26 )
+    tmp = new_landmark[..., 10:11, :].copy()
+    new_landmark[..., 10:11, :] = new_landmark[..., 26:27, :].copy()
+    new_landmark[..., 26:27, :] = tmp
+
+    # -- ( 15, 31 )
+    tmp = new_landmark[..., 15:16, :].copy()
+    new_landmark[..., 15:16, :] = new_landmark[..., 31:32, :].copy()
+    new_landmark[..., 31:32, :] = tmp
+
+    # -- ( 18, 33 )
+    tmp = new_landmark[..., 18:19, :].copy()
+    new_landmark[..., 18:19, :] = new_landmark[..., 33:34, :].copy()
+    new_landmark[..., 33:34, :] = tmp
+
+    # -- (  7, 23 )
+    tmp = new_landmark[..., 7:8, :].copy()
+    new_landmark[..., 7:8, :] = new_landmark[..., 23:24, :].copy()
+    new_landmark[..., 23:24, :] = tmp
+
+    # -- ( 16, 32 )
+    tmp = new_landmark[..., 16:17, :].copy()
+    new_landmark[..., 16:17, :] = new_landmark[..., 32:33, :].copy()
+    new_landmark[..., 32:33, :] = tmp
+
+    # -- (  9, 25 )
+    tmp = new_landmark[..., 9:10, :].copy()
+    new_landmark[..., 9:10, :] = new_landmark[..., 25:26, :].copy()
+    new_landmark[..., 25:26, :] = tmp
+
+    # -- (  8, 24 )
+    tmp = new_landmark[..., 8:9, :].copy()
+    new_landmark[..., 8:9, :] = new_landmark[..., 24:25, :].copy()
+    new_landmark[..., 24:25, :] = tmp
+
+
+
+
+    # -- flip index pair pose
+    # -- ( 37, 36 )
+    tmp = new_landmark[..., 37:38, :].copy()
+    new_landmark[..., 37:38, :] = new_landmark[..., 36:37, :].copy()
+    new_landmark[..., 36:37, :] = tmp
+
+    # -- ( 43, 42 )
+    tmp = new_landmark[..., 43:44, :].copy()
+    new_landmark[..., 43:44, :] = new_landmark[..., 42:43, :].copy()
+    new_landmark[..., 42:43, :] = tmp
+
+    # -- ( 39, 38 )
+    tmp = new_landmark[..., 39:40, :].copy()
+    new_landmark[..., 39:40, :] = new_landmark[..., 38:39, :].copy()
+    new_landmark[..., 38:39, :] = tmp
+
+    # -- ( 41, 40 )
+    tmp = new_landmark[..., 41:42, :].copy()
+    new_landmark[..., 41:42, :] = new_landmark[..., 40:41, :].copy()
+    new_landmark[..., 40:41, :] = tmp
+
+
+    return new_landmark
 
 
 
@@ -543,11 +656,16 @@ def process_videos_ds() -> tuple:
                 pfolder_name: str= f"{a_qf_set[KEY_PFOLDER][:-10]}_{str(idx_a_qf_set+1).zfill(4)}"
                 pfolder_name= f"{pfolder_name}_{a_qf_set[KEY_PFOLDER][-9:]}"
                 pfolder_name= f"{pfolder_name}_{many_sets_from[idx_a_qf_set]}"
+                pfolder_name_flip= f"{pfolder_name}_flip"
 
                 landmark_abs_folder: Path= OUT_LANDMARK_DIR /pfolder_name
                 skeleton_abs_folder: Path= OUT_SKELETON_DIR /pfolder_name
                 landmark_abs_folder.mkdir()
                 skeleton_abs_folder.mkdir()
+                landmark_abs_folder_flip: Path= OUT_LANDMARK_DIR /pfolder_name_flip
+                skeleton_abs_folder_flip: Path= OUT_SKELETON_DIR /pfolder_name_flip
+                landmark_abs_folder_flip.mkdir()
+                skeleton_abs_folder_flip.mkdir()
                 ds_landmark[-1][KEY_VIDS].append({
                     KEY_PFOLDER: pfolder_name,
                     KEY_SPLIT: a_video[KEY_SPLIT],
@@ -563,6 +681,17 @@ def process_videos_ds() -> tuple:
                     parent_folder=a_qf_set[KEY_PFOLDER],
                     landmarks=a_qf_set[KEY_LANDMARK]
                 )
+                ds_landmark[-1][KEY_VIDS].append({
+                    KEY_PFOLDER: pfolder_name_flip,
+                    KEY_SPLIT: a_video[KEY_SPLIT],
+                    KEY_LANDMARK: [],
+                })
+                ds_skeleton[-1][KEY_VIDS].append({
+                    KEY_PFOLDER: pfolder_name_flip,
+                    KEY_SPLIT: a_video[KEY_SPLIT],
+                    KEY_SKELETON: [],
+                })
+                landmarks_data_flip: list= flip_vertical_x_axis(landmarks_data_numpy).tolist()
                 for idx_init0, an_annotation_img in enumerate(a_qf_set[KEY_LANDMARK]):
                     landmark_skeleton_prefix: str= str(idx_init0+1).zfill(8)
                     with open(f"{landmark_abs_folder /landmark_skeleton_prefix}.npy", 'wb') as f:
@@ -575,19 +704,48 @@ def process_videos_ds() -> tuple:
                             hasLandmark=an_annotation_img,
                         ),
                     )
-                    ds_landmark[-1][KEY_VIDS][-1][KEY_LANDMARK].append({
+                    with open(f"{landmark_abs_folder_flip /landmark_skeleton_prefix}.npy", 'wb') as f:
+                        np.save(f, landmarks_data_flip[idx_init0])
+                    cv2.imwrite(
+                        filename=f"{skeleton_abs_folder_flip /landmark_skeleton_prefix}.jpg",
+                        img=drawFacePoseHandFromLM(
+                            img_write_to=np.zeros( (IMG_SIZE, IMG_SIZE, 3), dtype=np.uint8 ),
+                            landmark=landmarks_data_flip[idx_init0],
+                            hasLandmark={
+                                KEY_FACE: an_annotation_img[KEY_FACE],
+                                KEY_POSE: an_annotation_img[KEY_POSE],
+                                KEY_LHAND: an_annotation_img[KEY_RHAND],
+                                KEY_RHAND: an_annotation_img[KEY_LHAND],
+                            },
+                        ),
+                    )
+                    ds_landmark[-1][KEY_VIDS][-2][KEY_LANDMARK].append({
                         KEY_FILE: f"{landmark_skeleton_prefix}.npy",
                         KEY_FACE:  an_annotation_img[KEY_FACE],
                         KEY_POSE:  an_annotation_img[KEY_POSE],
                         KEY_LHAND: an_annotation_img[KEY_LHAND],
                         KEY_RHAND: an_annotation_img[KEY_RHAND],
                     })
-                    ds_skeleton[-1][KEY_VIDS][-1][KEY_SKELETON].append({
+                    ds_skeleton[-1][KEY_VIDS][-2][KEY_SKELETON].append({
                         KEY_FILE: f"{landmark_skeleton_prefix}.jpg",
                         KEY_FACE:  an_annotation_img[KEY_FACE],
                         KEY_POSE:  an_annotation_img[KEY_POSE],
                         KEY_LHAND: an_annotation_img[KEY_LHAND],
                         KEY_RHAND: an_annotation_img[KEY_RHAND],
+                    })
+                    ds_landmark[-1][KEY_VIDS][-1][KEY_LANDMARK].append({
+                        KEY_FILE: f"{landmark_skeleton_prefix}.npy",
+                        KEY_FACE:  an_annotation_img[KEY_FACE],
+                        KEY_POSE:  an_annotation_img[KEY_POSE],
+                        KEY_LHAND: an_annotation_img[KEY_RHAND],
+                        KEY_RHAND: an_annotation_img[KEY_LHAND],
+                    })
+                    ds_skeleton[-1][KEY_VIDS][-1][KEY_SKELETON].append({
+                        KEY_FILE: f"{landmark_skeleton_prefix}.jpg",
+                        KEY_FACE:  an_annotation_img[KEY_FACE],
+                        KEY_POSE:  an_annotation_img[KEY_POSE],
+                        KEY_LHAND: an_annotation_img[KEY_RHAND],
+                        KEY_RHAND: an_annotation_img[KEY_LHAND],
                     })
     return (ds_landmark, ds_skeleton)
 def main() -> None:
