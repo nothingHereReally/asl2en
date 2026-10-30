@@ -598,4 +598,7 @@ def main() -> None:
     with open(f"{DS_DIR /"qf8_ds_skeleton.json"}", 'w') as f:
         writeJson(ds_skeleton, f, indent=4)
 if __name__=="__main__":
+    '''
+    took approx. 5 minutes to finish
+    '''
     main()
