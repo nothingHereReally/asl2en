@@ -2379,18 +2379,27 @@ def main() -> None:
         annotations=gloss_video[KEY_LANDMARK],
     )
     result_score: jnp.ndarray= comparison_score(
-        input=np.array(input_landmarks)[None, ...],
+        input=np.array([
+            np.array(input_landmarks),
+            flip_vertical_x_axis(input_landmarks),
+        ]),
         model=ds_samples,
         mask=mask,
         body2dots=ds_samples_body2dots,
         weights=weights,
     )
-    ranking: list[int]= sort_score(result_score)[0]
+    ranking: list[list[int]]= sort_score(result_score)
     print(f"input --> {label_string} / {parent_folder}")
-    for idx, label_idx in enumerate(ranking[:10]):
+    for idx, label_idx in enumerate(ranking[0][:10]):
         print(
             f"  {str(idx+1).zfill(2)} -- {labels[label_idx].zfill(12).replace('0', ' ')} " +
             f"-- {jnp.min(result_score[0][ label_idx ], axis=-1):.4f}"
+        )
+    print(f"input --> {label_string} / {parent_folder}_flip")
+    for idx, label_idx in enumerate(ranking[1][:10]):
+        print(
+            f"  {str(idx+1).zfill(2)} -- {labels[label_idx].zfill(12).replace('0', ' ')} " +
+            f"-- {jnp.min(result_score[1][ label_idx ], axis=-1):.4f}"
         )
 if __name__=="__main__":
     main()
