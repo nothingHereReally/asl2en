@@ -2336,6 +2336,8 @@ def main() -> None:
     parser.add_argument("parent_folder", help="GLASL parent_folder value to predict")
     parent_folder= parser.parse_args().parent_folder
     label_string: str= str(parent_folder).rsplit('_')[0]
+    if str(parent_folder).rsplit('_')[-1] == 'flip':
+        raise ValueError('Not allowed to include flip to test')
     ds_samples, annotations, _, glasl_landmark= load_ds_samples()
     ds_samples= jnp.expand_dims(jnp.array(ds_samples), axis=0)
     '''
