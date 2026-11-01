@@ -2387,7 +2387,7 @@ def main() -> None:
     print(f"input --> {label_string} / {parent_folder}")
     for idx, label_idx in enumerate(ranking[:10]):
         print(
-            f"  {str(idx+1).zfill(2)} -- {labels[label_idx]}" +
+            f"  {str(idx+1).zfill(2)} -- {labels[label_idx].zfill(12).replace('0', ' ')} " +
             f"-- {jnp.min(result_score[0][ label_idx ], axis=-1):.4f}"
         )
 if __name__=="__main__":
