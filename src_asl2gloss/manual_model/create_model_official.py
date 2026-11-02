@@ -653,12 +653,6 @@ def loadnpfiles(parent_folder: str, landmarks: list) -> np.ndarray:
         with open(f"{LANDMARK_DIR /parent_folder /a_lm[KEY_FILE]}", 'rb') as f:
             out.append(np.load(f))
     return np.array(out)
-def get_model_gloss(gloss: str) -> str:
-    if gloss=='mine_my':
-        return 'mine'
-    if gloss=='me_i':
-        return 'i'
-    return gloss
 def load_ds_samples() -> tuple:
     '''
     return (manual_model, labels)
@@ -685,7 +679,7 @@ def load_ds_samples() -> tuple:
         list_pfolders: list[str]= a_gloss[KEY_LANDMARK]
         assert len(list_pfolders)==len(VERIFIED_DS_DIR[0][KEY_LANDMARK])
         annotations.append({
-            KEY_G: get_model_gloss(ds_gloss[KEY_G]),
+            KEY_G: ds_gloss[KEY_G],
             KEY_LANDMARK: list(
                 {
                     KEY_PFOLDER: el[KEY_PFOLDER],
@@ -715,8 +709,6 @@ def load_ds_samples() -> tuple:
             } for lm_img_el in many_imgs_el[KEY_LANDMARK]],
         } for many_imgs_el in annotations[-1][KEY_LANDMARK]])
         manual_model[-1].extend(flip_vertical_x_axis(manual_model[-1]))
-    for a_gloss in ds_landmark:
-        a_gloss[KEY_G]= get_model_gloss(a_gloss[KEY_G])
     return (manual_model, annotations, ds_landmark)
 def get_left_hand(input: jnp.ndarray) -> jnp.ndarray:
     if input.shape[-1]!=2:
