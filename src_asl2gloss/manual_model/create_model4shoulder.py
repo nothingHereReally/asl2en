@@ -6,9 +6,9 @@ from pathlib import Path
 
 
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
-GLASL_DS_DIR: Path= PROJ_ROOT /"dataset" /"glasl"
+GLASL_DS_DIR: Path= PROJ_ROOT /"dataset" /"glasl_verified"
 WLASL_DS_DIR: Path= PROJ_ROOT /"dataset" /"clean_dataset"
-GLASL_LANDMARK_DIR: Path= GLASL_DS_DIR /"glasl_v4_landmark_ds"
+GLASL_LANDMARK_DIR: Path= GLASL_DS_DIR /"qf8_ds_landmark"
 WLASL_LANDMARK_DIR: Path= WLASL_DS_DIR /"ds_landmark"
 MODEL2SAVE_DIR: Path= PROJ_ROOT /"src_asl2gloss" /"manual_model" /"model"
 GET_SHOULDER_FROM: Path= PROJ_ROOT /"dataset" /"clean_dataset" /"investigate_landmark" /"book_07072" /"00000001.npy"
@@ -1467,8 +1467,14 @@ def load_ds_samples() -> tuple:
     glasl_landmark: list= []
     with open(f"{WLASL_DS_DIR /'ds_landmark.json'}", 'r') as f:
         ds_landmark= loadJson(f)
-    with open(f"{GLASL_DS_DIR /'glasl_v4_landmark_ds.json'}", 'r') as f:
+    with open(f"{GLASL_DS_DIR /'qf8_ds_landmark.json'}", 'r') as f:
         glasl_landmark= loadJson(f)
+        glasl_landmark= [
+            {
+                KEY_G: el[KEY_G],
+                KEY_LANDMARK: el[KEY_VIDS],
+            } for el in glasl_landmark
+        ]
     manual_model: list= []
     annotations: list= []
     ds_landmark_by_gloss: dict= {
@@ -2321,7 +2327,7 @@ def check_ds_samples_and_shoulder2follow(ds_samples, shoulder2follow) -> None:
                     img=skeleton
                 )
 def init_folders_files() -> None:
-    assert (GLASL_DS_DIR /'glasl_v4_landmark_ds.json').exists()
+    assert (GLASL_DS_DIR /'qf8_ds_landmark.json').exists()
     assert (WLASL_DS_DIR /'ds_landmark.json').exists()
     assert GLASL_LANDMARK_DIR.exists()
     assert WLASL_LANDMARK_DIR.exists()
