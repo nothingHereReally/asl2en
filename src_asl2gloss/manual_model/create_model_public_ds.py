@@ -1315,6 +1315,329 @@ def flip_vertical_x_axis(landmarks) -> np.ndarray:
 
 
     return new_landmark
+def part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    # xs, ys= zip(*landmarks)
+    xs= list(map(lambda el: el[0], landmarks))
+    ys= list(map(lambda el: el[1], landmarks))
+    min_x, min_y= min(xs), min(ys)
+    xNeedForward: bool= min_x<0.0
+    yNeedForward: bool= min_y<0.0
+    if xNeedForward or yNeedForward:
+        landmarks= [(
+            x -min_x    if xNeedForward    else x,
+            y -min_y    if yNeedForward    else y
+        ) for x, y in landmarks]
+    del xs, ys, min_x, min_y, xNeedForward, yNeedForward
+
+    max_xy: float= max(
+        max(x for x, _ in landmarks),
+        max(y for _, y in landmarks)
+    )
+    if max_xy>1:
+        landmarks= [(
+            x/max_xy,
+            y/max_xy
+        ) for x, y in landmarks]
+
+    return landmarks
+def part2_beSquareRatioOnImage(landmarks: list[tuple[float, float]], original_shape: tuple[int, int]) -> list[tuple[float, float]]:
+    height, width= original_shape
+    if height==width:
+        return landmarks
+
+    if width<height: # portrait, change2withRespect2Height
+        scale: float= width/height
+        return [(
+            x*scale,
+            y
+        ) for x, y in landmarks]
+
+    # landscape, change2withRespect2Width
+    scale: float= height/width
+    return [(
+        x,
+        y*scale
+    ) for x, y in landmarks]
+def part3_zoomInOutForPadding(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    ### 2) zoom in/out with padding 0.05 each side( with respecting orig aspect ratio )
+    # zoom in/out for padding be 10% each side with respect to original aspect ratio
+    # ie.:
+    # ---- top/bottom pad 0.02, leftSide( fromPerspectiveOfSomeoneReadingThis ) pad 0.02: if wx < hy
+    # ---- top pad 0.02, leftSide/right pad 0.02: if hy < wx
+    # pad: float= 0.05
+    pad: float= 4.0/158.0
+    # xs, ys = zip(*landmarks)
+    xs: list= list(map(lambda el: el[0], landmarks))
+    ys: list= list(map(lambda el: el[1], landmarks))
+    # xs= list(filter(lambda el: el!=0, xs))
+    # ys= list(filter(lambda el: el!=0, ys))
+    if len(xs)==0 or len(ys)==0:
+        return landmarks
+    min_x, min_y=    min(xs), min(ys)
+    max_x, max_y=    max(xs), max(ys)
+    scale: float= (1  -2*pad)/max(
+        max_x -min_x,
+        max_y -min_y
+    )
+    return [(
+        # (x -min_x)    *scale    +pad  if x!=0 else x,
+        # (y -min_y)    *scale    +pad  if y!=0 else y
+        (x -min_x)    *scale    +pad,
+        (y -min_y)    *scale    +pad
+    ) for x, y in landmarks]
+def part4_centerLandmarkVerticallyHorizontally(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    ### 3) center landmark with same aspect ratio as original
+    # center horizontally and vertically, since done padding then just
+    # move to right/down
+    # xs, ys = zip(*landmarks)
+    xs: list= list(map(lambda el: el[0], landmarks))
+    ys: list= list(map(lambda el: el[1], landmarks))
+    # xs= list(filter(lambda el: el!=0, xs))
+    # ys= list(filter(lambda el: el!=0, ys))
+    if len(xs)==0 or len(ys)==0:
+        return landmarks
+    shift_x: float=  0.5    -(min(xs) +max(xs))  /2
+    shift_y: float=  0.5    -(min(ys) +max(ys))  /2
+
+    return [(
+        # x +shift_x  if x!=0 else x,
+        # y +shift_y  if y!=0 else y
+        x +shift_x,
+        y +shift_y
+    ) for x, y in landmarks]
+def normalizeLandmarks(landmarks: list[tuple[float, float]], original_shape: tuple) -> list[tuple[float, float]]:
+    '''
+    landmarks is an array eg. of shape (86, 2)
+    original_shape is tuple (HEIGHT, WIDTH)
+    '''
+    # lmark_fph.face_landmarks.landmark
+    # lmark_fph.pose_landmarks.landmark
+    # lmark_fph.left_hand_landmarks.landmark
+    # lmark_fph.right_hand_landmarks.landmark
+    # logic resize to --> 480 x 480 x 3
+    #     0) all coords be greater than|= 0.0 and less than|= 1.0
+    #         a) lmarks x,y overwrite to [0.0, 1.0] only
+    #         b) has x < 0.0 then ALL_x+abs(min(x_neg)), ie. move right
+    #         b) has y < 0.0 then ALL_y+abs(min(y_neg)), ie. move down
+    #         c) ALL_coords_x_y/highest_value
+    #         d) eg. 1.74 then ALL_coords_x_y/1.74
+    #         e) for all be scaled down with same aspect ratio as orig
+    #         f) NOW all( x, y ) are 0.0 to 1.0 value only
+    #     1) from old img ratio to new square img ratio
+    #         a) if owx < ohy: all_x= all_x* (480*owx/ohy)/480
+    #         b) if ohy < owx: all_y= all_y* (480*ohy/owx)/480
+    #     2) zoom in/out with padding 0.05 each side( with respecting orig aspect ratio )
+    #         a) if too far zoom in
+    #         b) if too close zoom out
+    #         c) goal lowest val 0.05 both(x,y) .ie padding
+    #         d) goal highest val 0.95 both(x,y)
+    #         e) ie. max(lm_wx, lm_hy) == 0.9
+    #     3) center landmark with same aspect ratio as original
+    #         a) min_wx_hy= min( wx, hy ); max_wx_hy= max( wx, hy )
+    #         b) min_wx_hy as mn; max_wx_hy as mx
+    #         c) if mn is wx, all X +( (mx-mn)/(mx*2) )
+    #         d) if mn is hy, all Y +( (mx-mn)/(mx*2) )
+    assert 1<len(original_shape) # incorrect use of normalizeLandmarks(...), mandatory 1<len(original_shape)
+    landmarks= part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(landmarks)
+    landmarks= part2_beSquareRatioOnImage(
+        landmarks,
+        (original_shape[0], original_shape[1])
+    )
+    landmarks= part3_zoomInOutForPadding(landmarks)
+    landmarks= part4_centerLandmarkVerticallyHorizontally(landmarks)
+
+
+    return landmarks
+def normalizeWorthyLandmarkWrapper(
+    landmarks: list[tuple[float, float]], # order --> face_pose_left_right_hand
+    original_shape: tuple,
+    hasLandmarks: dict
+) -> list[tuple[float, float]]:
+    if not (hasLandmarks["face"] or hasLandmarks["pose"] or hasLandmarks["left_hand"] or hasLandmarks["right_hand"]):
+        return landmarks
+    norm: list= []
+    if hasLandmarks['face']:
+        norm.extend(landmarks[
+            :len(WORTHY_FACE_IDX)
+        ])
+    if hasLandmarks['pose']:
+        norm.extend(landmarks[
+            len(WORTHY_FACE_IDX):
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX)
+        ])
+    if hasLandmarks['left_hand']:
+        norm.extend(landmarks[
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+        ])
+    if hasLandmarks['right_hand']:
+        norm.extend(landmarks[
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+        ])
+    norm= normalizeLandmarks(landmarks=norm, original_shape=original_shape)
+
+    out_landmark: list= []
+    # -- face landmarks --
+    if hasLandmarks["face"]:
+        out_landmark.extend(norm[:len(WORTHY_FACE_IDX)])
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                len(WORTHY_FACE_IDX),
+                2
+            )).tolist()
+        )
+
+    # -- pose landmarks --
+    if hasLandmarks["pose"]:
+        if hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX)
+            ])
+        else:
+            out_landmark.extend(norm[
+                :len(WORTHY_POSE_IDX)
+            ])
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                len(WORTHY_POSE_IDX),
+                2
+            )).tolist())
+
+    # -- left hand landmarks --
+    if hasLandmarks["left_hand"]:
+        if hasLandmarks["face"] and hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+            ])
+        elif hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+                len(WORTHY_FACE_IDX) +QUANTITY_HAND_LMARK
+            ])
+        elif hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX):
+                len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+            ])
+        else:
+            out_landmark.extend(norm[
+                :QUANTITY_HAND_LMARK
+            ])
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                QUANTITY_HAND_LMARK,
+                2
+            )).tolist())
+
+    # -- right hand landmarks --
+    if hasLandmarks["right_hand"]:
+        if hasLandmarks["face"] and hasLandmarks["pose"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+            ])
+        elif hasLandmarks["face"] and hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+            ])
+        elif hasLandmarks["face"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +QUANTITY_HAND_LMARK:
+            ])
+        elif hasLandmarks["pose"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+            ])
+        elif hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+            ])
+        elif hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX):
+            ])
+        elif hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                QUANTITY_HAND_LMARK:
+            ])
+        else:
+            out_landmark.extend(norm)
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                QUANTITY_HAND_LMARK,
+                2
+            )).tolist())
+
+    # out_landmark shape:
+    # (
+    #     len(WORTHY_FACE_IDX)
+    #     +len(WORTHY_POSE_IDX)
+    #     +QUANTITY_HAND_LMARK *2,
+    #     2
+    # )
+    return out_landmark # ie. output shape (86, 2)
+def rm_left_hand(landmarks: np.ndarray) -> np.ndarray:
+    assert landmarks.shape[-2:] == (86, 2)
+    out= landmarks.copy()
+    out[..., 36+8:36+8+21, :]= 0.0
+    return out
+def rm_lhand_wrapper(
+    gloss: str,
+    landmarks: np.ndarray,
+    annotations: list[dict],
+) -> tuple:
+    '''
+    annotations has structure
+    [
+        {
+            KEY_FACE: boolean,
+            KEY_POSE: boolean,
+            KEY_LHAND: boolean,
+            KEY_RHAND: boolean,
+        }
+    ]
+    '''
+    assert landmarks.shape[1:] == (86, 2)
+    if gloss in (
+        'drink',
+        'who',
+        'candy',
+        'cousin',
+        'feel',
+        'mine_my',
+        'me_i',
+        'stomach',
+        'need',
+        'see',
+        'feel',
+        'fever',
+    ):
+        out_landmarks: np.ndarray= rm_left_hand(landmarks)
+        out_annotations: list[dict]= []
+        for idx in range(out_landmarks.shape[0]):
+            out_landmarks[idx]= normalizeWorthyLandmarkWrapper(
+                landmarks=out_landmarks[idx].tolist(),
+                original_shape=(300, 300),
+                hasLandmarks={
+                    KEY_FACE:  annotations[idx][KEY_FACE],
+                    KEY_POSE:  annotations[idx][KEY_POSE],
+                    KEY_LHAND: False,
+                    KEY_RHAND: annotations[idx][KEY_RHAND],
+                }
+            )
+            out_annotations.append({
+                KEY_FACE:  annotations[idx][KEY_FACE],
+                KEY_POSE:  annotations[idx][KEY_POSE],
+                KEY_LHAND: False,
+                KEY_RHAND: annotations[idx][KEY_RHAND],
+            })
+        return (out_landmarks, out_annotations)
+    return (landmarks, annotations)
 def loadnpfiles(
     parent_folder: str,
     landmarks: list,
@@ -1913,11 +2236,17 @@ def test_all_data(
                 ds_elements= ds_elements[batch_size:]
                 ds_labels=   ds_labels[batch_size:]
                 ds_pfolders= ds_pfolders[batch_size:]
-            ds_elements.append(loadnpfiles(
+            a_qf_landmarks= loadnpfiles(
                 parent_folder=a_start_end[KEY_PFOLDER],
                 landmarks=a_start_end[KEY_LANDMARK],
                 landmark_dir=parent_folder_from,
-            ))
+            )
+            a_qf_landmarks, _= rm_lhand_wrapper(
+                gloss=a_gloss[KEY_G],
+                landmarks=a_qf_landmarks,
+                annotations=a_start_end[KEY_LANDMARK]
+            )
+            ds_elements.append(a_qf_landmarks)
             ds_labels.append(idx_gloss)
             ds_pfolders.append(a_start_end[KEY_PFOLDER])
             # -- for flip
