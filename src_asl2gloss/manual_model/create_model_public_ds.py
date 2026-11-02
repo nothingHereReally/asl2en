@@ -5,9 +5,9 @@ from pathlib import Path
 
 
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
-GLASL_DS_DIR: Path= PROJ_ROOT /"dataset" /"glasl"
+GLASL_DS_DIR: Path= PROJ_ROOT /"dataset" /"glasl_verified"
 WLASL_DS_DIR: Path= PROJ_ROOT /"dataset" /"clean_dataset"
-GLASL_LANDMARK_DIR: Path= GLASL_DS_DIR /"glasl_v4_landmark_ds"
+GLASL_LANDMARK_DIR: Path= GLASL_DS_DIR /"qf8_ds_landmark"
 WLASL_LANDMARK_DIR: Path= WLASL_DS_DIR /"ds_landmark"
 MODEL2SAVE_DIR: Path= PROJ_ROOT /"src_asl2gloss" /"manual_model" /"model"
 KEY_G: str= 'gloss'
@@ -1664,8 +1664,12 @@ def load_ds_samples() -> tuple:
     glasl_landmark: list= []
     with open(f"{WLASL_DS_DIR /'ds_landmark.json'}", 'r') as f:
         ds_landmark= loadJson(f)
-    with open(f"{GLASL_DS_DIR /'glasl_v4_landmark_ds.json'}", 'r') as f:
+    with open(f"{GLASL_DS_DIR /'qf8_ds_landmark.json'}", 'r') as f:
         glasl_landmark= loadJson(f)
+        glasl_landmark= [{
+            KEY_G: el[KEY_G],
+            KEY_LANDMARK: el[KEY_VIDS]
+        } for el in glasl_landmark]
     manual_model: list= []
     annotations: list= []
     ds_landmark_by_gloss: dict= {
@@ -2363,15 +2367,15 @@ def main() -> None:
     #     weights=weights,
     #     annotations=annotations,
     # )
-    test_all_data(
-        model=ds_samples,
-        mask=mask,
-        body2dots=ds_samples_body2dots,
-        weights=weights,
-        model_annotations=labels,
-        annotations=wlasl_landmark,
-        parent_folder_from=WLASL_LANDMARK_DIR,
-    )
+    # test_all_data(
+    #     model=ds_samples,
+    #     mask=mask,
+    #     body2dots=ds_samples_body2dots,
+    #     weights=weights,
+    #     model_annotations=labels,
+    #     annotations=wlasl_landmark,
+    #     parent_folder_from=WLASL_LANDMARK_DIR,
+    # )
     test_all_data(
         model=ds_samples,
         mask=mask,
