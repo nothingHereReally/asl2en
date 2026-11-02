@@ -129,7 +129,7 @@ WORTHY_FACE_IDX: tuple= (
 )
 WORTHY_POSE_IDX: tuple= (11,12,13,14,15,16,23,24)
 QUANTITY_HAND_LMARK: int= 21
-GLOSS_ONE_HAND: tuple[bool]= (
+GLOSS_ONE_HAND: tuple[bool, ...]= (
     False, # -- book
     True,  # -- drink
     False, # -- computer
