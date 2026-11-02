@@ -5,12 +5,17 @@ from pathlib import Path
 
 
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
-DS_DIR: Path= PROJ_ROOT /"dataset" /"clean_dataset"
-LANDMARK_DIR: Path= DS_DIR /"ds_landmark"
+GLASL_DS_DIR: Path= PROJ_ROOT /"dataset" /"glasl_verified"
+WLASL_DS_DIR: Path= PROJ_ROOT /"dataset" /"clean_dataset"
+GLASL_LANDMARK_DIR: Path= GLASL_DS_DIR /"qf8_ds_landmark"
+WLASL_LANDMARK_DIR: Path= WLASL_DS_DIR /"ds_landmark"
 MODEL2SAVE_DIR: Path= PROJ_ROOT /"src_asl2gloss" /"manual_model" /"model"
 KEY_G: str= 'gloss'
 KEY_VIDS: str= 'videos'
 KEY_VFILE: str= 'video_file'
+KEY_PFOLDER_FROM: str= 'parent_folder_from'
+VAL_WLASL: str= 'wlasl'
+VAL_GLASL: str= 'glasl'
 KEY_PFOLDER: str= 'parent_folder'
 KEY_FILE: str= 'file'
 KEY_FACE: str= 'face'
@@ -190,6 +195,7 @@ RIGHT_ARM3DOTS: tuple= (
 VERIFIED_DS_DIR: list= [
     {
         KEY_G: 'book',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -205,6 +211,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'drink',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [0],
         KEY_RHAND: [0],
         KEY_LANDMARK: [
@@ -220,6 +227,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'computer',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -234,7 +242,40 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'computer',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'computer_68028_00059_023_063_from_gt_p2',
+            'computer_69054_00077_020_117_from_gt_p2',
+            'computer_69054_00079_020_117_from_gt_p2',
+            'computer_12331_00204_024_051_from_gt_p3',
+            'computer_12336_00206_021_053_from_gt_p2',
+            'computer_12336_00210_021_053_from_gt_p2',
+            'computer_12314_00224_014_039_from_gt_p2',
+            'computer_12326_00268_013_073_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'computer',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'computer_12326_00267_013_073_from_gt_p2',
+            'computer_12326_00291_013_073_from_gt_p2',
+            'computer_12326_00306_013_073_from_gt_p3',
+            'computer_12326_00312_013_073_from_gt_p3',
+            'computer_81234_00337_001_119_from_gt_p2',
+            'computer_81234_00339_001_119_from_gt_p2',
+            'computer_81235_00542_001_092_from_gt_p2',
+            'computer_81235_00554_001_092_from_gt_p2',
+        ]
+    },
+    {
         KEY_G: 'before',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -249,7 +290,40 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'before',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'before_05730_00002_010_025_from_gt_p2',
+            'before_05729_00066_013_036_from_gt_p2',
+            'before_05727_00077_024_055_from_gt_p2',
+            'before_05727_00084_024_055_from_gt_p3',
+            'before_05739_00103_001_052_from_gt_p2',
+            'before_05739_00109_001_052_from_gt_p2',
+            'before_05739_00110_001_052_from_gt_p2',
+            'before_05747_00139_022_046_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'before',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'before_05747_00142_022_046_from_gt_p2',
+            'before_05747_00143_022_046_from_gt_p2',
+            'before_05747_00140_022_046_from_gt_p2',
+            'before_05748_00150_021_055_from_gt_p2',
+            'before_05748_00154_021_055_from_gt_p2',
+            'before_05748_00155_021_055_from_gt_p2',
+            'before_05748_00156_021_055_from_gt_p2',
+            'before_05750_00185_036_058_from_gt_p2',
+        ]
+    },
+    {
         KEY_G: 'chair',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -264,7 +338,56 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'chair',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'chair_09862_00066_021_078_from_gt_p1',
+            'chair_09862_00067_021_078_from_gt_p2',
+            'chair_09862_00068_021_078_from_gt_p2',
+            'chair_09862_00069_021_078_from_gt_p2',
+            'chair_68580_00169_013_040_from_gt_p2',
+            'chair_68580_00170_013_040_from_gt_p2',
+            'chair_68580_00172_013_040_from_gt_p2',
+            'chair_70263_00190_033_081_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'chair',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'chair_70263_00191_033_081_from_gt_p2',
+            'chair_70263_00192_033_081_from_gt_p2',
+            'chair_68019_00223_017_047_from_gt_p2',
+            'chair_68019_00226_017_047_from_gt_p2',
+            'chair_68019_00227_017_047_from_gt_p2',
+            'chair_09865_00251_007_048_from_gt_p1',
+            'chair_09865_00252_007_048_from_gt_p2',
+            'chair_09865_00253_007_048_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'chair',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'chair_68580_00179_013_040_from_gt_p2',
+            'chair_68580_00184_013_040_from_gt_p3',
+            'chair_70263_00193_033_081_from_gt_p2',
+            'chair_70263_00201_033_081_from_gt_p3',
+            'chair_70263_00205_033_081_from_gt_p3',
+            'chair_68019_00247_017_047_from_gt_p3',
+            'chair_09865_00263_007_048_from_gt_p2',
+            'chair_09865_00272_007_048_from_gt_p3',
+        ]
+    },
+    {
         KEY_G: 'go',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -279,7 +402,40 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'go',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'go_68292_00033_073_098_from_gt_p2',
+            'go_68292_00036_073_098_from_gt_p2',
+            'go_68292_00037_073_098_from_gt_p2',
+            'go_24965_00054_017_037_from_gt_p2',
+            'go_24965_00055_017_037_from_gt_p2',
+            'go_24965_00056_017_037_from_gt_p2',
+            'go_24954_00070_001_061_from_gt_p2',
+            'go_24954_00077_001_061_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'go',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'go_24954_00078_001_061_from_gt_p2',
+            'go_69345_00164_015_039_from_gt_p2',
+            'go_69345_00170_015_039_from_gt_p3',
+            'go_69345_00171_015_039_from_gt_p3',
+            'go_24969_00182_027_060_from_gt_p1',
+            'go_24969_00183_027_060_from_gt_p2',
+            'go_24969_00184_027_060_from_gt_p2',
+            'go_24969_00185_027_060_from_gt_p2',
+        ]
+    },
+    {
         KEY_G: 'clothes',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -294,7 +450,56 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'clothes',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'clothes_11326_00007_002_023_from_gt_p2',
+            'clothes_11326_00008_002_023_from_gt_p2',
+            'clothes_11326_00009_002_023_from_gt_p2',
+            'clothes_11311_00029_027_053_from_gt_p2',
+            'clothes_11311_00032_027_053_from_gt_p2',
+            'clothes_11311_00033_027_053_from_gt_p2',
+            'clothes_11314_00043_022_033_from_gt_p2',
+            'clothes_11314_00044_022_033_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'clothes',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'clothes_11314_00045_022_033_from_gt_p2',
+            'clothes_68870_00130_012_035_from_gt_p3',
+            'clothes_68870_00132_012_035_from_gt_p3',
+            'clothes_68870_00133_012_035_from_gt_p3',
+            'clothes_68024_00134_012_050_from_gt_p1',
+            'clothes_68024_00135_012_050_from_gt_p2',
+            'clothes_68024_00136_012_050_from_gt_p2',
+            'clothes_68024_00137_012_050_from_gt_p2',
+        ]
+    },
+    {
+        KEY_G: 'clothes',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'clothes_11327_00178_018_049_from_gt_p1',
+            'clothes_11327_00179_018_049_from_gt_p2',
+            'clothes_11327_00180_018_049_from_gt_p2',
+            'clothes_11327_00181_018_049_from_gt_p2',
+            'clothes_11328_00194_001_029_from_gt_p2',
+            'clothes_11328_00197_001_029_from_gt_p2',
+            'clothes_11328_00198_001_029_from_gt_p2',
+            'clothes_11329_00219_001_028_from_gt_p2',
+        ]
+    },
+    {
         KEY_G: 'who',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [0],
         KEY_RHAND: [0],
         KEY_LANDMARK: [
@@ -309,7 +514,24 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'who',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [0],
+        KEY_RHAND: [0],
+        KEY_LANDMARK: [
+            'who_63242_00017_024_032_from_gt_p1',
+            'who_63242_00018_024_032_from_gt_p2',
+            'who_63242_00019_024_032_from_gt_p2',
+            'who_63242_00020_024_032_from_gt_p3',
+            'who_63229_00038_019_032_from_gt_p2',
+            'who_63229_00039_019_032_from_gt_p2',
+            'who_63229_00040_019_032_from_gt_p2',
+            'who_63232_00117_065_116_from_gt_p2',
+        ]
+    },
+    {
         KEY_G: 'who', # -- latest who, according to expert
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [0],
         KEY_RHAND: [0],
         KEY_LANDMARK: [
@@ -325,6 +547,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'candy',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [0],
         KEY_RHAND: [0],
         KEY_LANDMARK: [
@@ -340,6 +563,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'cousin',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [0, 1],
         KEY_RHAND: [0, 1],
         KEY_LANDMARK: [
@@ -355,6 +579,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'mine_my',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [3, 5, 6],
         KEY_RHAND: [3, 5, 6],
         KEY_LANDMARK: [
@@ -370,6 +595,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'me_i',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [3, 5, 6],
         KEY_RHAND: [3, 5, 6],
         KEY_LANDMARK: [
@@ -384,7 +610,24 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'me_i',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [3, 5, 6],
+        KEY_RHAND: [3, 5, 6],
+        KEY_LANDMARK: [
+            'me_i_35549_00158_034_107_from_gt_p1',
+            'me_i_35549_00159_034_107_from_gt_p2',
+            'me_i_35549_00160_034_107_from_gt_p2',
+            'me_i_35549_00161_034_107_from_gt_p2',
+            'me_i_35550_00229_014_042_from_gt_p1',
+            'me_i_35550_00230_014_042_from_gt_p2',
+            'me_i_35550_00231_014_042_from_gt_p2',
+            'me_i_35550_00232_014_042_from_gt_p2',
+        ]
+    },
+    {
         KEY_G: 'stomach',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [4],
         KEY_RHAND: [4],
         KEY_LANDMARK: [
@@ -399,7 +642,24 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'stomach',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [4],
+        KEY_RHAND: [4],
+        KEY_LANDMARK: [
+            'stomach_81237_00218_001_043_from_gt_p1',
+            'stomach_81237_00221_001_043_from_gt_p2',
+            'stomach_81237_00226_001_043_from_gt_p2',
+            'stomach_81237_00234_001_043_from_gt_p2',
+            'stomach_81238_00254_001_041_from_gt_p2',
+            'stomach_81238_00256_001_041_from_gt_p2',
+            'stomach_81238_00259_001_041_from_gt_p2',
+            'stomach_81238_00266_001_041_from_gt_p3',
+        ]
+    },
+    {
         KEY_G: 'have',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -415,6 +675,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'need',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -430,6 +691,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'see',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -445,6 +707,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'feel',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [3],
         KEY_RHAND: [3],
         KEY_LANDMARK: [
@@ -460,6 +723,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'hurt',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -474,7 +738,24 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'hurt',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'hurt_70147_00001_052_072_from_gt_p1',
+            'hurt_70147_00002_052_072_from_gt_p2',
+            'hurt_70147_00003_052_072_from_gt_p2',
+            'hurt_70147_00004_052_072_from_gt_p2',
+            'hurt_28453_00019_016_037_from_gt_p1',
+            'hurt_28453_00020_016_037_from_gt_p2',
+            'hurt_28453_00021_016_037_from_gt_p2',
+            'hurt_28453_00022_016_037_from_gt_p2',
+        ]
+    },
+    {
         KEY_G: 'fever',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [1],
         KEY_RHAND: [1],
         KEY_LANDMARK: [
@@ -490,6 +771,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'dizzy',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -504,7 +786,40 @@ VERIFIED_DS_DIR: list= [
         ]
     },
     {
+        KEY_G: 'dizzy',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'dizzy_16982_00113_017_049_from_gt_p2',
+            'dizzy_16982_00114_017_049_from_gt_p2',
+            'dizzy_16982_00117_017_049_from_gt_p2',
+            'dizzy_78228_00279_048_160_from_gt_p2',
+            'dizzy_78228_00280_048_160_from_gt_p2',
+            'dizzy_78228_00293_048_160_from_gt_p2',
+            'dizzy_78229_00398_019_130_from_gt_p3',
+            'dizzy_78229_00399_019_130_from_gt_p3',
+        ]
+    },
+    {
+        KEY_G: 'dizzy',
+        KEY_PFOLDER_FROM: VAL_WLASL,
+        KEY_LHAND: [],
+        KEY_RHAND: [],
+        KEY_LANDMARK: [
+            'dizzy_78229_00400_019_130_from_gt_p3',
+            'dizzy_65501_00483_030_050_from_gt_p2',
+            'dizzy_65501_00485_030_050_from_gt_p2',
+            'dizzy_65501_00488_030_050_from_gt_p2',
+            'dizzy_65501_00490_030_050_from_gt_p2',
+            'dizzy_16985_00499_001_028_from_gt_p1',
+            'dizzy_16985_00500_001_028_from_gt_p2',
+            'dizzy_16985_00501_001_028_from_gt_p2',
+        ]
+    },
+    {
         KEY_G: 'headache',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [1, 2],
         KEY_RHAND: [1, 2],
         KEY_LANDMARK: [
@@ -520,6 +835,7 @@ VERIFIED_DS_DIR: list= [
     },
     {
         KEY_G: 'doctor',
+        KEY_PFOLDER_FROM: VAL_WLASL,
         KEY_LHAND: [],
         KEY_RHAND: [],
         KEY_LANDMARK: [
@@ -647,10 +963,337 @@ def flip_vertical_x_axis(landmarks) -> np.ndarray:
 
 
     return new_landmark
-def loadnpfiles(parent_folder: str, landmarks: list) -> np.ndarray:
+def part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    # xs, ys= zip(*landmarks)
+    xs= list(map(lambda el: el[0], landmarks))
+    ys= list(map(lambda el: el[1], landmarks))
+    min_x, min_y= min(xs), min(ys)
+    xNeedForward: bool= min_x<0.0
+    yNeedForward: bool= min_y<0.0
+    if xNeedForward or yNeedForward:
+        landmarks= [(
+            x -min_x    if xNeedForward    else x,
+            y -min_y    if yNeedForward    else y
+        ) for x, y in landmarks]
+    del xs, ys, min_x, min_y, xNeedForward, yNeedForward
+
+    max_xy: float= max(
+        max(x for x, _ in landmarks),
+        max(y for _, y in landmarks)
+    )
+    if max_xy>1:
+        landmarks= [(
+            x/max_xy,
+            y/max_xy
+        ) for x, y in landmarks]
+
+    return landmarks
+def part2_beSquareRatioOnImage(landmarks: list[tuple[float, float]], original_shape: tuple[int, int]) -> list[tuple[float, float]]:
+    height, width= original_shape
+    if height==width:
+        return landmarks
+
+    if width<height: # portrait, change2withRespect2Height
+        scale: float= width/height
+        return [(
+            x*scale,
+            y
+        ) for x, y in landmarks]
+
+    # landscape, change2withRespect2Width
+    scale: float= height/width
+    return [(
+        x,
+        y*scale
+    ) for x, y in landmarks]
+def part3_zoomInOutForPadding(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    ### 2) zoom in/out with padding 0.05 each side( with respecting orig aspect ratio )
+    # zoom in/out for padding be 10% each side with respect to original aspect ratio
+    # ie.:
+    # ---- top/bottom pad 0.02, leftSide( fromPerspectiveOfSomeoneReadingThis ) pad 0.02: if wx < hy
+    # ---- top pad 0.02, leftSide/right pad 0.02: if hy < wx
+    # pad: float= 0.05
+    pad: float= 4.0/158.0
+    # xs, ys = zip(*landmarks)
+    xs: list= list(map(lambda el: el[0], landmarks))
+    ys: list= list(map(lambda el: el[1], landmarks))
+    # xs= list(filter(lambda el: el!=0, xs))
+    # ys= list(filter(lambda el: el!=0, ys))
+    if len(xs)==0 or len(ys)==0:
+        return landmarks
+    min_x, min_y=    min(xs), min(ys)
+    max_x, max_y=    max(xs), max(ys)
+    scale: float= (1  -2*pad)/max(
+        max_x -min_x,
+        max_y -min_y
+    )
+    return [(
+        # (x -min_x)    *scale    +pad  if x!=0 else x,
+        # (y -min_y)    *scale    +pad  if y!=0 else y
+        (x -min_x)    *scale    +pad,
+        (y -min_y)    *scale    +pad
+    ) for x, y in landmarks]
+def part4_centerLandmarkVerticallyHorizontally(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    ### 3) center landmark with same aspect ratio as original
+    # center horizontally and vertically, since done padding then just
+    # move to right/down
+    # xs, ys = zip(*landmarks)
+    xs: list= list(map(lambda el: el[0], landmarks))
+    ys: list= list(map(lambda el: el[1], landmarks))
+    # xs= list(filter(lambda el: el!=0, xs))
+    # ys= list(filter(lambda el: el!=0, ys))
+    if len(xs)==0 or len(ys)==0:
+        return landmarks
+    shift_x: float=  0.5    -(min(xs) +max(xs))  /2
+    shift_y: float=  0.5    -(min(ys) +max(ys))  /2
+
+    return [(
+        # x +shift_x  if x!=0 else x,
+        # y +shift_y  if y!=0 else y
+        x +shift_x,
+        y +shift_y
+    ) for x, y in landmarks]
+def normalizeLandmarks(landmarks: list[tuple[float, float]], original_shape: tuple) -> list[tuple[float, float]]:
+    '''
+    landmarks is an array eg. of shape (86, 2)
+    original_shape is tuple (HEIGHT, WIDTH)
+    '''
+    # lmark_fph.face_landmarks.landmark
+    # lmark_fph.pose_landmarks.landmark
+    # lmark_fph.left_hand_landmarks.landmark
+    # lmark_fph.right_hand_landmarks.landmark
+    # logic resize to --> 480 x 480 x 3
+    #     0) all coords be greater than|= 0.0 and less than|= 1.0
+    #         a) lmarks x,y overwrite to [0.0, 1.0] only
+    #         b) has x < 0.0 then ALL_x+abs(min(x_neg)), ie. move right
+    #         b) has y < 0.0 then ALL_y+abs(min(y_neg)), ie. move down
+    #         c) ALL_coords_x_y/highest_value
+    #         d) eg. 1.74 then ALL_coords_x_y/1.74
+    #         e) for all be scaled down with same aspect ratio as orig
+    #         f) NOW all( x, y ) are 0.0 to 1.0 value only
+    #     1) from old img ratio to new square img ratio
+    #         a) if owx < ohy: all_x= all_x* (480*owx/ohy)/480
+    #         b) if ohy < owx: all_y= all_y* (480*ohy/owx)/480
+    #     2) zoom in/out with padding 0.05 each side( with respecting orig aspect ratio )
+    #         a) if too far zoom in
+    #         b) if too close zoom out
+    #         c) goal lowest val 0.05 both(x,y) .ie padding
+    #         d) goal highest val 0.95 both(x,y)
+    #         e) ie. max(lm_wx, lm_hy) == 0.9
+    #     3) center landmark with same aspect ratio as original
+    #         a) min_wx_hy= min( wx, hy ); max_wx_hy= max( wx, hy )
+    #         b) min_wx_hy as mn; max_wx_hy as mx
+    #         c) if mn is wx, all X +( (mx-mn)/(mx*2) )
+    #         d) if mn is hy, all Y +( (mx-mn)/(mx*2) )
+    assert 1<len(original_shape) # incorrect use of normalizeLandmarks(...), mandatory 1<len(original_shape)
+    landmarks= part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(landmarks)
+    landmarks= part2_beSquareRatioOnImage(
+        landmarks,
+        (original_shape[0], original_shape[1])
+    )
+    landmarks= part3_zoomInOutForPadding(landmarks)
+    landmarks= part4_centerLandmarkVerticallyHorizontally(landmarks)
+
+
+    return landmarks
+def normalizeWorthyLandmarkWrapper(
+    landmarks: list[tuple[float, float]], # order --> face_pose_left_right_hand
+    original_shape: tuple,
+    hasLandmarks: dict
+) -> list[tuple[float, float]]:
+    if not (hasLandmarks["face"] or hasLandmarks["pose"] or hasLandmarks["left_hand"] or hasLandmarks["right_hand"]):
+        return landmarks
+    norm: list= []
+    if hasLandmarks['face']:
+        norm.extend(landmarks[
+            :len(WORTHY_FACE_IDX)
+        ])
+    if hasLandmarks['pose']:
+        norm.extend(landmarks[
+            len(WORTHY_FACE_IDX):
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX)
+        ])
+    if hasLandmarks['left_hand']:
+        norm.extend(landmarks[
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+        ])
+    if hasLandmarks['right_hand']:
+        norm.extend(landmarks[
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+        ])
+    norm= normalizeLandmarks(landmarks=norm, original_shape=original_shape)
+
+    out_landmark: list= []
+    # -- face landmarks --
+    if hasLandmarks["face"]:
+        out_landmark.extend(norm[:len(WORTHY_FACE_IDX)])
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                len(WORTHY_FACE_IDX),
+                2
+            )).tolist()
+        )
+
+    # -- pose landmarks --
+    if hasLandmarks["pose"]:
+        if hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX)
+            ])
+        else:
+            out_landmark.extend(norm[
+                :len(WORTHY_POSE_IDX)
+            ])
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                len(WORTHY_POSE_IDX),
+                2
+            )).tolist())
+
+    # -- left hand landmarks --
+    if hasLandmarks["left_hand"]:
+        if hasLandmarks["face"] and hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+            ])
+        elif hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+                len(WORTHY_FACE_IDX) +QUANTITY_HAND_LMARK
+            ])
+        elif hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX):
+                len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK
+            ])
+        else:
+            out_landmark.extend(norm[
+                :QUANTITY_HAND_LMARK
+            ])
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                QUANTITY_HAND_LMARK,
+                2
+            )).tolist())
+
+    # -- right hand landmarks --
+    if hasLandmarks["right_hand"]:
+        if hasLandmarks["face"] and hasLandmarks["pose"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+            ])
+        elif hasLandmarks["face"] and hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+            ])
+        elif hasLandmarks["face"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +QUANTITY_HAND_LMARK:
+            ])
+        elif hasLandmarks["pose"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX) +QUANTITY_HAND_LMARK:
+            ])
+        elif hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+            ])
+        elif hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX):
+            ])
+        elif hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                QUANTITY_HAND_LMARK:
+            ])
+        else:
+            out_landmark.extend(norm)
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                QUANTITY_HAND_LMARK,
+                2
+            )).tolist())
+
+    # out_landmark shape:
+    # (
+    #     len(WORTHY_FACE_IDX)
+    #     +len(WORTHY_POSE_IDX)
+    #     +QUANTITY_HAND_LMARK *2,
+    #     2
+    # )
+    return out_landmark # ie. output shape (86, 2)
+def rm_left_hand(landmarks: np.ndarray) -> np.ndarray:
+    assert landmarks.shape[-2:] == (86, 2)
+    out= landmarks.copy()
+    out[..., 36+8:36+8+21, :]= 0.0
+    return out
+def rm_lhand_wrapper(
+    gloss: str,
+    landmarks: np.ndarray,
+    annotations: list[dict],
+) -> tuple:
+    '''
+    annotations has structure
+    [
+        {
+            KEY_FACE: boolean,
+            KEY_POSE: boolean,
+            KEY_LHAND: boolean,
+            KEY_RHAND: boolean,
+        }
+    ]
+    '''
+    assert landmarks.shape[1:] == (86, 2)
+    if gloss in (
+        'drink',
+        'who',
+        'candy',
+        'cousin',
+        'feel',
+        'mine_my',
+        'me_i',
+        'stomach',
+        'need',
+        'see',
+        'feel',
+        'fever',
+    ):
+        out_landmarks: np.ndarray= rm_left_hand(landmarks)
+        out_annotations: list[dict]= []
+        for idx in range(out_landmarks.shape[0]):
+            out_landmarks[idx]= normalizeWorthyLandmarkWrapper(
+                landmarks=out_landmarks[idx].tolist(),
+                original_shape=(300, 300),
+                hasLandmarks={
+                    KEY_FACE:  annotations[idx][KEY_FACE],
+                    KEY_POSE:  annotations[idx][KEY_POSE],
+                    KEY_LHAND: False,
+                    KEY_RHAND: annotations[idx][KEY_RHAND],
+                }
+            )
+            out_annotations.append({
+                KEY_FACE:  annotations[idx][KEY_FACE],
+                KEY_POSE:  annotations[idx][KEY_POSE],
+                KEY_LHAND: False,
+                KEY_RHAND: annotations[idx][KEY_RHAND],
+            })
+        return (out_landmarks, out_annotations)
+    return (landmarks, annotations)
+def loadnpfiles(
+    parent_folder: str,
+    landmarks: list,
+    landmark_dir: Path,
+) -> np.ndarray:
     out: list= []
     for a_lm in landmarks:
-        with open(f"{LANDMARK_DIR /parent_folder /a_lm[KEY_FILE]}", 'rb') as f:
+        with open(f"{landmark_dir /parent_folder /a_lm[KEY_FILE]}", 'rb') as f:
             out.append(np.load(f))
     return np.array(out)
 def load_ds_samples() -> tuple:
@@ -666,22 +1309,41 @@ def load_ds_samples() -> tuple:
     eg. labels: list[str]= ['book', 'drink', ...]
     '''
     ds_landmark: list= []
-    with open(f"{DS_DIR /'ds_landmark.json'}", 'r') as f:
+    glasl_landmark: list= []
+    with open(f"{WLASL_DS_DIR /'ds_landmark.json'}", 'r') as f:
         ds_landmark= loadJson(f)
+    with open(f"{GLASL_DS_DIR /'qf8_ds_landmark.json'}", 'r') as f:
+        glasl_landmark= loadJson(f)
+        glasl_landmark= [{
+            KEY_G: el[KEY_G],
+            KEY_LANDMARK: el[KEY_VIDS]
+        } for el in glasl_landmark]
     manual_model: list= []
     annotations: list= []
     ds_landmark_by_gloss: dict= {
         el[KEY_G]: el # el is dict of keys( 'gloss': str, 'landmark': list[dict] )
         for el in ds_landmark
     }
+    glasl_landmark_by_gloss: dict= {
+        el[KEY_G]: el
+        for el in glasl_landmark
+    }
     for a_gloss in VERIFIED_DS_DIR:
-        ds_gloss: dict= ds_landmark_by_gloss[a_gloss[KEY_G]] # dict of keys( 'gloss': str, 'landmark': list[dict] )
+        ds_gloss: dict= {}
+        parent_folder_from: Path= PROJ_ROOT
+        if a_gloss[KEY_PFOLDER_FROM] == VAL_GLASL:
+            ds_gloss= glasl_landmark_by_gloss[a_gloss[KEY_G]]
+            parent_folder_from= GLASL_LANDMARK_DIR
+        elif a_gloss[KEY_PFOLDER_FROM] == VAL_WLASL:
+            ds_gloss= ds_landmark_by_gloss[a_gloss[KEY_G]] # dict of keys( 'gloss': str, 'landmark': list[dict] )
+            parent_folder_from= WLASL_LANDMARK_DIR
         list_pfolders: list[str]= a_gloss[KEY_LANDMARK]
         assert len(list_pfolders)==len(VERIFIED_DS_DIR[0][KEY_LANDMARK])
         annotations.append({
             KEY_G: ds_gloss[KEY_G],
             KEY_LANDMARK: list(
                 {
+                    KEY_PFOLDER_FROM: parent_folder_from,
                     KEY_PFOLDER: el[KEY_PFOLDER],
                     KEY_LHAND: a_gloss[KEY_LHAND],
                     KEY_RHAND: a_gloss[KEY_RHAND],
@@ -692,7 +1354,7 @@ def load_ds_samples() -> tuple:
             )
         })
         manual_model.append([
-            loadnpfiles(el[KEY_PFOLDER], el[KEY_LANDMARK])
+            loadnpfiles(el[KEY_PFOLDER], el[KEY_LANDMARK], el[KEY_PFOLDER_FROM])
             for el in annotations[-1][KEY_LANDMARK]
         ])
         annotations[-1][KEY_LANDMARK].extend([
@@ -709,7 +1371,7 @@ def load_ds_samples() -> tuple:
             } for lm_img_el in many_imgs_el[KEY_LANDMARK]],
         } for many_imgs_el in annotations[-1][KEY_LANDMARK]])
         manual_model[-1].extend(flip_vertical_x_axis(manual_model[-1]))
-    return (manual_model, annotations, ds_landmark)
+    return (manual_model, annotations, ds_landmark, glasl_landmark)
 def get_left_hand(input: jnp.ndarray) -> jnp.ndarray:
     if input.shape[-1]!=2:
         return input[
@@ -1169,6 +1831,7 @@ def test_all_data(
     weights: jnp.ndarray,
     model_annotations: list[str],
     annotations: list,
+    parent_folder_from: Path,
 ) -> None:
     '''
     model, shape of - (1, QUANTITY_GLOSS, SAMPLE_PER_GLOSS, QUANTITY_FRAME, 86, 2)
@@ -1225,10 +1888,17 @@ def test_all_data(
                 ds_elements= ds_elements[batch_size:]
                 ds_labels=   ds_labels[batch_size:]
                 ds_pfolders= ds_pfolders[batch_size:]
-            ds_elements.append(loadnpfiles(
+            a_qf_landmarks= loadnpfiles(
                 parent_folder=a_start_end[KEY_PFOLDER],
                 landmarks=a_start_end[KEY_LANDMARK],
-            ))
+                landmark_dir=parent_folder_from,
+            )
+            a_qf_landmarks, _= rm_lhand_wrapper(
+                gloss=a_gloss[KEY_G],
+                landmarks=a_qf_landmarks,
+                annotations=a_start_end[KEY_LANDMARK]
+            )
+            ds_elements.append(a_qf_landmarks)
             ds_labels.append(idx_gloss)
             ds_pfolders.append(a_start_end[KEY_PFOLDER])
             # -- for flip
@@ -1287,8 +1957,10 @@ def show_shapes(
     print(f"weights shape    {weights.shape}")
     print(f"model_annotations length {len(model_annotations)}")
 def init_folders_files() -> None:
-    assert (DS_DIR /'ds_landmark.json').exists()
-    assert LANDMARK_DIR.exists()
+    assert (GLASL_DS_DIR /'glasl_v4_landmark_ds.json').exists()
+    assert (WLASL_DS_DIR /'ds_landmark.json').exists()
+    assert GLASL_LANDMARK_DIR.exists()
+    assert WLASL_LANDMARK_DIR.exists()
     if MODEL2SAVE_DIR.exists():
         print(
             f"-------------- error --------------" +
@@ -1317,7 +1989,7 @@ def save_model(
         writeJson(labels, f, indent=4)
 def main() -> None:
     # init_folders_files()
-    ds_samples, annotations, origin_annotations= load_ds_samples()
+    ds_samples, annotations, wlasl_landmark, glasl_landmark= load_ds_samples()
     ds_samples= jnp.expand_dims(jnp.array(ds_samples), axis=0)
     '''
     comparison_score(
@@ -1343,21 +2015,31 @@ def main() -> None:
     #     weights=weights,
     #     annotations=annotations,
     # )
+    # test_all_data(
+    #     model=ds_samples,
+    #     mask=mask,
+    #     body2dots=ds_samples_body2dots,
+    #     weights=weights,
+    #     model_annotations=labels,
+    #     annotations=wlasl_landmark,
+    #     parent_folder_from=WLASL_LANDMARK_DIR,
+    # )
     test_all_data(
         model=ds_samples,
         mask=mask,
         body2dots=ds_samples_body2dots,
         weights=weights,
         model_annotations=labels,
-        annotations=origin_annotations,
+        annotations=glasl_landmark,
+        parent_folder_from=GLASL_LANDMARK_DIR,
     )
-    # show_shapes(
-    #     ds_samples=ds_samples,
-    #     mask=mask,
-    #     body2dots=ds_samples_body2dots,
-    #     weights=weights,
-    #     model_annotations=labels,
-    # )
+    show_shapes(
+        ds_samples=ds_samples,
+        mask=mask,
+        body2dots=ds_samples_body2dots,
+        weights=weights,
+        model_annotations=labels,
+    )
     # save_model(
     #     ds_samples=ds_samples,
     #     mask=mask,
@@ -1365,5 +2047,8 @@ def main() -> None:
     #     weights=weights,
     #     labels=labels,
     # )
+    # with open("/tmp/asdf.json", "w") as f:
+    #     writeJson(annotations, f, indent=4)
+    # print("\n".join([el[KEY_G] for el in annotations]))
 if __name__=="__main__":
     main()
