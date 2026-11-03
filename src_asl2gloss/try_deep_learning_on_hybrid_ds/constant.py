@@ -16,6 +16,7 @@ right_hand is (21, 2)
 '''
 LANDMARK_DIR_WLASL: Path= PROJ_ROOT /"dataset" /"clean_dataset" /"fix_recent_n_classic_landmark"
 LANDMARK_DIR_GLASL: Path= PROJ_ROOT /"dataset" /"glasl" /"glasl_v4_landmark"
+LEFT_HAND_DIR_FILE: Path= PROJ_ROOT /"dataset" /"glasl" /"extracted_left_hand" /"left_hand.npy"
 wlasl_ds: list= []
 with open(f"{PROJ_ROOT /"dataset" /"clean_dataset" /"fix_recent_n_classic_landmark.json"}", "r") as f:
     wlasl_ds= loadJson(f)
@@ -43,6 +44,7 @@ LM_IDX_TOP_LIP: int        =  0
 LM_IDX_TIP_OF_FOREHEAD: int=  3
 LM_IDX_RIGHT_MOST_EYE: int =  7
 LM_IDX_RIGHT_MOST_LIP: int =  8
+LM_IDX_CHIN_LOW: int       = 17
 LM_IDX_RIGHT_EAR: int      = 19
 LM_IDX_UP_TIP_NOSE: int    = 20
 LM_IDX_LEFT_MOST_EYE: int  = 23
@@ -58,17 +60,19 @@ LM_IDX_RIGHT_SHOULDER: int = 37
 LM_IDX_LEFT_HIP: int       = 42
 LM_IDX_RIGHT_HIP: int      = 43
 # -----------------------------
+LM_IDX_LEFT_HAND_WRIST: int  = 44
 LM_IDX_LEFT_HAND_F_THUMB: int= 48
 LM_IDX_LEFT_HAND_F_INDEX: int= 52
 LM_IDX_LEFT_HAND_F_MIDLE: int= 56
 LM_IDX_LEFT_HAND_F_RING: int = 60
 LM_IDX_LEFT_HAND_F_PINKY: int= 64
 # -----------------------------
-LM_IDX_RIGHT_HAND_F_THUMB: int= 48
-LM_IDX_RIGHT_HAND_F_INDEX: int= 52
-LM_IDX_RIGHT_HAND_F_MIDLE: int= 56
-LM_IDX_RIGHT_HAND_F_RING: int = 60
-LM_IDX_RIGHT_HAND_F_PINKY: int= 64
+LM_IDX_RIGHT_HAND_WRIST: int  = 65
+LM_IDX_RIGHT_HAND_F_THUMB: int= 69
+LM_IDX_RIGHT_HAND_F_INDEX: int= 73
+LM_IDX_RIGHT_HAND_F_MIDLE: int= 77
+LM_IDX_RIGHT_HAND_F_RING: int = 81
+LM_IDX_RIGHT_HAND_F_PINKY: int= 85
 # -----------------------------
 LM_IMPORTANT_FACE_IDX: tuple= (
     LM_IDX_TIP_OF_FOREHEAD, # ok
@@ -84,15 +88,12 @@ LM_IMPORTANT_FACE_IDX: tuple= (
     LM_IDX_LEFT_MOST_LIP,   # ok
     LM_IDX_RIGHT_MOST_LIP,  # ok
     LM_IDX_TOP_LIP,         # ok
+
+    LM_IDX_CHIN_LOW,        # ok
 )
-# LM_IMPORTANT_FACE_IDX: tuple= (
-#     LM_IDX_TOP_LIP,
-#     LM_IDX_TIP_OF_FOREHEAD,
-#     LM_IDX_UP_TIP_NOSE,
-#     # -- on later process here to insert up and left body dots
-#     LM_IDX_LEFT_ARM_TIP,
-#     LM_IDX_RIGHT_ARM_TIP,
-# )
+
+
+# -- left hand --
 LM_LEFT_HAND_TIP: tuple= (
     LM_IDX_LEFT_HAND_F_THUMB,
     LM_IDX_LEFT_HAND_F_INDEX,
@@ -107,6 +108,9 @@ LM_LEFT_HAND_NOT_TIP: tuple= (
     57, 58, 59,
     61, 62, 63,
 )
+
+
+# -- right hand --
 LM_RIGHT_HAND_TIP: tuple= (
     LM_IDX_RIGHT_HAND_F_THUMB,
     LM_IDX_RIGHT_HAND_F_INDEX,
@@ -127,7 +131,9 @@ WORTHY_FACE_IDX: tuple= (
     263, 291, 294, 300, 323, 332, 334, 336, 362, 374,
     386, 389, 397
 )
+LEN_W_FACE: int= len(WORTHY_FACE_IDX)
 WORTHY_POSE_IDX: tuple= (11,12,13,14,15,16,23,24)
+LEN_W_POSE: int= len(WORTHY_POSE_IDX)
 QUANTITY_HAND_LMARK: int= 21
 GLOSS_ONE_HAND: tuple[bool, ...]= (
     False, # -- book
