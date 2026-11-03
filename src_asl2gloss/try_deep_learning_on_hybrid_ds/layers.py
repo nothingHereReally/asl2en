@@ -312,7 +312,7 @@ class AttentionPooling(Layer):
         super().__init__(**kwargs)
 
     def build(self, input_shape):
-        self.scoring_layer = Dense(1, activation="tanh")
+        self.scoring_layer= Dense(1, activation="tanh")
         del input_shape
     def call(self, inputs):
         # -- inputs shape (B, T, D)
@@ -328,6 +328,18 @@ class SelectLM(Layer):
     def build(self, input_shape):
         del input_shape
     def call(self, input):
+        '''
+        try 52 landmarks compare
+        ie. (
+            10 face landmarks,
+            10 pose landmarks,
+            16*2 hand landmarks,
+        ) -- due2from 86 landmarks
+        -- turned to on tip fingers do distance( ie. c^2 = a^2 + b^2 ) to
+        -- all other 61 dots
+
+        so 61*5 is 305, due to on a hand 5 fingers
+        '''
         # left_hand_tip: Any= input[..., LM_LEFT_HAND_TIP, :]
         # right_hand_tip: Any= input[..., LM_RIGHT_HAND_TIP, :]
         left_hand_tip: Any= ops.take(
@@ -340,8 +352,10 @@ class SelectLM(Layer):
             indices=LM_RIGHT_HAND_TIP,
             axis=-2,
         )
-        left_hand_tip= ops.expand_dims(left_hand_tip, axis=-3)
-        right_hand_tip= ops.expand_dims(right_hand_tip, axis=-3)
+        '''
+        left_hand_tip shape (B, QUANTITY_FRAME, len(LM_LEFT_HAND_TIP), 2)
+        right_hand_tip shape (B, QUANTITY_FRAME, len(LM_RIGHT_HAND_TIP), 2)
+        '''
         center_shoulder= (
             input[..., LM_IDX_LEFT_SHOULDER:LM_IDX_LEFT_SHOULDER+1, :] +
             input[..., LM_IDX_RIGHT_SHOULDER:LM_IDX_RIGHT_SHOULDER+1, :]
@@ -356,7 +370,7 @@ class SelectLM(Layer):
                 input,
                 indices=LM_IMPORTANT_FACE_IDX,
                 axis=-2,
-            ),
+            ), # -- face landmarks
             input[..., 36:36+8, :], # -- pose landmarks
             (center_shoulder + center_shoulder_hip)/2.0, # -- upper dot on 2 dots
             (center_hip + center_shoulder_hip)/2.0,      # -- lower dot on 2 dots
@@ -370,8 +384,10 @@ class SelectLM(Layer):
                 indices=LM_RIGHT_HAND_NOT_TIP,
                 axis=-2,
             ),
-        ], axis=-2)
+        ], axis=-2) # 10 face, 10 pose, 16*2 hand
         the_rest= ops.expand_dims(the_rest, axis=-2)
+        left_hand_tip= ops.expand_dims(left_hand_tip, axis=-3)
+        right_hand_tip= ops.expand_dims(right_hand_tip, axis=-3)
 
         left_hand_tip= (left_hand_tip - the_rest)**2
         left_hand_tip= ops.sum(left_hand_tip, axis=-1, keepdims=False)
@@ -404,23 +420,24 @@ data_in= Input(
 x= SelectLM()(data_in)
 # x= SinCosPostionalEncoding(name='positional')(x)
 x= NTimesEncoderTransformer(
-    n_times=3,
-    num_heads=4,
-    key_dim=4,
-    value_dim=4,
+    n_times=4,
+    num_heads=8,
+    key_dim=8,
+    value_dim=8,
     dropout=0.1,
-    ann_units=8,
+    ann_units=16,
     name='multi_encoder_in_sequence',
 )(x) # (QUANTITY_FRAME, LANDMARK_SHAPE[0]*LANDMARK_SHAPE[1])
 # x= GlobalAveragePooling1D(
 #     data_format='channels_last',
 #     keepdims=False,
 # )(x)
-x= AttentionPooling()(x)
-ann= Flatten()(x)
-ann= Dense(
-    units=LANDMARK_SHAPE[0]*2,
-    activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
-)(ann)
+# x= AttentionPooling()(x)
+ann= AttentionPooling()(x)
+# ann= Flatten()(x)
+# ann= Dense(
+#     units=LANDMARK_SHAPE[0]*2,
+#     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+# )(ann)
 # ---------------------------------------------------------------------------
-data_out = Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
+data_out= Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
