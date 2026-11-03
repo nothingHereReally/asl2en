@@ -12,6 +12,19 @@ from .constant import (
     LANDMARK_DIR_WLASL,
     LANDMARK_DIR_GLASL,
     BATCH,
+    LEFT_HAND_DIR_FILE,
+    LEN_W_FACE,
+    LEN_W_POSE,
+    LM_IDX_LEFT_ARM_TIP,
+    LM_IDX_LEFT_ELBOW,
+    LM_IDX_LEFT_HAND_WRIST,
+    LM_IDX_LEFT_HIP,
+    LM_IDX_LEFT_SHOULDER,
+    LM_IDX_RIGHT_ARM_TIP,
+    LM_IDX_RIGHT_ELBOW,
+    LM_IDX_RIGHT_HAND_WRIST,
+    LM_IDX_RIGHT_HIP,
+    LM_IDX_RIGHT_SHOULDER,
     MOD_PART_3,
     QUANTITY_FRAME,
     QUANTITY_HAND_LMARK,
@@ -240,11 +253,65 @@ def calculate_steps_needed(train_test: str=VAL_TRAIN, batch_size: int=BATCH) -> 
     return int(ceil(total_DS/float(batch_size)))
 
 
+def correct_hand_position(landmarks: np.ndarray, left_or_right: str) -> np.ndarray:
+    move_howmuch: float= 0.02
+    assert landmarks.shape == (86, 2)
+    if left_or_right == KEY_LHAND:
+        target= landmarks[LM_IDX_LEFT_HIP:LM_IDX_LEFT_HIP+1, :] + move_howmuch
+        move= target - landmarks[LM_IDX_LEFT_HAND_WRIST:LM_IDX_LEFT_HAND_WRIST+1, :]
+        landmarks[
+            LEN_W_FACE+LEN_W_POSE :LEN_W_FACE+LEN_W_POSE+QUANTITY_HAND_LMARK,
+            :
+        ]= landmarks[
+            LEN_W_FACE+LEN_W_POSE :LEN_W_FACE+LEN_W_POSE+QUANTITY_HAND_LMARK,
+            :
+        ] + move
+        target[:, 1]= target[:, 1] - move_howmuch
+        landmarks[LM_IDX_LEFT_ARM_TIP]= target.copy()
+        landmarks[LM_IDX_LEFT_ELBOW, :]= (
+            landmarks[LM_IDX_LEFT_SHOULDER, :] +
+            target
+        )/2.0
+    elif left_or_right == KEY_RHAND:
+        target= landmarks[LM_IDX_RIGHT_HIP:LM_IDX_RIGHT_HIP+1, :] - move_howmuch
+        move= target - landmarks[LM_IDX_RIGHT_HAND_WRIST:LM_IDX_RIGHT_HAND_WRIST+1, :]
+        landmarks[
+            LEN_W_FACE +LEN_W_POSE +QUANTITY_HAND_LMARK:,
+            :
+        ]= landmarks[
+            LEN_W_FACE +LEN_W_POSE +QUANTITY_HAND_LMARK:,
+            :
+        ] + move
+        target[:, 1]= target[:, 1] - move_howmuch
+        landmarks[LM_IDX_RIGHT_ARM_TIP]= target.copy()
+        landmarks[LM_IDX_RIGHT_ELBOW, :]= (
+            landmarks[LM_IDX_RIGHT_SHOULDER, :] +
+            target
+        )/2.0
+    else:
+        raise ValueError(f'left_or_right can only be: {KEY_LHAND} or {KEY_RHAND}')
+    return landmarks
 def load_npfiles(landmark: dict) -> list[np.ndarray]:
     out: list= []
     for an_img_detail in landmark[KEY_LANDMARK]:
+        assert an_img_detail[KEY_FACE] and an_img_detail[KEY_POSE] and \
+            ( an_img_detail[KEY_LHAND] or an_img_detail[KEY_RHAND] )
         with open(f"{landmark[KEY_PFOLDER_FROM] /landmark[KEY_PFOLDER] /an_img_detail[KEY_FILE]}", 'rb') as f:
-            out.append(np.load(f))
+            if not an_img_detail[KEY_LHAND] or not an_img_detail[KEY_RHAND]:
+                with open(LEFT_HAND_DIR_FILE, 'rb') as lhf:
+                    left_hand_data= np.load(lhf)
+                tmp: np.ndarray= np.load(f)
+                if an_img_detail[KEY_LHAND]:
+                    tmp[LEN_W_FACE+LEN_W_POSE:LEN_W_FACE+LEN_W_POSE+QUANTITY_HAND_LMARK, :]= left_hand_data
+                else:
+                    left_hand_data[:, 0]= 1- left_hand_data[:, 0]
+                    tmp[LEN_W_FACE+LEN_W_POSE+QUANTITY_HAND_LMARK:, :]= left_hand_data
+                out.append(correct_hand_position(
+                    landmarks=tmp,
+                    left_or_right=KEY_LHAND if an_img_detail[KEY_LHAND] else KEY_RHAND,
+                ))
+            else:
+                out.append(np.load(f))
     return out
 def load_elements_npfiles(elements: list) -> list:
     out: list= []
@@ -487,10 +554,10 @@ def get_data_landmark(
         wlasl_or_glasl='wlasl',
         split=train_test,
     )
-    dataset.extend(extract_ds_annotation_split(
-        wlasl_or_glasl='glasl',
-        split=train_test,
-    ))
+    # dataset.extend(extract_ds_annotation_split(
+    #     wlasl_or_glasl='glasl',
+    #     split=train_test,
+    # ))
     dataset_idxs: tuple= tuple(sample(
         range(len(dataset)),
         len(dataset)
