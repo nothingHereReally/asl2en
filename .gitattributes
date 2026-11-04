@@ -216,3 +216,6 @@ src_asl2gloss/see_opencv2help_mediapipe/results/original_input.jpg filter=lfs di
 src_asl2gloss/see_opencv2help_mediapipe/results/sharpen_strong_holistic.jpg filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/see_opencv2help_mediapipe/results/sharpen_strong_input.jpg filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/see_opencv2help_mediapipe/results/clahe_mild_holistic.jpg filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v74_transformer_distance/aslvid2gloss_v74.keras filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v74_transformer_distance/tfboard_logs/train/events.out.tfevents.1793676561.doxob.625007.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v74_transformer_distance/tfboard_logs/validation/events.out.tfevents.1793676583.doxob.625007.1.v2 filter=lfs diff=lfs merge=lfs -text
