@@ -219,3 +219,6 @@ src_asl2gloss/see_opencv2help_mediapipe/results/clahe_mild_holistic.jpg filter=l
 model/hybrid_ds_v74_transformer_distance/aslvid2gloss_v74.keras filter=lfs diff=lfs merge=lfs -text
 model/hybrid_ds_v74_transformer_distance/tfboard_logs/train/events.out.tfevents.1793676561.doxob.625007.0.v2 filter=lfs diff=lfs merge=lfs -text
 model/hybrid_ds_v74_transformer_distance/tfboard_logs/validation/events.out.tfevents.1793676583.doxob.625007.1.v2 filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v75_transformer_distance/aslvid2gloss_v75.keras filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v75_transformer_distance/tfboard_logs/train/events.out.tfevents.1793678013.doxob.683562.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v75_transformer_distance/tfboard_logs/validation/events.out.tfevents.1793678033.doxob.683562.1.v2 filter=lfs diff=lfs merge=lfs -text
