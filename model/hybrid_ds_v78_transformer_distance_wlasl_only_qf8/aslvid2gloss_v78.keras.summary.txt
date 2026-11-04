@@ -1,0 +1,45 @@
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)               │ (None, 8, 86, 2)            │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ select_landmark (SelectLM)           │ (None, 8, 520)              │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ multi_encoder_in_sequence            │ (None, 8, 520)              │         612,352 │
+│ (NTimesEncoderTransformer)           │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ attention_pooling (AttentionPooling) │ (None, 520)                 │             521 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_class (Dense)                  │ (None, 22)                  │          11,462 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 624,335 (2.38 MB)
+ Trainable params: 624,335 (2.38 MB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/20
+593/595 ━━━━━━━━━━━━━━━━━━━━ 0s 39ms/step - accuracy: 0.1880 - loss: 3.07272026-11-03 14:40:19.995203: I external/local_xla/xla/stream_executor/cuda/subprocess_compilation.cc:346] ptxas warning : Registers are spilled to local memory in function 'fusion_92', 8 bytes spill stores, 8 bytes spill loads
+
+595/595 ━━━━━━━━━━━━━━━━━━━━ 46s 51ms/step - accuracy: 0.1874 - loss: 3.0737 - val_accuracy: 0.2435 - val_loss: 2.6256 - learning_rate: 1.0000e-04
+Epoch 2/20
+595/595 ━━━━━━━━━━━━━━━━━━━━ 21s 35ms/step - accuracy: 0.3498 - loss: 2.1492 - val_accuracy: 0.3653 - val_loss: 1.9744 - learning_rate: 1.0000e-04
+Epoch 3/20
+595/595 ━━━━━━━━━━━━━━━━━━━━ 20s 34ms/step - accuracy: 0.4239 - loss: 1.8461 - val_accuracy: 0.5278 - val_loss: 1.6118 - learning_rate: 1.0000e-04
+Epoch 4/20
+595/595 ━━━━━━━━━━━━━━━━━━━━ 0s 26ms/step - accuracy: 0.4718 - loss: 1.6286
+Epoch 4: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+595/595 ━━━━━━━━━━━━━━━━━━━━ 22s 38ms/step - accuracy: 0.4718 - loss: 1.6286 - val_accuracy: 0.3910 - val_loss: 1.7279 - learning_rate: 1.0000e-04
+Epoch 5/20
+595/595 ━━━━━━━━━━━━━━━━━━━━ 24s 40ms/step - accuracy: 0.5030 - loss: 1.5049 - val_accuracy: 0.5850 - val_loss: 1.2389 - learning_rate: 1.0000e-05
+Epoch 6/20
+593/595 ━━━━━━━━━━━━━━━━━━━━ 0s 28ms/step - accuracy: 0.4959 - loss: 1.4365
+Epoch 6: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+595/595 ━━━━━━━━━━━━━━━━━━━━ 26s 44ms/step - accuracy: 0.4976 - loss: 1.4318 - val_accuracy: 0.4653 - val_loss: 1.5199 - learning_rate: 1.0000e-05
+Epoch 7/20
+593/595 ━━━━━━━━━━━━━━━━━━━━ 0s 27ms/step - accuracy: 0.5369 - loss: 1.3516
+Epoch 7: ReduceLROnPlateau reducing learning rate to 9.999999974752428e-08.
+595/595 ━━━━━━━━━━━━━━━━━━━━ 29s 50ms/step - accuracy: 0.5383 - loss: 1.3474 - val_accuracy: 0.5633 - val_loss: 1.3678 - learning_rate: 1.0000e-06
+Epoch 7: early stopping
+Restoring model weights from the end of the best epoch: 5.
+Quantity images --> 8
+Quantity categories --> 22
+model( --> aslvid2gloss_v78.keras <-- )
