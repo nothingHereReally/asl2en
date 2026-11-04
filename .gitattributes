@@ -222,3 +222,6 @@ model/hybrid_ds_v74_transformer_distance/tfboard_logs/validation/events.out.tfev
 model/hybrid_ds_v75_transformer_distance/aslvid2gloss_v75.keras filter=lfs diff=lfs merge=lfs -text
 model/hybrid_ds_v75_transformer_distance/tfboard_logs/train/events.out.tfevents.1793678013.doxob.683562.0.v2 filter=lfs diff=lfs merge=lfs -text
 model/hybrid_ds_v75_transformer_distance/tfboard_logs/validation/events.out.tfevents.1793678033.doxob.683562.1.v2 filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v76_transformer_distance_wlasl_only/aslvid2gloss_v76.keras filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v76_transformer_distance_wlasl_only/tfboard_logs/train/events.out.tfevents.1793679564.doxob.745503.0.v2 filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v76_transformer_distance_wlasl_only/tfboard_logs/validation/events.out.tfevents.1793679590.doxob.745503.1.v2 filter=lfs diff=lfs merge=lfs -text
