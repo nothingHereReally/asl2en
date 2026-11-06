@@ -2813,12 +2813,12 @@ def process_videos_ds() -> tuple:
                 skeleton_abs_folder.mkdir()
                 split_what: str= VAL_TRAIN if idx_video<int(RATIO4TRAIN*len(a_gloss[KEY_VIDS])) else VAL_TEST
                 ds_landmark[-1][KEY_VIDS].append({
-                    KEY_FILE: a_video[KEY_FILE],
+                    KEY_PFOLDER: pfolder_name,
                     KEY_SPLIT: split_what,
                     KEY_LANDMARK: [],
                 })
                 ds_skeleton[-1][KEY_VIDS].append({
-                    KEY_FILE: a_video[KEY_FILE],
+                    KEY_PFOLDER: pfolder_name,
                     KEY_SPLIT: split_what,
                     KEY_SKELETON: [],
                 })
