@@ -14,6 +14,7 @@ DS1_22_cleaned_wlasl: Path= PROJ_ROOT /'dataset' /'clean_dataset' /'fix_recent_n
 DS2_16_cleaned_aslct: Path= PROJ_ROOT /'dataset' /'asl_citizen' /'selected_start_end_landmark.json'
 KEY_G: str= 'gloss'
 KEY_VIDS: str= 'videos'
+Q_VIDS_PER_G: int= 10
 KEY_LANDMARK: str= 'landmark'
 # ---------------------------
 KEY_SPLIT: str= 'split'
@@ -61,14 +62,14 @@ def load_dataset(show_dist: bool=False) -> list:
                             out[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
                                 out[-1][KEY_VIDS][-1][KEY_LANDMARK][-1].copy()
                             )
-            out[-1][KEY_VIDS]= out[-1][KEY_VIDS][:10]
+            out[-1][KEY_VIDS]= out[-1][KEY_VIDS][:Q_VIDS_PER_G]
         else:
             # -- ie. for gloss who --
             out.append({
                 KEY_G: a_gloss[KEY_G],
                 KEY_VIDS: [],
             })
-            for a_video in a_gloss[KEY_VIDS][:10]:
+            for a_video in a_gloss[KEY_VIDS][:Q_VIDS_PER_G]:
                 for start_end in a_video[KEY_LANDMARK]:
                     out[-1][KEY_VIDS].append({
                         KEY_PFOLDER_FROM: DS1_22_LANDMARK_DIR,
@@ -88,7 +89,7 @@ def load_dataset(show_dist: bool=False) -> list:
                 KEY_G: a_gloss[KEY_G],
                 KEY_VIDS: [],
             })
-            for a_video in a_gloss[KEY_VIDS][10:]:
+            for a_video in a_gloss[KEY_VIDS][Q_VIDS_PER_G:]:
                 for start_end in a_video[KEY_LANDMARK]:
                     out[-1][KEY_VIDS].append({
                         KEY_PFOLDER_FROM: DS1_22_LANDMARK_DIR,
@@ -224,6 +225,26 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
         print(f"minimum elements count: {min_element_count}")
         print('------------------------')
     return output
+def split4train_test(dataset: list) -> tuple:
+    out_train: list= []
+    out_test: list= []
+    for a_gloss in dataset:
+        out_train.append({
+            KEY_G: a_gloss[KEY_G],
+            KEY_VIDS: [],
+        })
+        out_test.append({
+            KEY_G: a_gloss[KEY_G],
+            KEY_VIDS: [],
+        })
+        for idx_video, (_, video_elements) in enumerate(groupby(
+            a_gloss[KEY_VIDS], key=lambda el: el[KEY_PFOLDER]
+        )):
+            if idx_video < RATIO4TRAIN*Q_VIDS_PER_G:
+                out_train[-1][KEY_VIDS].extend(list(video_elements)[:2])
+            else:
+                out_test[-1][KEY_VIDS].extend(list(video_elements)[:2])
+    return (out_train, out_test)
 def main() -> None:
     dataset_annotations: list= load_dataset(show_dist=False)
     QUANTITY_FRAME: int= median_what(dataset_annotations, show_dist=False) # median 26
@@ -236,6 +257,7 @@ def main() -> None:
         q_frame=QUANTITY_FRAME,
         show_dist=False,
     )
+    ds_annotations_train, ds_annotations_test= split4train_test(dataset_annotations)
     '''
     TODO:
     ✔ QUANTITY_FRAME be median blah blahhh
