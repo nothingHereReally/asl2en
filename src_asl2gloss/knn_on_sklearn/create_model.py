@@ -196,19 +196,32 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
                     KEY_LANDMARK
                 ][:q_frame]
 
-                # part 2
-                output[-1][KEY_VIDS].append({
-                    KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
-                    KEY_PFOLDER: a_video[KEY_PFOLDER],
-                    KEY_LANDMARK: []
-                })
-                for _ in range(ratio):
+                if len(a_video[KEY_LANDMARK]) < q_frame:
+                    # part 2
+                    output[-1][KEY_VIDS].append({
+                        KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
+                        KEY_PFOLDER: a_video[KEY_PFOLDER],
+                        KEY_LANDMARK: []
+                    })
+                    for _ in range(ratio):
+                        output[-1][KEY_VIDS][-1][KEY_LANDMARK].extend(
+                            a_video[KEY_LANDMARK]
+                        )
+                    output[-1][KEY_VIDS][-1][KEY_LANDMARK]= output[-1][KEY_VIDS][-1][
+                        KEY_LANDMARK
+                    ][:q_frame]
+
+                    # part 3
+                    output[-1][KEY_VIDS].append({
+                        KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
+                        KEY_PFOLDER: a_video[KEY_PFOLDER],
+                        KEY_LANDMARK: a_video[KEY_LANDMARK],
+                    })
                     output[-1][KEY_VIDS][-1][KEY_LANDMARK].extend(
-                        a_video[KEY_LANDMARK]
+                        [ output[-1][KEY_VIDS][-1][KEY_LANDMARK][-1] ] *(
+                            q_frame -len(output[-1][KEY_VIDS][-1][KEY_LANDMARK])
+                        )
                     )
-                output[-1][KEY_VIDS][-1][KEY_LANDMARK]= output[-1][KEY_VIDS][-1][
-                    KEY_LANDMARK
-                ][:q_frame]
             else:
                 for init_idx in range(len(a_video[KEY_LANDMARK]) -q_frame +1):
                     output[-1][KEY_VIDS].append({
@@ -225,7 +238,7 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
         print(f"minimum elements count: {min_element_count}")
         print('------------------------')
     return output
-def split4train_test(dataset: list) -> tuple:
+def split4train_test(dataset: list, q_per_video: int) -> tuple:
     out_train: list= []
     out_test: list= []
     for a_gloss in dataset:
@@ -241,9 +254,9 @@ def split4train_test(dataset: list) -> tuple:
             a_gloss[KEY_VIDS], key=lambda el: el[KEY_PFOLDER]
         )):
             if idx_video < RATIO4TRAIN*Q_VIDS_PER_G:
-                out_train[-1][KEY_VIDS].extend(list(video_elements)[:2])
+                out_train[-1][KEY_VIDS].extend(list(video_elements)[:q_per_video])
             else:
-                out_test[-1][KEY_VIDS].extend(list(video_elements)[:2])
+                out_test[-1][KEY_VIDS].extend(list(video_elements)[:q_per_video])
     return (out_train, out_test)
 def main() -> None:
     dataset_annotations: list= load_dataset(show_dist=False)
@@ -257,7 +270,7 @@ def main() -> None:
         q_frame=QUANTITY_FRAME,
         show_dist=False,
     )
-    ds_annotations_train, ds_annotations_test= split4train_test(dataset_annotations)
+    ds_annotations_train, ds_annotations_test= split4train_test(dataset_annotations, 2)
     '''
     TODO:
     ✔ QUANTITY_FRAME be median blah blahhh
