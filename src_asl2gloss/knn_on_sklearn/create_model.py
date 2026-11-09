@@ -169,9 +169,12 @@ def do_all_have_hands(dataset: list, show_msg: bool=False) -> bool:
                         return all_atleast1hand 
     return all_atleast1hand
 def main() -> None:
-    dataset_annotations: list= load_dataset(show_dist=True)
-    QUANTITY_FRAME: int= median_what(dataset_annotations, show_dist=True)
-    print(do_all_have_hands(dataset_annotations, show_msg=True))
+    dataset_annotations: list= load_dataset(show_dist=False)
+    QUANTITY_FRAME: int= median_what(dataset_annotations, show_dist=False)
+    print(
+        f"is there at least 1 hand on every image landmarks? " +
+        "yes" if do_all_have_hands(dataset_annotations, show_msg=False) else "NO"
+    )
     print(f"---- median: {QUANTITY_FRAME} ----")
     '''
     TODO:
