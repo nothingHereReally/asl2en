@@ -179,16 +179,31 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
             KEY_VIDS: [],
         })
         for a_video in a_gloss[KEY_VIDS]:
-            output[-1][KEY_VIDS].append({
-                KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
-                KEY_PFOLDER: a_video[KEY_PFOLDER],
-                KEY_LANDMARK: [],
-            })
             if len(a_video[KEY_LANDMARK]) <= q_frame:
+                # part 1
+                output[-1][KEY_VIDS].append({
+                    KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
+                    KEY_PFOLDER: a_video[KEY_PFOLDER],
+                    KEY_LANDMARK: [],
+                })
                 ratio: int= ceil(q_frame/len(a_video[KEY_LANDMARK]))
                 for an_img_detail in a_video[KEY_LANDMARK]:
                     output[-1][KEY_VIDS][-1][KEY_LANDMARK].extend(
                         [an_img_detail] * ratio
+                    )
+                output[-1][KEY_VIDS][-1][KEY_LANDMARK]= output[-1][KEY_VIDS][-1][
+                    KEY_LANDMARK
+                ][:q_frame]
+
+                # part 2
+                output[-1][KEY_VIDS].append({
+                    KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
+                    KEY_PFOLDER: a_video[KEY_PFOLDER],
+                    KEY_LANDMARK: []
+                })
+                for _ in range(ratio):
+                    output[-1][KEY_VIDS][-1][KEY_LANDMARK].extend(
+                        a_video[KEY_LANDMARK]
                     )
                 output[-1][KEY_VIDS][-1][KEY_LANDMARK]= output[-1][KEY_VIDS][-1][
                     KEY_LANDMARK
