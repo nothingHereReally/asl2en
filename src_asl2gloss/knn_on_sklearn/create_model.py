@@ -1,7 +1,6 @@
 from json import load as loadJson, dump as writeJson
 from itertools import groupby
 from pathlib import Path
-from typing import dataclass_transform
 
 
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
