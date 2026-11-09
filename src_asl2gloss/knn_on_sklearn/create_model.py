@@ -176,7 +176,7 @@ def main() -> None:
     '''
     TODO:
     ✔ QUANTITY_FRAME be median blah blahhh
-    check mandatory all has atleast 1 hand blah
+    ✔ check mandatory all has atleast 1 hand blah
     use sklearn KNN blah for model
     do ML stats blah
     '''
