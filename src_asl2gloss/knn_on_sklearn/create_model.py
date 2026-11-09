@@ -110,13 +110,12 @@ def load_dataset(show_dist: bool=False) -> list:
             KEY_G: a_gloss[KEY_G],
             KEY_VIDS: [],
         })
-        for a_video in a_gloss[KEY_VIDS]:
+        for a_video in a_gloss[KEY_VIDS][:videos_per_gloss]:
             out[-1][KEY_VIDS].append({
                 KEY_PFOLDER_FROM: DS2_16_LANDMARK_DIR,
                 KEY_PFOLDER: a_video[KEY_PFOLDER],
                 KEY_LANDMARK: a_video[KEY_LANDMARK],
             })
-        out[-1][KEY_VIDS]= out[-1][KEY_VIDS][:videos_per_gloss]
     if show_dist:
         for a_gloss in out:
             print(f'{a_gloss[KEY_G]} --> {len(a_gloss[KEY_VIDS])}')
