@@ -33,7 +33,7 @@ KEY_PFOLDER: str= 'parent_folder'
 def has_atleast1hand(annotation: dict) -> bool:
     return (annotation[KEY_LHAND] or annotation[KEY_RHAND]) and \
             annotation[KEY_FACE] and annotation[KEY_POSE]
-def load_dataset(show_dist: bool) -> list:
+def load_dataset(show_dist: bool=False) -> list:
     with open(DS1_22_cleaned_wlasl, 'r') as f:
         ds1_wlasl: list= loadJson(f)
     with open(DS2_16_cleaned_aslct, 'r') as f:
@@ -121,7 +121,7 @@ def load_dataset(show_dist: bool) -> list:
         for a_gloss in out:
             print(f'{a_gloss[KEY_G]} --> {len(a_gloss[KEY_VIDS])}')
     return out
-def median_what(dataset: list, show_dist: bool) -> int:
+def median_what(dataset: list, show_dist: bool=False) -> int:
     length_list: list= []
     for a_gloss in dataset:
         for a_video in a_gloss[KEY_VIDS]:
@@ -147,7 +147,7 @@ def median_what(dataset: list, show_dist: bool) -> int:
         print(f"quantity groups( by number of images ): {len(tuple(groupby(length_list, key=lambda el: el['len'])))}")
         print(f"quantity videos: {len(length_list)}")
     return median_out
-def do_all_have_hands(dataset: list, show_msg: bool) -> bool:
+def do_all_have_hands(dataset: list, show_msg: bool=False) -> bool:
     all_atleast1hand: bool= True
     for a_gloss in dataset:
         for a_video in a_gloss[KEY_VIDS]:
