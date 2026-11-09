@@ -1,5 +1,6 @@
 from json import load as loadJson, dump as writeJson
 from itertools import groupby
+from math import ceil
 from pathlib import Path
 
 
@@ -167,14 +168,52 @@ def do_all_have_hands(dataset: list, show_msg: bool=False) -> bool:
                     else:
                         return all_atleast1hand 
     return all_atleast1hand
+def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -> list:
+    output: list= []
+    if show_dist:
+        print("---- dataset elements(obeys quantity frame) count ----")
+    for a_gloss in dataset:
+        output.append({
+            KEY_G: a_gloss[KEY_G],
+            KEY_VIDS: [],
+        })
+        for a_video in a_gloss[KEY_VIDS]:
+            output[-1][KEY_VIDS].append({
+                KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
+                KEY_PFOLDER: a_video[KEY_PFOLDER],
+                KEY_LANDMARK: [],
+            })
+            if len(a_video[KEY_LANDMARK]) <= q_frame:
+                ratio: int= ceil(q_frame/len(a_video[KEY_LANDMARK]))
+                for an_img_detail in a_video[KEY_LANDMARK]:
+                    output[-1][KEY_VIDS][-1][KEY_LANDMARK].extend(
+                        [an_img_detail] * ratio
+                    )
+                output[-1][KEY_VIDS][-1][KEY_LANDMARK]= output[-1][KEY_VIDS][-1][
+                    KEY_LANDMARK
+                ][:q_frame]
+            else:
+                for init_idx in range(len(a_video[KEY_LANDMARK]) -q_frame +1):
+                    output[-1][KEY_VIDS].append({
+                        KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
+                        KEY_PFOLDER: a_video[KEY_PFOLDER],
+                        KEY_LANDMARK: a_video[KEY_LANDMARK][init_idx:init_idx+q_frame],
+                    })
+        if show_dist:
+            print(f"-- gloss( {output[-1][KEY_G]} ) -- quantity elements: {len(output[-1][KEY_VIDS])}")
+    return output
 def main() -> None:
     dataset_annotations: list= load_dataset(show_dist=False)
-    QUANTITY_FRAME: int= median_what(dataset_annotations, show_dist=False)
+    QUANTITY_FRAME: int= median_what(dataset_annotations, show_dist=False) # median 26
     print(
         f"is there at least 1 hand on every image landmarks? " +
         "yes" if do_all_have_hands(dataset_annotations, show_msg=False) else "NO"
     )
-    print(f"---- median: {QUANTITY_FRAME} ----")
+    dataset_annotations= process4quantity_frame(
+        dataset=dataset_annotations,
+        q_frame=QUANTITY_FRAME,
+        show_dist=False,
+    )
     '''
     TODO:
     ✔ QUANTITY_FRAME be median blah blahhh
