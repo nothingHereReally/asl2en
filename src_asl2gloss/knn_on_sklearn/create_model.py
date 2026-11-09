@@ -170,6 +170,7 @@ def do_all_have_hands(dataset: list, show_msg: bool=False) -> bool:
     return all_atleast1hand
 def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -> list:
     output: list= []
+    min_element_count: int= 999_999
     if show_dist:
         print("---- dataset elements(obeys quantity frame) count ----")
     for a_gloss in dataset:
@@ -201,6 +202,12 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
                     })
         if show_dist:
             print(f"-- gloss( {output[-1][KEY_G]} ) -- quantity elements: {len(output[-1][KEY_VIDS])}")
+            if len(output[-1][KEY_VIDS]) < min_element_count:
+                min_element_count= len(output[-1][KEY_VIDS])
+    if show_dist:
+        print('------------------------')
+        print(f"minimum elements count: {min_element_count}")
+        print('------------------------')
     return output
 def main() -> None:
     dataset_annotations: list= load_dataset(show_dist=False)
