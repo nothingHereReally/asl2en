@@ -180,6 +180,7 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
             KEY_G: a_gloss[KEY_G],
             KEY_VIDS: [],
         })
+        per_gloss_per_video_elements: list[int]= []
         for a_video in a_gloss[KEY_VIDS]:
             if len(a_video[KEY_LANDMARK]) < q_frame:
                 # part 1
@@ -227,6 +228,7 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
                 )
                 if 3 < min_element_count_on_video:
                     min_element_count_on_video= 3
+                per_gloss_per_video_elements.append(3)
 
             elif len(a_video[KEY_LANDMARK]) == q_frame:
                 # part 1
@@ -237,6 +239,7 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
                 })
                 if 1 < min_element_count_on_video:
                     min_element_count_on_video= 1
+                per_gloss_per_video_elements.append(1)
 
             else:
                 for init_idx in range(len(a_video[KEY_LANDMARK]) -q_frame +1):
@@ -247,8 +250,14 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
                     })
                 if (len(a_video[KEY_LANDMARK]) -q_frame +1) < min_element_count_on_video:
                     min_element_count_on_video= len(a_video[KEY_LANDMARK]) -q_frame +1
+                per_gloss_per_video_elements.append(
+                    len(a_video[KEY_LANDMARK]) -q_frame +1
+                )
         if show_dist:
             print(f"-- gloss( {output[-1][KEY_G]} ) -- quantity elements: {len(output[-1][KEY_VIDS])}")
+            for idx_video, elements_count_on_a_video in enumerate(per_gloss_per_video_elements):
+                print(f"    {str(idx_video+1).zfill(3)}: {elements_count_on_a_video}")
+            print()
             if len(output[-1][KEY_VIDS]) < min_element_count_on_gloss:
                 min_element_count_on_gloss= len(output[-1][KEY_VIDS])
     if show_dist:
