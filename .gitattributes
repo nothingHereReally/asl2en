@@ -236,3 +236,4 @@ model/tfboard_logs_v79_glasl/train/events.out.tfevents.1793784822.doxob.674647.0
 model/tfboard_logs_v79_glasl/validation/events.out.tfevents.1793786312.doxob.674647.1.v2 filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/pics_others/median_human_being.jpg filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/pics_others/human_from_internet_standing_up.jpg filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/model_v001/knn_model.joblib filter=lfs diff=lfs merge=lfs -text
