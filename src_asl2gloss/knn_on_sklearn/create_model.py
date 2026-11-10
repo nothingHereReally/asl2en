@@ -214,6 +214,38 @@ def q_lessthan_p2_loop(video_annotation: dict, q_frame: int) -> list[dict]:
     assert len(output) == q2be_created
 
     return output
+def q_lessthan_p3_stretch_startend(video_annotation: dict, q_frame: int) -> list[dict]:
+    # use last ie. [x1, x2, ..., xn, xn, xn, ...]
+    assert len(video_annotation[KEY_LANDMARK]) < q_frame
+
+    output: list[dict]= []
+    missing_what: int= q_frame -len(video_annotation[KEY_LANDMARK])
+
+    # on start stretch
+    output.append({
+        KEY_PFOLDER_FROM: video_annotation[KEY_PFOLDER_FROM],
+        KEY_PFOLDER: video_annotation[KEY_PFOLDER],
+        KEY_LANDMARK: [
+            video_annotation[KEY_LANDMARK][0].copy()
+            for _ in range(missing_what)
+        ],
+    })
+    output[-1][KEY_LANDMARK].extend(video_annotation[KEY_LANDMARK])
+    assert len(output[-1][KEY_LANDMARK]) == q_frame
+
+    # on end stretch
+    output.append({
+        KEY_PFOLDER_FROM: video_annotation[KEY_PFOLDER_FROM],
+        KEY_PFOLDER: video_annotation[KEY_PFOLDER],
+        KEY_LANDMARK: video_annotation[KEY_LANDMARK],
+    })
+    output[-1][KEY_LANDMARK].extend([
+            video_annotation[KEY_LANDMARK][-1].copy()
+            for _ in range(missing_what)
+        ])
+    assert len(output[-1][KEY_LANDMARK]) == q_frame
+
+    return output
 def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -> list:
     output: list= []
     min_element_count_on_gloss: int= 999_999
@@ -228,30 +260,26 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
         per_gloss_per_video_elements: list[int]= []
         for a_video in a_gloss[KEY_VIDS]:
             if len(a_video[KEY_LANDMARK]) < q_frame:
+                q_added: int= 0
+
                 # part 1
                 elements: list[dict]= q_lessthan_p1_spread(a_video, q_frame)
                 output[-1][KEY_VIDS].extend(elements)
+                q_added+= len(elements)
 
                 # part 2
                 elements= q_lessthan_p2_loop(a_video, q_frame)
                 output[-1][KEY_VIDS].extend(elements)
+                q_added+= len(elements)
 
                 # part 3
-                # use last ie. [x1, x2, ..., xn, xn, xn, ...]
-                output[-1][KEY_VIDS].append({
-                    KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
-                    KEY_PFOLDER: a_video[KEY_PFOLDER],
-                    KEY_LANDMARK: a_video[KEY_LANDMARK],
-                })
-                output[-1][KEY_VIDS][-1][KEY_LANDMARK].extend(
-                    [ output[-1][KEY_VIDS][-1][KEY_LANDMARK][-1] ] *(
-                        q_frame -len(output[-1][KEY_VIDS][-1][KEY_LANDMARK])
-                    )
-                )
-                if 3 < min_element_count_on_video:
-                    min_element_count_on_video= 3
-                per_gloss_per_video_elements.append(3)
+                elements= q_lessthan_p3_stretch_startend(a_video, q_frame)
+                output[-1][KEY_VIDS].extend(elements)
+                q_added+= len(elements)
 
+                if q_added < min_element_count_on_video:
+                    min_element_count_on_video= q_added
+                per_gloss_per_video_elements.append(q_added)
             elif len(a_video[KEY_LANDMARK]) == q_frame:
                 # part 1
                 output[-1][KEY_VIDS].append({
