@@ -141,7 +141,7 @@ def flip_vertical_y_axis(landmarks) -> np.ndarray:
 def has_atleast1hand(annotation: dict) -> bool:
     return (annotation[KEY_LHAND] or annotation[KEY_RHAND]) and \
             annotation[KEY_FACE] and annotation[KEY_POSE]
-def load_dataset(show_dist: bool=False) -> list:
+def load_dataset_annotations(show_dist: bool=False) -> list:
     with open(DS1_22_cleaned_wlasl, 'r') as f:
         ds1_wlasl: list= loadJson(f)
     with open(DS2_16_cleaned_aslct, 'r') as f:
@@ -709,7 +709,7 @@ def get_dataset(dataset: list[dict]) -> tuple[np.ndarray, list[int]]:
         ds_elements_label,
     )
 def main() -> None:
-    dataset_annotations: list= load_dataset(show_dist=False)
+    dataset_annotations: list= load_dataset_annotations(show_dist=False)
     QUANTITY_FRAME: int= median_what(dataset_annotations, show_dist=False) # median 26
     print(
         f"is there at least 1 hand on every image landmarks? " +
