@@ -171,7 +171,8 @@ def do_all_have_hands(dataset: list, show_msg: bool=False) -> bool:
     return all_atleast1hand
 def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -> list:
     output: list= []
-    min_element_count: int= 999_999
+    min_element_count_on_gloss: int= 999_999
+    min_element_count_on_video: int= 999_999
     if show_dist:
         print("---- dataset elements(obeys quantity frame) count ----")
     for a_gloss in dataset:
@@ -180,8 +181,9 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
             KEY_VIDS: [],
         })
         for a_video in a_gloss[KEY_VIDS]:
-            if len(a_video[KEY_LANDMARK]) <= q_frame:
+            if len(a_video[KEY_LANDMARK]) < q_frame:
                 # part 1
+                # spread out via ceil( ... )
                 output[-1][KEY_VIDS].append({
                     KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
                     KEY_PFOLDER: a_video[KEY_PFOLDER],
@@ -190,38 +192,52 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
                 ratio: int= ceil(q_frame/len(a_video[KEY_LANDMARK]))
                 for an_img_detail in a_video[KEY_LANDMARK]:
                     output[-1][KEY_VIDS][-1][KEY_LANDMARK].extend(
-                        [an_img_detail] * ratio
+                        [an_img_detail for _ in range(ratio)]
                     )
                 output[-1][KEY_VIDS][-1][KEY_LANDMARK]= output[-1][KEY_VIDS][-1][
                     KEY_LANDMARK
                 ][:q_frame]
 
-                if len(a_video[KEY_LANDMARK]) < q_frame:
-                    # part 2
-                    output[-1][KEY_VIDS].append({
-                        KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
-                        KEY_PFOLDER: a_video[KEY_PFOLDER],
-                        KEY_LANDMARK: []
-                    })
-                    for _ in range(ratio):
-                        output[-1][KEY_VIDS][-1][KEY_LANDMARK].extend(
-                            a_video[KEY_LANDMARK]
-                        )
-                    output[-1][KEY_VIDS][-1][KEY_LANDMARK]= output[-1][KEY_VIDS][-1][
-                        KEY_LANDMARK
-                    ][:q_frame]
-
-                    # part 3
-                    output[-1][KEY_VIDS].append({
-                        KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
-                        KEY_PFOLDER: a_video[KEY_PFOLDER],
-                        KEY_LANDMARK: a_video[KEY_LANDMARK],
-                    })
+                # part 2
+                # use again loop ie. [x1, x2, ..., xn, x1, x2, ...] till q_frame
+                output[-1][KEY_VIDS].append({
+                    KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
+                    KEY_PFOLDER: a_video[KEY_PFOLDER],
+                    KEY_LANDMARK: []
+                })
+                for _ in range(ratio):
                     output[-1][KEY_VIDS][-1][KEY_LANDMARK].extend(
-                        [ output[-1][KEY_VIDS][-1][KEY_LANDMARK][-1] ] *(
-                            q_frame -len(output[-1][KEY_VIDS][-1][KEY_LANDMARK])
-                        )
+                        a_video[KEY_LANDMARK]
                     )
+                output[-1][KEY_VIDS][-1][KEY_LANDMARK]= output[-1][KEY_VIDS][-1][
+                    KEY_LANDMARK
+                ][:q_frame]
+
+                # part 3
+                # use last ie. [x1, x2, ..., xn, xn, xn, ...]
+                output[-1][KEY_VIDS].append({
+                    KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
+                    KEY_PFOLDER: a_video[KEY_PFOLDER],
+                    KEY_LANDMARK: a_video[KEY_LANDMARK],
+                })
+                output[-1][KEY_VIDS][-1][KEY_LANDMARK].extend(
+                    [ output[-1][KEY_VIDS][-1][KEY_LANDMARK][-1] ] *(
+                        q_frame -len(output[-1][KEY_VIDS][-1][KEY_LANDMARK])
+                    )
+                )
+                if 3 < min_element_count_on_video:
+                    min_element_count_on_video= 3
+
+            elif len(a_video[KEY_LANDMARK]) == q_frame:
+                # part 1
+                output[-1][KEY_VIDS].append({
+                    KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
+                    KEY_PFOLDER: a_video[KEY_PFOLDER],
+                    KEY_LANDMARK: a_video[KEY_LANDMARK],
+                })
+                if 1 < min_element_count_on_video:
+                    min_element_count_on_video= 1
+
             else:
                 for init_idx in range(len(a_video[KEY_LANDMARK]) -q_frame +1):
                     output[-1][KEY_VIDS].append({
@@ -229,13 +245,16 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
                         KEY_PFOLDER: a_video[KEY_PFOLDER],
                         KEY_LANDMARK: a_video[KEY_LANDMARK][init_idx:init_idx+q_frame],
                     })
+                if (len(a_video[KEY_LANDMARK]) -q_frame +1) < min_element_count_on_video:
+                    min_element_count_on_video= len(a_video[KEY_LANDMARK]) -q_frame +1
         if show_dist:
             print(f"-- gloss( {output[-1][KEY_G]} ) -- quantity elements: {len(output[-1][KEY_VIDS])}")
-            if len(output[-1][KEY_VIDS]) < min_element_count:
-                min_element_count= len(output[-1][KEY_VIDS])
+            if len(output[-1][KEY_VIDS]) < min_element_count_on_gloss:
+                min_element_count_on_gloss= len(output[-1][KEY_VIDS])
     if show_dist:
         print('------------------------')
-        print(f"minimum elements count: {min_element_count}")
+        print(f"minimum elements count on a gloss: {min_element_count_on_gloss}")
+        print(f"minimum elements count on a video: {min_element_count_on_video}")
         print('------------------------')
     return output
 def split4train_test(dataset: list, q_per_video: int) -> tuple:
