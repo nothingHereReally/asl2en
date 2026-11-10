@@ -628,6 +628,27 @@ def extract_features(landmarks: np.ndarray) -> np.ndarray:
         ],
         axis=-1,
     )
+def get_dataset(dataset: list[dict]) -> tuple[np.ndarray, list[int]]:
+    ds_elements: list|np.ndarray= []
+    ds_elements_label: list= []
+    for idx_gloss, a_gloss in enumerate(dataset):
+        for a_ds_element in a_gloss[KEY_VIDS]:
+            ds_elements.append(loadnpfiles(a_ds_element))
+            # appends of shape (QUANTITY_FRAME, 86, 2)
+            ds_elements_label.append(idx_gloss)
+    ds_elements= np.array(ds_elements)
+    orig_shape: tuple= ds_elements.shape
+    ds_elements= extract_features(np.reshape(
+        ds_elements,
+        shape=(-1, 86, 2),
+    ))
+    ds_elements= np.reshape(ds_elements, shape=(orig_shape[0], orig_shape[1], -1))
+    assert ds_elements.shape == (len(ds_elements_label), orig_shape[1], 120)
+
+    return (
+        np.reshape(ds_elements, (orig_shape[0], -1) ),
+        ds_elements_label,
+    )
 def main() -> None:
     dataset_annotations: list= load_dataset(show_dist=False)
     QUANTITY_FRAME: int= median_what(dataset_annotations, show_dist=False) # median 26
