@@ -613,8 +613,8 @@ def extract_features(landmarks: np.ndarray) -> np.ndarray:
     )
     left_index_finger_diff= (left_index_finger_diff -the_rest)**2
     right_index_finger_diff= (right_index_finger_diff -the_rest)**2
-    left_index_finger_diff= np.sum(left_index_finger_diff, axis=-1, keepdims=False)
-    right_index_finger_diff= np.sum(right_index_finger_diff, axis=-1, keepdims=False)
+    left_index_finger_diff= np.sum(left_index_finger_diff, axis=-1, keepdims=False)**0.5
+    right_index_finger_diff= np.sum(right_index_finger_diff, axis=-1, keepdims=False)**0.5
     return np.concatenate(
         [
             left_index_finger_diff,
