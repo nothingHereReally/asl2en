@@ -799,12 +799,5 @@ def main() -> None:
             knn_model.predict(ds_test_x),
             normalize=False,
         ) / ds_test_y.shape[0] * 100} %")
-    '''
-    TODO:
-    ✔ QUANTITY_FRAME be median blah blahhh
-    ✔ check mandatory all has atleast 1 hand blah
-    use sklearn KNN blah for model
-    do ML stats blah
-    '''
 if __name__=="__main__":
     main()
