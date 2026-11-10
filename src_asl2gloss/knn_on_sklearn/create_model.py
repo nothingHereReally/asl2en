@@ -30,6 +30,61 @@ KEY_LHAND: str= 'left_hand'
 KEY_RHAND: str= 'right_hand'
 KEY_PFOLDER_FROM: str= 'parent_folder_from'
 KEY_PFOLDER: str= 'parent_folder'
+# -------------------------------
+WORTHY_FACE_IDX: tuple= (
+    0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
+    105, 107, 133, 145, 152, 159, 162, 168, 172, 195,
+    263, 291, 294, 300, 323, 332, 334, 336, 362, 374,
+    386, 389, 397
+)
+WORTHY_POSE_IDX: tuple= (11,12,13,14,15,16,23,24)
+Q_HAND_LMARK: int= 21
+# -----------------------------
+LM_IDX_TOP_LIP: int        =  0
+LM_IDX_TIP_OF_FOREHEAD: int=  3
+LM_IDX_RIGHT_MOST_EYE: int =  7
+LM_IDX_RIGHT_MOST_LIP: int =  8
+LM_IDX_CHIN_TIP: int       = 17
+LM_IDX_RIGHT_EAR: int      = 19
+LM_IDX_UP_TIP_NOSE: int    = 20
+LM_IDX_LEFT_MOST_EYE: int  = 23
+LM_IDX_LEFT_MOST_LIP: int  = 24
+LM_IDX_LEFT_EAR: int       = 34
+LMs_IDXs_FACE_GOOD: tuple= (
+    LM_IDX_TOP_LIP,
+    LM_IDX_TIP_OF_FOREHEAD,
+    LM_IDX_RIGHT_MOST_EYE,
+    LM_IDX_RIGHT_MOST_LIP,
+    LM_IDX_CHIN_TIP,
+    LM_IDX_RIGHT_EAR,
+    LM_IDX_UP_TIP_NOSE,
+    LM_IDX_LEFT_MOST_EYE,
+    LM_IDX_LEFT_MOST_LIP,
+    LM_IDX_LEFT_EAR,
+)
+# -----------------------------
+LM_IDX_LEFT_SHOULDER: int  = 36
+LM_IDX_RIGHT_SHOULDER: int = 37
+LM_IDX_LEFT_HIP: int       = 42
+LM_IDX_RIGHT_HIP: int      = 43
+# -----------------------------
+LM_IDX_LEFT_INDEXF_TIP: int= 52
+LM_IDX_RIGHT_INDEXF_TIP:int= 73
+# -----------------------------
+LMs_IDXs_LEFT_H_NOT_INDEXF: tuple= (
+    44, 45, 46, 47, 48,
+    49, 50, 51,
+    53, 54, 55, 56, 57,
+    58, 59, 60, 61, 62,
+    63, 64,
+)
+LMs_IDXs_RIGHT_H_NOT_INDEXF: tuple= (
+    65, 66, 67, 68, 69,
+    70, 71, 72,
+    74, 75, 76, 77, 78,
+    79, 80, 81, 82, 83,
+    84, 85,
+)
 
 
 def has_atleast1hand(annotation: dict) -> bool:
@@ -510,6 +565,63 @@ def loadnpfiles(annotation: dict) -> list[np.ndarray]:
             output.append(np.load(f))
 
     return output
+def get2dots_frombody(input: np.ndarray) -> np.ndarray:
+    '''
+    input -- shape of (..., 86, 2)
+    -------------------------------
+    returned shape is (...,  2, 2)
+    '''
+    shoulder_center: np.ndarray= (
+        input[..., LM_IDX_LEFT_SHOULDER:LM_IDX_LEFT_SHOULDER+1, :] +
+        input[..., LM_IDX_RIGHT_SHOULDER:LM_IDX_RIGHT_SHOULDER+1, :]
+    )/2.0
+    hip_center: np.ndarray= (
+        input[..., LM_IDX_LEFT_HIP:LM_IDX_LEFT_HIP+1, :] +
+        input[..., LM_IDX_RIGHT_HIP:LM_IDX_RIGHT_HIP+1, :]
+    )/2.0
+    shoulder_hip_center: np.ndarray= (shoulder_center +hip_center)/2.0
+    '''
+    shoulder_center and hip_center, both has shape (..., 1, 2)
+    so as shoulder_hip_center has shape (..., 1, 2)
+    '''
+    return np.concatenate([
+        (shoulder_center+shoulder_hip_center)/2.0,
+        (shoulder_hip_center+hip_center)/2.0,
+    ], axis=-2)
+def extract_features(landmarks: np.ndarray) -> np.ndarray:
+    '''
+    landmarks be of shape (BATCH, 86, 2)
+    ---- to calculate distance from ----
+    10 face landmarks
+     8 pose landmarks + 2 landmarks/dots
+    20 left hand landmarks
+    20 right hand landmarks
+    '''
+    assert landmarks.shape[1:] == (86, 2)
+
+    left_index_finger_diff: np.ndarray=  landmarks[..., LM_IDX_LEFT_INDEXF_TIP:LM_IDX_LEFT_INDEXF_TIP+1, :]
+    right_index_finger_diff: np.ndarray= landmarks[..., LM_IDX_RIGHT_INDEXF_TIP:LM_IDX_RIGHT_INDEXF_TIP+1, :]
+    the_rest: np.ndarray= np.concatenate(
+        [
+            landmarks[..., LMs_IDXs_FACE_GOOD, :],
+            get2dots_frombody(landmarks),
+            landmarks[..., len(WORTHY_FACE_IDX):len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX), :],
+            landmarks[..., LMs_IDXs_LEFT_H_NOT_INDEXF,  :],
+            landmarks[..., LMs_IDXs_RIGHT_H_NOT_INDEXF, :],
+        ],
+        axis=-2,
+    )
+    left_index_finger_diff= (left_index_finger_diff -the_rest)**2
+    right_index_finger_diff= (right_index_finger_diff -the_rest)**2
+    left_index_finger_diff= np.sum(left_index_finger_diff, axis=-1, keepdims=False)
+    right_index_finger_diff= np.sum(right_index_finger_diff, axis=-1, keepdims=False)
+    return np.concatenate(
+        [
+            left_index_finger_diff,
+            right_index_finger_diff,
+        ],
+        axis=-1,
+    )
 def main() -> None:
     dataset_annotations: list= load_dataset(show_dist=False)
     QUANTITY_FRAME: int= median_what(dataset_annotations, show_dist=False) # median 26
