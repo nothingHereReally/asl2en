@@ -1,6 +1,7 @@
 from json import load as loadJson, dump as writeJson
 from itertools import groupby
 from math import ceil, floor
+import numpy as np
 from pathlib import Path
 
 
@@ -491,6 +492,16 @@ def check_ds_is_good(dataset: list[dict], q_elements_per_g: int, q_frame: int, s
         print()
 
     return is_good
+def loadnpfiles(annotation: dict) -> list[np.ndarray]:
+    output: list[np.ndarray]= []
+    for an_img_detail in annotation[KEY_LANDMARK]:
+        with open(
+            annotation[KEY_PFOLDER_FROM] /annotation[KEY_PFOLDER] /an_img_detail[KEY_FILE],
+            'rb',
+        ) as f:
+            output.append(np.load(f))
+
+    return output
 def main() -> None:
     dataset_annotations: list= load_dataset(show_dist=False)
     QUANTITY_FRAME: int= median_what(dataset_annotations, show_dist=False) # median 26
