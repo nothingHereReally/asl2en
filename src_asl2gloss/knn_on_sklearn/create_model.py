@@ -1,4 +1,4 @@
-from json import load as loadJson, dump as writeJson
+from json import load as loadJson
 from itertools import groupby
 from math import ceil, floor
 import numpy as np
@@ -578,9 +578,5 @@ def main() -> None:
     use sklearn KNN blah for model
     do ML stats blah
     '''
-    # with open('/tmp/asdf_train.json', 'w') as f:
-    #     writeJson(ds_annotations_train, f, indent=4)
-    # with open('/tmp/asdf_test.json', 'w') as f:
-    #     writeJson(ds_annotations_test, f, indent=4)
 if __name__=="__main__":
     main()
