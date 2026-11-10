@@ -1,8 +1,11 @@
 from json import load as loadJson
+from joblib import load as load_sklmodel, dump as write_sklmodel
 from itertools import groupby
 from math import ceil, floor
 import numpy as np
 from pathlib import Path
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
 
 
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
@@ -679,7 +682,7 @@ def extract_features(landmarks: np.ndarray) -> np.ndarray:
         ],
         axis=-1,
     )
-def get_dataset(dataset: list[dict]) -> tuple[np.ndarray, list[int]]:
+def load_dataset_numbers(dataset: list[dict]) -> tuple[np.ndarray, list[int]]:
     ds_elements: list|np.ndarray= []
     ds_elements_label: list[int]= []
     for idx_gloss, a_gloss in enumerate(dataset):
@@ -748,7 +751,7 @@ def main() -> None:
             7020*.8=5616 elements for train
             7020*.2=2484 elements for test
     '''
-    check_ds_is_good(
+    train_good: bool= check_ds_is_good(
         dataset=ds_annotations_train,
         q_elements_per_g=int(
             q_pervideo_notstrict*ceil(Q_VIDS_PER_G*RATIO4TRAIN)
@@ -756,7 +759,7 @@ def main() -> None:
         q_frame=QUANTITY_FRAME,
         show_msg=False,
     )
-    check_ds_is_good(
+    test_good: bool= check_ds_is_good(
         dataset=ds_annotations_test,
         q_elements_per_g=int(
             q_pervideo_notstrict*ceil(Q_VIDS_PER_G*(1-RATIO4TRAIN))
@@ -769,6 +772,33 @@ def main() -> None:
     max possible 20% test elements on a gloss: 36
     max possible suggested elements per video: 18
     '''
+    if train_good and test_good:
+        ds_train_x, ds_train_y= load_dataset_numbers(ds_annotations_train)
+        ds_test_x, ds_test_y= load_dataset_numbers(ds_annotations_test)
+
+        assert ds_train_x.shape == (len(ds_train_y), QUANTITY_FRAME*120)
+        assert ds_test_x.shape == (len(ds_test_y), QUANTITY_FRAME*120)
+        ds_train_y= np.array(ds_train_y)
+        ds_test_y= np.array(ds_test_y)
+
+        knn_model: KNeighborsClassifier= KNeighborsClassifier(
+            n_neighbors=5,
+            n_jobs=-1,
+        )
+        knn_model.fit(X=ds_train_x, y=ds_train_y)
+
+        print(f"accuracy on test: {accuracy_score(
+            ds_test_y,
+            knn_model.predict(ds_test_x),
+            normalize=False,
+        ) / ds_test_y.shape[0] * 100} %")
+        write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
+        knn_model= load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
+        print(f"accuracy on test( using loaded knn model file ): {accuracy_score(
+            ds_test_y,
+            knn_model.predict(ds_test_x),
+            normalize=False,
+        ) / ds_test_y.shape[0] * 100} %")
     '''
     TODO:
     ✔ QUANTITY_FRAME be median blah blahhh
