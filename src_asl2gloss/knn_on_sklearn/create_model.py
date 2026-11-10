@@ -476,6 +476,13 @@ def check_ds_is_good(dataset: list[dict], q_elements_per_g: int, q_frame: int, s
                     f"{a_ds_element[KEY_PFOLDER]} has {len(a_ds_element[KEY_LANDMARK])} QUANTITY_FRAME, expected2be {q_frame}"
                 )
                 is_good= False
+            for an_img_detail in a_ds_element[KEY_LANDMARK]:
+                if not (a_ds_element[KEY_PFOLDER_FROM] /a_ds_element[KEY_PFOLDER] /an_img_detail[KEY_FILE]).exists():
+                    err_msg.append(
+                        f"{a_ds_element[KEY_PFOLDER]} has file NOT EXISTS: " +
+                        f"{an_img_detail[KEY_FILE]}"
+                    )
+                    is_good= False
     if show_msg:
         print()
         print('---- result checking dataset ----')
@@ -483,7 +490,8 @@ def check_ds_is_good(dataset: list[dict], q_elements_per_g: int, q_frame: int, s
         if is_good:
             print(
                 f"dataset obeys {q_elements_per_g} quantity elements per gloss\n" +
-                f"    has {q_frame} QUANTITY_FRAME per dataset element"
+                f"    has {q_frame} QUANTITY_FRAME per dataset element\n" +
+                f"    and ALL files exists, so all good"
             )
         else:
             for msg in err_msg:
