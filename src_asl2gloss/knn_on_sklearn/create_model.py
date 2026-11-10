@@ -247,6 +247,29 @@ def q_lessthan_p3_stretch_startend(video_annotation: dict, q_frame: int) -> list
     assert len(output[-1][KEY_LANDMARK]) == q_frame
 
     return output
+def q_equalto_p4_loop(video_annotation: dict, q_frame: int) -> list[dict]:
+    # use again loop ie. [x1, x2, ..., xn],
+    # then also [x2, x3, ..., xn, x1],
+    # ...,
+    # [xn, x1, x2, ..., x(n-1)] till len q_frame
+    assert len(video_annotation[KEY_LANDMARK]) == q_frame
+
+    output: list[dict]= []
+    for idx_init in range(len(video_annotation[KEY_LANDMARK])):
+        output.append({
+            KEY_PFOLDER_FROM: video_annotation[KEY_PFOLDER_FROM],
+            KEY_PFOLDER: video_annotation[KEY_PFOLDER],
+            KEY_LANDMARK: video_annotation[idx_init:],
+        })
+        if len(output[-1][KEY_LANDMARK]) < q_frame:
+            output[-1][KEY_LANDMARK].extend(
+                video_annotation[KEY_LANDMARK]
+            )
+            output[-1][KEY_LANDMARK]= output[-1][KEY_LANDMARK][:q_frame]
+            assert len(output[-1][KEY_LANDMARK]) == q_frame
+    assert len(output) == len(video_annotation[KEY_LANDMARK])
+
+    return output
 def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -> list:
     output: list= []
     min_element_count_on_gloss: int= 999_999
@@ -282,15 +305,13 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
                     min_element_count_on_video= q_added
                 per_gloss_per_video_elements.append(q_added)
             elif len(a_video[KEY_LANDMARK]) == q_frame:
-                # part 1
-                output[-1][KEY_VIDS].append({
-                    KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
-                    KEY_PFOLDER: a_video[KEY_PFOLDER],
-                    KEY_LANDMARK: a_video[KEY_LANDMARK],
-                })
-                if 1 < min_element_count_on_video:
-                    min_element_count_on_video= 1
-                per_gloss_per_video_elements.append(1)
+                # part 4
+                elements: list[dict]= q_equalto_p4_loop(a_video, q_frame)
+                output[-1][KEY_VIDS].extend(elements)
+
+                if len(elements) < min_element_count_on_video:
+                    min_element_count_on_video= len(elements)
+                per_gloss_per_video_elements.append(len(elements))
 
             else:
                 for init_idx in range(len(a_video[KEY_LANDMARK]) -q_frame +1):
