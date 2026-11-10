@@ -278,13 +278,55 @@ def split4train_test(dataset: list, q_per_video: int) -> tuple:
             KEY_G: a_gloss[KEY_G],
             KEY_VIDS: [],
         })
-        for idx_video, (_, video_elements) in enumerate(groupby(
-            a_gloss[KEY_VIDS], key=lambda el: el[KEY_PFOLDER]
-        )):
+        record_not_used4train: list= []
+        record_not_used4test: list= []
+        group_by_video: list[list[dict]]= [
+            list(group) for _, group in groupby(
+                a_gloss[KEY_VIDS], key=lambda el: el[KEY_PFOLDER]
+            )
+        ]
+        assert len(group_by_video) == Q_VIDS_PER_G
+        for idx_video, a_video_elements in enumerate(group_by_video):
             if idx_video < RATIO4TRAIN*Q_VIDS_PER_G:
-                out_train[-1][KEY_VIDS].extend(list(video_elements)[:q_per_video])
+                '''
+                due2could be less than q_per_video
+                '''
+                out_train[-1][KEY_VIDS].extend(
+                    a_video_elements[:q_per_video]
+                    if len(a_video_elements) >= q_per_video
+                    else a_video_elements
+                )
             else:
-                out_test[-1][KEY_VIDS].extend(list(video_elements)[:q_per_video])
+                '''
+                due2could be less than q_per_video
+                '''
+                out_test[-1][KEY_VIDS].extend(
+                    a_video_elements[:q_per_video]
+                    if len(a_video_elements) >= q_per_video
+                    else a_video_elements
+                )
+
+            if len(a_video_elements) > q_per_video:
+                if idx_video < RATIO4TRAIN*Q_VIDS_PER_G:
+                    record_not_used4train.extend(a_video_elements[q_per_video:])
+                else:
+                    record_not_used4test.extend(a_video_elements[q_per_video:])
+        q_for_train_per_g: int= int(q_per_video *RATIO4TRAIN*Q_VIDS_PER_G)
+        q_for_test_per_g: int= ceil(q_per_video *(1-RATIO4TRAIN)*Q_VIDS_PER_G) # due to 3.99999...
+        if len(out_train[-1][KEY_VIDS]) < q_for_train_per_g:
+            missing_quantity: int=        q_for_train_per_g -len(out_train[-1][KEY_VIDS])
+            assert missing_quantity <= len(record_not_used4train)
+            out_train[-1][KEY_VIDS].extend(
+                record_not_used4train[:missing_quantity]
+            )
+        if len(out_test[-1][KEY_VIDS]) < q_for_test_per_g:
+            missing_quantity: int=       q_for_test_per_g -len(out_test[-1][KEY_VIDS])
+            assert missing_quantity <= len(record_not_used4test)
+            out_test[-1][KEY_VIDS].extend(
+                record_not_used4test[:missing_quantity]
+            )
+        assert int(len(out_train[-1][KEY_VIDS])) == q_for_train_per_g
+        assert int(len(out_test[-1][KEY_VIDS]))  == q_for_test_per_g
     return (out_train, out_test)
 def main() -> None:
     dataset_annotations: list= load_dataset(show_dist=False)
