@@ -788,7 +788,7 @@ def main() -> None:
         ds_test_y= np.array(ds_test_y)
 
         knn_model: KNeighborsClassifier= KNeighborsClassifier(
-            n_neighbors=9,
+            n_neighbors=1,
             n_jobs=-1,
         )
         '''
