@@ -525,6 +525,23 @@ def main() -> None:
         suggested_q_per_video=q_pervideo_notstrict,
         show_dist=False,
     )
+    '''
+    max possible 80% train elements on a gloss: 144
+    max possible 20% test elements on a gloss: 36
+    max possible suggested elements per video: 18
+    -- and is using
+    144 dataset elements per gloss on Train
+        from 1st 8 videos
+    36 dataset elements per gloss on Test
+        from last 2 videos
+    180=144+36, dataset elements per gloss
+        80% of 180 is 144
+        20% of 180 is  36
+        -----------------
+        180*39=7020 total elements
+            7020*.8=5616 elements for train
+            7020*.2=2484 elements for test
+    '''
     check_ds_is_good(
         dataset=ds_annotations_train,
         q_elements_per_g=int(
