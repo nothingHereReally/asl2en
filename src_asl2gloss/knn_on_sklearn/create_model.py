@@ -1,6 +1,6 @@
 from json import load as loadJson, dump as writeJson
 from itertools import groupby
-from math import ceil
+from math import ceil, floor
 from pathlib import Path
 
 
@@ -449,8 +449,15 @@ def split4train_test(dataset: list, suggested_q_per_video: int, show_dist: bool=
             print()
     if show_dist:
         print('------------------------')
-        print(f"minimum elements count on a gloss for train: {min_elements_per_g4train}")
-        print(f"minimum elements count on a gloss for test: {min_elements_per_g4test}")
+        # print(f"minimum elements count on a gloss for train: {min_elements_per_g4train}")
+        # print(f"minimum elements count on a gloss for test: {min_elements_per_g4test}")
+        total_possible_per_gloss: int= floor(min(
+            ceil(min_elements_per_g4train / RATIO4TRAIN),
+            ceil(min_elements_per_g4test / (1-RATIO4TRAIN)),
+        ))
+        print(f"max possible 80% train elements on a gloss: {ceil(total_possible_per_gloss *RATIO4TRAIN)}")
+        print(f"max possible 20% test elements on a gloss: {ceil(total_possible_per_gloss *(1-RATIO4TRAIN))}")
+        print(f"max possible suggested elements per video: {floor(total_possible_per_gloss/Q_VIDS_PER_G)}")
         print('------------------------')
     return (out_train, out_test)
 def main() -> None:
