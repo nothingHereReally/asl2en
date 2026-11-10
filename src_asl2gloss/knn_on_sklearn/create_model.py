@@ -359,9 +359,12 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
         print(f"minimum elements count on a video: {min_element_count_on_video}")
         print('------------------------')
     return output
-def split4train_test(dataset: list, q_per_video: int) -> tuple:
+def split4train_test(dataset: list, suggested_q_per_video: int, show_dist: bool=False) -> tuple:
     out_train: list= []
     out_test: list= []
+
+    min_elements_per_g4train: int= 9_999_999
+    min_elements_per_g4test: int=  9_999_999
     for a_gloss in dataset:
         out_train.append({
             KEY_G: a_gloss[KEY_G],
@@ -379,33 +382,54 @@ def split4train_test(dataset: list, q_per_video: int) -> tuple:
             )
         ]
         assert len(group_by_video) == Q_VIDS_PER_G
+
+
+        if show_dist:
+            print(f"-- gloss( {a_gloss[KEY_G]} ) -- quantity elements: {len(a_gloss[KEY_VIDS])}")
+            total_elements_train: int= sum([
+                len(el)
+                for el in group_by_video[:ceil(RATIO4TRAIN*Q_VIDS_PER_G)
+            ]])
+            total_elements_test: int=  sum([
+                len(el)
+                for el in group_by_video[ceil(RATIO4TRAIN*Q_VIDS_PER_G):]
+            ])
+            if total_elements_train < min_elements_per_g4train:
+                min_elements_per_g4train= total_elements_train
+            if total_elements_test < min_elements_per_g4test:
+                min_elements_per_g4test= total_elements_test
+            print(f"    from train max count: {total_elements_train}")
+            print(f"    from test max count: {total_elements_test}")
         for idx_video, a_video_elements in enumerate(group_by_video):
             if idx_video < RATIO4TRAIN*Q_VIDS_PER_G:
                 '''
-                due2could be less than q_per_video
+                due2could be less than suggested_q_per_video
                 '''
                 out_train[-1][KEY_VIDS].extend(
-                    a_video_elements[:q_per_video]
-                    if len(a_video_elements) >= q_per_video
+                    a_video_elements[:suggested_q_per_video]
+                    if len(a_video_elements) >= suggested_q_per_video
                     else a_video_elements
                 )
             else:
                 '''
-                due2could be less than q_per_video
+                due2could be less than suggested_q_per_video
                 '''
                 out_test[-1][KEY_VIDS].extend(
-                    a_video_elements[:q_per_video]
-                    if len(a_video_elements) >= q_per_video
+                    a_video_elements[:suggested_q_per_video]
+                    if len(a_video_elements) >= suggested_q_per_video
                     else a_video_elements
                 )
 
-            if len(a_video_elements) > q_per_video:
+            if len(a_video_elements) > suggested_q_per_video:
                 if idx_video < RATIO4TRAIN*Q_VIDS_PER_G:
-                    record_not_used4train.extend(a_video_elements[q_per_video:])
+                    record_not_used4train.extend(a_video_elements[suggested_q_per_video:])
                 else:
-                    record_not_used4test.extend(a_video_elements[q_per_video:])
-        q_for_train_per_g: int= int(q_per_video *RATIO4TRAIN*Q_VIDS_PER_G)
-        q_for_test_per_g: int= ceil(q_per_video *(1-RATIO4TRAIN)*Q_VIDS_PER_G) # due to 3.99999...
+                    record_not_used4test.extend(a_video_elements[suggested_q_per_video:])
+
+            if show_dist:
+                print(f"    {str(idx_video+1).zfill(3)}: {len(a_video_elements)}")
+        q_for_train_per_g: int= int(suggested_q_per_video *RATIO4TRAIN*Q_VIDS_PER_G)
+        q_for_test_per_g: int= ceil(suggested_q_per_video *(1-RATIO4TRAIN)*Q_VIDS_PER_G) # due to 3.99999...
         if len(out_train[-1][KEY_VIDS]) < q_for_train_per_g:
             missing_quantity: int=        q_for_train_per_g -len(out_train[-1][KEY_VIDS])
             assert missing_quantity <= len(record_not_used4train)
@@ -420,6 +444,14 @@ def split4train_test(dataset: list, q_per_video: int) -> tuple:
             )
         assert int(len(out_train[-1][KEY_VIDS])) == q_for_train_per_g
         assert int(len(out_test[-1][KEY_VIDS]))  == q_for_test_per_g
+
+        if show_dist:
+            print()
+    if show_dist:
+        print('------------------------')
+        print(f"minimum elements count on a gloss for train: {min_elements_per_g4train}")
+        print(f"minimum elements count on a gloss for test: {min_elements_per_g4test}")
+        print('------------------------')
     return (out_train, out_test)
 def main() -> None:
     dataset_annotations: list= load_dataset(show_dist=False)
@@ -433,7 +465,16 @@ def main() -> None:
         q_frame=QUANTITY_FRAME,
         show_dist=False,
     )
-    ds_annotations_train, ds_annotations_test= split4train_test(dataset_annotations, 2)
+    '''
+    current on 23+16=39 gloss
+    minimum elements count on a gloss: 188
+    minimum elements count on a video: 9
+    '''
+    ds_annotations_train, ds_annotations_test= split4train_test(
+        dataset=dataset_annotations,
+        suggested_q_per_video=18,
+        show_dist=False,
+    )
     '''
     TODO:
     ✔ QUANTITY_FRAME be median blah blahhh
