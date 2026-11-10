@@ -556,6 +556,12 @@ def check_ds_is_good(dataset: list[dict], q_elements_per_g: int, q_frame: int, s
 
     return is_good
 def loadnpfiles(annotation: dict) -> list[np.ndarray]:
+    '''
+    annotation is dict having keys
+    -- KEY_PFOLDER_FROM: Path
+    -- KEY_PFOLDER: str
+    -- KEY_LANDMARK: list[dict]
+    '''
     output: list[np.ndarray]= []
     for an_img_detail in annotation[KEY_LANDMARK]:
         with open(
