@@ -681,7 +681,7 @@ def extract_features(landmarks: np.ndarray) -> np.ndarray:
     )
 def get_dataset(dataset: list[dict]) -> tuple[np.ndarray, list[int]]:
     ds_elements: list|np.ndarray= []
-    ds_elements_label: list= []
+    ds_elements_label: list[int]= []
     for idx_gloss, a_gloss in enumerate(dataset):
         for a_ds_element in a_gloss[KEY_VIDS]:
             a_ds_element_landmarks: list[np.ndarray]= loadnpfiles(a_ds_element)
