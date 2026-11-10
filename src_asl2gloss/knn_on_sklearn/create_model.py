@@ -460,6 +460,37 @@ def split4train_test(dataset: list, suggested_q_per_video: int, show_dist: bool=
         print(f"max possible suggested elements per video: {floor(total_possible_per_gloss/Q_VIDS_PER_G)}")
         print('------------------------')
     return (out_train, out_test)
+def check_ds(dataset: list[dict], q_elements_per_g: int, q_frame: int, show_msg=False) -> bool:
+    is_good: bool= True
+    err_msg: list[str]= []
+    for a_gloss in dataset:
+        if len(a_gloss[KEY_VIDS]) != q_elements_per_g:
+            err_msg.append(
+                f"{a_gloss[KEY_G]} has {len(a_gloss[KEY_VIDS])} elements, expected2be {q_elements_per_g}"
+            )
+            is_good= False
+        for a_ds_element in a_gloss[KEY_VIDS]:
+            if len(a_ds_element[KEY_LANDMARK]) != q_frame:
+                err_msg.append(
+                    f"{a_ds_element[KEY_PFOLDER]} has {len(a_ds_element[KEY_LANDMARK])} QUANTITY_FRAME, expected2be {q_frame}"
+                )
+                is_good= False
+    if show_msg:
+        print()
+        print('---- result checking dataset ----')
+        print('----------------------------')
+        if is_good:
+            print(
+                f"dataset obeys {q_elements_per_g} quantity elements per gloss\n" +
+                f"    has {q_frame} QUANTITY_FRAME per dataset element"
+            )
+        else:
+            for msg in err_msg:
+                print(f"problem: {msg}")
+        print('----------------------------')
+        print()
+
+    return is_good
 def main() -> None:
     dataset_annotations: list= load_dataset(show_dist=False)
     QUANTITY_FRAME: int= median_what(dataset_annotations, show_dist=False) # median 26
@@ -477,10 +508,27 @@ def main() -> None:
     minimum elements count on a gloss: 188
     minimum elements count on a video: 9
     '''
+    q_pervideo_notstrict: int= 18
     ds_annotations_train, ds_annotations_test= split4train_test(
         dataset=dataset_annotations,
-        suggested_q_per_video=18,
+        suggested_q_per_video=q_pervideo_notstrict,
         show_dist=False,
+    )
+    check_ds(
+        dataset=ds_annotations_train,
+        q_elements_per_g=int(
+            q_pervideo_notstrict*ceil(Q_VIDS_PER_G*RATIO4TRAIN)
+        ),
+        q_frame=QUANTITY_FRAME,
+        show_msg=False,
+    )
+    check_ds(
+        dataset=ds_annotations_test,
+        q_elements_per_g=int(
+            q_pervideo_notstrict*ceil(Q_VIDS_PER_G*(1-RATIO4TRAIN))
+        ),
+        q_frame=QUANTITY_FRAME,
+        show_msg=False,
     )
     '''
     max possible 80% train elements on a gloss: 144
