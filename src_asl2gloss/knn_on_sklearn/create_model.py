@@ -542,7 +542,9 @@ def main() -> None:
     use sklearn KNN blah for model
     do ML stats blah
     '''
-    # with open('/tmp/asdf.json', 'w') as f:
-    #     writeJson(dataset_annotations, f, indent=4)
+    # with open('/tmp/asdf_train.json', 'w') as f:
+    #     writeJson(ds_annotations_train, f, indent=4)
+    # with open('/tmp/asdf_test.json', 'w') as f:
+    #     writeJson(ds_annotations_test, f, indent=4)
 if __name__=="__main__":
     main()
