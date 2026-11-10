@@ -215,6 +215,7 @@ def q_lessthan_p2_loop(video_annotation: dict, q_frame: int) -> list[dict]:
 
     return output
 def q_lessthan_p3_stretch_startend(video_annotation: dict, q_frame: int) -> list[dict]:
+    # use 1st  ie. [x1, x1, ..., x1, x2, ..., xn]
     # use last ie. [x1, x2, ..., xn, xn, xn, ...]
     assert len(video_annotation[KEY_LANDMARK]) < q_frame
 
