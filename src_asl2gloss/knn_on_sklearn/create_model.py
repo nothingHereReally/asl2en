@@ -537,7 +537,7 @@ def main() -> None:
         dataset=ds_annotations_test,
         q_elements_per_g=int(
             q_pervideo_notstrict*ceil(Q_VIDS_PER_G*(1-RATIO4TRAIN))
-        ),
+        ), # due to python: 10*(1-0.8) = 1.9999999999999996
         q_frame=QUANTITY_FRAME,
         show_msg=False,
     )
