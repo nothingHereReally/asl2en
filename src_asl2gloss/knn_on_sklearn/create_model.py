@@ -483,6 +483,11 @@ def main() -> None:
         show_dist=False,
     )
     '''
+    max possible 80% train elements on a gloss: 144
+    max possible 20% test elements on a gloss: 36
+    max possible suggested elements per video: 18
+    '''
+    '''
     TODO:
     ✔ QUANTITY_FRAME be median blah blahhh
     ✔ check mandatory all has atleast 1 hand blah
