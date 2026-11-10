@@ -169,6 +169,30 @@ def do_all_have_hands(dataset: list, show_msg: bool=False) -> bool:
                     else:
                         return all_atleast1hand 
     return all_atleast1hand
+def q_lessthan_p1_spread(video_annotation: dict, q_frame: int) -> list[dict]:
+    # spread out via ceil( ... )
+    assert len(video_annotation[KEY_LANDMARK]) < q_frame
+
+    ratio: int= ceil(q_frame/len(video_annotation[KEY_LANDMARK]))
+    q2be_created: int= len(video_annotation[KEY_LANDMARK]) -ceil(q_frame/ratio) +1
+    output: list[dict]= []
+    for init_idx in range(q2be_created):
+        output.append({
+            KEY_PFOLDER_FROM: video_annotation[KEY_PFOLDER_FROM],
+            KEY_PFOLDER: video_annotation[KEY_PFOLDER],
+            KEY_LANDMARK: [],
+        })
+        for an_img_detail in video_annotation[KEY_LANDMARK][
+            init_idx:init_idx +ceil(q_frame/ratio)
+        ]:
+            output[-1][KEY_LANDMARK].extend(
+                [an_img_detail for _ in range(ratio)]
+            )
+        output[-1][KEY_LANDMARK]= output[-1][KEY_LANDMARK][:q_frame]
+        assert len(output[-1][KEY_LANDMARK]) == q_frame
+    assert len(output) == q2be_created
+
+    return output
 def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -> list:
     output: list= []
     min_element_count_on_gloss: int= 999_999
@@ -184,20 +208,8 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
         for a_video in a_gloss[KEY_VIDS]:
             if len(a_video[KEY_LANDMARK]) < q_frame:
                 # part 1
-                # spread out via ceil( ... )
-                output[-1][KEY_VIDS].append({
-                    KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
-                    KEY_PFOLDER: a_video[KEY_PFOLDER],
-                    KEY_LANDMARK: [],
-                })
-                ratio: int= ceil(q_frame/len(a_video[KEY_LANDMARK]))
-                for an_img_detail in a_video[KEY_LANDMARK]:
-                    output[-1][KEY_VIDS][-1][KEY_LANDMARK].extend(
-                        [an_img_detail for _ in range(ratio)]
-                    )
-                output[-1][KEY_VIDS][-1][KEY_LANDMARK]= output[-1][KEY_VIDS][-1][
-                    KEY_LANDMARK
-                ][:q_frame]
+                elements: list[dict]= q_lessthan_p1_spread(a_video, q_frame)
+                output[-1][KEY_VIDS].extend(elements)
 
                 # part 2
                 # use again loop ie. [x1, x2, ..., xn, x1, x2, ...] till q_frame
