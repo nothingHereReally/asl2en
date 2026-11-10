@@ -259,7 +259,7 @@ def q_equalto_p4_loop(video_annotation: dict, q_frame: int) -> list[dict]:
         output.append({
             KEY_PFOLDER_FROM: video_annotation[KEY_PFOLDER_FROM],
             KEY_PFOLDER: video_annotation[KEY_PFOLDER],
-            KEY_LANDMARK: video_annotation[idx_init:],
+            KEY_LANDMARK: video_annotation[KEY_LANDMARK][idx_init:],
         })
         if len(output[-1][KEY_LANDMARK]) < q_frame:
             output[-1][KEY_LANDMARK].extend(
