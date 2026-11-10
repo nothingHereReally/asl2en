@@ -460,7 +460,7 @@ def split4train_test(dataset: list, suggested_q_per_video: int, show_dist: bool=
         print(f"max possible suggested elements per video: {floor(total_possible_per_gloss/Q_VIDS_PER_G)}")
         print('------------------------')
     return (out_train, out_test)
-def check_ds(dataset: list[dict], q_elements_per_g: int, q_frame: int, show_msg=False) -> bool:
+def check_ds_is_good(dataset: list[dict], q_elements_per_g: int, q_frame: int, show_msg=False) -> bool:
     is_good: bool= True
     err_msg: list[str]= []
     for a_gloss in dataset:
@@ -514,7 +514,7 @@ def main() -> None:
         suggested_q_per_video=q_pervideo_notstrict,
         show_dist=False,
     )
-    check_ds(
+    check_ds_is_good(
         dataset=ds_annotations_train,
         q_elements_per_g=int(
             q_pervideo_notstrict*ceil(Q_VIDS_PER_G*RATIO4TRAIN)
@@ -522,7 +522,7 @@ def main() -> None:
         q_frame=QUANTITY_FRAME,
         show_msg=False,
     )
-    check_ds(
+    check_ds_is_good(
         dataset=ds_annotations_test,
         q_elements_per_g=int(
             q_pervideo_notstrict*ceil(Q_VIDS_PER_G*(1-RATIO4TRAIN))
