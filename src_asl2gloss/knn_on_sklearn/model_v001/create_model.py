@@ -799,6 +799,11 @@ def main() -> None:
             knn_model.predict(ds_test_x),
             normalize=False,
         ) / ds_test_y.shape[0] * 100} %")
+        '''
+        is there at least 1 hand on every image landmarks? yes
+        accuracy on test: 72.15099715099716 %
+        accuracy on test( using loaded knn model file ): 72.15099715099716 %
+        '''
     '''
     TODO:
     ✔ QUANTITY_FRAME be median blah blahhh
