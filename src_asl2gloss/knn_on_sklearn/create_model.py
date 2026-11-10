@@ -702,7 +702,10 @@ def get_dataset(dataset: list[dict]) -> tuple[np.ndarray, list[int]]:
     assert ds_elements.shape == (len(ds_elements_label), orig_shape[1], 120)
 
     return (
-        np.reshape(ds_elements, (orig_shape[0], -1) ),
+        np.reshape(
+            ds_elements,
+            shape=(orig_shape[0], -1),
+        ),
         ds_elements_label,
     )
 def main() -> None:
