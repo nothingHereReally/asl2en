@@ -782,7 +782,7 @@ def main() -> None:
         ds_test_y= np.array(ds_test_y)
 
         knn_model: KNeighborsClassifier= KNeighborsClassifier(
-            n_neighbors=5,
+            n_neighbors=1,
             n_jobs=-1,
         )
         knn_model.fit(X=ds_train_x, y=ds_train_y)
@@ -790,14 +790,12 @@ def main() -> None:
         print(f"accuracy on test: {accuracy_score(
             ds_test_y,
             knn_model.predict(ds_test_x),
-            normalize=False,
-        ) / ds_test_y.shape[0] * 100} %")
+        ) * 100} %")
         write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
         knn_model= load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
         print(f"accuracy on test( using loaded knn model file ): {accuracy_score(
             ds_test_y,
             knn_model.predict(ds_test_x),
-            normalize=False,
-        ) / ds_test_y.shape[0] * 100} %")
+        ) * 100} %")
 if __name__=="__main__":
     main()
