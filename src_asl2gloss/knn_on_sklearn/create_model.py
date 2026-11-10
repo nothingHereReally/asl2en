@@ -193,6 +193,27 @@ def q_lessthan_p1_spread(video_annotation: dict, q_frame: int) -> list[dict]:
     assert len(output) == q2be_created
 
     return output
+def q_lessthan_p2_loop(video_annotation: dict, q_frame: int) -> list[dict]:
+    # use again loop ie. [x1, x2, ..., xn, x1, x2, ...] till q_frame
+    assert len(video_annotation[KEY_LANDMARK]) < q_frame
+
+    output: list[dict]= []
+    q2be_created: int= len(video_annotation[KEY_LANDMARK])
+    for init_idx in range(q2be_created):
+        output.append({
+            KEY_PFOLDER_FROM: video_annotation[KEY_PFOLDER_FROM],
+            KEY_PFOLDER: video_annotation[KEY_PFOLDER],
+            KEY_LANDMARK: video_annotation[KEY_LANDMARK][init_idx:],
+        })
+        while len(output[-1][KEY_LANDMARK]) < q_frame:
+            output[-1][KEY_LANDMARK].extend(
+                list(video_annotation[KEY_LANDMARK]).copy()
+            )
+        output[-1][KEY_LANDMARK]= output[-1][KEY_LANDMARK][:q_frame]
+        assert len(output[-1][KEY_LANDMARK]) == q_frame
+    assert len(output) == q2be_created
+
+    return output
 def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -> list:
     output: list= []
     min_element_count_on_gloss: int= 999_999
@@ -212,19 +233,8 @@ def process4quantity_frame(dataset: list, q_frame: int, show_dist: bool=False) -
                 output[-1][KEY_VIDS].extend(elements)
 
                 # part 2
-                # use again loop ie. [x1, x2, ..., xn, x1, x2, ...] till q_frame
-                output[-1][KEY_VIDS].append({
-                    KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
-                    KEY_PFOLDER: a_video[KEY_PFOLDER],
-                    KEY_LANDMARK: []
-                })
-                for _ in range(ratio):
-                    output[-1][KEY_VIDS][-1][KEY_LANDMARK].extend(
-                        a_video[KEY_LANDMARK]
-                    )
-                output[-1][KEY_VIDS][-1][KEY_LANDMARK]= output[-1][KEY_VIDS][-1][
-                    KEY_LANDMARK
-                ][:q_frame]
+                elements= q_lessthan_p2_loop(a_video, q_frame)
+                output[-1][KEY_VIDS].extend(elements)
 
                 # part 3
                 # use last ie. [x1, x2, ..., xn, xn, xn, ...]
