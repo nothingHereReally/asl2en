@@ -841,6 +841,37 @@ def knn_with_weights(
                 total_correct+= 1
         print(f"accuracy on test {idx+1}: {accuracy_score(ds_test_y[idx:idx+2], acc_result) * 100} % -- processing {(idx+1)/ds_test_x.shape[0]*100:.4f}%")
     print(f"test correct: {total_correct} / {count} = {total_correct/count*100:.4f}%")
+    '''
+    ...
+    y_pred: 38 -- y_true: 38
+    y_pred: 38 -- y_true: 38
+    accuracy on test 2791: 100.0 % -- processing 99.3946%
+    y_pred: 38 -- y_true: 38
+    y_pred: 38 -- y_true: 38
+    accuracy on test 2793: 100.0 % -- processing 99.4658%
+    y_pred: 38 -- y_true: 38
+    y_pred: 38 -- y_true: 38
+    accuracy on test 2795: 100.0 % -- processing 99.5370%
+    y_pred: 38 -- y_true: 38
+    y_pred: 38 -- y_true: 38
+    accuracy on test 2797: 100.0 % -- processing 99.6083%
+    y_pred: 38 -- y_true: 38
+    y_pred: 38 -- y_true: 38
+    accuracy on test 2799: 100.0 % -- processing 99.6795%
+    y_pred: 38 -- y_true: 38
+    y_pred: 38 -- y_true: 38
+    accuracy on test 2801: 100.0 % -- processing 99.7507%
+    y_pred: 38 -- y_true: 38
+    y_pred: 38 -- y_true: 38
+    accuracy on test 2803: 100.0 % -- processing 99.8219%
+    y_pred: 38 -- y_true: 38
+    y_pred: 38 -- y_true: 38
+    accuracy on test 2805: 100.0 % -- processing 99.8932%
+    y_pred: 38 -- y_true: 38
+    y_pred: 38 -- y_true: 38
+    accuracy on test 2807: 100.0 % -- processing 99.9644%
+    test correct: 1966 / 2808 = 70.0142%
+    '''
 
 
     # print(f"accuracy on train: {accuracy_score(ds_train_y, predict(train_results)) * 100} %")
