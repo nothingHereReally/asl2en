@@ -648,7 +648,7 @@ def get2dots_frombody(input: np.ndarray) -> np.ndarray:
         (shoulder_center+shoulder_hip_center)/2.0,
         (shoulder_hip_center+hip_center)/2.0,
     ], axis=-2)
-def extract_features(landmarks: np.ndarray) -> np.ndarray:
+def extract_features_left_right_diff(landmarks: np.ndarray) -> np.ndarray:
     '''
     landmarks be of shape (BATCH, 86, 2)
     ---- to calculate distance from ----
@@ -711,7 +711,7 @@ def load_dataset_numbers(dataset: list[dict]) -> tuple[np.ndarray, list[int], np
                 ))
     ds_elements= np.array(ds_elements)
     orig_shape: tuple= ds_elements.shape
-    ds_elements= extract_features(np.reshape(
+    ds_elements= extract_features_left_right_diff(np.reshape(
         ds_elements,
         shape=(-1, 86, 2),
     ))
