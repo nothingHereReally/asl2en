@@ -682,6 +682,20 @@ def extract_features_left_right_diff(landmarks: np.ndarray) -> np.ndarray:
         ],
         axis=-1,
     )
+def comparison_score(samples: np.ndarray, input: np.ndarray, weights: np.ndarray) -> np.ndarray:
+    assert len(samples.shape) == 2
+    assert len(input.shape) == 2
+    assert samples.shape[-1] == input.shape[-1]
+    assert samples.shape == weights.shape
+
+    output: np.ndarray= (
+        np.expand_dims(samples, axis=0) - np.expand_dims(input, axis=1)
+    )**2.0
+    output= output *np.expand_dims(weights, axis=0)
+    output= np.sum(output, axis=-1, keepdims=False)
+
+    assert output.shape == (input.shape[0], samples.shape[0])
+    return output
 def load_dataset_numbers(dataset: list[dict]) -> tuple[np.ndarray, list[int], np.ndarray]:
     ds_elements: list|np.ndarray= []
     ds_elements_label: list[int]= []
