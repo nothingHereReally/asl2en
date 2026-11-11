@@ -682,9 +682,10 @@ def extract_features(landmarks: np.ndarray) -> np.ndarray:
         ],
         axis=-1,
     )
-def load_dataset_numbers(dataset: list[dict]) -> tuple[np.ndarray, list[int]]:
+def load_dataset_numbers(dataset: list[dict]) -> tuple[np.ndarray, list[int], np.ndarray]:
     ds_elements: list|np.ndarray= []
     ds_elements_label: list[int]= []
+    weights_left_right_hand: list[list[tuple[float, float]]]|np.ndarray= []
     for idx_gloss, a_gloss in enumerate(dataset):
         for a_ds_element in a_gloss[KEY_VIDS]:
             a_ds_element_landmarks: list[np.ndarray]= loadnpfiles(a_ds_element)
@@ -695,21 +696,35 @@ def load_dataset_numbers(dataset: list[dict]) -> tuple[np.ndarray, list[int]]:
 
             ds_elements.append(flip_vertical_y_axis(a_ds_element_landmarks))
             ds_elements_label.append(idx_gloss)
+
+            weights_left_right_hand.append([])
+            for an_img_detail in a_ds_element[KEY_LANDMARK]:
+                weights_left_right_hand[-1].append((
+                    1.0 if an_img_detail[KEY_LHAND] else 0.0,
+                    1.0 if an_img_detail[KEY_RHAND] else 0.0,
+                ))
+            weights_left_right_hand.append([])
+            for an_img_detail in a_ds_element[KEY_LANDMARK]:
+                weights_left_right_hand[-1].append((
+                    1.0 if an_img_detail[KEY_RHAND] else 0.0,
+                    1.0 if an_img_detail[KEY_LHAND] else 0.0,
+                ))
     ds_elements= np.array(ds_elements)
     orig_shape: tuple= ds_elements.shape
     ds_elements= extract_features(np.reshape(
         ds_elements,
         shape=(-1, 86, 2),
     ))
-    ds_elements= np.reshape(ds_elements, shape=(orig_shape[0], orig_shape[1], -1))
-    assert ds_elements.shape == (len(ds_elements_label), orig_shape[1], 120)
+    ds_elements= np.reshape(ds_elements, shape=(orig_shape[0], -1))
+    weights_left_right_hand= np.repeat(np.array(weights_left_right_hand), 60, axis=-1)
+    weights_left_right_hand= np.reshape(weights_left_right_hand, shape=(orig_shape[0], -1))
+    assert ds_elements.shape == (len(ds_elements_label), orig_shape[1]*120) # shape (B, QF*120)
+    assert weights_left_right_hand.shape == (len(ds_elements_label), orig_shape[1]*120)
 
     return (
-        np.reshape(
-            ds_elements,
-            shape=(orig_shape[0], -1),
-        ),
+        ds_elements,
         ds_elements_label,
+        weights_left_right_hand,
     )
 def main() -> None:
     dataset_annotations: list= load_dataset_annotations(show_dist=False)
