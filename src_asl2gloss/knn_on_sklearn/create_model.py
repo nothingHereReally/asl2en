@@ -787,12 +787,20 @@ def main() -> None:
         )
         knn_model.fit(X=ds_train_x, y=ds_train_y)
 
+        print(f"accuracy on train: {accuracy_score(
+            ds_train_y,
+            knn_model.predict(ds_train_x),
+        ) * 100} %")
         print(f"accuracy on test: {accuracy_score(
             ds_test_y,
             knn_model.predict(ds_test_x),
         ) * 100} %")
         write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
         knn_model= load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
+        print(f"accuracy on train( using loaded knn model file ): {accuracy_score(
+            ds_train_y,
+            knn_model.predict(ds_train_x),
+        ) * 100} %")
         print(f"accuracy on test( using loaded knn model file ): {accuracy_score(
             ds_test_y,
             knn_model.predict(ds_test_x),
