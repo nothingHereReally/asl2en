@@ -789,7 +789,7 @@ def try_knn_sklearn(
         knn_model.predict(ds_test_x),
     ) * 100} %")
     write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
-    knn_model= load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
+    knn_model=  load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
     print(f"accuracy on train( using loaded knn model file ): {accuracy_score(
         ds_train_y,
         knn_model.predict(ds_train_x),
@@ -860,7 +860,7 @@ def main() -> None:
     max possible suggested elements per video: 18
     '''
     if train_good and test_good:
-        ds_train_x, ds_train_y, ds_weights= load_dataset_numbers(ds_annotations_train)
+        ds_train_x, ds_train_y, _= load_dataset_numbers(ds_annotations_train)
         ds_test_x, ds_test_y, _= load_dataset_numbers(ds_annotations_test)
 
         assert ds_train_x.shape == (len(ds_train_y), QUANTITY_FRAME*120)
