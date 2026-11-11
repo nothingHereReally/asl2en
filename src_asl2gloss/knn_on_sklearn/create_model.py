@@ -689,10 +689,38 @@ def comparison_score(samples: np.ndarray, input: np.ndarray, weights: np.ndarray
     assert samples.shape == weights.shape
 
     output: np.ndarray= (
-        np.expand_dims(samples, axis=0) - np.expand_dims(input, axis=1)
+        samples[None, :, :].astype(np.float16) - input[:, None, :].astype(np.float16)
     )**2.0
-    output= output *np.expand_dims(weights, axis=0)
+    output= output *weights[None, :, :].astype(np.float16)
     output= np.sum(output, axis=-1, keepdims=False)
+
+    # samples= samples.astype(np.float16)
+    # input= input.astype(np.float16)
+    # weights= weights.astype(np.float16)
+    # output: np.ndarray= np.empty(
+    #     (input.shape[0], samples.shape[0]),
+    #     dtype=np.result_type(samples, input, weights, np.float64),
+    # )
+    # by_chunk: int= 10
+    # input_batch_size: int= max(1, ceil(input.shape[0] /by_chunk))
+    # sample_batch_size: int= max(1, ceil(samples.shape[0] /by_chunk))
+    # print(f"-- input_batch_size {input_batch_size}")
+    # print(f"-- sample_batch_size {sample_batch_size}")
+    # for input_start in range(0, input.shape[0], input_batch_size):
+    #     input_end: int= input_start +input_batch_size
+    #     print(f"-- calc for {input_start} -- {input_end}")
+    #     for sample_start in range(0, samples.shape[0], sample_batch_size):
+    #         sample_end: int= sample_start +sample_batch_size
+    #         distances: np.ndarray= (
+    #             samples[None, sample_start:sample_end, :]
+    #             -input[input_start:input_end, None, :]
+    #         )**2.0
+    #         distances *= weights[None, sample_start:sample_end, :]
+    #         output[input_start:input_end, sample_start:sample_end]= np.sum(
+    #             distances,
+    #             axis=-1,
+    #             keepdims=False,
+    #         )
 
     assert output.shape == (input.shape[0], samples.shape[0])
     return output
