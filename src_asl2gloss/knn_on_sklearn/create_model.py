@@ -16,13 +16,11 @@ from sklearn.metrics import (
 
 
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
-'''
-average human being from https://media.istockphoto.com/id/965662288/photo/a-young-bearded-man-in-casual-wear-stands-with-hands-on-his-sides-on-a-white-background.jpg?s=612x612&w=0&k=20&c=QNRZO_MJP-hANRVdtyJ3OeVx30JM5IDrCjPwLbw8NjQ=
-'''
 DS1_22_LANDMARK_DIR: Path= PROJ_ROOT /'dataset' /'clean_dataset' /'fix_recent_n_classic_landmark'
 DS2_16_LANDMARK_DIR: Path= PROJ_ROOT /'dataset' /'asl_citizen' /'selected_start_end_landmark'
 DS1_22_cleaned_wlasl: Path= PROJ_ROOT /'dataset' /'clean_dataset' /'fix_recent_n_classic_landmark.json'
 DS2_16_cleaned_aslct: Path= PROJ_ROOT /'dataset' /'asl_citizen' /'selected_start_end_landmark.json'
+STATS_PATH: Path= PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"ml_stats_image"
 KEY_G: str= 'gloss'
 KEY_VIDS: str= 'videos'
 Q_VIDS_PER_G: int= 10
@@ -780,7 +778,6 @@ def save_stats(
     y_true: np.ndarray,
     y_pred: np.ndarray,
     labels: list[str],
-    stats_path: Path,
 ) -> None:
     class_ids: list[int]= list(range(len(labels)))
     scores: dict[str, float]= {
@@ -795,13 +792,16 @@ def save_stats(
             y_true, y_pred, labels=class_ids, average="macro", zero_division=0,
         ),
     }
+    if not STATS_PATH.exists():
+        STATS_PATH.mkdir()
+
     for metric, score in scores.items():
         image= np.full((120, 520, 3), 255, dtype=np.uint8)
         cv2.putText(image, f"{split.capitalize()} {metric.replace('_', '-')}:",
                     (20, 48), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (35, 35, 35), 2)
         cv2.putText(image, f"{score * 100:.2f}%", (20, 96),
                     cv2.FONT_HERSHEY_SIMPLEX, 1.1, (40, 110, 40), 2)
-        image_path= stats_path / f"{split}_{metric}.png"
+        image_path= STATS_PATH / f"{split}_{metric}.png"
         if not cv2.imwrite(str(image_path), image):
             raise OSError(f"Could not write statistics image: {image_path}")
         print(f"{metric} on {split}: {score * 100:.2f} %")
@@ -830,7 +830,7 @@ def save_stats(
             cv2.putText(image, str(matrix[row, col]),
                         (x0 +3, y0 +cell_size // 2 +5),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.35, (20, 20, 20), 1)
-    matrix_path= stats_path / f"{split}_confusion_matrix.png"
+    matrix_path= STATS_PATH / f"{split}_confusion_matrix.png"
     if not cv2.imwrite(str(matrix_path), image):
         raise OSError(f"Could not write confusion matrix image: {matrix_path}")
 def try_knn_sklearn(
@@ -846,14 +846,10 @@ def try_knn_sklearn(
     )
     knn_model.fit(X=ds_train_x, y=ds_train_y)
 
-    stats_path: Path= PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"ml_stats_image"
-    if not stats_path.exists():
-        stats_path.mkdir()
-
     train_predictions: np.ndarray= knn_model.predict(ds_train_x)
     test_predictions: np.ndarray= knn_model.predict(ds_test_x)
-    save_stats("train", ds_train_y, train_predictions, labels, stats_path)
-    save_stats("test", ds_test_y, test_predictions, labels, stats_path)
+    save_stats("train", ds_train_y, train_predictions, labels)
+    save_stats("test", ds_test_y, test_predictions, labels)
     write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model.joblib"))
     knn_model=  load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model.joblib"))
     with open(                    PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model_label.json", 'w') as f:
