@@ -1,4 +1,4 @@
-from json import load as loadJson
+from json import load as loadJson, dump as writeJson
 from joblib import load as load_sklmodel, dump as write_sklmodel
 from itertools import groupby
 from math import ceil, floor
@@ -773,6 +773,7 @@ def try_knn_sklearn(
     ds_train_y: np.ndarray,
     ds_test_x: np.ndarray,
     ds_test_y: np.ndarray,
+    labels: list[str],
 ) -> None:
     knn_model: KNeighborsClassifier= KNeighborsClassifier(
         n_neighbors=1,
@@ -790,6 +791,9 @@ def try_knn_sklearn(
     ) * 100} %")
     write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
     knn_model=  load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
+    with open(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model_label.json", 'w') as f:
+        writeJson(labels, f, indent=4)
+
     print(f"accuracy on train( using loaded knn model file ): {accuracy_score(
         ds_train_y,
         knn_model.predict(ds_train_x),
@@ -873,6 +877,7 @@ def main() -> None:
             ds_train_y,
             ds_test_x,
             ds_test_y,
+            [el[KEY_G] for el in ds_train_x]
         )
 if __name__=="__main__":
     main()
