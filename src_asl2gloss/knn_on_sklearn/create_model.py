@@ -877,7 +877,7 @@ def main() -> None:
             ds_train_y,
             ds_test_x,
             ds_test_y,
-            [el[KEY_G] for el in ds_train_x]
+            [el[KEY_G] for el in ds_annotations_train]
         )
 if __name__=="__main__":
     main()
