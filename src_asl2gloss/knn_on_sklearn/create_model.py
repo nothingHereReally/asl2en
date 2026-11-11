@@ -740,6 +740,36 @@ def load_dataset_numbers(dataset: list[dict]) -> tuple[np.ndarray, list[int], np
         ds_elements_label,
         weights_left_right_hand,
     )
+def try_knn_sklearn(
+    ds_train_x: np.ndarray,
+    ds_train_y: np.ndarray,
+    ds_test_x: np.ndarray,
+    ds_test_y: np.ndarray,
+) -> None:
+    knn_model: KNeighborsClassifier= KNeighborsClassifier(
+        n_neighbors=1,
+        n_jobs=-1,
+    )
+    knn_model.fit(X=ds_train_x, y=ds_train_y)
+
+    print(f"accuracy on train: {accuracy_score(
+        ds_train_y,
+        knn_model.predict(ds_train_x),
+    ) * 100} %")
+    print(f"accuracy on test: {accuracy_score(
+        ds_test_y,
+        knn_model.predict(ds_test_x),
+    ) * 100} %")
+    write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
+    knn_model= load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
+    print(f"accuracy on train( using loaded knn model file ): {accuracy_score(
+        ds_train_y,
+        knn_model.predict(ds_train_x),
+    ) * 100} %")
+    print(f"accuracy on test( using loaded knn model file ): {accuracy_score(
+        ds_test_y,
+        knn_model.predict(ds_test_x),
+    ) * 100} %")
 def main() -> None:
     dataset_annotations: list= load_dataset_annotations(show_dist=False)
     QUANTITY_FRAME: int= median_what(dataset_annotations, show_dist=False) # median 26
@@ -802,37 +832,19 @@ def main() -> None:
     max possible suggested elements per video: 18
     '''
     if train_good and test_good:
-        ds_train_x, ds_train_y= load_dataset_numbers(ds_annotations_train)
-        ds_test_x, ds_test_y= load_dataset_numbers(ds_annotations_test)
+        ds_train_x, ds_train_y, ds_weights= load_dataset_numbers(ds_annotations_train)
+        ds_test_x, ds_test_y, _= load_dataset_numbers(ds_annotations_test)
 
         assert ds_train_x.shape == (len(ds_train_y), QUANTITY_FRAME*120)
         assert ds_test_x.shape == (len(ds_test_y), QUANTITY_FRAME*120)
         ds_train_y= np.array(ds_train_y)
         ds_test_y= np.array(ds_test_y)
 
-        knn_model: KNeighborsClassifier= KNeighborsClassifier(
-            n_neighbors=1,
-            n_jobs=-1,
+        try_knn_sklearn(
+            ds_train_x,
+            ds_train_y,
+            ds_test_x,
+            ds_test_y,
         )
-        knn_model.fit(X=ds_train_x, y=ds_train_y)
-
-        print(f"accuracy on train: {accuracy_score(
-            ds_train_y,
-            knn_model.predict(ds_train_x),
-        ) * 100} %")
-        print(f"accuracy on test: {accuracy_score(
-            ds_test_y,
-            knn_model.predict(ds_test_x),
-        ) * 100} %")
-        write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
-        knn_model= load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
-        print(f"accuracy on train( using loaded knn model file ): {accuracy_score(
-            ds_train_y,
-            knn_model.predict(ds_train_x),
-        ) * 100} %")
-        print(f"accuracy on test( using loaded knn model file ): {accuracy_score(
-            ds_test_y,
-            knn_model.predict(ds_test_x),
-        ) * 100} %")
 if __name__=="__main__":
     main()
