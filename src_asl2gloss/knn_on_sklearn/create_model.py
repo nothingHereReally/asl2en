@@ -3,9 +3,16 @@ from joblib import load as load_sklmodel, dump as write_sklmodel
 from itertools import groupby
 from math import ceil, floor
 import numpy as np
+import cv2
 from pathlib import Path
 from sklearn.neighbors import KNeighborsClassifier
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    f1_score,
+    precision_score,
+    recall_score,
+)
 
 
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
@@ -768,6 +775,64 @@ def load_dataset_numbers(dataset: list[dict]) -> tuple[np.ndarray, list[int], np
         ds_elements_label,
         weights_left_right_hand,
     )
+def save_stats(
+    split: str,
+    y_true: np.ndarray,
+    y_pred: np.ndarray,
+    labels: list[str],
+    stats_path: Path,
+) -> None:
+    class_ids: list[int]= list(range(len(labels)))
+    scores: dict[str, float]= {
+        "accuracy": accuracy_score(y_true, y_pred),
+        "precision": precision_score(
+            y_true, y_pred, labels=class_ids, average="macro", zero_division=0,
+        ),
+        "recall": recall_score(
+            y_true, y_pred, labels=class_ids, average="macro", zero_division=0,
+        ),
+        "f1_score": f1_score(
+            y_true, y_pred, labels=class_ids, average="macro", zero_division=0,
+        ),
+    }
+    for metric, score in scores.items():
+        image= np.full((120, 520, 3), 255, dtype=np.uint8)
+        cv2.putText(image, f"{split.capitalize()} {metric.replace('_', '-')}:",
+                    (20, 48), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (35, 35, 35), 2)
+        cv2.putText(image, f"{score * 100:.2f}%", (20, 96),
+                    cv2.FONT_HERSHEY_SIMPLEX, 1.1, (40, 110, 40), 2)
+        image_path= stats_path / f"{split}_{metric}.png"
+        if not cv2.imwrite(str(image_path), image):
+            raise OSError(f"Could not write statistics image: {image_path}")
+        print(f"{metric} on {split}: {score * 100:.2f} %")
+
+    matrix= confusion_matrix(y_true, y_pred, labels=class_ids)
+    cell_size: int= max(28, min(56, 1200 // max(len(class_ids), 1)))
+    label_width: int= 180
+    header_height: int= 50
+    image= np.full((header_height +len(class_ids) *cell_size,
+                    label_width +len(class_ids) *cell_size, 3), 255, dtype=np.uint8)
+    cv2.putText(image, "Actual row / predicted column", (5, 28),
+                cv2.FONT_HERSHEY_SIMPLEX, 0.45, (35, 35, 35), 1)
+    for row, gloss in enumerate(labels):
+        y0= header_height +row *cell_size
+        cv2.putText(image, f"{row}: {gloss}", (5, y0 +cell_size // 2 +5),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (35, 35, 35), 1)
+        for col in range(len(class_ids)):
+            x0= label_width +col *cell_size
+            cv2.putText(image, str(col), (x0 +3, 42),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.3, (35, 35, 35), 1)
+            intensity= int(255 *(1 -matrix[row, col] / max(matrix.max(), 1)))
+            cv2.rectangle(image, (x0, y0), (x0 +cell_size, y0 +cell_size),
+                          (intensity, 220, intensity), thickness=-1)
+            cv2.rectangle(image, (x0, y0), (x0 +cell_size, y0 +cell_size),
+                          (180, 180, 180), thickness=1)
+            cv2.putText(image, str(matrix[row, col]),
+                        (x0 +3, y0 +cell_size // 2 +5),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.35, (20, 20, 20), 1)
+    matrix_path= stats_path / f"{split}_confusion_matrix.png"
+    if not cv2.imwrite(str(matrix_path), image):
+        raise OSError(f"Could not write confusion matrix image: {matrix_path}")
 def try_knn_sklearn(
     ds_train_x: np.ndarray,
     ds_train_y: np.ndarray,
@@ -781,26 +846,26 @@ def try_knn_sklearn(
     )
     knn_model.fit(X=ds_train_x, y=ds_train_y)
 
-    print(f"accuracy on train: {accuracy_score(
-        ds_train_y,
-        knn_model.predict(ds_train_x),
-    ) * 100} %")
-    print(f"accuracy on test: {accuracy_score(
-        ds_test_y,
-        knn_model.predict(ds_test_x),
-    ) * 100} %")
-    write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
-    knn_model=  load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model.joblib"))
-    with open(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn/" /"knn_model_label.json", 'w') as f:
+    stats_path: Path= PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"ml_stats_image"
+    if not stats_path.exists():
+        stats_path.mkdir()
+
+    train_predictions: np.ndarray= knn_model.predict(ds_train_x)
+    test_predictions: np.ndarray= knn_model.predict(ds_test_x)
+    save_stats("train", ds_train_y, train_predictions, labels, stats_path)
+    save_stats("test", ds_test_y, test_predictions, labels, stats_path)
+    write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model.joblib"))
+    knn_model=  load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model.joblib"))
+    with open(                    PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model_label.json", 'w') as f:
         writeJson(labels, f, indent=4)
 
     print(f"accuracy on train( using loaded knn model file ): {accuracy_score(
         ds_train_y,
-        knn_model.predict(ds_train_x),
+        train_predictions,
     ) * 100} %")
     print(f"accuracy on test( using loaded knn model file ): {accuracy_score(
         ds_test_y,
-        knn_model.predict(ds_test_x),
+        test_predictions,
     ) * 100} %")
 def main() -> None:
     dataset_annotations: list= load_dataset_annotations(show_dist=False)
