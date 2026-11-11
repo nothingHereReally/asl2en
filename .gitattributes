@@ -239,3 +239,13 @@ src_asl2gloss/pics_others/human_from_internet_standing_up.jpg filter=lfs diff=lf
 src_asl2gloss/knn_on_sklearn/model_v001/knn_model.joblib filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/knn_on_sklearn/model_v002/knn_model_k1.joblib filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/knn_on_sklearn/knn_model.joblib filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/ml_stats_image/test_accuracy.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/ml_stats_image/test_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/ml_stats_image/test_f1_score.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/ml_stats_image/test_precision.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/ml_stats_image/test_recall.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/ml_stats_image/train_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/ml_stats_image/train_f1_score.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/ml_stats_image/train_recall.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/ml_stats_image/train_accuracy.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/ml_stats_image/train_precision.png filter=lfs diff=lfs merge=lfs -text
