@@ -787,13 +787,13 @@ def save_stats(
     scores: dict[str, float]= {
         "accuracy": accuracy_score(y_true, y_pred),
         "precision": precision_score(
-            y_true, y_pred, labels=class_ids, average="macro", zero_division=0,
+            y_true, y_pred, labels=class_ids, average="macro",
         ),
         "recall": recall_score(
-            y_true, y_pred, labels=class_ids, average="macro", zero_division=0,
+            y_true, y_pred, labels=class_ids, average="macro",
         ),
         "f1_score": f1_score(
-            y_true, y_pred, labels=class_ids, average="macro", zero_division=0,
+            y_true, y_pred, labels=class_ids, average="macro",
         ),
     }
     if not STATS_PATH.exists():
