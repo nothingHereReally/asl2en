@@ -796,7 +796,7 @@ def save_stats(
             y_true, y_pred, labels=class_ids, average="macro",
         ),
     }
-    if not STATS_PATH.exists():
+    if not STATS_PATH.exists() and create_files:
         STATS_PATH.mkdir()
 
     for metric, score in scores.items():
