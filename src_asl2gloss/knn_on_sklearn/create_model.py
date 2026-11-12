@@ -845,6 +845,7 @@ def try_knn_sklearn(
     ds_test_x: np.ndarray,
     ds_test_y: np.ndarray,
     labels: list[str],
+    create_files: bool=False,
 ) -> None:
     knn_model: Pipeline= make_pipeline(
         StandardScaler(),
@@ -867,19 +868,20 @@ def try_knn_sklearn(
         ds_train_y,
         train_predictions,
         labels,
-        False,
+        create_files,
     )
     save_stats(
         "test",
         ds_test_y,
         test_predictions,
         labels,
-        False,
+        create_files,
     )
-    write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model.joblib"))
-    knn_model=  load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model.joblib"))
-    with open(                    PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model_label.json", 'w') as f:
-        writeJson(labels, f, indent=4)
+    if create_files:
+        write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model.joblib"))
+        knn_model=  load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model.joblib"))
+        with open(                    PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model_label.json", 'w') as f:
+            writeJson(labels, f, indent=4)
 
     print(f"accuracy on train( using loaded knn model file ): {accuracy_score(
         ds_train_y,
@@ -960,11 +962,12 @@ def main() -> None:
         ds_test_y= np.array(ds_test_y)
 
         try_knn_sklearn(
-            ds_train_x,
-            ds_train_y,
-            ds_test_x,
-            ds_test_y,
-            [el[KEY_G] for el in ds_annotations_train]
+            ds_train_x=ds_train_x,
+            ds_train_y=ds_train_y,
+            ds_test_x=ds_test_x,
+            ds_test_y=ds_test_y,
+            labels=[el[KEY_G] for el in ds_annotations_train],
+            create_files=True,
         )
 if __name__=="__main__":
     '''
