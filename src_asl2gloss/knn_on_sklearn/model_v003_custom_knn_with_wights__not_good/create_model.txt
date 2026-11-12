@@ -939,7 +939,6 @@ def main() -> None:
     if train_good and test_good:
         ds_train_x, ds_train_y, ds_weights= load_dataset_numbers(ds_annotations_train)
         ds_test_x, ds_test_y, _= load_dataset_numbers(ds_annotations_test)
-        print('hello world t(-_-t)')
 
         assert ds_train_x.shape == (len(ds_train_y), QUANTITY_FRAME*120)
         assert ds_test_x.shape == (len(ds_test_y), QUANTITY_FRAME*120)
