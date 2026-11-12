@@ -220,7 +220,7 @@ def load_dataset_annotations(show_dist: bool=False) -> list:
                             out[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
                                 out[-1][KEY_VIDS][-1][KEY_LANDMARK][-1].copy()
                             )
-    videos_per_gloss: int= int(len(out[-1][KEY_VIDS]))
+    videos_per_gloss: int= Q_VIDS_PER_G
     for a_gloss in ds2_aslct:
         out.append({
             KEY_G: a_gloss[KEY_G],
