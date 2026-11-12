@@ -941,4 +941,19 @@ def main() -> None:
             [el[KEY_G] for el in ds_annotations_train]
         )
 if __name__=="__main__":
+    '''
+    on K=1
+
+    is there at least 1 hand on every image landmarks? yes
+    accuracy on train: 100.00 %
+    precision on train: 100.00 %
+    recall on train: 100.00 %
+    f1_score on train: 100.00 %
+    accuracy on test: 74.50 %
+    precision on test: 77.51 %
+    recall on test: 74.50 %
+    f1_score on test: 71.82 %
+    accuracy on train( using loaded knn model file ): 100.0 %
+    accuracy on test( using loaded knn model file ): 74.50142450142451 %
+    '''
     main()
