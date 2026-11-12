@@ -5,6 +5,7 @@ from math import ceil, floor
 import numpy as np
 import cv2
 from pathlib import Path
+from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import (
     accuracy_score,
@@ -13,6 +14,8 @@ from sklearn.metrics import (
     precision_score,
     recall_score,
 )
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.preprocessing import StandardScaler
 
 
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent
@@ -843,9 +846,17 @@ def try_knn_sklearn(
     ds_test_y: np.ndarray,
     labels: list[str],
 ) -> None:
-    knn_model: KNeighborsClassifier= KNeighborsClassifier(
-        n_neighbors=1,
-        n_jobs=-1,
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        PCA(n_components=0.94),
+        KNeighborsClassifier(
+            n_neighbors=7,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
     )
     knn_model.fit(X=ds_train_x, y=ds_train_y)
 
