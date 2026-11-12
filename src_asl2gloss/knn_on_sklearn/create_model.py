@@ -801,15 +801,15 @@ def save_stats(
 
     for metric, score in scores.items():
         image= np.full((120, 520, 3), 255, dtype=np.uint8)
-        if create_files:
-            cv2.putText(image, f"{split.capitalize()} {metric.replace('_', '-')}:",
-                        (20, 48), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (35, 35, 35), 2)
-            cv2.putText(image, f"{score * 100:.2f}%", (20, 96),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.1, (40, 110, 40), 2)
-            image_path= STATS_PATH / f"{split}_{metric}.png"
-            if not cv2.imwrite(str(image_path), image):
-                raise OSError(f"Could not write statistics image: {image_path}")
-        print(f"{metric} on {split}: {score * 100:.2f} %")
+        # if create_files:
+        #     cv2.putText(image, f"{split.capitalize()} {metric.replace('_', '-')}:",
+        #                 (20, 48), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (35, 35, 35), 2)
+        #     cv2.putText(image, f"{score * 100:.2f}%", (20, 96),
+        #                 cv2.FONT_HERSHEY_SIMPLEX, 1.1, (40, 110, 40), 2)
+        #     image_path= STATS_PATH / f"{split}_{metric}.png"
+        #     if not cv2.imwrite(str(image_path), image):
+        #         raise OSError(f"Could not write statistics image: {image_path}")
+        print(f"{metric} on {split}: {score * 100:.5f} %")
 
     matrix= confusion_matrix(y_true, y_pred, labels=class_ids)
     cell_size: int= max(28, min(56, 1200 // max(len(class_ids), 1)))
