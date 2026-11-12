@@ -260,3 +260,4 @@ src_asl2gloss/knn_on_sklearn/wlasl_glasl_asl_citizen/ml_stats_image/train_precis
 src_asl2gloss/knn_on_sklearn/wlasl_glasl_asl_citizen/ml_stats_image/train_recall.png filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/knn_on_sklearn/wlasl_glasl_asl_citizen/ml_stats_image/test_f1_score.png filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/knn_on_sklearn/wlasl_glasl_asl_citizen/ml_stats_image/test_recall.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/model_v004_with_scalar_good/knn_model.joblib filter=lfs diff=lfs merge=lfs -text
