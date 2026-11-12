@@ -1,0 +1,705 @@
+---- experiments
+
+
+------------------------
+    knn_model: Pipeline = make_pipeline(
+        StandardScaler(),
+        PCA(n_components=0.94),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 84.90 %
+precision on test: 87.70 %
+recall on test: 84.90 %
+f1_score on test: 83.08 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 84.9002849002849 %
+
+
+
+
+------------------------
+    knn_model: Pipeline = make_pipeline(
+        StandardScaler(),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 84.69 %
+precision on test: 88.59 %
+recall on test: 84.69 %
+f1_score on test: 82.95 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 84.68660968660969 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        # RobustScaler(),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=2,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 83.76 %
+precision on test: 87.77 %
+recall on test: 83.76 %
+f1_score on test: 81.87 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 83.76068376068376 %
+
+
+
+
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        PCA(n_components=0.9),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=2,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 76.99 %
+precision on test: 76.96 %
+recall on test: 76.99 %
+f1_score on test: 74.81 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 76.99430199430199 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        PCA(n_components=0.99),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=2,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 82.12 %
+precision on test: 83.37 %
+recall on test: 82.12 %
+f1_score on test: 79.31 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 82.12250712250713 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        RobustScaler(),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=2,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 78.99 %
+precision on test: 79.15 %
+recall on test: 78.99 %
+f1_score on test: 76.34 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 78.98860398860398 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        PCA(0.95, whiten=True),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=2,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 75.57 %
+precision on test: 77.90 %
+recall on test: 75.57 %
+f1_score on test: 73.19 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 75.56980056980058 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        PCA(0.95),
+        KNeighborsClassifier(
+            n_neighbors=5,
+            weights='distance',
+            algorithm='auto',
+            p=2,  <--🍁
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 82.83 %
+precision on test: 87.28 %
+recall on test: 82.83 %
+f1_score on test: 80.51 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 82.83475783475784 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=5,
+            weights='distance',
+            algorithm='auto',
+            p=1, <--🍁
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 84.26 %
+precision on test: 88.04 %
+recall on test: 84.26 %
+f1_score on test: 82.23 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 84.25925925925925 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=7,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 83.76 %
+precision on test: 87.48 %
+recall on test: 83.76 %
+f1_score on test: 81.44 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 83.76068376068376 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=9,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 83.33 %
+precision on test: 87.02 %
+recall on test: 83.33 %
+f1_score on test: 80.77 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 83.33333333333334 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        PCA(n_components=0.97),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 83.40 %
+precision on test: 87.36 %
+recall on test: 83.40 %
+f1_score on test: 81.01 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 83.4045584045584 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=7,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 83.76 %
+precision on test: 87.48 %
+recall on test: 83.76 %
+f1_score on test: 81.44 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 83.76068376068376 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=9,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 83.33 %
+precision on test: 87.02 %
+recall on test: 83.33 %
+f1_score on test: 80.77 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 83.33333333333334 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=11,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 83.05 %
+precision on test: 86.73 %
+recall on test: 83.05 %
+f1_score on test: 80.31 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 83.04843304843304 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=13,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 82.41 %
+precision on test: 86.08 %
+recall on test: 82.41 %
+f1_score on test: 79.38 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 82.4074074074074 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        RobustScaler(),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 82.26 %
+precision on test: 83.45 %
+recall on test: 82.26 %
+f1_score on test: 79.30 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 82.26495726495726 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        MinMaxScaler(),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 82.69 %
+precision on test: 86.05 %
+recall on test: 82.69 %
+f1_score on test: 80.93 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 82.6923076923077 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        MaxAbsScaler(),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 82.48 %
+precision on test: 85.61 %
+recall on test: 82.48 %
+f1_score on test: 80.65 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 82.47863247863248 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        Normalizer(norm='l2'),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 77.92 %
+precision on test: 76.73 %
+recall on test: 77.92 %
+f1_score on test: 75.29 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 77.92022792022793 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        QuantileTransformer(
+            n_quantiles=500,
+            output_distribution='normal',
+            random_state=0,
+        ),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 75.25 %
+precision on test: 79.06 %
+recall on test: 75.25 %
+f1_score on test: 74.57 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 75.24928774928775 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        PowerTransformer(method='yeo-johnson'),
+        PCA(n_components=0.95),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 84.12 %
+precision on test: 85.54 %
+recall on test: 84.12 %
+f1_score on test: 81.45 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 84.11680911680912 %
+
+
+
+
+------------------------
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        SelectKBest(score_func=f_classif, k=800),
+        KNeighborsClassifier(
+            n_neighbors=3,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
+    )
+------------------------------------------------------
+is there at least 1 hand on every image landmarks? yes
+accuracy on train: 100.00 %
+precision on train: 100.00 %
+recall on train: 100.00 %
+f1_score on train: 100.00 %
+accuracy on test: 44.73 %
+precision on test: 47.17 %
+recall on test: 44.73 %
+f1_score on test: 41.52 %
+accuracy on train( using loaded knn model file ): 100.0 %
+accuracy on test( using loaded knn model file ): 44.729344729344724 %
+
+
+
+
+
+
+
+
+-------------------------------------
+-- imports
+from sklearn.decomposition import PCA
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import (
+    accuracy_score,
+    confusion_matrix,
+    f1_score,
+    precision_score,
+    recall_score,
+)
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.feature_selection import SelectKBest, f_classif
+from sklearn.preprocessing import (
+    MaxAbsScaler,
+    RobustScaler,
+    StandardScaler,
+    MinMaxScaler,
+    Normalizer,
+    QuantileTransformer,
+    PowerTransformer,
+)
