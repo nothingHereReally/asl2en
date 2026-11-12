@@ -778,6 +778,7 @@ def save_stats(
     y_true: np.ndarray,
     y_pred: np.ndarray,
     labels: list[str],
+    create_files: bool=False,
 ) -> None:
     class_ids: list[int]= list(range(len(labels)))
     scores: dict[str, float]= {
@@ -797,13 +798,14 @@ def save_stats(
 
     for metric, score in scores.items():
         image= np.full((120, 520, 3), 255, dtype=np.uint8)
-        cv2.putText(image, f"{split.capitalize()} {metric.replace('_', '-')}:",
-                    (20, 48), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (35, 35, 35), 2)
-        cv2.putText(image, f"{score * 100:.2f}%", (20, 96),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.1, (40, 110, 40), 2)
-        image_path= STATS_PATH / f"{split}_{metric}.png"
-        if not cv2.imwrite(str(image_path), image):
-            raise OSError(f"Could not write statistics image: {image_path}")
+        if create_files:
+            cv2.putText(image, f"{split.capitalize()} {metric.replace('_', '-')}:",
+                        (20, 48), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (35, 35, 35), 2)
+            cv2.putText(image, f"{score * 100:.2f}%", (20, 96),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.1, (40, 110, 40), 2)
+            image_path= STATS_PATH / f"{split}_{metric}.png"
+            if not cv2.imwrite(str(image_path), image):
+                raise OSError(f"Could not write statistics image: {image_path}")
         print(f"{metric} on {split}: {score * 100:.2f} %")
 
     matrix= confusion_matrix(y_true, y_pred, labels=class_ids)
@@ -831,8 +833,9 @@ def save_stats(
                         (x0 +3, y0 +cell_size // 2 +5),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.35, (20, 20, 20), 1)
     matrix_path= STATS_PATH / f"{split}_confusion_matrix.png"
-    if not cv2.imwrite(str(matrix_path), image):
-        raise OSError(f"Could not write confusion matrix image: {matrix_path}")
+    if create_files:
+        if not cv2.imwrite(str(matrix_path), image):
+            raise OSError(f"Could not write confusion matrix image: {matrix_path}")
 def try_knn_sklearn(
     ds_train_x: np.ndarray,
     ds_train_y: np.ndarray,
@@ -848,8 +851,20 @@ def try_knn_sklearn(
 
     train_predictions: np.ndarray= knn_model.predict(ds_train_x)
     test_predictions: np.ndarray= knn_model.predict(ds_test_x)
-    save_stats("train", ds_train_y, train_predictions, labels)
-    save_stats("test", ds_test_y, test_predictions, labels)
+    save_stats(
+        "train",
+        ds_train_y,
+        train_predictions,
+        labels,
+        False,
+    )
+    save_stats(
+        "test",
+        ds_test_y,
+        test_predictions,
+        labels,
+        False,
+    )
     write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model.joblib"))
     knn_model=  load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model.joblib"))
     with open(                    PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model_label.json", 'w') as f:
