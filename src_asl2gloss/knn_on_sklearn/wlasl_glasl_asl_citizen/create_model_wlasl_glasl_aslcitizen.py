@@ -910,7 +910,7 @@ def main() -> None:
     dataset_annotations: list= load_dataset_annotations(show_dist=False)
     QUANTITY_FRAME: int= 26
     print(
-        f"{QUANTITY_FRAME} <---- is there at least 1 hand on every image landmarks? " +
+        f"is there at least 1 hand on every image landmarks? " +
         "yes" if do_all_have_hands(dataset_annotations, show_msg=False) else "NO"
     )
     dataset_annotations= process4quantity_frame(
@@ -984,4 +984,17 @@ def main() -> None:
             [el[KEY_G] for el in ds_annotations_train]
         )
 if __name__=="__main__":
+    '''
+    is there at least 1 hand on every image landmarks? yes
+    accuracy on train: 100.00 %
+    precision on train: 100.00 %
+    recall on train: 100.00 %
+    f1_score on train: 100.00 %
+    accuracy on test: 77.14 %
+    precision on test: 81.73 %
+    recall on test: 77.14 %
+    f1_score on test: 76.24 %
+    accuracy on train( using loaded knn model file ): 100.0 %
+    accuracy on test( using loaded knn model file ): 77.13675213675214 %
+    '''
     main()
