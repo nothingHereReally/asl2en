@@ -227,35 +227,19 @@ def load_dataset_annotations(show_dist: bool=False) -> list:
                             out[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
                                 out[-1][KEY_VIDS][-1][KEY_LANDMARK][-1].copy()
                             )
-    idx_who_limit: int= 7
     for idx_g, a_gloss in enumerate(ds3_glasl):
-        if idx_g < idx_who_limit:
-            tmp_last: dict= out[idx_g][KEY_VIDS][-1]
-            out[idx_g][KEY_VIDS]= out[idx_g][KEY_VIDS][:4]
-            out[idx_g][KEY_VIDS].append(tmp_last)
-        else:
-            tmp_last: dict= out[idx_g+1][KEY_VIDS][-1]
-            out[idx_g+1][KEY_VIDS]= out[idx_g+1][KEY_VIDS][:4]
-            out[idx_g+1][KEY_VIDS].append(tmp_last)
+        tmp_last: dict= out[idx_g][KEY_VIDS][-1]
+        out[idx_g][KEY_VIDS]= out[idx_g][KEY_VIDS][:4]
+        out[idx_g][KEY_VIDS].append(tmp_last)
         for idx_v, a_video in enumerate(a_gloss[KEY_VIDS][:5]):
-            if idx_g < idx_who_limit:
-                out[idx_g][KEY_VIDS].insert(
-                    4+idx_v,
-                    {
-                        KEY_PFOLDER_FROM: DS3_22_LANDMARK_DIR,
-                        KEY_PFOLDER: a_video[KEY_PFOLDER],
-                        KEY_LANDMARK: a_video[KEY_LANDMARK],
-                    },
-                )
-            else:
-                out[idx_g+1][KEY_VIDS].insert(
-                    4+idx_v,
-                    {
-                        KEY_PFOLDER_FROM: DS3_22_LANDMARK_DIR,
-                        KEY_PFOLDER: a_video[KEY_PFOLDER],
-                        KEY_LANDMARK: a_video[KEY_LANDMARK],
-                    }
-                )
+            out[idx_g][KEY_VIDS].insert(
+                4+idx_v,
+                {
+                    KEY_PFOLDER_FROM: DS3_22_LANDMARK_DIR,
+                    KEY_PFOLDER: a_video[KEY_PFOLDER],
+                    KEY_LANDMARK: a_video[KEY_LANDMARK],
+                },
+            )
 
     for a_gloss in ds2_aslct:
         out.append({
