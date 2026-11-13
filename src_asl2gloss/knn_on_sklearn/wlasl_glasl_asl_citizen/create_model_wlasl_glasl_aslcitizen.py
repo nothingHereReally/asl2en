@@ -186,27 +186,27 @@ def load_dataset_annotations(show_dist: bool=False) -> list:
                             )
             out[-1][KEY_VIDS]= out[-1][KEY_VIDS][:Q_VIDS_PER_G]
         else:
-            # -- ie. for gloss who --
-            out.append({
-                KEY_G: a_gloss[KEY_G],
-                KEY_VIDS: [],
-            })
-            for a_video in a_gloss[KEY_VIDS][:Q_VIDS_PER_G]:
-                for start_end in a_video[KEY_LANDMARK]:
-                    out[-1][KEY_VIDS].append({
-                        KEY_PFOLDER_FROM: DS1_22_LANDMARK_DIR,
-                        KEY_PFOLDER: start_end[KEY_PFOLDER],
-                        KEY_LANDMARK: [],
-                    })
-                    for idx in range(len(start_end[KEY_LANDMARK])):
-                        if idx == 0 or has_atleast1hand(start_end[KEY_LANDMARK][idx]):
-                            out[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
-                                dict(start_end[KEY_LANDMARK][idx]).copy()
-                            )
-                        else:
-                            out[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
-                                out[-1][KEY_VIDS][-1][KEY_LANDMARK][-1].copy()
-                            )
+            # -- ie. for old gloss who --
+            # out.append({
+            #     KEY_G: a_gloss[KEY_G],
+            #     KEY_VIDS: [],
+            # })
+            # for a_video in a_gloss[KEY_VIDS][:Q_VIDS_PER_G]:
+            #     for start_end in a_video[KEY_LANDMARK]:
+            #         out[-1][KEY_VIDS].append({
+            #             KEY_PFOLDER_FROM: DS1_22_LANDMARK_DIR,
+            #             KEY_PFOLDER: start_end[KEY_PFOLDER],
+            #             KEY_LANDMARK: [],
+            #         })
+            #         for idx in range(len(start_end[KEY_LANDMARK])):
+            #             if idx == 0 or has_atleast1hand(start_end[KEY_LANDMARK][idx]):
+            #                 out[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
+            #                     dict(start_end[KEY_LANDMARK][idx]).copy()
+            #                 )
+            #             else:
+            #                 out[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
+            #                     out[-1][KEY_VIDS][-1][KEY_LANDMARK][-1].copy()
+            #                 )
             out.append({
                 KEY_G: a_gloss[KEY_G],
                 KEY_VIDS: [],
