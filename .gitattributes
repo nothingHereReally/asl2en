@@ -276,3 +276,7 @@ src_asl2gloss/knn_on_sklearn/model_v005_diff0/knn_model.joblib filter=lfs diff=l
 src_asl2gloss/knn_on_sklearn/model_v005_diff0/ml_stats_image/glasl_test_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/knn_on_sklearn/model_v005_diff0/ml_stats_image/test_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/knn_on_sklearn/model_v005_diff0/ml_stats_image/train_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/model_v005_diff0_goodbalance_accuracy/ml_stats_image/glasl_test_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/model_v005_diff0_goodbalance_accuracy/ml_stats_image/test_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/model_v005_diff0_goodbalance_accuracy/ml_stats_image/train_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/model_v005_diff0_goodbalance_accuracy/knn_model.joblib filter=lfs diff=lfs merge=lfs -text
