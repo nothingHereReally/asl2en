@@ -5,6 +5,7 @@ from math import ceil, floor
 import numpy as np
 import cv2
 from pathlib import Path
+from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.metrics import (
     accuracy_score,
@@ -13,6 +14,8 @@ from sklearn.metrics import (
     precision_score,
     recall_score,
 )
+from sklearn.pipeline import Pipeline, make_pipeline
+from sklearn.preprocessing import StandardScaler
 
 
 PROJ_ROOT: Path= Path(__file__).parent.parent.parent.parent
@@ -513,7 +516,7 @@ def split4train_test(dataset: list, suggested_q_per_video: int, show_dist: bool=
 
     min_elements_per_g4train: int= 9_999_999
     min_elements_per_g4test: int=  9_999_999
-    for idx_g, a_gloss in enumerate(dataset):
+    for a_gloss in dataset:
         out_train.append({
             KEY_G: a_gloss[KEY_G],
             KEY_VIDS: [],
@@ -529,16 +532,6 @@ def split4train_test(dataset: list, suggested_q_per_video: int, show_dist: bool=
                 a_gloss[KEY_VIDS], key=lambda el: el[KEY_PFOLDER]
             )
         ]
-        # if idx_g < 23 and idx_g != 7:
-        #     tmp: list[list[dict]]= []
-        #     tmp.extend(group_by_video[:4])
-        #     tmp.extend(group_by_video[8:12])
-        #     tmp.extend(group_by_video[-2:])
-        #     group_by_video= tmp
-        # if len(group_by_video) != Q_VIDS_PER_G:
-        #     print(f"len group_by_video: {len(group_by_video)} -- {a_gloss[KEY_G]}")
-        #     for a_video in group_by_video:
-        #         print(f"---- {a_video[0][KEY_PFOLDER]} ----")
         assert len(group_by_video) == Q_VIDS_PER_G
 
 
@@ -821,82 +814,107 @@ def save_stats(
     y_true: np.ndarray,
     y_pred: np.ndarray,
     labels: list[str],
+    create_files: bool=False,
 ) -> None:
     class_ids: list[int]= list(range(len(labels)))
     scores: dict[str, float]= {
         "accuracy": accuracy_score(y_true, y_pred),
         "precision": precision_score(
-            y_true, y_pred, labels=class_ids, average="macro", zero_division=0,
+            y_true, y_pred, labels=class_ids, average="macro",
         ),
         "recall": recall_score(
-            y_true, y_pred, labels=class_ids, average="macro", zero_division=0,
+            y_true, y_pred, labels=class_ids, average="macro",
         ),
         "f1_score": f1_score(
-            y_true, y_pred, labels=class_ids, average="macro", zero_division=0,
+            y_true, y_pred, labels=class_ids, average="macro",
         ),
     }
-    if not STATS_PATH.exists():
+    if not STATS_PATH.exists() and create_files:
         STATS_PATH.mkdir()
 
     for metric, score in scores.items():
-        image= np.full((120, 520, 3), 255, dtype=np.uint8)
-        cv2.putText(image, f"{split.capitalize()} {metric.replace('_', '-')}:",
-                    (20, 48), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (35, 35, 35), 2)
-        cv2.putText(image, f"{score * 100:.2f}%", (20, 96),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.1, (40, 110, 40), 2)
-        image_path= STATS_PATH / f"{split}_{metric}.png"
-        if not cv2.imwrite(str(image_path), image):
-            raise OSError(f"Could not write statistics image: {image_path}")
-        print(f"{metric} on {split}: {score * 100:.2f} %")
+        # if create_files:
+        #     image= np.full((120, 520, 3), 255, dtype=np.uint8)
+        #     cv2.putText(image, f"{split.capitalize()} {metric.replace('_', '-')}:",
+        #                 (20, 48), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (35, 35, 35), 2)
+        #     cv2.putText(image, f"{score * 100:.2f}%", (20, 96),
+        #                 cv2.FONT_HERSHEY_SIMPLEX, 1.1, (40, 110, 40), 2)
+        #     image_path= STATS_PATH / f"{split}_{metric}.png"
+        #     if not cv2.imwrite(str(image_path), image):
+        #         raise OSError(f"Could not write statistics image: {image_path}")
+        print(f"{metric} on {split}: {score * 100:.5f} %")
 
-    matrix= confusion_matrix(y_true, y_pred, labels=class_ids)
-    cell_size: int= max(28, min(56, 1200 // max(len(class_ids), 1)))
-    label_width: int= 180
-    header_height: int= 50
-    image= np.full((header_height +len(class_ids) *cell_size,
-                    label_width +len(class_ids) *cell_size, 3), 255, dtype=np.uint8)
-    cv2.putText(image, "Actual row / predicted column", (5, 28),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.45, (35, 35, 35), 1)
-    for row, gloss in enumerate(labels):
-        y0= header_height +row *cell_size
-        cv2.putText(image, f"{row}: {gloss}", (5, y0 +cell_size // 2 +5),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (35, 35, 35), 1)
-        for col in range(len(class_ids)):
-            x0= label_width +col *cell_size
-            cv2.putText(image, str(col), (x0 +3, 42),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.3, (35, 35, 35), 1)
-            intensity= int(255 *(1 -matrix[row, col] / max(matrix.max(), 1)))
-            cv2.rectangle(image, (x0, y0), (x0 +cell_size, y0 +cell_size),
-                          (intensity, 220, intensity), thickness=-1)
-            cv2.rectangle(image, (x0, y0), (x0 +cell_size, y0 +cell_size),
-                          (180, 180, 180), thickness=1)
-            cv2.putText(image, str(matrix[row, col]),
-                        (x0 +3, y0 +cell_size // 2 +5),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.35, (20, 20, 20), 1)
-    matrix_path= STATS_PATH / f"{split}_confusion_matrix.png"
-    if not cv2.imwrite(str(matrix_path), image):
-        raise OSError(f"Could not write confusion matrix image: {matrix_path}")
+    if create_files:
+        matrix= confusion_matrix(y_true, y_pred, labels=class_ids)
+        cell_size: int= max(28, min(56, 1200 // max(len(class_ids), 1)))
+        label_width: int= 180
+        header_height: int= 50
+        image= np.full((header_height +len(class_ids) *cell_size,
+                        label_width +len(class_ids) *cell_size, 3), 255, dtype=np.uint8)
+        cv2.putText(image, "Actual row / predicted column", (5, 28),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.45, (35, 35, 35), 1)
+        for row, gloss in enumerate(labels):
+            y0= header_height +row *cell_size
+            cv2.putText(image, f"{row}: {gloss}", (5, y0 +cell_size // 2 +5),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.4, (35, 35, 35), 1)
+            for col in range(len(class_ids)):
+                x0= label_width +col *cell_size
+                cv2.putText(image, str(col), (x0 +3, 42),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.3, (35, 35, 35), 1)
+                intensity= int(255 *(1 -matrix[row, col] / max(matrix.max(), 1)))
+                cv2.rectangle(image, (x0, y0), (x0 +cell_size, y0 +cell_size),
+                              (intensity, 220, intensity), thickness=-1)
+                cv2.rectangle(image, (x0, y0), (x0 +cell_size, y0 +cell_size),
+                              (180, 180, 180), thickness=1)
+                cv2.putText(image, str(matrix[row, col]),
+                            (x0 +3, y0 +cell_size // 2 +5),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.35, (20, 20, 20), 1)
+        matrix_path= STATS_PATH / f"{split}_confusion_matrix.png"
+        if not cv2.imwrite(str(matrix_path), image):
+            raise OSError(f"Could not write confusion matrix image: {matrix_path}")
 def try_knn_sklearn(
     ds_train_x: np.ndarray,
     ds_train_y: np.ndarray,
     ds_test_x: np.ndarray,
     ds_test_y: np.ndarray,
     labels: list[str],
+    create_files: bool=False,
 ) -> None:
-    knn_model: KNeighborsClassifier= KNeighborsClassifier(
-        n_neighbors=1,
-        n_jobs=-1,
+    knn_model: Pipeline= make_pipeline(
+        StandardScaler(),
+        PCA(n_components=0.94),
+        KNeighborsClassifier(
+            n_neighbors=7,
+            weights='distance',
+            algorithm='auto',
+            p=1,
+            metric='minkowski',
+            n_jobs=-1,
+        ),
     )
     knn_model.fit(X=ds_train_x, y=ds_train_y)
 
     train_predictions: np.ndarray= knn_model.predict(ds_train_x)
     test_predictions: np.ndarray= knn_model.predict(ds_test_x)
-    save_stats("train", ds_train_y, train_predictions, labels)
-    save_stats("test", ds_test_y, test_predictions, labels)
-    write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"wlasl_glasl_asl_citizen" /"knn_model.joblib"))
-    knn_model=  load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"wlasl_glasl_asl_citizen" /"knn_model.joblib"))
-    with open(                    PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"wlasl_glasl_asl_citizen" /"knn_model_label.json", 'w') as f:
-        writeJson(labels, f, indent=4)
+    save_stats(
+        "train",
+        ds_train_y,
+        train_predictions,
+        labels,
+        create_files,
+    )
+    save_stats(
+        "test",
+        ds_test_y,
+        test_predictions,
+        labels,
+        create_files,
+    )
+    if create_files:
+        write_sklmodel(knn_model, str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"wlasl_glasl_asl_citizen" /"knn_model.joblib"))
+        knn_model=  load_sklmodel(str(PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"wlasl_glasl_asl_citizen" /"knn_model.joblib"))
+        with open(                    PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"wlasl_glasl_asl_citizen" /"knn_model_label.json", 'w') as f:
+            writeJson(labels, f, indent=4)
 
     print(f"accuracy on train( using loaded knn model file ): {accuracy_score(
         ds_train_y,
@@ -977,11 +995,12 @@ def main() -> None:
         ds_test_y= np.array(ds_test_y)
 
         try_knn_sklearn(
-            ds_train_x,
-            ds_train_y,
-            ds_test_x,
-            ds_test_y,
-            [el[KEY_G] for el in ds_annotations_train]
+            ds_train_x=ds_train_x,
+            ds_train_y=ds_train_y,
+            ds_test_x=ds_test_x,
+            ds_test_y=ds_test_y,
+            labels=[el[KEY_G] for el in ds_annotations_train],
+            create_files=True,
         )
 if __name__=="__main__":
     '''
