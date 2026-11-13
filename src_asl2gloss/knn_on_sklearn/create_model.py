@@ -223,13 +223,12 @@ def load_dataset_annotations(show_dist: bool=False) -> list:
                             out[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
                                 out[-1][KEY_VIDS][-1][KEY_LANDMARK][-1].copy()
                             )
-    videos_per_gloss: int= Q_VIDS_PER_G
     for a_gloss in ds2_aslct:
         out.append({
             KEY_G: a_gloss[KEY_G],
             KEY_VIDS: [],
         })
-        for a_video in a_gloss[KEY_VIDS][:videos_per_gloss]:
+        for a_video in a_gloss[KEY_VIDS][:Q_VIDS_PER_G]:
             out[-1][KEY_VIDS].append({
                 KEY_PFOLDER_FROM: DS2_16_LANDMARK_DIR,
                 KEY_PFOLDER: a_video[KEY_PFOLDER],
