@@ -1005,15 +1005,15 @@ def main() -> None:
 if __name__=="__main__":
     '''
     is there at least 1 hand on every image landmarks? yes
-    accuracy on train: 100.00 %
-    precision on train: 100.00 %
-    recall on train: 100.00 %
-    f1_score on train: 100.00 %
-    accuracy on test: 77.14 %
-    precision on test: 81.73 %
-    recall on test: 77.14 %
-    f1_score on test: 76.24 %
+    accuracy on train: 100.00000 %
+    precision on train: 100.00000 %
+    recall on train: 100.00000 %
+    f1_score on train: 100.00000 %
+    accuracy on test: 82.76353 %
+    precision on test: 84.84408 %
+    recall on test: 82.76353 %
+    f1_score on test: 81.65163 %
     accuracy on train( using loaded knn model file ): 100.0 %
-    accuracy on test( using loaded knn model file ): 77.13675213675214 %
+    accuracy on test( using loaded knn model file ): 82.76353276353277 %
     '''
     main()
