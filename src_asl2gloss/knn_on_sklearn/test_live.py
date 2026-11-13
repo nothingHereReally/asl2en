@@ -319,6 +319,139 @@ def normalizeLandmarks(landmarks: list[tuple[float, float]], original_shape: tup
 
 
     return landmarks
+def normalizeWorthyLandmarkWrapper(
+    landmarks: list[tuple[float, float]], # order --> face_pose_left_right_hand
+    original_shape: tuple,
+    hasLandmarks: dict
+) -> list[tuple[float, float]]:
+    if not (hasLandmarks["face"] or hasLandmarks["pose"] or hasLandmarks["left_hand"] or hasLandmarks["right_hand"]):
+        return landmarks
+    norm: list= []
+    if hasLandmarks['face']:
+        norm.extend(landmarks[
+            :len(WORTHY_FACE_IDX)
+        ])
+    if hasLandmarks['pose']:
+        norm.extend(landmarks[
+            len(WORTHY_FACE_IDX):
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX)
+        ])
+    if hasLandmarks['left_hand']:
+        norm.extend(landmarks[
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +Q_HAND_LMARK
+        ])
+    if hasLandmarks['right_hand']:
+        norm.extend(landmarks[
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +Q_HAND_LMARK:
+        ])
+    norm= normalizeLandmarks(landmarks=norm, original_shape=original_shape)
+
+    out_landmark: list= []
+    # -- face landmarks --
+    if hasLandmarks["face"]:
+        out_landmark.extend(norm[:len(WORTHY_FACE_IDX)])
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                len(WORTHY_FACE_IDX),
+                2
+            )).tolist()
+        )
+
+    # -- pose landmarks --
+    if hasLandmarks["pose"]:
+        if hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX)
+            ])
+        else:
+            out_landmark.extend(norm[
+                :len(WORTHY_POSE_IDX)
+            ])
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                len(WORTHY_POSE_IDX),
+                2
+            )).tolist())
+
+    # -- left hand landmarks --
+    if hasLandmarks["left_hand"]:
+        if hasLandmarks["face"] and hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +Q_HAND_LMARK
+            ])
+        elif hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+                len(WORTHY_FACE_IDX) +Q_HAND_LMARK
+            ])
+        elif hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX):
+                len(WORTHY_POSE_IDX) +Q_HAND_LMARK
+            ])
+        else:
+            out_landmark.extend(norm[
+                :Q_HAND_LMARK
+            ])
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                Q_HAND_LMARK,
+                2
+            )).tolist())
+
+    # -- right hand landmarks --
+    if hasLandmarks["right_hand"]:
+        if hasLandmarks["face"] and hasLandmarks["pose"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +Q_HAND_LMARK:
+            ])
+        elif hasLandmarks["face"] and hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+            ])
+        elif hasLandmarks["face"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +Q_HAND_LMARK:
+            ])
+        elif hasLandmarks["pose"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX) +Q_HAND_LMARK:
+            ])
+        elif hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+            ])
+        elif hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX):
+            ])
+        elif hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                Q_HAND_LMARK:
+            ])
+        else:
+            out_landmark.extend(norm)
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                Q_HAND_LMARK,
+                2
+            )).tolist())
+
+    # out_landmark shape:
+    # (
+    #     len(WORTHY_FACE_IDX)
+    #     +len(WORTHY_POSE_IDX)
+    #     +Q_HAND_LMARK *2,
+    #     2
+    # )
+    return out_landmark # ie. output shape (86, 2)
 def landmarks_force_0_to_1(landmarks: list) -> list:
     return [
         (
@@ -329,8 +462,7 @@ def landmarks_force_0_to_1(landmarks: list) -> list:
 def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> tuple[np.ndarray, list[tuple[float, float]]]:
     assert lmark_mph.face_landmarks!=None
     assert lmark_mph.pose_landmarks!=None
-    assert lmark_mph.left_hand_landmarks!=None
-    assert lmark_mph.right_hand_landmarks!=None
+    assert lmark_mph.left_hand_landmarks!=None or lmark_mph.right_hand_landmarks!=None
 
 
     landmark__face_pose_left_right_hand: list= list()
@@ -365,39 +497,53 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
     )
 
     # ---- left hand landmarks ----
-    for el in lmark_mph.left_hand_landmarks.landmark:
-        landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
-    img_write_to= drawSkeletonImg(
-        image=img_write_to,
-        lmark_coordinates=landmarks_force_0_to_1(
-            [(el.x, el.y) for el in lmark_mph.left_hand_landmarks.landmark]
-        ),
-        connections_idxs=HAND_CONNECTIONS,
-        thick=10,
-        color_dot=None,
-        color_line=(255, 255, 255)
-    )
+    if lmark_mph.left_hand_landmarks != None:
+        for el in lmark_mph.left_hand_landmarks.landmark:
+            landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
+        img_write_to= drawSkeletonImg(
+            image=img_write_to,
+            lmark_coordinates=landmarks_force_0_to_1(
+                [(el.x, el.y) for el in lmark_mph.left_hand_landmarks.landmark]
+            ),
+            connections_idxs=HAND_CONNECTIONS,
+            thick=10,
+            color_dot=None,
+            color_line=(255, 255, 255)
+        )
+    else:
+        for _ in range(Q_HAND_LMARK):
+            landmark__face_pose_left_right_hand.append((  0.0, 0.0  ))
 
     # ---- right hand landmarks ----
-    for el in lmark_mph.right_hand_landmarks.landmark:
-        landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
-    img_write_to= drawSkeletonImg(
-        image=img_write_to,
-        lmark_coordinates=landmarks_force_0_to_1(
-            [(el.x, el.y) for el in lmark_mph.right_hand_landmarks.landmark]
-        ),
-        connections_idxs=HAND_CONNECTIONS,
-        thick=10,
-        color_dot=None,
-        color_line=(153, 204, 204), # 204/255= 0.8
-    )
+    if lmark_mph.right_hand_landmarks != None:
+        for el in lmark_mph.right_hand_landmarks.landmark:
+            landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
+        img_write_to= drawSkeletonImg(
+            image=img_write_to,
+            lmark_coordinates=landmarks_force_0_to_1(
+                [(el.x, el.y) for el in lmark_mph.right_hand_landmarks.landmark]
+            ),
+            connections_idxs=HAND_CONNECTIONS,
+            thick=10,
+            color_dot=None,
+            color_line=(153, 204, 204), # 204/255= 0.8
+        )
+    else:
+        for _ in range(Q_HAND_LMARK):
+            landmark__face_pose_left_right_hand.append((  0.0, 0.0  ))
 
 
 
 
-    landmark__face_pose_left_right_hand= normalizeLandmarks(
+    landmark__face_pose_left_right_hand= normalizeWorthyLandmarkWrapper(
         landmarks=landmark__face_pose_left_right_hand,
-        original_shape=orig_shape
+        original_shape=orig_shape,
+        hasLandmarks={
+            'face': lmark_mph.face_landmarks != None,
+            'pose': lmark_mph.pose_landmarks != None,
+            'left_hand': lmark_mph.left_hand_landmarks != None,
+            'right_hand': lmark_mph.right_hand_landmarks != None,
+        }
     )
 
 
