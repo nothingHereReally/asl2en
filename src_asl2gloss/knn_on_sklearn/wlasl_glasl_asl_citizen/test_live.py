@@ -462,8 +462,7 @@ def landmarks_force_0_to_1(landmarks: list) -> list:
 def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> tuple[np.ndarray, list[tuple[float, float]]]:
     assert lmark_mph.face_landmarks!=None
     assert lmark_mph.pose_landmarks!=None
-    assert lmark_mph.left_hand_landmarks!=None
-    assert lmark_mph.right_hand_landmarks!=None
+    assert lmark_mph.left_hand_landmarks!=None or lmark_mph.right_hand_landmarks!=None
 
 
     landmark__face_pose_left_right_hand: list= list()
@@ -498,39 +497,53 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
     )
 
     # ---- left hand landmarks ----
-    for el in lmark_mph.left_hand_landmarks.landmark:
-        landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
-    img_write_to= drawSkeletonImg(
-        image=img_write_to,
-        lmark_coordinates=landmarks_force_0_to_1(
-            [(el.x, el.y) for el in lmark_mph.left_hand_landmarks.landmark]
-        ),
-        connections_idxs=HAND_CONNECTIONS,
-        thick=10,
-        color_dot=None,
-        color_line=(255, 255, 255)
-    )
+    if lmark_mph.left_hand_landmarks != None:
+        for el in lmark_mph.left_hand_landmarks.landmark:
+            landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
+        img_write_to= drawSkeletonImg(
+            image=img_write_to,
+            lmark_coordinates=landmarks_force_0_to_1(
+                [(el.x, el.y) for el in lmark_mph.left_hand_landmarks.landmark]
+            ),
+            connections_idxs=HAND_CONNECTIONS,
+            thick=10,
+            color_dot=None,
+            color_line=(255, 255, 255)
+        )
+    else:
+        for _ in range(Q_HAND_LMARK):
+            landmark__face_pose_left_right_hand.append((  0.0, 0.0  ))
 
     # ---- right hand landmarks ----
-    for el in lmark_mph.right_hand_landmarks.landmark:
-        landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
-    img_write_to= drawSkeletonImg(
-        image=img_write_to,
-        lmark_coordinates=landmarks_force_0_to_1(
-            [(el.x, el.y) for el in lmark_mph.right_hand_landmarks.landmark]
-        ),
-        connections_idxs=HAND_CONNECTIONS,
-        thick=10,
-        color_dot=None,
-        color_line=(153, 204, 204), # 204/255= 0.8
-    )
+    if lmark_mph.right_hand_landmarks != None:
+        for el in lmark_mph.right_hand_landmarks.landmark:
+            landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
+        img_write_to= drawSkeletonImg(
+            image=img_write_to,
+            lmark_coordinates=landmarks_force_0_to_1(
+                [(el.x, el.y) for el in lmark_mph.right_hand_landmarks.landmark]
+            ),
+            connections_idxs=HAND_CONNECTIONS,
+            thick=10,
+            color_dot=None,
+            color_line=(153, 204, 204), # 204/255= 0.8
+        )
+    else:
+        for _ in range(Q_HAND_LMARK):
+            landmark__face_pose_left_right_hand.append((  0.0, 0.0  ))
 
 
 
 
-    landmark__face_pose_left_right_hand= normalizeLandmarks(
+    landmark__face_pose_left_right_hand= normalizeWorthyLandmarkWrapper(
         landmarks=landmark__face_pose_left_right_hand,
-        original_shape=orig_shape
+        original_shape=orig_shape,
+        hasLandmarks={
+            'face': lmark_mph.face_landmarks != None,
+            'pose': lmark_mph.pose_landmarks != None,
+            'left_hand': lmark_mph.left_hand_landmarks != None,
+            'right_hand': lmark_mph.right_hand_landmarks != None,
+        }
     )
 
 
@@ -595,11 +608,11 @@ def extract_features_left_right_diff(landmarks: np.ndarray) -> np.ndarray:
         ],
         axis=-1,
     )
-def has4parts_landmark(results) -> bool:
+def atleast1hand(results) -> bool:
     return results.face_landmarks != None and \
            results.pose_landmarks != None and \
-           results.left_hand_landmarks != None and \
-           results.right_hand_landmarks != None
+           ( results.left_hand_landmarks != None or \
+           results.right_hand_landmarks != None )
 def resize_image(image: np.ndarray, target_size: int) -> np.ndarray:
     h, w= image.shape[:2]
     scale= target_size /max(h, w)
@@ -647,7 +660,7 @@ def main() -> None:
                 rgb_frame= apply_clahe(image_rgb=rgb_frame)
             results= MPH_fph.process(rgb_frame)
 
-            if has4parts_landmark(results):
+            if atleast1hand(results):
                 img_with_skeleton, landmarks= drawFacePoseHand(rgb_frame, results, frame.shape[:2])
                 no_landmark_count= 0
 
