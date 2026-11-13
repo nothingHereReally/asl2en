@@ -271,3 +271,4 @@ src_asl2gloss/knn_on_sklearn/model_v004_with_scalar_good/ml_stats_image/test_con
 src_asl2gloss/knn_on_sklearn/model_v004_with_scalar_good/ml_stats_image/test_precision.png filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/knn_on_sklearn/model_v004_with_scalar_good/ml_stats_image/train_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
 src_asl2gloss/knn_on_sklearn/model_v004_with_scalar_good/ml_stats_image/train_precision.png filter=lfs diff=lfs merge=lfs -text
+src_asl2gloss/knn_on_sklearn/ml_stats_image/glasl_test_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
