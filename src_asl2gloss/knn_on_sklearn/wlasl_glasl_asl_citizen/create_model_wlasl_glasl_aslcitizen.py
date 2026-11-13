@@ -872,7 +872,7 @@ def save_stats(
         matrix_path= STATS_PATH / f"{split}_confusion_matrix.png"
         if not cv2.imwrite(str(matrix_path), image):
             raise OSError(f"Could not write confusion matrix image: {matrix_path}")
-def try_knn_sklearn(
+def do_knn_on_sklearn(
     ds_train_x: np.ndarray,
     ds_train_y: np.ndarray,
     ds_test_x: np.ndarray,
@@ -994,7 +994,7 @@ def main() -> None:
         ds_train_y= np.array(ds_train_y)
         ds_test_y= np.array(ds_test_y)
 
-        try_knn_sklearn(
+        do_knn_on_sklearn(
             ds_train_x=ds_train_x,
             ds_train_y=ds_train_y,
             ds_test_x=ds_test_x,
