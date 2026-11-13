@@ -223,6 +223,7 @@ def load_dataset_annotations(show_dist: bool=False) -> list:
                             out[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
                                 out[-1][KEY_VIDS][-1][KEY_LANDMARK][-1].copy()
                             )
+
     for a_gloss in ds2_aslct:
         out.append({
             KEY_G: a_gloss[KEY_G],
@@ -799,8 +800,8 @@ def save_stats(
         STATS_PATH.mkdir()
 
     for metric, score in scores.items():
-        image= np.full((120, 520, 3), 255, dtype=np.uint8)
         # if create_files:
+        #     image= np.full((120, 520, 3), 255, dtype=np.uint8)
         #     cv2.putText(image, f"{split.capitalize()} {metric.replace('_', '-')}:",
         #                 (20, 48), cv2.FONT_HERSHEY_SIMPLEX, 0.8, (35, 35, 35), 2)
         #     cv2.putText(image, f"{score * 100:.2f}%", (20, 96),
@@ -810,32 +811,32 @@ def save_stats(
         #         raise OSError(f"Could not write statistics image: {image_path}")
         print(f"{metric} on {split}: {score * 100:.5f} %")
 
-    matrix= confusion_matrix(y_true, y_pred, labels=class_ids)
-    cell_size: int= max(28, min(56, 1200 // max(len(class_ids), 1)))
-    label_width: int= 180
-    header_height: int= 50
-    image= np.full((header_height +len(class_ids) *cell_size,
-                    label_width +len(class_ids) *cell_size, 3), 255, dtype=np.uint8)
-    cv2.putText(image, "Actual row / predicted column", (5, 28),
-                cv2.FONT_HERSHEY_SIMPLEX, 0.45, (35, 35, 35), 1)
-    for row, gloss in enumerate(labels):
-        y0= header_height +row *cell_size
-        cv2.putText(image, f"{row}: {gloss}", (5, y0 +cell_size // 2 +5),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.4, (35, 35, 35), 1)
-        for col in range(len(class_ids)):
-            x0= label_width +col *cell_size
-            cv2.putText(image, str(col), (x0 +3, 42),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.3, (35, 35, 35), 1)
-            intensity= int(255 *(1 -matrix[row, col] / max(matrix.max(), 1)))
-            cv2.rectangle(image, (x0, y0), (x0 +cell_size, y0 +cell_size),
-                          (intensity, 220, intensity), thickness=-1)
-            cv2.rectangle(image, (x0, y0), (x0 +cell_size, y0 +cell_size),
-                          (180, 180, 180), thickness=1)
-            cv2.putText(image, str(matrix[row, col]),
-                        (x0 +3, y0 +cell_size // 2 +5),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.35, (20, 20, 20), 1)
-    matrix_path= STATS_PATH / f"{split}_confusion_matrix.png"
     if create_files:
+        matrix= confusion_matrix(y_true, y_pred, labels=class_ids)
+        cell_size: int= max(28, min(56, 1200 // max(len(class_ids), 1)))
+        label_width: int= 180
+        header_height: int= 50
+        image= np.full((header_height +len(class_ids) *cell_size,
+                        label_width +len(class_ids) *cell_size, 3), 255, dtype=np.uint8)
+        cv2.putText(image, "Actual row / predicted column", (5, 28),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.45, (35, 35, 35), 1)
+        for row, gloss in enumerate(labels):
+            y0= header_height +row *cell_size
+            cv2.putText(image, f"{row}: {gloss}", (5, y0 +cell_size // 2 +5),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.4, (35, 35, 35), 1)
+            for col in range(len(class_ids)):
+                x0= label_width +col *cell_size
+                cv2.putText(image, str(col), (x0 +3, 42),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.3, (35, 35, 35), 1)
+                intensity= int(255 *(1 -matrix[row, col] / max(matrix.max(), 1)))
+                cv2.rectangle(image, (x0, y0), (x0 +cell_size, y0 +cell_size),
+                              (intensity, 220, intensity), thickness=-1)
+                cv2.rectangle(image, (x0, y0), (x0 +cell_size, y0 +cell_size),
+                              (180, 180, 180), thickness=1)
+                cv2.putText(image, str(matrix[row, col]),
+                            (x0 +3, y0 +cell_size // 2 +5),
+                            cv2.FONT_HERSHEY_SIMPLEX, 0.35, (20, 20, 20), 1)
+        matrix_path= STATS_PATH / f"{split}_confusion_matrix.png"
         if not cv2.imwrite(str(matrix_path), image):
             raise OSError(f"Could not write confusion matrix image: {matrix_path}")
 def try_knn_sklearn(
@@ -970,18 +971,18 @@ def main() -> None:
         )
 if __name__=="__main__":
     '''
-    on K=1
+    on K=7
 
     is there at least 1 hand on every image landmarks? yes
-    accuracy on train: 100.00 %
-    precision on train: 100.00 %
-    recall on train: 100.00 %
-    f1_score on train: 100.00 %
-    accuracy on test: 74.50 %
-    precision on test: 77.51 %
-    recall on test: 74.50 %
-    f1_score on test: 71.82 %
+    accuracy on train: 100.00000 %
+    precision on train: 100.00000 %
+    recall on train: 100.00000 %
+    f1_score on train: 100.00000 %
+    accuracy on test: 84.18803 %
+    precision on test: 87.24804 %
+    recall on test: 84.18803 %
+    f1_score on test: 82.04235 %
     accuracy on train( using loaded knn model file ): 100.0 %
-    accuracy on test( using loaded knn model file ): 74.50142450142451 %
+    accuracy on test( using loaded knn model file ): 84.1880341880342 %
     '''
     main()
