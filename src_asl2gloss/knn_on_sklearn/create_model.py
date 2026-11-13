@@ -604,6 +604,65 @@ def split4train_test(dataset: list, suggested_q_per_video: int, show_dist: bool=
         print(f"max possible suggested elements per video: {floor(total_possible_per_gloss/Q_VIDS_PER_G)}")
         print('------------------------')
     return (out_train, out_test)
+def extract_q_per_video(dataset: list[dict], suggested_q_per_video: int, show_dist: bool=False) -> list[dict]:
+    output: list[dict]= []
+
+    min_elements_per_gloss: int= 9_999_999
+    for a_gloss in dataset:
+        output.append({
+            KEY_G: a_gloss[KEY_G],
+            KEY_VIDS: [],
+        })
+        record_not_used: list= []
+        group_by_video: list[list[dict]]= [
+            list(group) for _, group in groupby(
+                a_gloss[KEY_VIDS], key=lambda el: el[KEY_PFOLDER]
+            )
+        ]
+        assert len(group_by_video) == Q_VIDS_PER_G
+
+
+        if show_dist:
+            print(f"-- gloss( {a_gloss[KEY_G]} ) -- quantity elements: {len(a_gloss[KEY_VIDS])}")
+            total_elements: int= sum([
+                len(el)
+                for el in group_by_video
+            ])
+            if total_elements < min_elements_per_gloss:
+                min_elements_per_gloss= total_elements
+            print(f"    from max count: {total_elements}")
+        for idx_video, a_video_elements in enumerate(group_by_video):
+            '''
+            due2could be less than suggested_q_per_video
+            '''
+            output[-1][KEY_VIDS].extend(
+                a_video_elements[:suggested_q_per_video]
+                if len(a_video_elements) >= suggested_q_per_video
+                else a_video_elements
+            )
+
+            if len(a_video_elements) > suggested_q_per_video:
+                record_not_used.extend(a_video_elements[suggested_q_per_video:])
+
+            if show_dist:
+                print(f"    {str(idx_video+1).zfill(3)}: {len(a_video_elements)}")
+        quantity_per_g: int= int(suggested_q_per_video *Q_VIDS_PER_G)
+        if len(output[-1][KEY_VIDS]) < quantity_per_g:
+            missing_quantity: int= quantity_per_g -len(output[-1][KEY_VIDS])
+            assert missing_quantity <= len(record_not_used)
+            output[-1][KEY_VIDS].extend(
+                record_not_used[:missing_quantity]
+            )
+        assert int(len(output[-1][KEY_VIDS])) == quantity_per_g
+
+        if show_dist:
+            print()
+    if show_dist:
+        print('------------------------')
+        print(f"max possible elements on a gloss: {min_elements_per_gloss}")
+        print(f"max possible suggested elements per video: {floor(min_elements_per_gloss/Q_VIDS_PER_G)}")
+        print('------------------------')
+    return output
 def check_ds_is_good(dataset: list[dict], q_elements_per_g: int, q_frame: int, show_msg=False) -> bool:
     is_good: bool= True
     err_msg: list[str]= []
@@ -1302,6 +1361,11 @@ def main() -> None:
         suggested_q_per_video=q_pervideo_notstrict,
         show_dist=False,
     )
+    glasl_test_annotations= extract_q_per_video(
+        dataset=glasl_test_annotations,
+        suggested_q_per_video=q_pervideo_notstrict,
+        show_dist=False,
+    )
     '''
     max possible 80% train elements on a gloss: 144
     max possible 20% test elements on a gloss: 36
@@ -1390,10 +1454,10 @@ if __name__=="__main__":
 
     -------------------------
     ---- glasl_test ----
-    accuracy on glasl_test: 79.19941 %
-    precision on glasl_test: 91.40975 %
-    recall on glasl_test: 80.79903 %
-    f1_score on glasl_test: 80.02106 %
+    accuracy on glasl_test: 81.28788 %
+    precision on glasl_test: 91.30264 %
+    recall on glasl_test: 81.28788 %
+    f1_score on glasl_test: 80.37542 %
 
     accuracy on train( using loaded knn model file ): 100.0 %
     accuracy on test( using loaded knn model file ): 86.18421052631578 %
