@@ -462,11 +462,11 @@ def extract_features_left_right_diff(landmarks: np.ndarray) -> np.ndarray:
         ],
         axis=-1,
     )
-def has4parts_landmark(results) -> bool:
+def atleast1hand(results) -> bool:
     return results.face_landmarks != None and \
            results.pose_landmarks != None and \
-           results.left_hand_landmarks != None and \
-           results.right_hand_landmarks != None
+           ( results.left_hand_landmarks != None or \
+           results.right_hand_landmarks != None )
 def resize_image(image: np.ndarray, target_size: int) -> np.ndarray:
     h, w= image.shape[:2]
     scale= target_size /max(h, w)
@@ -514,7 +514,7 @@ def main() -> None:
                 rgb_frame= apply_clahe(image_rgb=rgb_frame)
             results= MPH_fph.process(rgb_frame)
 
-            if has4parts_landmark(results):
+            if atleast1hand(results):
                 img_with_skeleton, landmarks= drawFacePoseHand(rgb_frame, results, frame.shape[:2])
                 no_landmark_count= 0
 
