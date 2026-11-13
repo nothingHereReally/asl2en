@@ -1169,6 +1169,7 @@ def save_stats(
         #     if not cv2.imwrite(str(image_path), image):
         #         raise OSError(f"Could not write statistics image: {image_path}")
         print(f"{metric} on {split}: {score * 100:.5f} %")
+    print()
 
     if create_files:
         matrix= confusion_matrix(y_true, y_pred, labels=class_ids)
@@ -1261,7 +1262,7 @@ def do_knn_on_sklearn(
         with open(                    PROJ_ROOT /"src_asl2gloss" /"knn_on_sklearn" /"knn_model_label.json", 'w') as f:
             writeJson(labels, f, indent=4)
 
-    print(f"\naccuracy on train( using loaded knn model file ): {accuracy_score(
+    print(f"accuracy on train( using loaded knn model file ): {accuracy_score(
         ds_train_y,
         train_predictions,
     ) * 100} %")
@@ -1378,12 +1379,14 @@ if __name__=="__main__":
     recall on train: 100.00000 %
     f1_score on train: 100.00000 %
 
+
     -------------------------
     ---- test ----
     accuracy on test: 86.18421 %
     precision on test: 88.95332 %
     recall on test: 86.18421 %
     f1_score on test: 84.25076 %
+
 
     -------------------------
     ---- glasl_test ----
