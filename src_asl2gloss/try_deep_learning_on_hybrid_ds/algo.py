@@ -234,7 +234,7 @@ def extract_ds_annotation_split(split: str, q_pervideo_notstrict: int, show_dist
         }
     ]
     '''
-    # assert split in (VAL_TRAIN, VAL_TEST), due2already check on get_data_landmark(...)
+    # assert split in (VAL_TRAIN, VAL_TEST), due2already check on dataset_generator(...)
 
     output: list[dict]= []
     min_element_count_on_gloss: int= 999_999
@@ -441,7 +441,7 @@ def from86extract87andflip(annotation: dict) -> list[np.ndarray]:
     return [output[0], output[1]]
 
 
-def get_data_landmark(train_test: str=VAL_TRAIN, batch_size: int=BATCH) -> Generator:
+def dataset_generator(train_test: str=VAL_TRAIN, batch_size: int=BATCH) -> Generator:
     assert train_test in (VAL_TRAIN, VAL_TEST)
     assert 0 < batch_size
 
