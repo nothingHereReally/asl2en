@@ -2,8 +2,15 @@ from keras.src.losses import sparse_categorical_crossentropy
 from keras.src.models import Model
 from keras.src.optimizers import Adam
 
-from .constant import EPOCHS, VAL_TRAIN, VAL_TEST, PROJ_ROOT
-from .algo import calculate_steps_needed, get_data_landmark
+from .constant import (
+    EPOCHS,
+    VAL_TRAIN,
+    VAL_TEST,
+    STEPS_TRAIN,
+    STEPS_TEST,
+    PROJ_ROOT,
+)
+from .algo import dataset_generator
 from .layers import data_in, data_out
 from .callbacks import d_lr, sTraining, tf_board
 
@@ -20,12 +27,12 @@ def main():
     )
     model.summary()
     model.fit(
-        x=get_data_landmark(train_test=VAL_TRAIN),
+        x=dataset_generator(train_test=VAL_TRAIN),
         epochs=EPOCHS,
         callbacks=[d_lr, sTraining, tf_board],
-        validation_data=get_data_landmark(train_test=VAL_TEST),
-        steps_per_epoch=calculate_steps_needed(VAL_TRAIN),
-        validation_steps=calculate_steps_needed(VAL_TEST),
+        validation_data=dataset_generator(train_test=VAL_TEST),
+        steps_per_epoch=STEPS_TRAIN,
+        validation_steps=STEPS_TEST,
         validation_freq=1
     )
     model_file_name: str= "aslvid2gloss_v79.keras"
