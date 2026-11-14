@@ -249,7 +249,10 @@ def median_what(dataset: list, show_dist: bool=False) -> int:
     return median_out
 
 
-DS_ANNOTATIONS: list[dict]= load_dataset_annotations(show_dist=False)
+DS_ANNOTATIONS: list[dict]= load_dataset_annotations(
+    show_dist=False,
+    name=False,
+)
 QUANTITY_FRAME: int= median_what(dataset=DS_ANNOTATIONS, show_dist=False)
 LEN_GLOSS: int= len(DS_ANNOTATIONS)
 
