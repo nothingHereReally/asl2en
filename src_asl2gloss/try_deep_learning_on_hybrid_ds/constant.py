@@ -1,5 +1,6 @@
 from itertools import groupby
 from json import load as loadJson
+from math import ceil
 from pathlib import Path
 
 
@@ -27,6 +28,7 @@ VAL_TRAIN: str= 'train'
 VAL_TEST: str= 'test'
 RATIO4TRAIN: float= 0.8
 Q_VIDS_PER_G: int= 10
+Q_PERVIDEO_NOTSTRICT= 18
 
 WORTHY_FACE_IDX: tuple[int, ...]= (
     0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
@@ -261,6 +263,8 @@ DS_ANNOTATIONS: list[dict]= load_dataset_annotations(
     show_dist=False,
     name=False,
 )
+STEPS_TRAIN: int= len(DS_ANNOTATIONS) *Q_PERVIDEO_NOTSTRICT*ceil(Q_VIDS_PER_G*RATIO4TRAIN)
+STEPS_TEST: int= len(DS_ANNOTATIONS) *Q_PERVIDEO_NOTSTRICT*ceil(Q_VIDS_PER_G*(1-RATIO4TRAIN))
 QUANTITY_FRAME: int= median_what(dataset=DS_ANNOTATIONS, show_dist=False)
 LEN_GLOSS: int= len(DS_ANNOTATIONS)
 
