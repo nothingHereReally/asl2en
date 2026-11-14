@@ -387,71 +387,41 @@ def flip_vertical_y_axis(landmarks) -> np.ndarray:
     return new_landmark
 
 
-def extract_ds_annotation_split(wlasl_or_glasl: str, split: str) -> list:
-    out: list= []
-    assert split==VAL_TRAIN or split==VAL_TEST
-    if wlasl_or_glasl == 'glasl':
-        for idx_gloss, a_gloss in enumerate(glasl_ds):
-            approved_by_split: list= list(filter(
-                lambda el: el[KEY_SPLIT]==split,
-                a_gloss[KEY_VIDS],
-            ))
-            out.extend([{
-                KEY_GID: idx_gloss,
-                KEY_PFOLDER_FROM: LANDMARK_DIR_GLASL,
-                KEY_PFOLDER: el[KEY_PFOLDER],
-                KEY_LANDMARK: el[KEY_LANDMARK],
-            } for el in approved_by_split])
-    elif wlasl_or_glasl == 'wlasl':
-        for idx_gloss, a_gloss in enumerate(wlasl_ds):
-            approved_by_split: list= list(filter(
-                lambda el: el[KEY_SPLIT]==split,
-                a_gloss[KEY_VIDS],
-            )) # -- element is dict 3keys( video_file, split, landmark:list[dict..] )
-            for a_video in approved_by_split:
-                out.extend([{
-                    KEY_GID: idx_gloss,
-                    KEY_PFOLDER_FROM: LANDMARK_DIR_WLASL,
-                    KEY_PFOLDER: el[KEY_PFOLDER],
-                    KEY_LANDMARK: el[KEY_LANDMARK],
-                } for el in a_video[KEY_LANDMARK]])
-    else:
-        raise ValueError(
-            f'wlasl_or_glasl can only be "wlasl" or' +
-            f'"glasl", given value: {wlasl_or_glasl}'
-        )
-    return out
+def loadnpfiles(annotation: dict) -> list[np.ndarray]:
+    '''
+    annotation is dict having keys
+    -- KEY_GID: int
+    -- KEY_PFOLDER_FROM: Path
+    -- KEY_PFOLDER: str
+    -- KEY_LANDMARK: list[dict]
+    '''
+    output: list[np.ndarray]= []
+    for an_img_detail in annotation[KEY_LANDMARK]:
+        with open(
+            annotation[KEY_PFOLDER_FROM] /annotation[KEY_PFOLDER] /an_img_detail[KEY_FILE],
+            'rb',
+        ) as f:
+            output.append(np.load(f))
+
+    return output
 
 
-def calculate_steps_needed(train_test: str=VAL_TRAIN, batch_size: int=BATCH) -> int:
-    total_DS: int= 0
-    dataset: list= extract_ds_annotation_split(
-        wlasl_or_glasl='glasl',
-        split=train_test,
-    )
-    for a_video in dataset:
-        idx_init: int= idx_init_has_hand(a_video[KEY_LANDMARK])
-        if idx_init!=-1:
-            if len(a_video[KEY_LANDMARK])<=QUANTITY_FRAME:
-                total_DS+= 1
-            else:
-                len_available_images: int= len(a_video[KEY_LANDMARK])-idx_init
-                o2t_mod: int= int(len_available_images/QUANTITY_FRAME) # floor
-                total_DS+= 1 # for part 1
-                if QUANTITY_FRAME<len_available_images:
-                    total_DS+= int(
-                        o2t_mod *(len(a_video[KEY_LANDMARK]) -(idx_init+ QUANTITY_FRAME*o2t_mod))
-                    ) # for part 2
-                    for work4mod_what in MOD_PART_3: # for part 3
-                        if 0<int(len_available_images//work4mod_what):
-                            total_DS+= (len_available_images//work4mod_what) -QUANTITY_FRAME +1
-                        else:
-                            total_DS+= 1
-                else:
-                    total_DS+= 1
-    dataset= extract_ds_annotation_split(
-        wlasl_or_glasl='wlasl',
-        split=train_test,
+def from86extract87andflip(annotation: dict) -> list[np.ndarray]:
+    '''
+    annotation dict has keys
+    -- KEY_GID: int
+    -- KEY_PFOLDER_FROM: Path
+    -- KEY_PFOLDER: str
+    -- KEY_LANDMARK: list[dict] of length QUANTITY_FRAME
+    '''
+    output: list[list[np.ndarray]]|np.ndarray= [loadnpfiles(annotation)]
+    output.append(flip_vertical_y_axis(output[0]).tolist())
+    # output of shape (2, QUANTITY_FRAME, 86, 2)
+    output= np.pad(
+        array=np.array(output),
+        pad_width=((0, 0), (0, 0), (0, 1), (0, 0)), # due2on axis=-2 after
+        mode='constant',
+        constant_values=0.0,
     )
     for a_video in dataset:
         idx_init: int= idx_init_has_hand(a_video[KEY_LANDMARK])
