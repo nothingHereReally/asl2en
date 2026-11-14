@@ -178,6 +178,11 @@ def do_all_have_hands(dataset: list, show_msg: bool=False) -> bool:
                         )
                     else:
                         return all_atleast1hand
+    if show_msg:
+        if all_atleast1hand:
+            print("---- All good, all has at least 1 hand ----")
+        else:
+            print("---- Has parts where NO HAND EXISTS, not good ---")
     return all_atleast1hand
 def check_ds_is_good(dataset: list[dict], q_videos_per_g: int, show_msg=False) -> bool:
     '''
