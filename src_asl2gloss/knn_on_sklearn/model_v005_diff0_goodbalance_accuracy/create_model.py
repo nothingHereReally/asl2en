@@ -311,7 +311,7 @@ def do_all_have_hands(dataset: list, show_msg: bool=False) -> bool:
                             f"    right hand: {an_img[KEY_RHAND]}\n"
                         )
                     else:
-                        return all_atleast1hand 
+                        return all_atleast1hand
     return all_atleast1hand
 def q_lessthan_p1_spread(video_annotation: dict, q_frame: int) -> list[dict]:
     # spread out via ceil( ... )
