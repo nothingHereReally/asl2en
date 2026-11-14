@@ -1,51 +1,36 @@
-from math import ceil, floor
-# from numpy import array, load as loadnp, ndarray, uint16
+from math import ceil
 import numpy as np
-from random import sample
+from random import shuffle
 from typing import Generator
-from pathlib import Path
 
 
 from .constant import (
-    KEY_PFOLDER_FROM,
-    KEY_VIDS,
-    LANDMARK_DIR_WLASL,
-    LANDMARK_DIR_GLASL,
+    DS_ANNOTATIONS,
     BATCH,
-    LEFT_HAND_DIR_FILE,
-    LEN_W_FACE,
-    LEN_W_POSE,
-    LM_IDX_LEFT_ARM_TIP,
-    LM_IDX_LEFT_ELBOW,
-    LM_IDX_LEFT_HAND_WRIST,
-    LM_IDX_LEFT_HIP,
-    LM_IDX_LEFT_SHOULDER,
-    LM_IDX_RIGHT_ARM_TIP,
-    LM_IDX_RIGHT_ELBOW,
-    LM_IDX_RIGHT_HAND_WRIST,
-    LM_IDX_RIGHT_HIP,
-    LM_IDX_RIGHT_SHOULDER,
-    MOD_PART_3,
-    QUANTITY_FRAME,
-    QUANTITY_HAND_LMARK,
-    VAL_TEST,
-    WORTHY_FACE_IDX,
-    WORTHY_POSE_IDX,
-    wlasl_ds,
-    glasl_ds,
 
+    KEY_G,
     KEY_GID,
-    KEY_LANDMARK,
-
+    KEY_VIDS,
     KEY_PFOLDER,
-    KEY_SPLIT,
-    VAL_TRAIN,
+    KEY_PFOLDER_FROM,
+    KEY_LANDMARK,
+    LANDMARK_SHAPE,
+
+    Q_W_FACE,
+    Q_W_POSE,
+    Q_W_HAND,
 
     KEY_FILE,
-    KEY_FACE,
-    KEY_POSE,
     KEY_LHAND,
     KEY_RHAND,
+
+    Q_VIDS_PER_G,
+    Q_PERVIDEO_NOTSTRICT,
+    QUANTITY_FRAME,
+
+    RATIO4TRAIN,
+    VAL_TEST,
+    VAL_TRAIN,
 )
 
 
