@@ -7,7 +7,17 @@ from keras.src.saving import register_keras_serializable
 from typing import Any
 
 
-from .constant import LANDMARK_SHAPE, LM_IDX_LEFT_HIP, LM_IDX_LEFT_SHOULDER, LM_IDX_RIGHT_HIP, LM_IDX_RIGHT_SHOULDER, LM_LEFT_HAND_NOT_TIP, LM_LEFT_HAND_TIP, LM_RIGHT_HAND_NOT_TIP, LM_RIGHT_HAND_TIP, QUANTITY_FRAME, LEN_GLOSS, LM_IMPORTANT_FACE_IDX
+from .constant import (
+    LANDMARK_SHAPE,
+
+    LM_IDX_LEFT_SHOULDER,
+    LM_IDX_RIGHT_SHOULDER,
+    LM_IDX_LEFT_HIP,
+    LM_IDX_RIGHT_HIP,
+
+    QUANTITY_FRAME,
+    LEN_GLOSS,
+)
 
 
 @register_keras_serializable()
@@ -412,12 +422,12 @@ class SelectLM(Layer):
             "name":      self.name,
         }
 # ---------------------------------------------------------------------------
-data_in= Input(
+layer_in= Input(
     shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]),
     name='batch_vid',
 )
 # ---------------------------------------------------------------------------
-x= SelectLM()(data_in)
+x= SelectLM()(layer_in)
 # x= SinCosPostionalEncoding(name='positional')(x)
 x= NTimesEncoderTransformer(
     n_times=4,
@@ -440,4 +450,4 @@ ann= AttentionPooling()(x)
 #     activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
 # )(ann)
 # ---------------------------------------------------------------------------
-data_out= Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
+layer_out= Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)

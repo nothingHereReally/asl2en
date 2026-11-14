@@ -11,14 +11,14 @@ from .constant import (
     PROJ_ROOT,
 )
 from .algo import dataset_generator
-from .layers import data_in, data_out
+from .layers import layer_in, layer_out
 from .callbacks import d_lr, sTraining, tf_board
 
 
 def main():
     model: Model= Model(
-        inputs=data_in,
-        outputs=data_out
+        inputs=layer_in,
+        outputs=layer_out
     )
     model.compile(
         optimizer=Adam(learning_rate=0.0001),
