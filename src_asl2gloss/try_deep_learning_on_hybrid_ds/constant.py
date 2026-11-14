@@ -141,6 +141,7 @@ def load_dataset_annotations(show_dist: bool=False, name: bool=False) -> list[di
                             output[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
                                 output[-1][KEY_VIDS][-1][KEY_LANDMARK][-1].copy()
                             )
+        assert len(output[-1][KEY_VIDS]) == Q_VIDS_PER_G
 
     for a_gloss in ds2_aslct:
         output.append({
@@ -153,6 +154,7 @@ def load_dataset_annotations(show_dist: bool=False, name: bool=False) -> list[di
                 KEY_PFOLDER: a_video[KEY_PFOLDER],
                 KEY_LANDMARK: a_video[KEY_LANDMARK],
             })
+        assert len(output[-1][KEY_VIDS]) == Q_VIDS_PER_G
     if show_dist:
         for a_gloss in output:
             print(f'{a_gloss[KEY_G]} --> {len(a_gloss[KEY_VIDS])}')
