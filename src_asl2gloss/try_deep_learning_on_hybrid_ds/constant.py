@@ -97,7 +97,7 @@ def load_dataset_annotations(show_dist: bool=False, name: bool=False) -> list[di
     with open(DS2_16_cleaned_aslct, 'r') as f:
         ds2_aslct: list= loadJson(f)
     output: list= []
-    for a_gloss in ds1_wlasl:
+    for idx_g, a_gloss in enumerate(ds1_wlasl):
         if a_gloss[KEY_G] != 'who':
             output.append({
                 KEY_G: a_gloss[KEY_G],
@@ -106,6 +106,7 @@ def load_dataset_annotations(show_dist: bool=False, name: bool=False) -> list[di
             for a_video in a_gloss[KEY_VIDS]:
                 for start_end in a_video[KEY_LANDMARK]:
                     output[-1][KEY_VIDS].append({
+                        KEY_GID: idx_g,
                         KEY_PFOLDER_FROM: DS1_22_LANDMARK_DIR.name if name else DS1_22_LANDMARK_DIR,
                         KEY_PFOLDER: start_end[KEY_PFOLDER],
                         KEY_LANDMARK: [],
@@ -116,6 +117,7 @@ def load_dataset_annotations(show_dist: bool=False, name: bool=False) -> list[di
                                 dict(start_end[KEY_LANDMARK][idx]).copy()
                             )
                         else:
+                            # to fix no hand img
                             output[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
                                 output[-1][KEY_VIDS][-1][KEY_LANDMARK][-1].copy()
                             )
@@ -128,6 +130,7 @@ def load_dataset_annotations(show_dist: bool=False, name: bool=False) -> list[di
             for a_video in a_gloss[KEY_VIDS][Q_VIDS_PER_G:]:
                 for start_end in a_video[KEY_LANDMARK]:
                     output[-1][KEY_VIDS].append({
+                        KEY_GID: idx_g,
                         KEY_PFOLDER_FROM: DS1_22_LANDMARK_DIR.name if name else DS1_22_LANDMARK_DIR,
                         KEY_PFOLDER: start_end[KEY_PFOLDER],
                         KEY_LANDMARK: [],
@@ -138,18 +141,21 @@ def load_dataset_annotations(show_dist: bool=False, name: bool=False) -> list[di
                                 dict(start_end[KEY_LANDMARK][idx]).copy()
                             )
                         else:
+                            # to fix no hand img
                             output[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
                                 output[-1][KEY_VIDS][-1][KEY_LANDMARK][-1].copy()
                             )
         assert len(output[-1][KEY_VIDS]) == Q_VIDS_PER_G
 
-    for a_gloss in ds2_aslct:
+    past_g_total: int= len(output)
+    for idx, a_gloss in enumerate(ds2_aslct):
         output.append({
             KEY_G: a_gloss[KEY_G],
             KEY_VIDS: [],
         })
         for a_video in a_gloss[KEY_VIDS][:Q_VIDS_PER_G]:
             output[-1][KEY_VIDS].append({
+                KEY_GID: idx +past_g_total,
                 KEY_PFOLDER_FROM: DS2_16_LANDMARK_DIR.name if name else DS2_16_LANDMARK_DIR,
                 KEY_PFOLDER: a_video[KEY_PFOLDER],
                 KEY_LANDMARK: a_video[KEY_LANDMARK],
