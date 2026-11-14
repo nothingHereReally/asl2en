@@ -23,7 +23,7 @@ def main():
     model.compile(
         optimizer=Adam(learning_rate=0.0001),
         loss=sparse_categorical_crossentropy,
-        metrics=['accuracy']
+        metrics=['accuracy'],
     )
     model.summary()
     model.fit(
