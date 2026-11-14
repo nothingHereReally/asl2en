@@ -91,7 +91,7 @@ LMs_IDXs_RIGHT_H_NOT_INDEXF: tuple= (
 def has_atleast1hand(annotation: dict) -> bool:
     return bool(annotation[KEY_FACE] and annotation[KEY_POSE] and
                 (annotation[KEY_LHAND] or annotation[KEY_RHAND]))
-def load_dataset_annotations(show_dist: bool=False) -> list[dict]:
+def load_dataset_annotations(show_dist: bool=False, name: bool=False) -> list[dict]:
     with open(DS1_22_cleaned_wlasl, 'r') as f:
         ds1_wlasl: list= loadJson(f)
     with open(DS2_16_cleaned_aslct, 'r') as f:
@@ -106,7 +106,7 @@ def load_dataset_annotations(show_dist: bool=False) -> list[dict]:
             for a_video in a_gloss[KEY_VIDS]:
                 for start_end in a_video[KEY_LANDMARK]:
                     output[-1][KEY_VIDS].append({
-                        KEY_PFOLDER_FROM: DS1_22_LANDMARK_DIR,
+                        KEY_PFOLDER_FROM: DS1_22_LANDMARK_DIR.name if name else DS1_22_LANDMARK_DIR,
                         KEY_PFOLDER: start_end[KEY_PFOLDER],
                         KEY_LANDMARK: [],
                     })
@@ -128,7 +128,7 @@ def load_dataset_annotations(show_dist: bool=False) -> list[dict]:
             for a_video in a_gloss[KEY_VIDS][Q_VIDS_PER_G:]:
                 for start_end in a_video[KEY_LANDMARK]:
                     output[-1][KEY_VIDS].append({
-                        KEY_PFOLDER_FROM: DS1_22_LANDMARK_DIR,
+                        KEY_PFOLDER_FROM: DS1_22_LANDMARK_DIR.name if name else DS1_22_LANDMARK_DIR,
                         KEY_PFOLDER: start_end[KEY_PFOLDER],
                         KEY_LANDMARK: [],
                     })
@@ -149,7 +149,7 @@ def load_dataset_annotations(show_dist: bool=False) -> list[dict]:
         })
         for a_video in a_gloss[KEY_VIDS][:Q_VIDS_PER_G]:
             output[-1][KEY_VIDS].append({
-                KEY_PFOLDER_FROM: DS2_16_LANDMARK_DIR,
+                KEY_PFOLDER_FROM: DS2_16_LANDMARK_DIR.name if name else DS2_16_LANDMARK_DIR,
                 KEY_PFOLDER: a_video[KEY_PFOLDER],
                 KEY_LANDMARK: a_video[KEY_LANDMARK],
             })
