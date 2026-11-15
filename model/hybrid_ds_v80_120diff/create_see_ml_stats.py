@@ -1346,4 +1346,28 @@ def main() -> None:
 
 
 if __name__=='__main__':
+    '''
+    -------------------------
+    ---- train ----
+    accuracy on train: 99.99086 %
+    precision on train: 99.99089 %
+    recall on train: 99.99086 %
+    f1_score on train: 99.99086 %
+
+
+    -------------------------
+    ---- test ----
+    accuracy on test: 85.56287 %
+    precision on test: 85.52361 %
+    recall on test: 85.56287 %
+    f1_score on test: 83.47763 %
+
+
+    -------------------------
+    ---- glasl_test ----
+    accuracy on glasl_test: 84.55808 %
+    precision on glasl_test: 92.63434 %
+    recall on glasl_test: 84.55808 %
+    f1_score on glasl_test: 84.15181 %
+    '''
     main()
