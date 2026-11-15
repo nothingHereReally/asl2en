@@ -283,3 +283,5 @@ src_asl2gloss/knn_on_sklearn/model_v005_diff0_goodbalance_accuracy/knn_model.job
 model/hybrid_ds_v80_120diff/aslvid2gloss_v80.keras filter=lfs diff=lfs merge=lfs -text
 model/hybrid_ds_v80_120diff/tfboard_logs/train/events.out.tfevents.1794677387.doxob.1557310.0.v2 filter=lfs diff=lfs merge=lfs -text
 model/hybrid_ds_v80_120diff/tfboard_logs/validation/events.out.tfevents.1794677782.doxob.1557310.1.v2 filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v80_120diff/ml_stats_image/test_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v80_120diff/ml_stats_image/train_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
