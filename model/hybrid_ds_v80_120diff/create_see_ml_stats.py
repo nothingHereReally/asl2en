@@ -509,6 +509,59 @@ def extract_ds_annotation_split(
     return output
 
 
+def flip_vertical_y_axis(landmarks) -> np.ndarray:
+    '''
+    landmarks be of shape (INT, ..., 86, 2)
+    '''
+    new_landmark= np.array(landmarks).copy()
+    new_landmark[..., 0]= 1 -new_landmark[..., 0]
+    lhand2rhand: np.ndarray= new_landmark[...,
+        Q_W_FACE +Q_W_POSE:
+        Q_W_FACE +Q_W_POSE +Q_W_HAND
+    ,:].copy()
+    rhand2lhand: np.ndarray= new_landmark[...,
+        Q_W_FACE +Q_W_POSE +Q_W_HAND:
+    ,:].copy()
+    new_landmark[...,
+        Q_W_FACE +Q_W_POSE:
+        Q_W_FACE +Q_W_POSE +Q_W_HAND
+    ,:]= rhand2lhand # ie. past was right hand, now be left hand
+    new_landmark[...,
+        Q_W_FACE +Q_W_POSE +Q_W_HAND:
+    ,:]= lhand2rhand # ie. past was left hand, now be right hand
+
+    indices2flip: tuple[tuple, ...]= (
+        # -- face --
+        ( 12, 28 ),
+        ( 19, 34 ),
+        ( 11, 27 ),
+        ( 21, 35 ),
+        ( 14, 30 ),
+        ( 13, 29 ),
+        ( 10, 26 ),
+        ( 15, 31 ),
+        ( 18, 33 ),
+        (  7, 23 ),
+        ( 16, 32 ),
+        (  9, 25 ),
+        (  8, 24 ),
+
+        # -- pose --
+        ( 37, 36 ),
+        ( 43, 42 ),
+        ( 39, 38 ),
+        ( 41, 40 ),
+    )
+    # -- flip index pair face
+    # -- ( 12, 28 )
+    for p_a, p_b in indices2flip:
+        tmp= new_landmark[..., p_a:p_a+1, :].copy()
+        new_landmark[..., p_a:p_a+1, :]= new_landmark[..., p_b:p_b+1, :].copy()
+        new_landmark[..., p_b:p_b+1, :]= tmp
+
+    return new_landmark
+
+
 def main() -> None:
     ds_annotations: list[dict]= load_dataset_annotations(
         show_dist=False,
