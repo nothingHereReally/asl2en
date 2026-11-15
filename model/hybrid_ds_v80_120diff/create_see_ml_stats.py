@@ -1,4 +1,6 @@
 from json import load as loadJson
+from keras.src.models import Model
+from keras.src.saving import load_model
 from math import ceil
 import numpy as np
 import cv2
@@ -17,6 +19,7 @@ DS1_22_LANDMARK_DIR: Path= PROJ_ROOT / 'dataset' / 'clean_dataset' / 'fix_recent
 DS2_16_LANDMARK_DIR: Path= PROJ_ROOT / 'dataset' / 'asl_citizen' / 'selected_start_end_landmark'
 DS1_22_cleaned_wlasl: Path= PROJ_ROOT / 'dataset' / 'clean_dataset' / 'fix_recent_n_classic_landmark.json'
 DS2_16_cleaned_aslct: Path= PROJ_ROOT / 'dataset' / 'asl_citizen' / 'selected_start_end_landmark.json'
+MODEL_PATH: Path= PROJ_ROOT /"model" /"hybrid_ds_v80_120diff" /"aslvid2gloss_v80.keras"
 STATS_PATH: Path= PROJ_ROOT /"model" /"hybrid_ds_v80_120diff" /"ml_stats_image"
 
 KEY_G: str= 'gloss'
@@ -36,6 +39,7 @@ QUANTITY_FRAME: int= 26
 RATIO4TRAIN: float= 0.8
 Q_VIDS_PER_G: int= 10
 Q_PERVIDEO_NOTSTRICT= 18
+BATCH: int= 32
 
 
 WORTHY_FACE_IDX: tuple[int, ...]= (
@@ -610,6 +614,28 @@ def from86extract87andflip(annotation: dict) -> list[np.ndarray]:
             output[1, idx, 86, 0]= 0.0
 
     return [output[0], output[1]]
+
+
+def model_prediction(
+    model,
+    dataset: list[dict],
+    batch_size: int=BATCH,
+) -> tuple[list[int], list[int]]:
+    out_predicted: list[int]= []
+    out_actual: list[int]= []
+
+    for idx_start in range(0, len(dataset), batch_size):
+        batch_x_ds_elements__nums: list[np.ndarray]= []
+
+        for a_ds_element in dataset[idx_start:idx_start+batch_size]:
+            batch_x_ds_elements__nums.extend(from86extract87andflip(a_ds_element))
+            out_actual.extend([a_ds_element[KEY_GID], a_ds_element[KEY_GID]])
+        out_predicted.extend(np.argmax(model.predict(
+            x=np.array(batch_x_ds_elements__nums),
+            batch_size=len(batch_x_ds_elements__nums)
+        ), axis=-1).tolist())
+
+    return (out_predicted, out_actual)
 
 
 def main() -> None:
