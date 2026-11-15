@@ -884,7 +884,7 @@ def model_prediction(
             batch_size=len(batch_x_ds_elements__nums)
         ), axis=-1).tolist())
 
-    return (out_predicted, out_actual)
+    return (out_actual, out_predicted)
 
 
 def main() -> None:
@@ -905,8 +905,10 @@ def main() -> None:
         show_dist=False,
     )
     model= load_model(str(MODEL_PATH))
-    pred_y_train, actual_y_train= model_prediction(model, ds_train_annotations)
-    pred_y_test, actual_y_test= model_prediction(model, ds_test_annotations)
+    actual_y_train, pred_y_train= model_prediction(model, ds_train_annotations)
+    actual_y_test, pred_y_test= model_prediction(model, ds_test_annotations)
+
+
     with open(LABEL_PATH, 'r') as f:
         labels: list[str]= loadJson(f)
     save_stats(
@@ -914,14 +916,14 @@ def main() -> None:
         y_true=np.array(actual_y_train),
         y_pred=np.array(pred_y_train),
         labels=labels,
-        create_files=False,
+        create_files=True,
     )
     save_stats(
         split='test',
         y_true=np.array(actual_y_test),
         y_pred=np.array(pred_y_test),
         labels=labels,
-        create_files=False,
+        create_files=True,
     )
 
 
