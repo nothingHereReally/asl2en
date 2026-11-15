@@ -26,6 +26,10 @@ DS2_16_cleaned_aslct: Path= PROJ_ROOT / 'dataset' / 'asl_citizen' / 'selected_st
 MODEL_PATH: Path= PROJ_ROOT /"model" /"hybrid_ds_v80_120diff" /"aslvid2gloss_v80.keras"
 LABEL_PATH: Path= PROJ_ROOT /"model" /"hybrid_ds_v80_120diff" /"labels.json"
 STATS_PATH: Path= PROJ_ROOT /"model" /"hybrid_ds_v80_120diff" /"ml_stats_image"
+# ---- test GLASL ----
+DS3_22_LANDMARK_DIR: Path= PROJ_ROOT /'dataset' /'glasl_verified' /'ds_landmark'
+DS3_22_cleaned_glasl: Path= PROJ_ROOT /'dataset' /'glasl_verified' /'ds_landmark.json'
+# ---- test GLASL ----
 
 KEY_G: str= 'gloss'
 KEY_GID: str= 'gloss_id'
@@ -380,6 +384,29 @@ def load_dataset_annotations(show_dist: bool=False, name: bool=False) -> list[di
         for a_gloss in output:
             print(f'{a_gloss[KEY_G]} --> {len(a_gloss[KEY_VIDS])}')
     return output
+def load_glasl_test_annotations(training_annotations: list, show_dist: bool=False) -> list[dict]:
+    with open(DS3_22_cleaned_glasl, 'r') as f:
+        ds3_glasl: list[dict]= loadJson(f)
+
+    assert len(ds3_glasl) <= len(training_annotations)
+    output: list[dict]= []
+    for idx_g, a_gloss in enumerate(ds3_glasl):
+        assert a_gloss[KEY_G] == training_annotations[idx_g][KEY_G]
+        output.append({
+            KEY_G: a_gloss[KEY_G],
+            KEY_VIDS: [],
+        })
+        for a_video in a_gloss[KEY_VIDS][:Q_VIDS_PER_G]:
+            output[-1][KEY_VIDS].append({
+                KEY_GID: idx_g,
+                KEY_PFOLDER_FROM: DS3_22_LANDMARK_DIR,
+                KEY_PFOLDER: a_video[KEY_PFOLDER],
+                KEY_LANDMARK: a_video[KEY_LANDMARK],
+            })
+    if show_dist:
+        for a_gloss in output:
+            print(f'{a_gloss[KEY_G]} --> {len(a_gloss[KEY_VIDS])}')
+    return output
 
 
 def save_stats(
@@ -684,6 +711,9 @@ def extract_ds_annotation_split(
         elif split == VAL_TEST:
             output[-1][KEY_VIDS]= a_gloss[KEY_VIDS][ceil(RATIO4TRAIN*Q_VIDS_PER_G):]
             q_elements_per_g= q_pervideo_notstrict*ceil((1-RATIO4TRAIN)*Q_VIDS_PER_G)
+        elif split == 'all':
+            output[-1][KEY_VIDS]= a_gloss[KEY_VIDS]
+            q_elements_per_g= q_pervideo_notstrict*Q_VIDS_PER_G
 
         ds_elements_per_gloss: list[dict]= []
         ds_elements_notused: list[dict]= []
@@ -892,6 +922,13 @@ def main() -> None:
         show_dist=False,
         name=False,
     )
+    glasl_test_annotations: list[dict]= load_glasl_test_annotations(
+        ds_annotations,
+        show_dist=False,
+    )
+    glasl_total_class: int= len(glasl_test_annotations)
+
+
     ds_train_annotations: list[dict]= extract_ds_annotation_split(
         dataset=ds_annotations,
         split=VAL_TRAIN,
@@ -904,9 +941,16 @@ def main() -> None:
         q_pervideo_notstrict=Q_PERVIDEO_NOTSTRICT,
         show_dist=False,
     )
+    glasl_test_annotations: list[dict]= extract_ds_annotation_split(
+        dataset=glasl_test_annotations,
+        split='all',
+        q_pervideo_notstrict=Q_PERVIDEO_NOTSTRICT,
+        show_dist=False,
+    )
     model= load_model(str(MODEL_PATH))
     actual_y_train, pred_y_train= model_prediction(model, ds_train_annotations)
     actual_y_test, pred_y_test= model_prediction(model, ds_test_annotations)
+    actual_y_glasl, pred_y_glasl= model_prediction(model, glasl_test_annotations)
 
 
     with open(LABEL_PATH, 'r') as f:
@@ -923,6 +967,13 @@ def main() -> None:
         y_true=np.array(actual_y_test),
         y_pred=np.array(pred_y_test),
         labels=labels,
+        create_files=True,
+    )
+    save_stats(
+        split='glasl_test',
+        y_true=np.array(actual_y_glasl),
+        y_pred=np.array(pred_y_glasl),
+        labels=labels[:glasl_total_class],
         create_files=True,
     )
 
