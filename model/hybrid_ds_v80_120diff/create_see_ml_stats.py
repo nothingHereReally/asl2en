@@ -1,4 +1,5 @@
 from json import load as loadJson
+from math import ceil
 import numpy as np
 import cv2
 from pathlib import Path
@@ -24,10 +25,14 @@ KEY_VIDS: str= 'videos'
 KEY_LANDMARK: str= 'landmark'
 KEY_PFOLDER_FROM: str= 'parent_folder_from'
 KEY_PFOLDER: str= 'parent_folder'
+KEY_FILE: str= 'file'
 KEY_FACE: str= 'face'
 KEY_POSE: str= 'pose'
 KEY_LHAND: str= 'left_hand'
 KEY_RHAND: str= 'right_hand'
+VAL_TRAIN: str= 'train'
+VAL_TEST: str= 'test'
+QUANTITY_FRAME: int= 26
 RATIO4TRAIN: float= 0.8
 Q_VIDS_PER_G: int= 10
 Q_PERVIDEO_NOTSTRICT= 18
