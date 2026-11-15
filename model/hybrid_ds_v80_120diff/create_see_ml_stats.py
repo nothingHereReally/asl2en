@@ -24,6 +24,7 @@ DS2_16_LANDMARK_DIR: Path= PROJ_ROOT / 'dataset' / 'asl_citizen' / 'selected_sta
 DS1_22_cleaned_wlasl: Path= PROJ_ROOT / 'dataset' / 'clean_dataset' / 'fix_recent_n_classic_landmark.json'
 DS2_16_cleaned_aslct: Path= PROJ_ROOT / 'dataset' / 'asl_citizen' / 'selected_start_end_landmark.json'
 MODEL_PATH: Path= PROJ_ROOT /"model" /"hybrid_ds_v80_120diff" /"aslvid2gloss_v80.keras"
+LABEL_PATH: Path= PROJ_ROOT /"model" /"hybrid_ds_v80_120diff" /"labels.json"
 STATS_PATH: Path= PROJ_ROOT /"model" /"hybrid_ds_v80_120diff" /"ml_stats_image"
 
 KEY_G: str= 'gloss'
@@ -906,6 +907,22 @@ def main() -> None:
     model= load_model(str(MODEL_PATH))
     pred_y_train, actual_y_train= model_prediction(model, ds_train_annotations)
     pred_y_test, actual_y_test= model_prediction(model, ds_test_annotations)
+    with open(LABEL_PATH, 'r') as f:
+        labels: list[str]= loadJson(f)
+    save_stats(
+        split='train',
+        y_true=np.array(actual_y_train),
+        y_pred=np.array(pred_y_train),
+        labels=labels,
+        create_files=False,
+    )
+    save_stats(
+        split='test',
+        y_true=np.array(actual_y_test),
+        y_pred=np.array(pred_y_test),
+        labels=labels,
+        create_files=False,
+    )
 
 
 if __name__=='__main__':
