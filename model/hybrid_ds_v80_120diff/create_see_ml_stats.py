@@ -38,6 +38,18 @@ Q_VIDS_PER_G: int= 10
 Q_PERVIDEO_NOTSTRICT= 18
 
 
+WORTHY_FACE_IDX: tuple[int, ...]= (
+    0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
+    105, 107, 133, 145, 152, 159, 162, 168, 172, 195,
+    263, 291, 294, 300, 323, 332, 334, 336, 362, 374,
+    386, 389, 397
+)
+WORTHY_POSE_IDX: tuple[int, ...]= (11, 12, 13, 14, 15, 16, 23, 24)
+Q_W_FACE: int= len(WORTHY_FACE_IDX)
+Q_W_POSE: int= len(WORTHY_POSE_IDX)
+Q_W_HAND: int= 21
+
+
 def has_atleast1hand(annotation: dict) -> bool:
     return bool(annotation[KEY_FACE] and annotation[KEY_POSE] and
                 (annotation[KEY_LHAND] or annotation[KEY_RHAND]))
