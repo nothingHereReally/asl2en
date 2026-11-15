@@ -643,6 +643,21 @@ def main() -> None:
         show_dist=False,
         name=False,
     )
+    ds_train_annotations: list[dict]= extract_ds_annotation_split(
+        dataset=ds_annotations,
+        split=VAL_TRAIN,
+        q_pervideo_notstrict=Q_PERVIDEO_NOTSTRICT,
+        show_dist=False,
+    )
+    ds_test_annotations: list[dict]= extract_ds_annotation_split(
+        dataset=ds_annotations,
+        split=VAL_TEST,
+        q_pervideo_notstrict=Q_PERVIDEO_NOTSTRICT,
+        show_dist=False,
+    )
+    model= load_model(str(MODEL_PATH))
+    pred_y_train, actual_y_train= model_prediction(model, ds_train_annotations)
+    pred_y_test, actual_y_test= model_prediction(model, ds_test_annotations)
 
 
 if __name__=='__main__':
