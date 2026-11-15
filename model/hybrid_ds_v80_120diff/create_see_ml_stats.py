@@ -560,6 +560,23 @@ def flip_vertical_y_axis(landmarks) -> np.ndarray:
         new_landmark[..., p_b:p_b+1, :]= tmp
 
     return new_landmark
+def loadnpfiles(annotation: dict) -> list[np.ndarray]:
+    '''
+    annotation is dict having keys
+    -- KEY_GID: int
+    -- KEY_PFOLDER_FROM: Path
+    -- KEY_PFOLDER: str
+    -- KEY_LANDMARK: list[dict]
+    '''
+    output: list[np.ndarray]= []
+    for an_img_detail in annotation[KEY_LANDMARK]:
+        with open(
+            annotation[KEY_PFOLDER_FROM] /annotation[KEY_PFOLDER] /an_img_detail[KEY_FILE],
+            'rb',
+        ) as f:
+            output.append(np.load(f))
+
+    return output
 
 
 def main() -> None:
