@@ -1,0 +1,31 @@
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)               │ (None, 26, 87, 2)           │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ extract_features (ExtractFeatures)   │ (None, 26, 120)             │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ multi_encoder_in_sequence            │ (None, 26, 120)             │         141,952 │
+│ (NTimesEncoderTransformer)           │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ attention_pooling (AttentionPooling) │ (None, 120)                 │             121 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_class (Dense)                  │ (None, 38)                  │           4,598 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 146,671 (572.93 KB)
+ Trainable params: 146,671 (572.93 KB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/20
+5472/5472 ━━━━━━━━━━━━━━━━━━━━ 486s 86ms/step - accuracy: 0.9089 - loss: 0.4094 - val_accuracy: 0.8556 - val_loss: 0.5906 - learning_rate: 1.0000e-04
+Epoch 2/20
+5472/5472 ━━━━━━━━━━━━━━━━━━━━ 0s 70ms/step - accuracy: 0.9982 - loss: 0.0106
+Epoch 2: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+5472/5472 ━━━━━━━━━━━━━━━━━━━━ 474s 87ms/step - accuracy: 0.9982 - loss: 0.0106 - val_accuracy: 0.8410 - val_loss: 0.6945 - learning_rate: 1.0000e-04
+Epoch 3/20
+5472/5472 ━━━━━━━━━━━━━━━━━━━━ 454s 83ms/step - accuracy: 1.0000 - loss: 0.0010 - val_accuracy: 0.8637 - val_loss: 0.6626 - learning_rate: 1.0000e-05
+Epoch 3: early stopping
+Restoring model weights from the end of the best epoch: 1.
+Quantity images --> 26
+Quantity categories --> 38
+model( --> aslvid2gloss_v80.keras <-- )
