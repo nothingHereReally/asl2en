@@ -577,6 +577,39 @@ def loadnpfiles(annotation: dict) -> list[np.ndarray]:
             output.append(np.load(f))
 
     return output
+def from86extract87andflip(annotation: dict) -> list[np.ndarray]:
+    '''
+    annotation dict has keys
+    -- KEY_GID: int
+    -- KEY_PFOLDER_FROM: Path
+    -- KEY_PFOLDER: str
+    -- KEY_LANDMARK: list[dict] of length QUANTITY_FRAME
+    '''
+    output: list[list[np.ndarray]]|np.ndarray= [loadnpfiles(annotation)]
+    output.append(flip_vertical_y_axis(output[0]).tolist())
+    # output of shape (2, QUANTITY_FRAME, 86, 2)
+    output= np.pad(
+        array=np.array(output),
+        pad_width=((0, 0), (0, 0), (0, 1), (0, 0)), # due2on axis=-2 after
+        mode='constant',
+        constant_values=0.0,
+    )
+    for idx, an_img_detail in enumerate(annotation[KEY_LANDMARK]):
+        if an_img_detail[KEY_LHAND]:
+            output[0, idx, 86, 0]= 1.0
+            output[1, idx, 86, 1]= 1.0
+        else:
+            output[0, idx, 86, 0]= 0.0
+            output[1, idx, 86, 1]= 0.0
+
+        if an_img_detail[KEY_RHAND]:
+            output[0, idx, 86, 1]= 1.0
+            output[1, idx, 86, 0]= 1.0
+        else:
+            output[0, idx, 86, 1]= 0.0
+            output[1, idx, 86, 0]= 0.0
+
+    return [output[0], output[1]]
 
 
 def main() -> None:
