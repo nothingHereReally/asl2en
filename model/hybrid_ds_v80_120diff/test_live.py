@@ -661,7 +661,11 @@ def landmarks_force_0_to_1(landmarks: list) -> list:
             max(0.0, min(y, 1.0)),
         ) for x, y in landmarks
     ]
-def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> tuple[np.ndarray, list[tuple[float, float]]]:
+def drawFacePoseHand(
+    img_write_to: np.ndarray,
+    lmark_mph,
+    orig_shape: tuple,
+) -> tuple[np.ndarray, list[tuple[float, float]], bool, bool]:
     assert lmark_mph.face_landmarks!=None
     assert lmark_mph.pose_landmarks!=None
     assert lmark_mph.left_hand_landmarks!=None or lmark_mph.right_hand_landmarks!=None
@@ -752,7 +756,12 @@ def drawFacePoseHand(img_write_to: np.ndarray, lmark_mph, orig_shape: tuple) -> 
     # HERE ORDER OF LANDMARKS
     # order of landmarks [...face..., ...pose..., ...left_hand..., ...right_hand...]
     # return tuple(ndarray, list_of_shape_86_2)
-    return (img_write_to, landmark__face_pose_left_right_hand)
+    return (
+        img_write_to,
+        landmark__face_pose_left_right_hand,
+        lmark_mph.left_hand_landmarks != None,
+        lmark_mph.right_hand_landmarks != None,
+    )
 def get2dots_frombody(input: np.ndarray) -> np.ndarray:
     '''
     input -- shape of (..., 86, 2)
@@ -847,14 +856,18 @@ def main() -> None:
             results= MPH_fph.process(rgb_frame)
 
             if atleast1hand(results):
-                img_with_skeleton, landmarks= drawFacePoseHand(rgb_frame, results, frame.shape[:2])
+                img_with_skeleton, landmarks, has_lhand, has_rhand= drawFacePoseHand(
+                    rgb_frame,
+                    results,
+                    frame.shape[:2],
+                )
                 no_landmark_count= 0
 
                 landmark_left_or_right_hands.append(
                     from86extract87(
                         landmarks=np.array(landmarks),
-                        left_hand=results.left_hand_landmarks != None,
-                        right_hand=results.right_hand_landmarks != None,
+                        left_hand=has_lhand,
+                        right_hand=has_rhand,
                     )
                 )
                 if len(landmark_left_or_right_hands) >= QUANTITY_FRAME:
