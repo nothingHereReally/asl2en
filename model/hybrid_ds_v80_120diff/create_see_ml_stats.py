@@ -1315,8 +1315,7 @@ def main() -> None:
         labels: list[str]= loadJson(f)
     actual_y_train, pred_y_train= model_prediction(model, ds_train_annotations)
     actual_y_test, pred_y_test= model_prediction(model, ds_test_annotations)
-    actual_y_glasl, pred_y_glasl= model_prediction(model, glasl_test_annotations)
-    actual_y_glasl_rlh, pred_y_glasl_rlh= model_prediction_rm_left(
+    actual_y_glasl, pred_y_glasl= model_prediction_rm_left(
         model,
         labels=labels[:glasl_total_class],
         dataset=glasl_test_annotations,
@@ -1341,13 +1340,6 @@ def main() -> None:
         split='glasl_test',
         y_true=np.array(actual_y_glasl),
         y_pred=np.array(pred_y_glasl),
-        labels=labels[:glasl_total_class],
-        create_files=True,
-    )
-    save_stats(
-        split='glasl_test_rlh',
-        y_true=np.array(actual_y_glasl_rlh),
-        y_pred=np.array(pred_y_glasl_rlh),
         labels=labels[:glasl_total_class],
         create_files=True,
     )
