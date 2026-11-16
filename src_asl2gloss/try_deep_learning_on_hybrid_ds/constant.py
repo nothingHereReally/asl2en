@@ -9,6 +9,7 @@ DS1_22_LANDMARK_DIR: Path= PROJ_ROOT / 'dataset' / 'clean_dataset' / 'fix_recent
 DS2_16_LANDMARK_DIR: Path= PROJ_ROOT / 'dataset' / 'asl_citizen' / 'selected_start_end_landmark'
 DS1_22_cleaned_wlasl: Path= PROJ_ROOT / 'dataset' / 'clean_dataset' / 'fix_recent_n_classic_landmark.json'
 DS2_16_cleaned_aslct: Path= PROJ_ROOT / 'dataset' / 'asl_citizen' / 'selected_start_end_landmark.json'
+LABELS_PATH: Path= PROJ_ROOT /"model" /"labels.json"
 
 EPOCHS: int= 20
 BATCH: int= 16

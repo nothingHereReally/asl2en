@@ -1,3 +1,4 @@
+from json import dump as writeJson
 from math import ceil
 import numpy as np
 from random import shuffle
@@ -16,6 +17,7 @@ from .constant import (
     KEY_LANDMARK,
     LANDMARK_SHAPE,
 
+    LABELS_PATH,
     Q_W_FACE,
     Q_W_POSE,
     Q_W_HAND,
@@ -214,6 +216,15 @@ def flatten_and_check_dataset(dataset: list[dict]) -> list[dict]:
                 KEY_LANDMARK: a_video[KEY_LANDMARK],
             })
     return output
+def create_labels_jsonfile() -> None:
+    labels: list[str]= []
+    for a_gloss in DS_ANNOTATIONS:
+        labels.append(a_gloss[KEY_G])
+
+    if LABELS_PATH.exists():
+        with open(LABELS_PATH, 'w') as f:
+            writeJson(labels, f, indent=4)
+
 def extract_ds_annotation_split(split: str, q_pervideo_notstrict: int, show_dist: bool=False) -> list[dict]:
     '''
     if q_pervideo_notstrict is -1, then use all elements on train XOR test
