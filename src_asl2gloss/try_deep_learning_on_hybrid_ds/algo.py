@@ -454,6 +454,16 @@ def from86extract87andflip(annotation: dict) -> list[np.ndarray]:
             output[1, idx, 86, 0]= 0.0
 
     return [output[0], output[1]]
+def calculate_steps(train_test: str=VAL_TRAIN, batch_size: int=BATCH) -> int:
+    assert train_test in (VAL_TRAIN, VAL_TEST)
+
+    quantity_elements: int= len(extract_ds_annotation_split(
+        split=train_test,
+        q_pervideo_notstrict=Q_PERVIDEO_NOTSTRICT,
+        show_dist=False,
+    ))
+
+    return ceil(quantity_elements / batch_size)
 
 
 def dataset_generator(train_test: str=VAL_TRAIN, batch_size: int=BATCH) -> Generator:
