@@ -1329,7 +1329,7 @@ def main() -> None:
         y_pred=np.array(pred_y_train),
         labels=labels,
         untill=len(labels),
-        create_files=True,
+        create_files=False,
     )
     save_stats(
         split='test',
@@ -1337,7 +1337,7 @@ def main() -> None:
         y_pred=np.array(pred_y_test),
         labels=labels,
         untill=len(labels),
-        create_files=True,
+        create_files=False,
     )
     save_stats(
         split='glasl_test',
@@ -1345,7 +1345,7 @@ def main() -> None:
         y_pred=np.array(pred_y_glasl),
         labels=labels,
         untill=glasl_total_class,
-        create_files=True,
+        create_files=False,
     )
 
 
