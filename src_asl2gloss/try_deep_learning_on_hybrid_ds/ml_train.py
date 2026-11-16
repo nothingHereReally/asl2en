@@ -9,9 +9,8 @@ from .constant import (
     STEPS_TRAIN,
     STEPS_TEST,
     PROJ_ROOT,
-    Q_PERVIDEO_NOTSTRICT,
 )
-from .algo import calculate_steps, create_labels_jsonfile, dataset_generator
+from .algo import create_labels_jsonfile, dataset_generator
 from .layers import layer_in, layer_out
 from .callbacks import d_lr, sTraining, tf_board
 
