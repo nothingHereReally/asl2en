@@ -11,7 +11,7 @@ from .constant import (
     PROJ_ROOT,
     Q_PERVIDEO_NOTSTRICT,
 )
-from .algo import calculate_steps, dataset_generator
+from .algo import calculate_steps, create_labels_jsonfile, dataset_generator
 from .layers import layer_in, layer_out
 from .callbacks import d_lr, sTraining, tf_board
 
@@ -27,6 +27,7 @@ def main():
         metrics=['accuracy'],
     )
     model.summary()
+    create_labels_jsonfile()
     if 0 < Q_PERVIDEO_NOTSTRICT:
         model.fit(
             x=dataset_generator(train_test=VAL_TRAIN),
