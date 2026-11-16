@@ -1451,7 +1451,7 @@ def main() -> None:
             ds_test_x=ds_test_x,
             ds_test_y=ds_test_y,
             labels=[el[KEY_G] for el in ds_annotations_train],
-            create_files=True,
+            create_files=False,
             ds_glasl_test_x=ds_glasl_test_x,
             ds_glasl_test_y=np.array(ds_glasl_test_y),
             ds_glasl_limit=len(glasl_test_annotations),

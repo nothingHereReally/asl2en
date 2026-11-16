@@ -2007,7 +2007,7 @@ def save_model(
     with open(f"{MODEL2SAVE_DIR /"labels.json"}", 'w') as f:
         writeJson(labels, f, indent=4)
 def main() -> None:
-    init_folders_files()
+    # init_folders_files()
     ds_samples, annotations, wlasl_landmark, glasl_landmark= load_ds_samples()
     ds_samples= jnp.expand_dims(jnp.array(ds_samples), axis=0)
     '''
@@ -2059,13 +2059,13 @@ def main() -> None:
         weights=weights,
         model_annotations=labels,
     )
-    save_model(
-        ds_samples=ds_samples,
-        mask=mask,
-        body2dots=ds_samples_body2dots,
-        weights=weights,
-        labels=labels,
-    )
+    # save_model(
+    #     ds_samples=ds_samples,
+    #     mask=mask,
+    #     body2dots=ds_samples_body2dots,
+    #     weights=weights,
+    #     labels=labels,
+    # )
     # with open("/tmp/asdf.json", "w") as f:
     #     writeJson(annotations, f, indent=4)
     # print("\n".join([el[KEY_G] for el in annotations]))

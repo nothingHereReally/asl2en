@@ -635,7 +635,7 @@ def apply_clahe(image_rgb):
     )
 def main() -> None:
     model, labels= load_model()
-    do_clahe: bool= False
+    do_clahe: bool= True
 
     cap: cv.VideoCapture= cv.VideoCapture(2)
     if not cap.isOpened():
