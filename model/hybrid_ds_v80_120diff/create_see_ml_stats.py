@@ -414,19 +414,20 @@ def save_stats(
     y_true: np.ndarray,
     y_pred: np.ndarray,
     labels: list[str],
+    untill: int,
     create_files: bool=False,
 ) -> None:
     class_ids: list[int]= list(range(len(labels)))
     scores: dict[str, float]= {
         "accuracy": accuracy_score(y_true, y_pred),
         "precision": precision_score(
-            y_true, y_pred, labels=class_ids, average="macro",
+            y_true, y_pred, labels=class_ids[:untill], average="macro",
         ),
         "recall": recall_score(
-            y_true, y_pred, labels=class_ids, average="macro",
+            y_true, y_pred, labels=class_ids[:untill], average="macro",
         ),
         "f1_score": f1_score(
-            y_true, y_pred, labels=class_ids, average="macro",
+            y_true, y_pred, labels=class_ids[:untill], average="macro",
         ),
     }
     if not STATS_PATH.exists() and create_files:
@@ -1327,6 +1328,7 @@ def main() -> None:
         y_true=np.array(actual_y_train),
         y_pred=np.array(pred_y_train),
         labels=labels,
+        untill=len(labels),
         create_files=True,
     )
     save_stats(
@@ -1334,13 +1336,15 @@ def main() -> None:
         y_true=np.array(actual_y_test),
         y_pred=np.array(pred_y_test),
         labels=labels,
+        untill=len(labels),
         create_files=True,
     )
     save_stats(
         split='glasl_test',
         y_true=np.array(actual_y_glasl),
         y_pred=np.array(pred_y_glasl),
-        labels=labels[:glasl_total_class],
+        labels=labels,
+        untill=glasl_total_class,
         create_files=True,
     )
 

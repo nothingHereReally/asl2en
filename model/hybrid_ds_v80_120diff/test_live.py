@@ -830,7 +830,7 @@ def from86extract87(landmarks: np.ndarray, left_hand: bool, right_hand: bool) ->
 
 def main() -> None:
     model, labels= load_model()
-    do_clahe: bool= True
+    do_clahe: bool= False
 
     cap: cv.VideoCapture= cv.VideoCapture(2)
     if not cap.isOpened():
