@@ -263,8 +263,8 @@ DS_ANNOTATIONS: list[dict]= load_dataset_annotations(
     show_dist=False,
     name=False,
 )
-STEPS_TRAIN: int= len(DS_ANNOTATIONS) *Q_PERVIDEO_NOTSTRICT*ceil(Q_VIDS_PER_G*RATIO4TRAIN)
-STEPS_TEST: int= len(DS_ANNOTATIONS) *Q_PERVIDEO_NOTSTRICT*ceil(Q_VIDS_PER_G*(1-RATIO4TRAIN))
+STEPS_TRAIN: int= ceil(len(DS_ANNOTATIONS) *Q_PERVIDEO_NOTSTRICT*ceil(Q_VIDS_PER_G*RATIO4TRAIN) / BATCH)
+STEPS_TEST: int= ceil(len(DS_ANNOTATIONS) *Q_PERVIDEO_NOTSTRICT*ceil(Q_VIDS_PER_G*(1-RATIO4TRAIN)) / BATCH)
 QUANTITY_FRAME: int= median_what(dataset=DS_ANNOTATIONS, show_dist=False)
 '''
 for current 22 gloss + 16 gloss= 38 gloss, QUANTITY_FRAME is 26
