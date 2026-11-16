@@ -28,26 +28,15 @@ def main():
     )
     model.summary()
     create_labels_jsonfile()
-    if 0 < Q_PERVIDEO_NOTSTRICT:
-        model.fit(
-            x=dataset_generator(train_test=VAL_TRAIN),
-            epochs=EPOCHS,
-            callbacks=[d_lr, sTraining, tf_board],
-            validation_data=dataset_generator(train_test=VAL_TEST),
-            steps_per_epoch=STEPS_TRAIN,
-            validation_steps=STEPS_TEST,
-            validation_freq=1
-        )
-    else:
-        model.fit(
-            x=dataset_generator(train_test=VAL_TRAIN),
-            epochs=EPOCHS,
-            callbacks=[d_lr, sTraining, tf_board],
-            validation_data=dataset_generator(train_test=VAL_TEST),
-            steps_per_epoch=calculate_steps(VAL_TRAIN),
-            validation_steps=calculate_steps(VAL_TEST),
-            validation_freq=1
-        )
+    model.fit(
+        x=dataset_generator(train_test=VAL_TRAIN),
+        epochs=EPOCHS,
+        callbacks=[d_lr, sTraining, tf_board],
+        validation_data=dataset_generator(train_test=VAL_TEST),
+        steps_per_epoch=STEPS_TRAIN,
+        validation_steps=STEPS_TEST,
+        validation_freq=1
+    )
     model_file_name: str= "aslvid2gloss_v83.keras"
     print(f"Quantity images --> {model.input_shape[1]}")
     print(f"Quantity categories --> {model.output_shape[-1]}")
