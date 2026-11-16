@@ -221,9 +221,8 @@ def create_labels_jsonfile() -> None:
     for a_gloss in DS_ANNOTATIONS:
         labels.append(a_gloss[KEY_G])
 
-    if LABELS_PATH.exists():
-        with open(LABELS_PATH, 'w') as f:
-            writeJson(labels, f, indent=4)
+    with open(LABELS_PATH, 'w') as f:
+        writeJson(labels, f, indent=4)
 
 def extract_ds_annotation_split(split: str, q_pervideo_notstrict: int, show_dist: bool=False) -> list[dict]:
     '''
