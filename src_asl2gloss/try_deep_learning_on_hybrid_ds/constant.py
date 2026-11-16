@@ -28,8 +28,7 @@ VAL_TRAIN: str= 'train'
 VAL_TEST: str= 'test'
 RATIO4TRAIN: float= 0.8
 Q_VIDS_PER_G: int= 10
-# Q_PERVIDEO_NOTSTRICT= 18
-Q_PERVIDEO_NOTSTRICT= -1 # ie. use all dataset elements, but still 80% videos train, 20% test
+Q_PERVIDEO_NOTSTRICT= 18
 
 WORTHY_FACE_IDX: tuple[int, ...]= (
     0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
