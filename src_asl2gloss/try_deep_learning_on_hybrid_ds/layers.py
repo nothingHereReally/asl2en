@@ -1,5 +1,5 @@
 from keras.src.activations.activations import ReLU
-from keras.src.layers import Attention, Dense, Input, LayerNormalization, MultiHeadAttention, Layer
+from keras.src.layers import Dense, Input, LayerNormalization, MultiHeadAttention, Layer
 from keras.src.activations import softmax
 from keras.src import ops
 from keras.src.saving import register_keras_serializable
