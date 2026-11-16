@@ -151,6 +151,8 @@ class AttentionPooling(Layer):
         scores= self.scoring_layer(inputs) # be shape (B, T, 1)
         weights= ops.softmax(scores, axis=1) # norm via softmax still shape (B, T, 1)
         # weights, accross what time is it most important
+        # ie. among on T from (B, T, D) where do we need
+        # -- to pay attention to 1st, 2nd, ...
         return ops.sum(inputs * weights, axis=1) # shape (B, D)
 @register_keras_serializable()
 class ExtractFeatures(Layer):
