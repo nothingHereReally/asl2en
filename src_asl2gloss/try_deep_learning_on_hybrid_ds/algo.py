@@ -216,6 +216,8 @@ def flatten_and_check_dataset(dataset: list[dict]) -> list[dict]:
     return output
 def extract_ds_annotation_split(split: str, q_pervideo_notstrict: int, show_dist: bool=False) -> list[dict]:
     '''
+    if q_pervideo_notstrict is -1, then use all elements on train XOR test
+    -----------------------
     returns list[dict] of [
         {
             KEY_GID: int,
@@ -235,6 +237,7 @@ def extract_ds_annotation_split(split: str, q_pervideo_notstrict: int, show_dist
     ]
     '''
     # assert split in (VAL_TRAIN, VAL_TEST), due2already check on dataset_generator(...)
+    assert q_pervideo_notstrict == -1 or 0 < q_pervideo_notstrict
 
     output: list[dict]= []
     min_element_count_on_gloss: int= 999_999
@@ -251,11 +254,15 @@ def extract_ds_annotation_split(split: str, q_pervideo_notstrict: int, show_dist
         assert len(a_gloss[KEY_VIDS]) == Q_VIDS_PER_G
         q_elements_per_g: int= -1
         if split == VAL_TRAIN:
+            # ie. 80% quantity videos for train --> RATIO4TRAIN
             output[-1][KEY_VIDS]= a_gloss[KEY_VIDS][:ceil(RATIO4TRAIN*Q_VIDS_PER_G)]
-            q_elements_per_g= q_pervideo_notstrict*ceil(RATIO4TRAIN*Q_VIDS_PER_G)
+            if 0 < q_pervideo_notstrict:
+                q_elements_per_g= q_pervideo_notstrict*ceil(RATIO4TRAIN*Q_VIDS_PER_G)
         elif split == VAL_TEST:
+            # ie. 20% quantity videos for train --> 1-RATIO4TRAIN
             output[-1][KEY_VIDS]= a_gloss[KEY_VIDS][ceil(RATIO4TRAIN*Q_VIDS_PER_G):]
-            q_elements_per_g= q_pervideo_notstrict*ceil((1-RATIO4TRAIN)*Q_VIDS_PER_G)
+            if 0 < q_pervideo_notstrict:
+                q_elements_per_g= q_pervideo_notstrict*ceil((1-RATIO4TRAIN)*Q_VIDS_PER_G)
 
         ds_elements_per_gloss: list[dict]= []
         ds_elements_notused: list[dict]= []
@@ -301,19 +308,27 @@ def extract_ds_annotation_split(split: str, q_pervideo_notstrict: int, show_dist
                 pergloss_pervideo_count.append(len(elements))
 
 
-            if len(tmp_elements_a_video) <= q_pervideo_notstrict:
-                ds_elements_per_gloss.extend(tmp_elements_a_video)
+            if 0 < q_pervideo_notstrict:
+                if len(tmp_elements_a_video) <= q_pervideo_notstrict:
+                    ds_elements_per_gloss.extend(tmp_elements_a_video)
+                else:
+                    ds_elements_per_gloss.extend(tmp_elements_a_video[:q_pervideo_notstrict])
+                    ds_elements_notused.extend(tmp_elements_a_video[q_pervideo_notstrict:])
             else:
-                ds_elements_per_gloss.extend(tmp_elements_a_video[:q_pervideo_notstrict])
-                ds_elements_notused.extend(tmp_elements_a_video[q_pervideo_notstrict:])
+                ds_elements_per_gloss.extend(tmp_elements_a_video)
 
 
-        # -- fill missing due2target --> q_elements_per_g, ie. elements per gloss
-        if len(ds_elements_per_gloss) < q_elements_per_g:
-            q_missing_elements: int= q_elements_per_g -len(ds_elements_per_gloss)
-            assert q_missing_elements <= len(ds_elements_notused)
-            ds_elements_per_gloss.extend(ds_elements_notused[:q_missing_elements])
-        assert len(ds_elements_per_gloss) == q_elements_per_g
+        if 0 < q_pervideo_notstrict:
+            # -- fill missing due2target --> q_elements_per_g, ie. elements per gloss
+            # due2above only appends int(q_pervideo_notstrict) or less than int(q_pervideo_notstrict)
+            assert 0 < q_elements_per_g
+
+            if len(ds_elements_per_gloss) < q_elements_per_g:
+                q_missing_elements: int= q_elements_per_g -len(ds_elements_per_gloss)
+                assert q_missing_elements <= len(ds_elements_notused) # due2mandatory enough dataset
+
+                ds_elements_per_gloss.extend(ds_elements_notused[:q_missing_elements])
+            assert len(ds_elements_per_gloss) == q_elements_per_g
         output[-1][KEY_VIDS]= ds_elements_per_gloss
 
         if show_dist:
