@@ -80,17 +80,7 @@ pip install --upgrade pip
 
 
 ---
-Testing the model v30, latest best model
-now test( please use **`bash`** to run this )
-```bash
-python -m src_asl2gloss.test_model.model_v30
-```
-<br><br><br>
-
-
----
 do live test
-
 ```bash
-python -m src_asl2gloss.test_model.test_live_via_camera
+python -m model.hybrid_ds_v80_120diff.test_live
 ```

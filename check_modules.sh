@@ -36,6 +36,7 @@ check torch                 "2.7.1"
 check torchaudio            "2.7.1"
 check torchvision           "0.22.1"
 check jax                   "0.7.1"
+check scikit-learn          "1.7.1"
 
 
 # pip install torch==2.7.1 torchaudio==2.7.1 torchvision==0.22.1
@@ -51,6 +52,7 @@ check jax                   "0.7.1"
 # pip install mediapipe==0.10.21
 # pip install protobuf==4.25.9
 # pip install numpy==2.3.2
+# pip install scikit-learn==1.7.1
 
 
 # -- 10 modules -- old --

@@ -1,0 +1,1213 @@
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)               │ (None, 26, 87, 2)           │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ extract_features (ExtractFeatures)   │ (None, 26, 120)             │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ multi_encoder_in_sequence            │ (None, 26, 120)             │         281,024 │
+│ (NTimesEncoderTransformer)           │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ attention_pooling (AttentionPooling) │ (None, 120)                 │             121 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_class (Dense)                  │ (None, 38)                  │           4,598 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 285,743 (1.09 MB)
+ Trainable params: 285,743 (1.09 MB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 70s 88ms/step - accuracy: 0.5812 - loss: 1.6658 - val_accuracy: 0.7726 - val_loss: 0.9480 - learning_rate: 1.0000e-04
+Epoch 2/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 53s 84ms/step - accuracy: 0.9321 - loss: 0.3807 - val_accuracy: 0.8569 - val_loss: 0.5313 - learning_rate: 1.0000e-04
+Epoch 3/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 54s 86ms/step - accuracy: 0.9852 - loss: 0.1411 - val_accuracy: 0.8694 - val_loss: 0.4984 - learning_rate: 1.0000e-04
+Epoch 4/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 0s 65ms/step - accuracy: 0.9968 - loss: 0.0604
+Epoch 4: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+342/342 ━━━━━━━━━━━━━━━━━━━━ 56s 89ms/step - accuracy: 0.9968 - loss: 0.0604 - val_accuracy: 0.8603 - val_loss: 0.5676 - learning_rate: 1.0000e-04
+Epoch 5/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 58s 93ms/step - accuracy: 0.9999 - loss: 0.0303 - val_accuracy: 0.8733 - val_loss: 0.5326 - learning_rate: 1.0000e-05
+Epoch 5: early stopping
+Restoring model weights from the end of the best epoch: 3.
+Quantity images --> 26
+Quantity categories --> 38
+model( --> aslvid2gloss_v81.keras <-- )
+--> took 5minutes 25seconds
+
+
+
+
+-- algo.py
+---------------------------------------------------
+from math import ceil
+import numpy as np
+from random import shuffle
+from typing import Generator
+
+
+from .constant import (
+    DS_ANNOTATIONS,
+    BATCH,
+
+    KEY_G,
+    KEY_GID,
+    KEY_VIDS,
+    KEY_PFOLDER,
+    KEY_PFOLDER_FROM,
+    KEY_LANDMARK,
+    LANDMARK_SHAPE,
+
+    Q_W_FACE,
+    Q_W_POSE,
+    Q_W_HAND,
+
+    KEY_FILE,
+    KEY_LHAND,
+    KEY_RHAND,
+
+    Q_VIDS_PER_G,
+    Q_PERVIDEO_NOTSTRICT,
+    QUANTITY_FRAME,
+
+    RATIO4TRAIN,
+    VAL_TEST,
+    VAL_TRAIN,
+)
+
+
+def q_lessthan_p1_spread(video_annotation: dict, q_frame: int) -> list[dict]:
+    # spread out via ceil( ... )
+    assert len(video_annotation[KEY_LANDMARK]) < q_frame
+
+    ratio: int= ceil(q_frame/len(video_annotation[KEY_LANDMARK]))
+    q2be_created: int= len(video_annotation[KEY_LANDMARK]) -ceil(q_frame/ratio) +1
+    output: list[dict]= []
+    for init_idx in range(q2be_created):
+        output.append({
+            KEY_GID: video_annotation[KEY_GID],
+            KEY_PFOLDER_FROM: video_annotation[KEY_PFOLDER_FROM],
+            KEY_PFOLDER: video_annotation[KEY_PFOLDER],
+            KEY_LANDMARK: [],
+        })
+        for an_img_detail in video_annotation[KEY_LANDMARK][
+            init_idx:init_idx +ceil(q_frame/ratio)
+        ]:
+            output[-1][KEY_LANDMARK].extend(
+                [an_img_detail for _ in range(ratio)]
+            )
+        output[-1][KEY_LANDMARK]= output[-1][KEY_LANDMARK][:q_frame]
+        assert len(output[-1][KEY_LANDMARK]) == q_frame
+    assert len(output) == q2be_created
+
+    return output
+def q_lessthan_p2_loop(video_annotation: dict, q_frame: int) -> list[dict]:
+    # use again loop ie. [x1, x2, ..., xn, x1, x2, ...] till q_frame
+    assert len(video_annotation[KEY_LANDMARK]) < q_frame
+
+    output: list[dict]= []
+    q2be_created: int= len(video_annotation[KEY_LANDMARK])
+    for init_idx in range(q2be_created):
+        output.append({
+            KEY_GID: video_annotation[KEY_GID],
+            KEY_PFOLDER_FROM: video_annotation[KEY_PFOLDER_FROM],
+            KEY_PFOLDER: video_annotation[KEY_PFOLDER],
+            KEY_LANDMARK: video_annotation[KEY_LANDMARK][init_idx:],
+        })
+        while len(output[-1][KEY_LANDMARK]) < q_frame:
+            output[-1][KEY_LANDMARK].extend(
+                list(video_annotation[KEY_LANDMARK]).copy()
+            )
+        output[-1][KEY_LANDMARK]= output[-1][KEY_LANDMARK][:q_frame]
+        assert len(output[-1][KEY_LANDMARK]) == q_frame
+    assert len(output) == q2be_created
+
+    return output
+def q_lessthan_p3_stretch_startend(video_annotation: dict, q_frame: int) -> list[dict]:
+    # use 1st  ie. [x1, x1, ..., x1, x2, ..., xn]
+    # use last ie. [x1, x2, ..., xn, xn, xn, ...]
+    assert len(video_annotation[KEY_LANDMARK]) < q_frame
+
+    output: list[dict]= []
+    missing_what: int= q_frame -len(video_annotation[KEY_LANDMARK])
+
+    # on start stretch
+    output.append({
+        KEY_GID: video_annotation[KEY_GID],
+        KEY_PFOLDER_FROM: video_annotation[KEY_PFOLDER_FROM],
+        KEY_PFOLDER: video_annotation[KEY_PFOLDER],
+        KEY_LANDMARK: [
+            video_annotation[KEY_LANDMARK][0].copy()
+            for _ in range(missing_what)
+        ],
+    })
+    output[-1][KEY_LANDMARK].extend(video_annotation[KEY_LANDMARK])
+    assert len(output[-1][KEY_LANDMARK]) == q_frame
+
+    # on end stretch
+    output.append({
+        KEY_GID: video_annotation[KEY_GID],
+        KEY_PFOLDER_FROM: video_annotation[KEY_PFOLDER_FROM],
+        KEY_PFOLDER: video_annotation[KEY_PFOLDER],
+        KEY_LANDMARK: video_annotation[KEY_LANDMARK],
+    })
+    output[-1][KEY_LANDMARK].extend([
+            video_annotation[KEY_LANDMARK][-1].copy()
+            for _ in range(missing_what)
+        ])
+    assert len(output[-1][KEY_LANDMARK]) == q_frame
+
+    return output
+def q_equalto_p4_loop(video_annotation: dict, q_frame: int) -> list[dict]:
+    # use again loop ie. [x1, x2, ..., xn],
+    # then also [x2, x3, ..., xn, x1],
+    # ...,
+    # [xn, x1, x2, ..., x(n-1)] till len q_frame
+    assert len(video_annotation[KEY_LANDMARK]) == q_frame
+
+    output: list[dict]= []
+    for idx_init in range(len(video_annotation[KEY_LANDMARK])):
+        output.append({
+            KEY_GID: video_annotation[KEY_GID],
+            KEY_PFOLDER_FROM: video_annotation[KEY_PFOLDER_FROM],
+            KEY_PFOLDER: video_annotation[KEY_PFOLDER],
+            KEY_LANDMARK: video_annotation[KEY_LANDMARK][idx_init:],
+        })
+        if len(output[-1][KEY_LANDMARK]) < q_frame:
+            output[-1][KEY_LANDMARK].extend(
+                video_annotation[KEY_LANDMARK]
+            )
+            output[-1][KEY_LANDMARK]= output[-1][KEY_LANDMARK][:q_frame]
+            assert len(output[-1][KEY_LANDMARK]) == q_frame
+    assert len(output) == len(video_annotation[KEY_LANDMARK])
+
+    return output
+def q_greaterthan_p5_loop(video_annotation: dict, q_frame: int) -> list[dict]:
+    # loop till last ie. [x1, x2, ..., x_qf],
+    # then also [x2, x3, ..., x_qf, x_qf+1],
+    # ...,
+    # [xn, x1, x2, ..., x_qf-1] till len q_frame, due to on orig last is xn
+    assert len(video_annotation[KEY_LANDMARK]) > q_frame
+
+    output: list[dict]= []
+    for idx_init in range(len(video_annotation[KEY_LANDMARK])):
+        output.append({
+            KEY_GID: video_annotation[KEY_GID],
+            KEY_PFOLDER_FROM: video_annotation[KEY_PFOLDER_FROM],
+            KEY_PFOLDER: video_annotation[KEY_PFOLDER],
+            KEY_LANDMARK: video_annotation[KEY_LANDMARK][
+                idx_init:idx_init+q_frame
+            ],
+        })
+        if len(output[-1][KEY_LANDMARK]) < q_frame:
+            output[-1][KEY_LANDMARK].extend(
+                video_annotation[KEY_LANDMARK]
+            )
+            output[-1][KEY_LANDMARK]= output[-1][KEY_LANDMARK][:q_frame]
+            assert len(output[-1][KEY_LANDMARK]) == q_frame
+    assert len(output) == len(video_annotation[KEY_LANDMARK])
+
+    return output
+def flatten_and_check_dataset(dataset: list[dict]) -> list[dict]:
+    '''
+    flattens dataset to just dataset elements and checks file that they exists
+    input( dataset ) be of [
+        {
+            KEY_G: str,
+            KEY_VIDS: [...]
+        }
+    ]
+    -----------------------
+    returns list[dict] of [
+        {
+            KEY_GID: int,
+            KEY_PFOLDER_FROM: Path,
+            KEY_PFOLDER: str,
+            KEY_LANDMARK: [ -- length of KEY_LANDMARK --> QUANTITY_FRAME
+                {
+                    KEY_FILE: str,
+                    KEY_FACE: bool,
+                    KEY_POSE: bool,
+                    KEY_LHAND: bool,
+                    KEY_RHAND: bool,
+                },
+                ...
+            ]
+        }
+    ]
+    '''
+    output: list[dict]= []
+    for a_gloss in dataset:
+        for a_video in a_gloss[KEY_VIDS]:
+            if len(a_video[KEY_LANDMARK]) != QUANTITY_FRAME:
+                raise ValueError(f"{a_video[KEY_PFOLDER]} has {len(a_video[KEY_LANDMARK])} image, should be {QUANTITY_FRAME}")
+
+            if not (a_video[KEY_PFOLDER_FROM] /a_video[KEY_PFOLDER]).exists():
+                raise FileNotFoundError(f"error: {a_video[KEY_PFOLDER]} doesn't exists")
+
+            for an_img_detail in a_video[KEY_LANDMARK]:
+                if not (a_video[KEY_PFOLDER_FROM] /a_video[KEY_PFOLDER] /an_img_detail[KEY_FILE]).exists():
+                    raise FileNotFoundError(f"error: {a_video[KEY_PFOLDER]}/{an_img_detail[KEY_FILE]} doesn't exists")
+
+            output.append({
+                KEY_GID: a_video[KEY_GID],
+                KEY_PFOLDER_FROM: a_video[KEY_PFOLDER_FROM],
+                KEY_PFOLDER: a_video[KEY_PFOLDER],
+                KEY_LANDMARK: a_video[KEY_LANDMARK],
+            })
+    return output
+def extract_ds_annotation_split(split: str, q_pervideo_notstrict: int, show_dist: bool=False) -> list[dict]:
+    '''
+    if q_pervideo_notstrict is -1, then use all elements on train XOR test
+    -----------------------
+    returns list[dict] of [
+        {
+            KEY_GID: int,
+            KEY_PFOLDER_FROM: Path,
+            KEY_PFOLDER: str,
+            KEY_LANDMARK: [ -- length of KEY_LANDMARK --> QUANTITY_FRAME
+                {
+                    KEY_FILE: str,
+                    KEY_FACE: bool,
+                    KEY_POSE: bool,
+                    KEY_LHAND: bool,
+                    KEY_RHAND: bool,
+                },
+                ...
+            ]
+        }
+    ]
+    '''
+    # assert split in (VAL_TRAIN, VAL_TEST), due2already check on dataset_generator(...)
+    assert q_pervideo_notstrict == -1 or 0 < q_pervideo_notstrict
+
+    output: list[dict]= []
+    min_element_count_on_gloss: int= 999_999
+    min_element_count_on_video: int= 999_999
+    if show_dist:
+        print(f"---- dataset {split} -- elements(obeys QUANTITY_FRAME) count ----")
+    for a_gloss in DS_ANNOTATIONS:
+        output.append({
+            KEY_G: a_gloss[KEY_G],
+            KEY_VIDS: [],
+        })
+
+        # -- to follow 80% train, 20% test
+        assert len(a_gloss[KEY_VIDS]) == Q_VIDS_PER_G
+        q_elements_per_g: int= -1
+        if split == VAL_TRAIN:
+            # ie. 80% quantity videos for train --> RATIO4TRAIN
+            output[-1][KEY_VIDS]= a_gloss[KEY_VIDS][:ceil(RATIO4TRAIN*Q_VIDS_PER_G)]
+            if 0 < q_pervideo_notstrict:
+                q_elements_per_g= q_pervideo_notstrict*ceil(RATIO4TRAIN*Q_VIDS_PER_G)
+        elif split == VAL_TEST:
+            # ie. 20% quantity videos for train --> 1-RATIO4TRAIN
+            output[-1][KEY_VIDS]= a_gloss[KEY_VIDS][ceil(RATIO4TRAIN*Q_VIDS_PER_G):]
+            if 0 < q_pervideo_notstrict:
+                q_elements_per_g= q_pervideo_notstrict*ceil((1-RATIO4TRAIN)*Q_VIDS_PER_G)
+
+        ds_elements_per_gloss: list[dict]= []
+        ds_elements_notused: list[dict]= []
+        pergloss_pervideo_count: list[int]= []
+        for a_video in output[-1][KEY_VIDS]:
+            tmp_elements_a_video: list[dict]= []
+            if len(a_video[KEY_LANDMARK]) < QUANTITY_FRAME:
+                q_added: int= 0
+
+                # part 1
+                elements: list[dict]= q_lessthan_p1_spread(a_video, q_frame=QUANTITY_FRAME)
+                tmp_elements_a_video.extend(elements)
+                q_added+= len(elements)
+
+                # part 2
+                elements= q_lessthan_p2_loop(a_video, q_frame=QUANTITY_FRAME)
+                tmp_elements_a_video.extend(elements)
+                q_added+= len(elements)
+
+                # part 3
+                elements= q_lessthan_p3_stretch_startend(a_video, q_frame=QUANTITY_FRAME)
+                tmp_elements_a_video.extend(elements)
+                q_added+= len(elements)
+
+                if q_added < min_element_count_on_video:
+                    min_element_count_on_video= q_added
+                pergloss_pervideo_count.append(q_added)
+            elif len(a_video[KEY_LANDMARK]) == QUANTITY_FRAME:
+                # part 4
+                elements: list[dict]= q_equalto_p4_loop(a_video, q_frame=QUANTITY_FRAME)
+                tmp_elements_a_video.extend(elements)
+
+                if len(elements) < min_element_count_on_video:
+                    min_element_count_on_video= len(elements)
+                pergloss_pervideo_count.append(len(elements))
+            else:
+                # part 5
+                elements: list[dict]= q_greaterthan_p5_loop(a_video, q_frame=QUANTITY_FRAME)
+                tmp_elements_a_video.extend(elements)
+
+                if len(elements) < min_element_count_on_video:
+                    min_element_count_on_video= len(elements)
+                pergloss_pervideo_count.append(len(elements))
+
+
+            if 0 < q_pervideo_notstrict:
+                if len(tmp_elements_a_video) <= q_pervideo_notstrict:
+                    ds_elements_per_gloss.extend(tmp_elements_a_video)
+                else:
+                    ds_elements_per_gloss.extend(tmp_elements_a_video[:q_pervideo_notstrict])
+                    ds_elements_notused.extend(tmp_elements_a_video[q_pervideo_notstrict:])
+            else:
+                ds_elements_per_gloss.extend(tmp_elements_a_video)
+
+
+        if 0 < q_pervideo_notstrict:
+            # -- fill missing due2target --> q_elements_per_g, ie. elements per gloss
+            # due2above only appends int(q_pervideo_notstrict) or less than int(q_pervideo_notstrict)
+            assert 0 < q_elements_per_g
+
+            if len(ds_elements_per_gloss) < q_elements_per_g:
+                q_missing_elements: int= q_elements_per_g -len(ds_elements_per_gloss)
+                assert q_missing_elements <= len(ds_elements_notused) # due2mandatory enough dataset
+
+                ds_elements_per_gloss.extend(ds_elements_notused[:q_missing_elements])
+            assert len(ds_elements_per_gloss) == q_elements_per_g
+        output[-1][KEY_VIDS]= ds_elements_per_gloss
+
+        if show_dist:
+            print(f"-- gloss( {output[-1][KEY_G]} ) -- quantity elements max: {sum(pergloss_pervideo_count)} --(to)--> {len(output[-1][KEY_VIDS])}")
+            for idx_video, elements_count_on_a_video in enumerate(pergloss_pervideo_count):
+                print(f"    {str(idx_video+1).zfill(3)}: {elements_count_on_a_video}")
+            print()
+            if len(output[-1][KEY_VIDS]) < min_element_count_on_gloss:
+                min_element_count_on_gloss= len(output[-1][KEY_VIDS])
+    if show_dist:
+        print('------------------------')
+        print(f"minimum elements count on a gloss: {min_element_count_on_gloss}")
+        print(f"minimum elements count on a video: {min_element_count_on_video}")
+        print('------------------------')
+
+    output= flatten_and_check_dataset(output)
+
+    return output
+
+
+def flip_vertical_y_axis(landmarks) -> np.ndarray:
+    '''
+    landmarks be of shape (INT, ..., 86, 2)
+    '''
+    new_landmark= np.array(landmarks).copy()
+    new_landmark[..., 0]= 1 -new_landmark[..., 0]
+    lhand2rhand: np.ndarray= new_landmark[...,
+        Q_W_FACE +Q_W_POSE:
+        Q_W_FACE +Q_W_POSE +Q_W_HAND
+    ,:].copy()
+    rhand2lhand: np.ndarray= new_landmark[...,
+        Q_W_FACE +Q_W_POSE +Q_W_HAND:
+    ,:].copy()
+    new_landmark[...,
+        Q_W_FACE +Q_W_POSE:
+        Q_W_FACE +Q_W_POSE +Q_W_HAND
+    ,:]= rhand2lhand # ie. past was right hand, now be left hand
+    new_landmark[...,
+        Q_W_FACE +Q_W_POSE +Q_W_HAND:
+    ,:]= lhand2rhand # ie. past was left hand, now be right hand
+
+    indices2flip: tuple[tuple, ...]= (
+        # -- face --
+        ( 12, 28 ),
+        ( 19, 34 ),
+        ( 11, 27 ),
+        ( 21, 35 ),
+        ( 14, 30 ),
+        ( 13, 29 ),
+        ( 10, 26 ),
+        ( 15, 31 ),
+        ( 18, 33 ),
+        (  7, 23 ),
+        ( 16, 32 ),
+        (  9, 25 ),
+        (  8, 24 ),
+
+        # -- pose --
+        ( 37, 36 ),
+        ( 43, 42 ),
+        ( 39, 38 ),
+        ( 41, 40 ),
+    )
+    # -- flip index pair face
+    # -- ( 12, 28 )
+    for p_a, p_b in indices2flip:
+        tmp= new_landmark[..., p_a:p_a+1, :].copy()
+        new_landmark[..., p_a:p_a+1, :]= new_landmark[..., p_b:p_b+1, :].copy()
+        new_landmark[..., p_b:p_b+1, :]= tmp
+
+    return new_landmark
+
+
+def loadnpfiles(annotation: dict) -> list[np.ndarray]:
+    '''
+    annotation is dict having keys
+    -- KEY_GID: int
+    -- KEY_PFOLDER_FROM: Path
+    -- KEY_PFOLDER: str
+    -- KEY_LANDMARK: list[dict]
+    '''
+    output: list[np.ndarray]= []
+    for an_img_detail in annotation[KEY_LANDMARK]:
+        with open(
+            annotation[KEY_PFOLDER_FROM] /annotation[KEY_PFOLDER] /an_img_detail[KEY_FILE],
+            'rb',
+        ) as f:
+            output.append(np.load(f))
+
+    return output
+
+
+def from86extract87andflip(annotation: dict) -> list[np.ndarray]:
+    '''
+    annotation dict has keys
+    -- KEY_GID: int
+    -- KEY_PFOLDER_FROM: Path
+    -- KEY_PFOLDER: str
+    -- KEY_LANDMARK: list[dict] of length QUANTITY_FRAME
+    '''
+    output: list[list[np.ndarray]]|np.ndarray= [loadnpfiles(annotation)]
+    output.append(flip_vertical_y_axis(output[0]).tolist())
+    # output of shape (2, QUANTITY_FRAME, 86, 2)
+    output= np.pad(
+        array=np.array(output),
+        pad_width=((0, 0), (0, 0), (0, 1), (0, 0)), # due2on axis=-2 after
+        mode='constant',
+        constant_values=0.0,
+    )
+    for idx, an_img_detail in enumerate(annotation[KEY_LANDMARK]):
+        if an_img_detail[KEY_LHAND]:
+            output[0, idx, 86, 0]= 1.0
+            output[1, idx, 86, 1]= 1.0
+        else:
+            output[0, idx, 86, 0]= 0.0
+            output[1, idx, 86, 1]= 0.0
+
+        if an_img_detail[KEY_RHAND]:
+            output[0, idx, 86, 1]= 1.0
+            output[1, idx, 86, 0]= 1.0
+        else:
+            output[0, idx, 86, 1]= 0.0
+            output[1, idx, 86, 0]= 0.0
+
+    return [output[0], output[1]]
+def calculate_steps(train_test: str=VAL_TRAIN, batch_size: int=BATCH) -> int:
+    assert train_test in (VAL_TRAIN, VAL_TEST)
+
+    quantity_elements: int= len(extract_ds_annotation_split(
+        split=train_test,
+        q_pervideo_notstrict=Q_PERVIDEO_NOTSTRICT,
+        show_dist=False,
+    ))
+
+    return ceil(quantity_elements / batch_size)
+
+
+def dataset_generator(train_test: str=VAL_TRAIN, batch_size: int=BATCH) -> Generator:
+    assert train_test in (VAL_TRAIN, VAL_TEST)
+    assert 0 < batch_size
+
+    dataset: list[dict]= extract_ds_annotation_split(
+        split=train_test,
+        q_pervideo_notstrict=Q_PERVIDEO_NOTSTRICT,
+        show_dist=False,
+    )
+    dataset_idxs: list[int]= list(range(len(dataset)))
+    shuffle(dataset_idxs)
+
+    batch_annotations: list[dict]= []
+    while True:
+        for idx_ds in dataset_idxs:
+            batch_annotations.append(dataset[idx_ds])
+            while batch_size <= len(batch_annotations):
+                x_ds_elements_batch: list[np.ndarray]|np.ndarray= []
+                y_ds_elements_batch: list[int]= []
+                for a_ds_element in batch_annotations[:batch_size]:
+                    x_ds_elements_batch.extend(from86extract87andflip(a_ds_element))
+                    y_ds_elements_batch.append(a_ds_element[KEY_GID])
+                    y_ds_elements_batch.append(a_ds_element[KEY_GID])
+                batch_annotations= batch_annotations[batch_size:]
+
+                x_ds_elements_batch= np.array(x_ds_elements_batch)
+                assert x_ds_elements_batch.shape == (batch_size*2, QUANTITY_FRAME, *LANDMARK_SHAPE)
+                yield (
+                    np.array(x_ds_elements_batch),
+                    np.array(y_ds_elements_batch),
+                )
+
+
+if __name__=='__main__':
+    pass
+    '''
+    ds_train: list[dict]= extract_ds_annotation_split(
+        split=VAL_TRAIN,
+        q_pervideo_notstrict=Q_PERVIDEO_NOTSTRICT,
+        show_dist=True,
+    )
+    ds_test: list[dict]= extract_ds_annotation_split(
+        split=VAL_TEST,
+        q_pervideo_notstrict=Q_PERVIDEO_NOTSTRICT,
+        show_dist=True,
+    )
+    output: list[dict]= []
+    for a_ds_element in ds_train:
+        output.append({
+            KEY_GID: a_ds_element[KEY_GID],
+            KEY_PFOLDER_FROM: a_ds_element[KEY_PFOLDER_FROM].name,
+            KEY_PFOLDER: a_ds_element[KEY_PFOLDER],
+            KEY_LANDMARK: a_ds_element[KEY_LANDMARK],
+        })
+    ds_train= output
+    output= []
+    for a_ds_element in ds_test:
+        output.append({
+            KEY_GID: a_ds_element[KEY_GID],
+            KEY_PFOLDER_FROM: a_ds_element[KEY_PFOLDER_FROM].name,
+            KEY_PFOLDER: a_ds_element[KEY_PFOLDER],
+            KEY_LANDMARK: a_ds_element[KEY_LANDMARK],
+        })
+    ds_test= output
+    with open('/tmp/ds_train_flatten.json', 'w') as f:
+        writeJson(ds_train, f, indent=4)
+    with open('/tmp/ds_test_flatten.json', 'w') as f:
+        writeJson(ds_test, f, indent=4)
+    '''
+---------------------------------------------------
+
+
+
+
+-- callbacks.py
+---------------------------------------------------
+from keras.src.callbacks import ReduceLROnPlateau, EarlyStopping, TensorBoard
+from .constant import PROJ_ROOT
+
+
+d_lr: ReduceLROnPlateau= ReduceLROnPlateau(
+    monitor='val_accuracy',
+    factor=0.1,
+    patience=1,
+    verbose=1,
+    mode='max',
+    min_delta=0.001,
+    cooldown=1,
+    min_lr=1.0e-12
+)
+sTraining: EarlyStopping= EarlyStopping(
+    # monitor='val_accuracy',
+    monitor='val_loss',
+    min_delta=0.001,
+    patience=2,
+    verbose=1,
+    # mode='max',
+    mode='min',
+    restore_best_weights=True,
+)
+tf_board: TensorBoard= TensorBoard(
+    log_dir=f"{PROJ_ROOT /"model" /"tfboard_logs"}",
+    histogram_freq=1,
+    write_graph=False,
+    write_images=False,
+    write_steps_per_second=False,
+    update_freq='epoch'
+)
+---------------------------------------------------
+
+
+
+
+-- constant.py
+---------------------------------------------------
+from itertools import groupby
+from json import load as loadJson
+from math import ceil
+from pathlib import Path
+
+
+PROJ_ROOT: Path= Path(__file__).resolve().parent.parent.parent
+DS1_22_LANDMARK_DIR: Path= PROJ_ROOT / 'dataset' / 'clean_dataset' / 'fix_recent_n_classic_landmark'
+DS2_16_LANDMARK_DIR: Path= PROJ_ROOT / 'dataset' / 'asl_citizen' / 'selected_start_end_landmark'
+DS1_22_cleaned_wlasl: Path= PROJ_ROOT / 'dataset' / 'clean_dataset' / 'fix_recent_n_classic_landmark.json'
+DS2_16_cleaned_aslct: Path= PROJ_ROOT / 'dataset' / 'asl_citizen' / 'selected_start_end_landmark.json'
+
+EPOCHS: int= 20
+BATCH: int= 16
+KEY_G: str= 'gloss'
+KEY_GID: str= 'gloss_id'
+KEY_VIDS: str= 'videos'
+KEY_LANDMARK: str= 'landmark'
+KEY_PFOLDER_FROM: str= 'parent_folder_from'
+KEY_PFOLDER: str= 'parent_folder'
+KEY_FILE: str= 'file'
+KEY_FACE: str= 'face'
+KEY_POSE: str= 'pose'
+KEY_LHAND: str= 'left_hand'
+KEY_RHAND: str= 'right_hand'
+KEY_SPLIT: str= 'split'
+VAL_TRAIN: str= 'train'
+VAL_TEST: str= 'test'
+RATIO4TRAIN: float= 0.8
+Q_VIDS_PER_G: int= 10
+Q_PERVIDEO_NOTSTRICT= 18
+
+WORTHY_FACE_IDX: tuple[int, ...]= (
+    0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
+    105, 107, 133, 145, 152, 159, 162, 168, 172, 195,
+    263, 291, 294, 300, 323, 332, 334, 336, 362, 374,
+    386, 389, 397
+)
+WORTHY_POSE_IDX: tuple[int, ...]= (11, 12, 13, 14, 15, 16, 23, 24)
+Q_W_FACE: int= len(WORTHY_FACE_IDX)
+Q_W_POSE: int= len(WORTHY_POSE_IDX)
+Q_W_HAND: int= 21
+LANDMARK_SHAPE: tuple[int, int]= (Q_W_FACE +Q_W_POSE +Q_W_HAND*2 +1, 2)
+
+# -----------------------------
+LM_IDX_TOP_LIP: int        =  0
+LM_IDX_TIP_OF_FOREHEAD: int=  3
+LM_IDX_RIGHT_MOST_EYE: int =  7
+LM_IDX_RIGHT_MOST_LIP: int =  8
+LM_IDX_CHIN_TIP: int       = 17
+LM_IDX_RIGHT_EAR: int      = 19
+LM_IDX_UP_TIP_NOSE: int    = 20
+LM_IDX_LEFT_MOST_EYE: int  = 23
+LM_IDX_LEFT_MOST_LIP: int  = 24
+LM_IDX_LEFT_EAR: int       = 34
+LMs_IDXs_FACE_GOOD: tuple= (
+    LM_IDX_TOP_LIP,
+    LM_IDX_TIP_OF_FOREHEAD,
+    LM_IDX_RIGHT_MOST_EYE,
+    LM_IDX_RIGHT_MOST_LIP,
+    LM_IDX_CHIN_TIP,
+    LM_IDX_RIGHT_EAR,
+    LM_IDX_UP_TIP_NOSE,
+    LM_IDX_LEFT_MOST_EYE,
+    LM_IDX_LEFT_MOST_LIP,
+    LM_IDX_LEFT_EAR,
+)
+# -----------------------------
+LM_IDX_LEFT_SHOULDER: int  = 36
+LM_IDX_RIGHT_SHOULDER: int = 37
+LM_IDX_LEFT_HIP: int       = 42
+LM_IDX_RIGHT_HIP: int      = 43
+# -----------------------------
+LM_IDX_LEFT_INDEXF_TIP: int= 52
+LM_IDX_RIGHT_INDEXF_TIP:int= 73
+# -----------------------------
+LMs_IDXs_LEFT_H_NOT_INDEXF: tuple= (
+    44, 45, 46, 47, 48,
+    49, 50, 51,
+    53, 54, 55, 56, 57,
+    58, 59, 60, 61, 62,
+    63, 64,
+)
+LMs_IDXs_RIGHT_H_NOT_INDEXF: tuple= (
+    65, 66, 67, 68, 69,
+    70, 71, 72,
+    74, 75, 76, 77, 78,
+    79, 80, 81, 82, 83,
+    84, 85,
+)
+
+
+def has_atleast1hand(annotation: dict) -> bool:
+    return bool(annotation[KEY_FACE] and annotation[KEY_POSE] and
+                (annotation[KEY_LHAND] or annotation[KEY_RHAND]))
+def load_dataset_annotations(show_dist: bool=False, name: bool=False) -> list[dict]:
+    with open(DS1_22_cleaned_wlasl, 'r') as f:
+        ds1_wlasl: list= loadJson(f)
+    with open(DS2_16_cleaned_aslct, 'r') as f:
+        ds2_aslct: list= loadJson(f)
+    output: list= []
+    for idx_g, a_gloss in enumerate(ds1_wlasl):
+        if a_gloss[KEY_G] != 'who':
+            output.append({
+                KEY_G: a_gloss[KEY_G],
+                KEY_VIDS: [],
+            })
+            for a_video in a_gloss[KEY_VIDS]:
+                for start_end in a_video[KEY_LANDMARK]:
+                    output[-1][KEY_VIDS].append({
+                        KEY_GID: idx_g,
+                        KEY_PFOLDER_FROM: DS1_22_LANDMARK_DIR.name if name else DS1_22_LANDMARK_DIR,
+                        KEY_PFOLDER: start_end[KEY_PFOLDER],
+                        KEY_LANDMARK: [],
+                    })
+                    for idx in range(len(start_end[KEY_LANDMARK])):
+                        if idx == 0 or has_atleast1hand(start_end[KEY_LANDMARK][idx]):
+                            output[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
+                                dict(start_end[KEY_LANDMARK][idx]).copy()
+                            )
+                        else:
+                            # to fix no hand img
+                            output[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
+                                output[-1][KEY_VIDS][-1][KEY_LANDMARK][-1].copy()
+                            )
+            output[-1][KEY_VIDS]= output[-1][KEY_VIDS][:Q_VIDS_PER_G]
+        else:
+            output.append({
+                KEY_G: a_gloss[KEY_G],
+                KEY_VIDS: [],
+            })
+            for a_video in a_gloss[KEY_VIDS][Q_VIDS_PER_G:]:
+                for start_end in a_video[KEY_LANDMARK]:
+                    output[-1][KEY_VIDS].append({
+                        KEY_GID: idx_g,
+                        KEY_PFOLDER_FROM: DS1_22_LANDMARK_DIR.name if name else DS1_22_LANDMARK_DIR,
+                        KEY_PFOLDER: start_end[KEY_PFOLDER],
+                        KEY_LANDMARK: [],
+                    })
+                    for idx in range(len(start_end[KEY_LANDMARK])):
+                        if idx == 0 or has_atleast1hand(start_end[KEY_LANDMARK][idx]):
+                            output[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
+                                dict(start_end[KEY_LANDMARK][idx]).copy()
+                            )
+                        else:
+                            # to fix no hand img
+                            output[-1][KEY_VIDS][-1][KEY_LANDMARK].append(
+                                output[-1][KEY_VIDS][-1][KEY_LANDMARK][-1].copy()
+                            )
+        assert len(output[-1][KEY_VIDS]) == Q_VIDS_PER_G
+
+    past_g_total: int= len(output)
+    for idx, a_gloss in enumerate(ds2_aslct):
+        output.append({
+            KEY_G: a_gloss[KEY_G],
+            KEY_VIDS: [],
+        })
+        for a_video in a_gloss[KEY_VIDS][:Q_VIDS_PER_G]:
+            output[-1][KEY_VIDS].append({
+                KEY_GID: idx +past_g_total,
+                KEY_PFOLDER_FROM: DS2_16_LANDMARK_DIR.name if name else DS2_16_LANDMARK_DIR,
+                KEY_PFOLDER: a_video[KEY_PFOLDER],
+                KEY_LANDMARK: a_video[KEY_LANDMARK],
+            })
+        assert len(output[-1][KEY_VIDS]) == Q_VIDS_PER_G
+    if show_dist:
+        for a_gloss in output:
+            print(f'{a_gloss[KEY_G]} --> {len(a_gloss[KEY_VIDS])}')
+    return output
+def do_all_have_hands(dataset: list, show_msg: bool=False) -> bool:
+    all_atleast1hand: bool= True
+    for a_gloss in dataset:
+        for a_video in a_gloss[KEY_VIDS]:
+            for an_img in a_video[KEY_LANDMARK]:
+                if not (an_img[KEY_LHAND] or an_img[KEY_RHAND]) or not (
+                    an_img[KEY_FACE] and an_img[KEY_POSE]
+                ):
+                    all_atleast1hand= False
+                    if show_msg:
+                        print(
+                            f"gloss: {a_gloss[KEY_G]}\n" +
+                            f"  parent folder: {a_video[KEY_PFOLDER_FROM].name}/{a_video[KEY_PFOLDER]}\n" +
+                            f"    image: {an_img[KEY_FILE]}\n" +
+                            f"    face: {an_img[KEY_FACE]}\n" +
+                            f"    pose: {an_img[KEY_POSE]}\n" +
+                            f"    left hand: {an_img[KEY_LHAND]}\n" +
+                            f"    right hand: {an_img[KEY_RHAND]}\n"
+                        )
+                    else:
+                        return all_atleast1hand
+    if show_msg:
+        if all_atleast1hand:
+            print("---- All good, all has at least 1 hand ----")
+        else:
+            print("---- Has parts where NO HAND EXISTS, not good ---")
+    return all_atleast1hand
+def check_ds_is_good(dataset: list[dict], q_videos_per_g: int, show_msg=False) -> bool:
+    '''
+    check for quantity videos
+    and that files exists
+    '''
+    is_good: bool= True
+    err_msg: list[str]= []
+    for a_gloss in dataset:
+        if len(a_gloss[KEY_VIDS]) != q_videos_per_g:
+            err_msg.append(
+                f"{a_gloss[KEY_G]} has {len(a_gloss[KEY_VIDS])} elements, expected2be {q_videos_per_g}"
+            )
+            is_good= False
+        for a_video in a_gloss[KEY_VIDS]:
+            for an_img_detail in a_video[KEY_LANDMARK]:
+                if not (a_video[KEY_PFOLDER_FROM] /a_video[KEY_PFOLDER] /an_img_detail[KEY_FILE]).exists():
+                    err_msg.append(
+                        f"{a_video[KEY_PFOLDER]} has file NOT EXISTS: " +
+                        f"{an_img_detail[KEY_FILE]}"
+                    )
+                    is_good= False
+    if show_msg:
+        print()
+        print('---- result checking dataset ----')
+        print('----------------------------')
+        if is_good:
+            print(
+                f"dataset obeys {q_videos_per_g} quantity videos per gloss\n" +
+                f"    and ALL files exists, so all good"
+            )
+        else:
+            for msg in err_msg:
+                print(f"problem: {msg}")
+        print('----------------------------')
+        print()
+
+    return is_good
+def median_what(dataset: list, show_dist: bool=False) -> int:
+    length_list: list= []
+    for a_gloss in dataset:
+        for a_video in a_gloss[KEY_VIDS]:
+            length_list.append({
+                KEY_G: a_gloss[KEY_G],
+                'len': len(a_video[KEY_LANDMARK])
+            })
+    length_list= sorted(
+        length_list,
+        key=lambda el: el['len'],
+    )
+    median_out: int= -1
+    if len(length_list)%2 == 0:
+        quantity: int= len(length_list)
+        median_out= int(
+            (length_list[quantity//2-1]['len'] +length_list[quantity//2]['len'])/2.0
+        )
+    else:
+        median_out= length_list[len(length_list)//2]['len']
+    if show_dist:
+        for a_len, glosses in groupby(length_list, key=lambda el: el['len']):
+            print(f"{a_len}  {',  '.join(el[KEY_G] for el in tuple(glosses))}")
+        print(f"quantity groups( by number of images ): {len(tuple(groupby(length_list, key=lambda el: el['len'])))}")
+        print(f"quantity videos: {len(length_list)}")
+    return median_out
+
+
+DS_ANNOTATIONS: list[dict]= load_dataset_annotations(
+    show_dist=False,
+    name=False,
+)
+STEPS_TRAIN: int= ceil(len(DS_ANNOTATIONS) *Q_PERVIDEO_NOTSTRICT*ceil(Q_VIDS_PER_G*RATIO4TRAIN) / BATCH)
+STEPS_TEST: int= ceil(len(DS_ANNOTATIONS) *Q_PERVIDEO_NOTSTRICT*ceil(Q_VIDS_PER_G*(1-RATIO4TRAIN)) / BATCH)
+QUANTITY_FRAME: int= median_what(dataset=DS_ANNOTATIONS, show_dist=False)
+'''
+for current 22 gloss + 16 gloss= 38 gloss, QUANTITY_FRAME is 26
+'''
+LEN_GLOSS: int= len(DS_ANNOTATIONS)
+
+
+if __name__=='__main__':
+    print(
+        f"is there at least 1 hand on every image landmarks? " +
+        "yes" if do_all_have_hands(DS_ANNOTATIONS, show_msg=False) else "NO"
+    )
+    print(
+        f"are all dataset good? " +
+        "yes" if check_ds_is_good(
+            dataset=DS_ANNOTATIONS,
+            q_videos_per_g=Q_VIDS_PER_G,
+            show_msg=True,
+        ) else "NO"
+    )
+---------------------------------------------------
+
+
+
+
+-- layers.py
+---------------------------------------------------
+from keras.src.activations.activations import ReLU
+from keras.src.layers import Dense, Input, LayerNormalization, MultiHeadAttention, Layer
+from keras.src.activations import softmax
+from keras.src import ops
+from keras.src.saving import register_keras_serializable
+from typing import Any
+
+
+from .constant import (
+    LANDMARK_SHAPE,
+    LM_IDX_LEFT_INDEXF_TIP,
+
+    LM_IDX_LEFT_SHOULDER,
+    LM_IDX_RIGHT_INDEXF_TIP,
+    LM_IDX_RIGHT_SHOULDER,
+    LM_IDX_LEFT_HIP,
+    LM_IDX_RIGHT_HIP,
+    Q_W_FACE,
+    Q_W_POSE,
+
+    QUANTITY_FRAME,
+    LEN_GLOSS,
+    LMs_IDXs_FACE_GOOD,
+    LMs_IDXs_LEFT_H_NOT_INDEXF,
+    LMs_IDXs_RIGHT_H_NOT_INDEXF,
+)
+
+
+@register_keras_serializable()
+class EncoderTransformer( Layer ):
+    def __init__(
+        self,
+        num_heads: int=4,  # 8 on 'attention is all u need' (2017)
+        key_dim: int=43,   # 64 on 'attention is all u need' (2017)
+        value_dim: int=43, # --> so that 43*4= 172= 86*2
+        dropout: float=0.1,
+        ann_units: int=2048,
+        name: str='encoder_transformer',
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.num_heads= num_heads
+        self.key_dim=   key_dim
+        self.value_dim= value_dim
+        self.dropout=   dropout
+        self.ann_units= ann_units
+        self.name=      name
+    def build(self, input_shape):
+        # assert len(input_shape)==3
+        d_model= input_shape[-1]
+        self.multiHeadAtt= MultiHeadAttention(
+            num_heads=self.num_heads,
+            key_dim=self.key_dim,
+            value_dim=self.value_dim,
+            dropout=self.dropout,
+            use_bias=True,
+        )
+        self.normAfterMHA= LayerNormalization()
+        self.ann= Dense(
+            units=self.ann_units,
+            activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+        )
+        self.annBringBackShape= Dense(
+            units=d_model,
+            activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+        )
+        self.normAfterAnn= LayerNormalization()
+    def call(self, data_input):
+        data= self.multiHeadAtt(
+            query=data_input,
+            value=data_input,
+            key=data_input,
+        )
+        data= ops.add(data, data_input)
+        data_after_mha= self.normAfterMHA(data)
+
+        data= self.ann(data_after_mha)
+        data= self.annBringBackShape(data)
+        data= ops.add(data, data_after_mha)
+        data= self.normAfterAnn(data)
+
+        return data
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "num_heads": self.num_heads,
+            "key_dim":   self.key_dim,
+            "value_dim": self.value_dim,
+            "dropout":   self.dropout,
+            "ann_units": self.ann_units,
+            "name":      self.name,
+        }
+@register_keras_serializable()
+class NTimesEncoderTransformer(Layer):
+    def __init__(
+        self,
+        n_times: int=6,
+        num_heads: int=4,  # 8 on 'attention is all u need' (2017)
+        key_dim: int=43,   # 64 on 'attention is all u need' (2017)
+        value_dim: int=43, # --> so that 43*4= 172= 86*2
+        dropout: float=0.1,
+        ann_units: int=2048,
+        name: str='multi_encoder_in_sequence',
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.n_times=   n_times
+        self.num_heads= num_heads
+        self.key_dim=   key_dim
+        self.value_dim= value_dim
+        self.dropout=   dropout
+        self.ann_units= ann_units
+        self.name=      name
+    def build(self, input_shape):
+        # assert len(input_shape)==3
+        del input_shape
+        self.encoder_seq= [EncoderTransformer(
+            num_heads=self.num_heads,
+            key_dim=self.key_dim,
+            value_dim=self.value_dim,
+            dropout=self.dropout,
+            ann_units=self.ann_units,
+            name=f"enc_{idx}",
+        ) for idx in range(self.n_times)]
+    def call(self, data_input):
+        data= data_input
+        for encoder in self.encoder_seq:
+            data= encoder(data)
+        return data
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "n_times":   self.n_times,
+            "num_heads": self.num_heads,
+            "key_dim":   self.key_dim,
+            "value_dim": self.value_dim,
+            "dropout":   self.dropout,
+            "ann_units": self.ann_units,
+            "name":      self.name,
+        }
+@register_keras_serializable()
+class AttentionPooling(Layer):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def build(self, input_shape):
+        self.scoring_layer= Dense(1, activation="tanh")
+        del input_shape
+    def call(self, inputs):
+        # -- inputs shape (B, T, D)
+        scores= self.scoring_layer(inputs) # be shape (B, T, 1)
+        weights= ops.softmax(scores, axis=1) # norm via softmax still shape (B, T, 1)
+        # weights, accross what time is it most important
+        return ops.sum(inputs * weights, axis=1) # shape (B, D)
+@register_keras_serializable()
+class ExtractFeatures(Layer):
+    def __init__(self, name: str='extract_features', **kwargs):
+        super().__init__(**kwargs)
+        self.name= name
+    def build(self, input_shape):
+        del input_shape
+    def _get2dots_frombody(self, landmarks):
+        '''
+        input -- shape of (..., be >= 86, 2)
+        -------------------------------
+        returned shape is (...,  2, 2)
+        '''
+        shoulder_center= (
+            landmarks[..., LM_IDX_LEFT_SHOULDER:LM_IDX_LEFT_SHOULDER+1, :] +
+            landmarks[..., LM_IDX_RIGHT_SHOULDER:LM_IDX_RIGHT_SHOULDER+1, :]
+        )/2.0
+        hip_center= (
+            landmarks[..., LM_IDX_LEFT_HIP:LM_IDX_LEFT_HIP+1, :] +
+            landmarks[..., LM_IDX_RIGHT_HIP:LM_IDX_RIGHT_HIP+1, :]
+        )/2.0
+        shoulder_hip_center= (shoulder_center +hip_center)/2.0
+        '''
+        shoulder_center and hip_center, both has shape (..., 1, 2)
+        so as shoulder_hip_center has shape (..., 1, 2)
+        '''
+        return ops.concatenate([
+            (shoulder_center+shoulder_hip_center)/2.0,
+            (shoulder_hip_center+hip_center)/2.0,
+        ], axis=-2)
+    def call(self, input):
+        left_indexf_tip: Any= input[..., LM_IDX_LEFT_INDEXF_TIP:LM_IDX_LEFT_INDEXF_TIP+1, :]
+        right_indexf_tip: Any= input[..., LM_IDX_RIGHT_INDEXF_TIP:LM_IDX_RIGHT_INDEXF_TIP+1, :]
+        the_rest: Any= ops.concatenate(
+            [
+                ops.take(input, indices=LMs_IDXs_FACE_GOOD, axis=-2),
+                self._get2dots_frombody(input),
+                input[..., Q_W_FACE:Q_W_FACE+Q_W_POSE, :],
+                ops.take(input, indices=LMs_IDXs_LEFT_H_NOT_INDEXF, axis=-2),
+                ops.take(input, indices=LMs_IDXs_RIGHT_H_NOT_INDEXF, axis=-2),
+            ],
+            axis=-2,
+        )
+        '''
+        left_indexf_tip  shape (B, QUANTITY_FRAME, 1, 2)
+        right_indexf_tip shape (B, QUANTITY_FRAME, 1, 2)
+        the_rest of shape (B, QUANTITY_FRAME, 10 +2 +8 +20 +20, 2) --> (B, QF, 60, 2)
+        '''
+        left_indexf_tip= (the_rest - left_indexf_tip)**2
+        right_indexf_tip= (the_rest - right_indexf_tip)**2
+        left_indexf_tip= ops.sqrt(ops.sum(left_indexf_tip, axis=-1, keepdims=False))
+        right_indexf_tip= ops.sqrt(ops.sum(right_indexf_tip, axis=-1, keepdims=False))
+        '''
+        left_indexf_tip  shape (B, QUANTITY_FRAME, 60)
+        right_indexf_tip shape (B, QUANTITY_FRAME, 60)
+        '''
+        left_indexf_tip=  left_indexf_tip  * input[..., -1:, 0]
+        right_indexf_tip= right_indexf_tip * input[..., -1:, 1]
+
+        return ops.concatenate([
+            left_indexf_tip,
+            right_indexf_tip,
+        ], axis=-1)
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "name":      self.name,
+        }
+# ---------------------------------------------------------------------------
+layer_in= Input(
+    shape=(QUANTITY_FRAME, LANDMARK_SHAPE[0], LANDMARK_SHAPE[1]),
+    name='batch_vid',
+)
+# ---------------------------------------------------------------------------
+x= ExtractFeatures()(layer_in)
+x= NTimesEncoderTransformer(
+    n_times=4,
+    num_heads=8,
+    key_dim=16,
+    value_dim=16,
+    dropout=0.1,
+    ann_units=32,
+    name='multi_encoder_in_sequence',
+)(x)
+ann= AttentionPooling()(x)
+layer_out= Dense(LEN_GLOSS, activation=softmax, name='batch_class')(ann)
+---------------------------------------------------
+
+
+
+
+-- ml_train.py
+---------------------------------------------------
+from keras.src.losses import sparse_categorical_crossentropy
+from keras.src.models import Model
+from keras.src.optimizers import Adam
+
+from .constant import (
+    EPOCHS,
+    VAL_TRAIN,
+    VAL_TEST,
+    STEPS_TRAIN,
+    STEPS_TEST,
+    PROJ_ROOT,
+)
+from .algo import dataset_generator
+from .layers import layer_in, layer_out
+from .callbacks import d_lr, sTraining, tf_board
+
+
+def main():
+    model: Model= Model(
+        inputs=layer_in,
+        outputs=layer_out
+    )
+    model.compile(
+        optimizer=Adam(learning_rate=0.0001),
+        loss=sparse_categorical_crossentropy,
+        metrics=['accuracy'],
+    )
+    model.summary()
+    model.fit(
+        x=dataset_generator(train_test=VAL_TRAIN),
+        epochs=EPOCHS,
+        callbacks=[d_lr, sTraining, tf_board],
+        validation_data=dataset_generator(train_test=VAL_TEST),
+        steps_per_epoch=STEPS_TRAIN,
+        validation_steps=STEPS_TEST,
+        validation_freq=1
+    )
+    model_file_name: str= "aslvid2gloss_v81.keras"
+    print(f"Quantity images --> {model.input_shape[1]}")
+    print(f"Quantity categories --> {model.output_shape[-1]}")
+    print(f"model( --> {model_file_name} <-- )")
+    model.save(f"{PROJ_ROOT /"model" /model_file_name}")
+
+
+if __name__=="__main__":
+    main()
+---------------------------------------------------

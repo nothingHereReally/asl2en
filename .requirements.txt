@@ -8,6 +8,7 @@ opencv-contrib-python==4.11.0.86
 opencv-python==4.12.0.88
 protobuf==4.25.9
 pygame==2.6.1
+scikit-learn==1.7.1
 tensorflow==2.19.1
 tf_keras==2.19.0
 torch==2.7.1
