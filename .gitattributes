@@ -298,3 +298,6 @@ model/hybrid_ds_v81_120diff_286k_params/ml_stats_image/train_confusion_matrix.pn
 model/hybrid_ds_v82_120diff_111k_params/aslvid2gloss_v82.keras filter=lfs diff=lfs merge=lfs -text
 model/hybrid_ds_v82_120diff_111k_params/tfboard_logs/train/events.out.tfevents.1794851976.doxob.1438097.0.v2 filter=lfs diff=lfs merge=lfs -text
 model/hybrid_ds_v82_120diff_111k_params/tfboard_logs/validation/events.out.tfevents.1794852013.doxob.1438097.1.v2 filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v82_120diff_111k_params/ml_stats_image/glasl_test_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v82_120diff_111k_params/ml_stats_image/test_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
+model/hybrid_ds_v82_120diff_111k_params/ml_stats_image/train_confusion_matrix.png filter=lfs diff=lfs merge=lfs -text
