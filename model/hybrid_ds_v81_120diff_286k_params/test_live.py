@@ -1,0 +1,907 @@
+import cv2 as cv
+from json import load as loadJson
+from keras.src.activations.activations import ReLU
+from keras.src.saving import load_model as loadkeras_model
+from keras.src.layers import Dense, LayerNormalization, MultiHeadAttention, Layer
+from keras.src import ops
+from keras.src.saving import register_keras_serializable
+from mediapipe.python.solutions.holistic import Holistic
+import numpy as np
+from pathlib import Path
+import pygame
+from typing import Any
+
+
+PROJ_ROOT: Path= Path(__file__).parent.parent.parent
+MODEL_PATH: Path= PROJ_ROOT /"model" /"hybrid_ds_v81_120diff_286k_params" /"aslvid2gloss_v81.keras"
+LABELS_PATH: Path= PROJ_ROOT /"model" /"hybrid_ds_v81_120diff_286k_params" /"labels.json"
+MPH_fph: Holistic= Holistic(
+    static_image_mode=False,
+    model_complexity=2,
+    min_detection_confidence=0.55,
+    min_tracking_confidence=0.55,
+)
+IMG_SIZE: int= 800
+FACE_CONNECTIONS: tuple= (
+    (3, 28), (28, 34), (34, 27), (27, 35), (35, 17), # left oval face
+    (3, 12), (12, 19), (19, 11), (11, 21), (21, 17), # right oval face
+
+    (26, 29), (29, 30), # left eyebrow
+
+    (23, 32), (32, 31), # left eye down
+    (31, 33), (33, 23), # left eye up
+
+    (10, 13), (13, 14), # right eyebrow
+
+    (7, 16), (16, 15), # right eye down
+    (15, 18), (18, 7), # rght eye up
+
+    (20, 22), (22, 2), # nose vertical line
+    (2, 25), (25, 1), # left half nose
+    (1, 9), (9, 2), # rigth half nose
+
+    # mouth
+    (8, 6), (6, 24), # down lip edge down
+    (24, 0), (0, 8), # up lip edge up
+    (8, 5), (5, 24), # up/down lip inner a
+    (24, 4), (4, 8), # up/down lip inner b
+)
+WORTHY_FACE_IDX: tuple= (
+    0, 2, 4, 10, 13, 14, 17, 33, 61, 64, 70, 93, 103,
+    105, 107, 133, 145, 152, 159, 162, 168, 172, 195,
+    263, 291, 294, 300, 323, 332, 334, 336, 362, 374,
+    386, 389, 397
+)
+
+# before use of POSE_CONNECTIONS modify landmark 1st
+# modify to use index to be used only: 11,12,13,14,15,16,23,24
+# so new index: 0,1,2,3,4,5,6,7
+POSE_CONNECTIONS: tuple= ((0, 1), (0, 2), (1, 3), (2, 4), (3, 5), (6, 7), (0, 6), (1, 7))
+WORTHY_POSE_IDX: tuple= (11,12,13,14,15,16,23,24)
+
+HAND_CONNECTIONS: tuple= (
+    (0, 1), (0, 5), (9, 13), (13, 17), (5, 9), (0, 17), # palm connections
+    (1, 2), (2, 3), (3, 4),           # thumb finger connections
+    (5, 6), (6, 7), (7, 8),           # index finger connections
+    (9, 10), (10, 11), (11, 12),      # middle finger connections
+    (13, 14), (14, 15), (15, 16),     # ring finger connections
+    (17, 18), (18, 19), (19, 20)      # pinky finger connections
+)
+QUANTITY_FRAME: int= 26
+Q_W_FACE: int= len(WORTHY_FACE_IDX)
+Q_W_POSE: int= len(WORTHY_POSE_IDX)
+Q_W_HAND: int= 21
+# -----------------------------
+LM_IDX_TOP_LIP: int        =  0
+LM_IDX_TIP_OF_FOREHEAD: int=  3
+LM_IDX_RIGHT_MOST_EYE: int =  7
+LM_IDX_RIGHT_MOST_LIP: int =  8
+LM_IDX_CHIN_TIP: int       = 17
+LM_IDX_RIGHT_EAR: int      = 19
+LM_IDX_UP_TIP_NOSE: int    = 20
+LM_IDX_LEFT_MOST_EYE: int  = 23
+LM_IDX_LEFT_MOST_LIP: int  = 24
+LM_IDX_LEFT_EAR: int       = 34
+LMs_IDXs_FACE_GOOD: tuple= (
+    LM_IDX_TOP_LIP,
+    LM_IDX_TIP_OF_FOREHEAD,
+    LM_IDX_RIGHT_MOST_EYE,
+    LM_IDX_RIGHT_MOST_LIP,
+    LM_IDX_CHIN_TIP,
+    LM_IDX_RIGHT_EAR,
+    LM_IDX_UP_TIP_NOSE,
+    LM_IDX_LEFT_MOST_EYE,
+    LM_IDX_LEFT_MOST_LIP,
+    LM_IDX_LEFT_EAR,
+)
+# -----------------------------
+LM_IDX_LEFT_SHOULDER: int  = 36
+LM_IDX_RIGHT_SHOULDER: int = 37
+LM_IDX_LEFT_HIP: int       = 42
+LM_IDX_RIGHT_HIP: int      = 43
+# -----------------------------
+LM_IDX_LEFT_INDEXF_TIP: int= 52
+LM_IDX_RIGHT_INDEXF_TIP:int= 73
+# -----------------------------
+LMs_IDXs_LEFT_H_NOT_INDEXF: tuple= (
+    44, 45, 46, 47, 48,
+    49, 50, 51,
+    53, 54, 55, 56, 57,
+    58, 59, 60, 61, 62,
+    63, 64,
+)
+LMs_IDXs_RIGHT_H_NOT_INDEXF: tuple= (
+    65, 66, 67, 68, 69,
+    70, 71, 72,
+    74, 75, 76, 77, 78,
+    79, 80, 81, 82, 83,
+    84, 85,
+)
+
+
+# -- for custom layers needed by model -- start -----------
+@register_keras_serializable()
+class EncoderTransformer( Layer ):
+    def __init__(
+        self,
+        num_heads: int=4,  # 8 on 'attention is all u need' (2017)
+        key_dim: int=43,   # 64 on 'attention is all u need' (2017)
+        value_dim: int=43, # --> so that 43*4= 172= 86*2
+        dropout: float=0.1,
+        ann_units: int=2048,
+        name: str='encoder_transformer',
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.num_heads= num_heads
+        self.key_dim=   key_dim
+        self.value_dim= value_dim
+        self.dropout=   dropout
+        self.ann_units= ann_units
+        self.name=      name
+    def build(self, input_shape):
+        # assert len(input_shape)==3
+        d_model= input_shape[-1]
+        self.multiHeadAtt= MultiHeadAttention(
+            num_heads=self.num_heads,
+            key_dim=self.key_dim,
+            value_dim=self.value_dim,
+            dropout=self.dropout,
+            use_bias=True,
+        )
+        self.normAfterMHA= LayerNormalization()
+        self.ann= Dense(
+            units=self.ann_units,
+            activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+        )
+        self.annBringBackShape= Dense(
+            units=d_model,
+            activation=ReLU(negative_slope=0.0, max_value=256.0, threshold=0.0),
+        )
+        self.normAfterAnn= LayerNormalization()
+    def call(self, data_input):
+        data= self.multiHeadAtt(
+            query=data_input,
+            value=data_input,
+            key=data_input,
+        )
+        data= ops.add(data, data_input)
+        data_after_mha= self.normAfterMHA(data)
+
+        data= self.ann(data_after_mha)
+        data= self.annBringBackShape(data)
+        data= ops.add(data, data_after_mha)
+        data= self.normAfterAnn(data)
+
+        return data
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "num_heads": self.num_heads,
+            "key_dim":   self.key_dim,
+            "value_dim": self.value_dim,
+            "dropout":   self.dropout,
+            "ann_units": self.ann_units,
+            "name":      self.name,
+        }
+@register_keras_serializable()
+class NTimesEncoderTransformer(Layer):
+    def __init__(
+        self,
+        n_times: int=6,
+        num_heads: int=4,  # 8 on 'attention is all u need' (2017)
+        key_dim: int=43,   # 64 on 'attention is all u need' (2017)
+        value_dim: int=43, # --> so that 43*4= 172= 86*2
+        dropout: float=0.1,
+        ann_units: int=2048,
+        name: str='multi_encoder_in_sequence',
+        **kwargs
+    ):
+        super().__init__(**kwargs)
+        self.n_times=   n_times
+        self.num_heads= num_heads
+        self.key_dim=   key_dim
+        self.value_dim= value_dim
+        self.dropout=   dropout
+        self.ann_units= ann_units
+        self.name=      name
+    def build(self, input_shape):
+        # assert len(input_shape)==3
+        del input_shape
+        self.encoder_seq= [EncoderTransformer(
+            num_heads=self.num_heads,
+            key_dim=self.key_dim,
+            value_dim=self.value_dim,
+            dropout=self.dropout,
+            ann_units=self.ann_units,
+            name=f"enc_{idx}",
+        ) for idx in range(self.n_times)]
+    def call(self, data_input):
+        data= data_input
+        for encoder in self.encoder_seq:
+            data= encoder(data)
+        return data
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "n_times":   self.n_times,
+            "num_heads": self.num_heads,
+            "key_dim":   self.key_dim,
+            "value_dim": self.value_dim,
+            "dropout":   self.dropout,
+            "ann_units": self.ann_units,
+            "name":      self.name,
+        }
+@register_keras_serializable()
+class AttentionPooling(Layer):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def build(self, input_shape):
+        self.scoring_layer= Dense(1, activation="tanh")
+        del input_shape
+    def call(self, inputs):
+        # -- inputs shape (B, T, D)
+        scores= self.scoring_layer(inputs) # be shape (B, T, 1)
+        weights= ops.softmax(scores, axis=1) # norm via softmax still shape (B, T, 1)
+        # weights, accross what time is it most important
+        return ops.sum(inputs * weights, axis=1) # shape (B, D)
+@register_keras_serializable()
+class ExtractFeatures(Layer):
+    def __init__(self, name: str='extract_features', **kwargs):
+        super().__init__(**kwargs)
+        self.name= name
+    def build(self, input_shape):
+        del input_shape
+    def _get2dots_frombody(self, landmarks):
+        '''
+        input -- shape of (..., be >= 86, 2)
+        -------------------------------
+        returned shape is (...,  2, 2)
+        '''
+        shoulder_center= (
+            landmarks[..., LM_IDX_LEFT_SHOULDER:LM_IDX_LEFT_SHOULDER+1, :] +
+            landmarks[..., LM_IDX_RIGHT_SHOULDER:LM_IDX_RIGHT_SHOULDER+1, :]
+        )/2.0
+        hip_center= (
+            landmarks[..., LM_IDX_LEFT_HIP:LM_IDX_LEFT_HIP+1, :] +
+            landmarks[..., LM_IDX_RIGHT_HIP:LM_IDX_RIGHT_HIP+1, :]
+        )/2.0
+        shoulder_hip_center= (shoulder_center +hip_center)/2.0
+        '''
+        shoulder_center and hip_center, both has shape (..., 1, 2)
+        so as shoulder_hip_center has shape (..., 1, 2)
+        '''
+        return ops.concatenate([
+            (shoulder_center+shoulder_hip_center)/2.0,
+            (shoulder_hip_center+hip_center)/2.0,
+        ], axis=-2)
+    def call(self, input):
+        left_indexf_tip: Any= input[..., LM_IDX_LEFT_INDEXF_TIP:LM_IDX_LEFT_INDEXF_TIP+1, :]
+        right_indexf_tip: Any= input[..., LM_IDX_RIGHT_INDEXF_TIP:LM_IDX_RIGHT_INDEXF_TIP+1, :]
+        the_rest: Any= ops.concatenate(
+            [
+                ops.take(input, indices=LMs_IDXs_FACE_GOOD, axis=-2),
+                self._get2dots_frombody(input),
+                input[..., Q_W_FACE:Q_W_FACE+Q_W_POSE, :],
+                ops.take(input, indices=LMs_IDXs_LEFT_H_NOT_INDEXF, axis=-2),
+                ops.take(input, indices=LMs_IDXs_RIGHT_H_NOT_INDEXF, axis=-2),
+            ],
+            axis=-2,
+        )
+        '''
+        left_indexf_tip  shape (B, QUANTITY_FRAME, 1, 2)
+        right_indexf_tip shape (B, QUANTITY_FRAME, 1, 2)
+        the_rest of shape (B, QUANTITY_FRAME, 10 +2 +8 +20 +20, 2) --> (B, QF, 60, 2)
+        '''
+        left_indexf_tip= (the_rest - left_indexf_tip)**2
+        right_indexf_tip= (the_rest - right_indexf_tip)**2
+        left_indexf_tip= ops.sqrt(ops.sum(left_indexf_tip, axis=-1, keepdims=False))
+        right_indexf_tip= ops.sqrt(ops.sum(right_indexf_tip, axis=-1, keepdims=False))
+        '''
+        left_indexf_tip  shape (B, QUANTITY_FRAME, 60)
+        right_indexf_tip shape (B, QUANTITY_FRAME, 60)
+        '''
+        left_indexf_tip=  left_indexf_tip  * input[..., -1:, 0]
+        right_indexf_tip= right_indexf_tip * input[..., -1:, 1]
+
+        return ops.concatenate([
+            left_indexf_tip,
+            right_indexf_tip,
+        ], axis=-1)
+    def get_config(self):
+        return {
+            **super().get_config(),
+            "name":      self.name,
+        }
+# -- for custom layers needed by model -- end -------------
+def load_model() -> tuple[Any, list[str]]:
+    model= loadkeras_model(MODEL_PATH)
+    with open(LABELS_PATH, 'r') as f:
+        labels: list[str]= loadJson(f)
+    return (
+        model,
+        labels,
+    )
+def isOkPlot(coord: tuple) -> bool:
+    # x and y coordinates
+    # mandatory be greater than or equal to Zero
+    # and less than or equal to One
+    return coord[0]<=1.0 and coord[1]<=1.0 and 0.0<=coord[0] and 0.0<=coord[1]
+def drawSkeletonImg(image: np.ndarray, \
+                    lmark_coordinates: list, \
+                    connections_idxs: tuple, \
+                    thick: int=2, \
+                    color_line: tuple|None=None, \
+                    color_dot: tuple|None=None) -> np.ndarray:
+    img_wh: dict= {"wx": image.shape[1], "hy": image.shape[0]}
+
+
+    # drawing the lines between 2 landmark connections
+    if color_line!=None or color_dot!=None:
+        for lmark_idx_pair in connections_idxs:
+            pA: tuple= (
+                lmark_coordinates[  lmark_idx_pair[0]  ][0], # x
+                lmark_coordinates[  lmark_idx_pair[0]  ][1]  # y
+            )
+            pB: tuple= (
+                lmark_coordinates[  lmark_idx_pair[1]  ][0], # x
+                lmark_coordinates[  lmark_idx_pair[1]  ][1]  # y
+            )
+            if isOkPlot(pA) and isOkPlot(pB):
+                if color_dot!=None:
+                    cv.circle(
+                        img=image,
+                        center=(
+                            int(pA[0]*img_wh['wx']),
+                            int(pA[1]*img_wh['hy'])
+                        ),
+                        radius=0,
+                        color=color_dot,
+                        thickness=thick*2
+                    )
+                    cv.circle(
+                        img=image,
+                        center=(
+                            int(pB[0]*img_wh['wx']),
+                            int(pB[1]*img_wh['hy'])
+                        ),
+                        radius=0,
+                        color=color_dot,
+                        thickness=thick*2
+                    )
+                if color_line!=None:
+                    cv.line(
+                        img=image,
+                        pt1=(int(pA[0]*img_wh['wx']), int(pA[1]*img_wh['hy'])),
+                        pt2=(int(pB[0]*img_wh['wx']), int(pB[1]*img_wh['hy'])),
+                        color=color_line,
+                        thickness=thick
+                    )
+            else:
+                raise NotImplementedError("Has landmark_coordinate<0.0 or 1.0<landmark_coordinate which is not allowed, it should be 0.0<= landmark_coordinate <=1.0, on both x and y coordinates")
+            del pA
+            del pB
+    return image
+def part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    # xs, ys= zip(*landmarks)
+    xs= list(map(lambda el: el[0], landmarks))
+    ys= list(map(lambda el: el[1], landmarks))
+    min_x, min_y= min(xs), min(ys)
+    xNeedForward: bool= min_x<0.0
+    yNeedForward: bool= min_y<0.0
+    if xNeedForward or yNeedForward:
+        landmarks= [(
+            x -min_x    if xNeedForward    else x,
+            y -min_y    if yNeedForward    else y
+        ) for x, y in landmarks]
+    del xs, ys, min_x, min_y, xNeedForward, yNeedForward
+
+    max_xy: float= max(
+        max(x for x, _ in landmarks),
+        max(y for _, y in landmarks)
+    )
+    if max_xy>1:
+        landmarks= [(
+            x/max_xy,
+            y/max_xy
+        ) for x, y in landmarks]
+
+    return landmarks
+def part2_beSquareRatioOnImage(landmarks: list[tuple[float, float]], original_shape: tuple[int, int]) -> list[tuple[float, float]]:
+    height, width= original_shape
+    if height==width:
+        return landmarks
+
+    if width<height: # portrait, change2withRespect2Height
+        scale: float= width/height
+        return [(
+            x*scale,
+            y
+        ) for x, y in landmarks]
+
+    # landscape, change2withRespect2Width
+    scale: float= height/width
+    return [(
+        x,
+        y*scale
+    ) for x, y in landmarks]
+def part3_zoomInOutForPadding(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    ### 2) zoom in/out with padding 0.05 each side( with respecting orig aspect ratio )
+    # zoom in/out for padding be 10% each side with respect to original aspect ratio
+    # ie.:
+    # ---- top/bottom pad 0.02, leftSide( fromPerspectiveOfSomeoneReadingThis ) pad 0.02: if wx < hy
+    # ---- top pad 0.02, leftSide/right pad 0.02: if hy < wx
+    # pad: float= 0.05
+    pad: float= 4.0/158.0
+    # xs, ys = zip(*landmarks)
+    xs: list= list(map(lambda el: el[0], landmarks))
+    ys: list= list(map(lambda el: el[1], landmarks))
+    # xs= list(filter(lambda el: el!=0, xs))
+    # ys= list(filter(lambda el: el!=0, ys))
+    if len(xs)==0 or len(ys)==0:
+        return landmarks
+    min_x, min_y=    min(xs), min(ys)
+    max_x, max_y=    max(xs), max(ys)
+    scale: float= (1  -2*pad)/max(
+        max_x -min_x,
+        max_y -min_y
+    )
+    return [(
+        # (x -min_x)    *scale    +pad  if x!=0 else x,
+        # (y -min_y)    *scale    +pad  if y!=0 else y
+        (x -min_x)    *scale    +pad,
+        (y -min_y)    *scale    +pad
+    ) for x, y in landmarks]
+def part4_centerLandmarkVerticallyHorizontally(landmarks: list[tuple[float, float]]) -> list[tuple[float, float]]:
+    ### 3) center landmark with same aspect ratio as original
+    # center horizontally and vertically, since done padding then just
+    # move to right/down
+    # xs, ys = zip(*landmarks)
+    xs: list= list(map(lambda el: el[0], landmarks))
+    ys: list= list(map(lambda el: el[1], landmarks))
+    # xs= list(filter(lambda el: el!=0, xs))
+    # ys= list(filter(lambda el: el!=0, ys))
+    if len(xs)==0 or len(ys)==0:
+        return landmarks
+    shift_x: float=  0.5    -(min(xs) +max(xs))  /2
+    shift_y: float=  0.5    -(min(ys) +max(ys))  /2
+
+    return [(
+        # x +shift_x  if x!=0 else x,
+        # y +shift_y  if y!=0 else y
+        x +shift_x,
+        y +shift_y
+    ) for x, y in landmarks]
+def normalizeLandmarks(landmarks: list[tuple[float, float]], original_shape: tuple) -> list[tuple[float, float]]:
+    '''
+    landmarks is an array eg. of shape (86, 2)
+    original_shape is tuple (HEIGHT, WIDTH)
+    '''
+    # lmark_fph.face_landmarks.landmark
+    # lmark_fph.pose_landmarks.landmark
+    # lmark_fph.left_hand_landmarks.landmark
+    # lmark_fph.right_hand_landmarks.landmark
+    # logic resize to --> 480 x 480 x 3
+    #     0) all coords be greater than|= 0.0 and less than|= 1.0
+    #         a) lmarks x,y overwrite to [0.0, 1.0] only
+    #         b) has x < 0.0 then ALL_x+abs(min(x_neg)), ie. move right
+    #         b) has y < 0.0 then ALL_y+abs(min(y_neg)), ie. move down
+    #         c) ALL_coords_x_y/highest_value
+    #         d) eg. 1.74 then ALL_coords_x_y/1.74
+    #         e) for all be scaled down with same aspect ratio as orig
+    #         f) NOW all( x, y ) are 0.0 to 1.0 value only
+    #     1) from old img ratio to new square img ratio
+    #         a) if owx < ohy: all_x= all_x* (480*owx/ohy)/480
+    #         b) if ohy < owx: all_y= all_y* (480*ohy/owx)/480
+    #     2) zoom in/out with padding 0.05 each side( with respecting orig aspect ratio )
+    #         a) if too far zoom in
+    #         b) if too close zoom out
+    #         c) goal lowest val 0.05 both(x,y) .ie padding
+    #         d) goal highest val 0.95 both(x,y)
+    #         e) ie. max(lm_wx, lm_hy) == 0.9
+    #     3) center landmark with same aspect ratio as original
+    #         a) min_wx_hy= min( wx, hy ); max_wx_hy= max( wx, hy )
+    #         b) min_wx_hy as mn; max_wx_hy as mx
+    #         c) if mn is wx, all X +( (mx-mn)/(mx*2) )
+    #         d) if mn is hy, all Y +( (mx-mn)/(mx*2) )
+    assert 1<len(original_shape) # incorrect use of normalizeLandmarks(...), mandatory 1<len(original_shape)
+    landmarks= part1_beGreaterThanOrEqual0_and_lessThanOrEqual1(landmarks)
+    landmarks= part2_beSquareRatioOnImage(
+        landmarks,
+        (original_shape[0], original_shape[1])
+    )
+    landmarks= part3_zoomInOutForPadding(landmarks)
+    landmarks= part4_centerLandmarkVerticallyHorizontally(landmarks)
+
+
+    return landmarks
+def normalizeWorthyLandmarkWrapper(
+    landmarks: list[tuple[float, float]], # order --> face_pose_left_right_hand
+    original_shape: tuple,
+    hasLandmarks: dict
+) -> list[tuple[float, float]]:
+    if not (hasLandmarks["face"] or hasLandmarks["pose"] or hasLandmarks["left_hand"] or hasLandmarks["right_hand"]):
+        return landmarks
+    norm: list= []
+    if hasLandmarks['face']:
+        norm.extend(landmarks[
+            :len(WORTHY_FACE_IDX)
+        ])
+    if hasLandmarks['pose']:
+        norm.extend(landmarks[
+            len(WORTHY_FACE_IDX):
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX)
+        ])
+    if hasLandmarks['left_hand']:
+        norm.extend(landmarks[
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +Q_W_HAND
+        ])
+    if hasLandmarks['right_hand']:
+        norm.extend(landmarks[
+            len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +Q_W_HAND:
+        ])
+    norm= normalizeLandmarks(landmarks=norm, original_shape=original_shape)
+
+    out_landmark: list= []
+    # -- face landmarks --
+    if hasLandmarks["face"]:
+        out_landmark.extend(norm[:len(WORTHY_FACE_IDX)])
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                len(WORTHY_FACE_IDX),
+                2
+            )).tolist()
+        )
+
+    # -- pose landmarks --
+    if hasLandmarks["pose"]:
+        if hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX)
+            ])
+        else:
+            out_landmark.extend(norm[
+                :len(WORTHY_POSE_IDX)
+            ])
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                len(WORTHY_POSE_IDX),
+                2
+            )).tolist())
+
+    # -- left hand landmarks --
+    if hasLandmarks["left_hand"]:
+        if hasLandmarks["face"] and hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +Q_W_HAND
+            ])
+        elif hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+                len(WORTHY_FACE_IDX) +Q_W_HAND
+            ])
+        elif hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX):
+                len(WORTHY_POSE_IDX) +Q_W_HAND
+            ])
+        else:
+            out_landmark.extend(norm[
+                :Q_W_HAND
+            ])
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                Q_W_HAND,
+                2
+            )).tolist())
+
+    # -- right hand landmarks --
+    if hasLandmarks["right_hand"]:
+        if hasLandmarks["face"] and hasLandmarks["pose"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX) +Q_W_HAND:
+            ])
+        elif hasLandmarks["face"] and hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +len(WORTHY_POSE_IDX):
+            ])
+        elif hasLandmarks["face"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX) +Q_W_HAND:
+            ])
+        elif hasLandmarks["pose"] and hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX) +Q_W_HAND:
+            ])
+        elif hasLandmarks["face"]:
+            out_landmark.extend(norm[
+                len(WORTHY_FACE_IDX):
+            ])
+        elif hasLandmarks["pose"]:
+            out_landmark.extend(norm[
+                len(WORTHY_POSE_IDX):
+            ])
+        elif hasLandmarks["left_hand"]:
+            out_landmark.extend(norm[
+                Q_W_HAND:
+            ])
+        else:
+            out_landmark.extend(norm)
+    else:
+        out_landmark.extend(np.zeros(
+            (
+                Q_W_HAND,
+                2
+            )).tolist())
+
+    # out_landmark shape:
+    # (
+    #     len(WORTHY_FACE_IDX)
+    #     +len(WORTHY_POSE_IDX)
+    #     +Q_W_HAND *2,
+    #     2
+    # )
+    return out_landmark # ie. output shape (86, 2)
+def landmarks_force_0_to_1(landmarks: list) -> list:
+    return [
+        (
+            max(0.0, min(x, 1.0)),
+            max(0.0, min(y, 1.0)),
+        ) for x, y in landmarks
+    ]
+def drawFacePoseHand(
+    img_write_to: np.ndarray,
+    lmark_mph,
+    orig_shape: tuple,
+) -> tuple[np.ndarray, list[tuple[float, float]], bool, bool]:
+    assert lmark_mph.face_landmarks!=None
+    assert lmark_mph.pose_landmarks!=None
+    assert lmark_mph.left_hand_landmarks!=None or lmark_mph.right_hand_landmarks!=None
+
+
+    landmark__face_pose_left_right_hand: list= list()
+    # ---- face landmarks ----
+    for idx, el in enumerate(lmark_mph.face_landmarks.landmark):
+        if idx in WORTHY_FACE_IDX:
+            landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
+    img_write_to= drawSkeletonImg(
+        image=img_write_to,
+        lmark_coordinates=landmarks_force_0_to_1(
+            landmark__face_pose_left_right_hand
+        ),
+        connections_idxs=FACE_CONNECTIONS,
+        thick=10,
+        color_dot=None,
+        color_line=(0, 153, 0), # 153/255= 0.6
+    )
+
+    # ---- pose landmarks ----
+    for idx, el in enumerate(lmark_mph.pose_landmarks.landmark):
+        if idx in WORTHY_POSE_IDX:
+            landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
+    img_write_to= drawSkeletonImg(
+        image=img_write_to,
+        lmark_coordinates=landmarks_force_0_to_1(
+            landmark__face_pose_left_right_hand[-1*len(WORTHY_POSE_IDX):]
+        ),
+        connections_idxs=POSE_CONNECTIONS,
+        thick=10,
+        color_dot=None,
+        color_line=(0, 0, 153), # 153/255= 0.6
+    )
+
+    # ---- left hand landmarks ----
+    if lmark_mph.left_hand_landmarks != None:
+        for el in lmark_mph.left_hand_landmarks.landmark:
+            landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
+        img_write_to= drawSkeletonImg(
+            image=img_write_to,
+            lmark_coordinates=landmarks_force_0_to_1(
+                [(el.x, el.y) for el in lmark_mph.left_hand_landmarks.landmark]
+            ),
+            connections_idxs=HAND_CONNECTIONS,
+            thick=10,
+            color_dot=None,
+            color_line=(255, 255, 255)
+        )
+    else:
+        for _ in range(Q_W_HAND):
+            landmark__face_pose_left_right_hand.append((  0.0, 0.0  ))
+
+    # ---- right hand landmarks ----
+    if lmark_mph.right_hand_landmarks != None:
+        for el in lmark_mph.right_hand_landmarks.landmark:
+            landmark__face_pose_left_right_hand.append((  el.x, el.y  ))
+        img_write_to= drawSkeletonImg(
+            image=img_write_to,
+            lmark_coordinates=landmarks_force_0_to_1(
+                [(el.x, el.y) for el in lmark_mph.right_hand_landmarks.landmark]
+            ),
+            connections_idxs=HAND_CONNECTIONS,
+            thick=10,
+            color_dot=None,
+            color_line=(153, 204, 204), # 204/255= 0.8
+        )
+    else:
+        for _ in range(Q_W_HAND):
+            landmark__face_pose_left_right_hand.append((  0.0, 0.0  ))
+
+
+
+
+    landmark__face_pose_left_right_hand= normalizeWorthyLandmarkWrapper(
+        landmarks=landmark__face_pose_left_right_hand,
+        original_shape=orig_shape,
+        hasLandmarks={
+            'face': lmark_mph.face_landmarks != None,
+            'pose': lmark_mph.pose_landmarks != None,
+            'left_hand': lmark_mph.left_hand_landmarks != None,
+            'right_hand': lmark_mph.right_hand_landmarks != None,
+        }
+    )
+
+
+    # HERE ORDER OF LANDMARKS
+    # order of landmarks [...face..., ...pose..., ...left_hand..., ...right_hand...]
+    # return tuple(ndarray, list_of_shape_86_2)
+    return (
+        img_write_to,
+        landmark__face_pose_left_right_hand,
+        lmark_mph.left_hand_landmarks != None,
+        lmark_mph.right_hand_landmarks != None,
+    )
+def get2dots_frombody(input: np.ndarray) -> np.ndarray:
+    '''
+    input -- shape of (..., 86, 2)
+    -------------------------------
+    returned shape is (...,  2, 2)
+    '''
+    shoulder_center: np.ndarray= (
+        input[..., LM_IDX_LEFT_SHOULDER:LM_IDX_LEFT_SHOULDER+1, :] +
+        input[..., LM_IDX_RIGHT_SHOULDER:LM_IDX_RIGHT_SHOULDER+1, :]
+    )/2.0
+    hip_center: np.ndarray= (
+        input[..., LM_IDX_LEFT_HIP:LM_IDX_LEFT_HIP+1, :] +
+        input[..., LM_IDX_RIGHT_HIP:LM_IDX_RIGHT_HIP+1, :]
+    )/2.0
+    shoulder_hip_center: np.ndarray= (shoulder_center +hip_center)/2.0
+    '''
+    shoulder_center and hip_center, both has shape (..., 1, 2)
+    so as shoulder_hip_center has shape (..., 1, 2)
+    '''
+    return np.concatenate([
+        (shoulder_center+shoulder_hip_center)/2.0,
+        (shoulder_hip_center+hip_center)/2.0,
+    ], axis=-2)
+def atleast1hand(results) -> bool:
+    return results.face_landmarks != None and \
+           results.pose_landmarks != None and \
+           ( results.left_hand_landmarks != None or \
+           results.right_hand_landmarks != None )
+def resize_image(image: np.ndarray, target_size: int) -> np.ndarray:
+    h, w= image.shape[:2]
+    scale= target_size /max(h, w)
+    return cv.resize(image, (int(w * scale), int(h * scale)))
+def apply_clahe(image_rgb):
+    '''
+    image_rgb, 3D data,
+    CLAHE, Contrast Limited Adaptive Histogram Equalization
+    ie. have more contrast on image
+    -------------------------------
+    returned is image in rgb also
+    '''
+    light, a, b= cv.split(
+        cv.cvtColor(image_rgb, cv.COLOR_RGB2LAB)
+    )
+    clahe= cv.createCLAHE(clipLimit=1.5, tileGridSize=(8,8)).apply(light)
+    return cv.cvtColor(
+        cv.merge((clahe, a, b)),
+        cv.COLOR_LAB2RGB
+    )
+def from86extract87(landmarks: np.ndarray, left_hand: bool, right_hand: bool) -> np.ndarray:
+    '''
+    landmarks be shape (86, 2)
+    --------------------------
+    returns of shape (87, 2)
+    '''
+    left_right_hand: np.ndarray= np.array([[
+        1.0 if left_hand else 0.0,
+        1.0 if right_hand else 0.0,
+    ]])
+    output: np.ndarray= np.concatenate([
+        landmarks,
+        left_right_hand,
+    ], axis=0)
+
+    return output
+
+
+def main() -> None:
+    model, labels= load_model()
+    do_clahe: bool= True
+
+    cap: cv.VideoCapture= cv.VideoCapture(2)
+    if not cap.isOpened():
+        print("Error: Could not open camera")
+        return
+    pygame.init() # init pygame display
+    screen= pygame.display.set_mode((IMG_SIZE, IMG_SIZE))
+    pygame.display.set_caption("ASL Recognition")
+
+    landmark_left_or_right_hands: list= []
+    no_landmark_count: int= 0
+    count_frames_skip: int= 0
+    try:
+        while True:
+            ret, frame= cap.read()
+            if not ret:
+                break
+
+            count_frames_skip+= 1
+            rgb_frame= cv.cvtColor(frame, cv.COLOR_BGR2RGB)
+            if do_clahe:
+                rgb_frame= apply_clahe(image_rgb=rgb_frame)
+            results= MPH_fph.process(rgb_frame)
+
+            if atleast1hand(results):
+                img_with_skeleton, landmarks, has_lhand, has_rhand= drawFacePoseHand(
+                    rgb_frame,
+                    results,
+                    frame.shape[:2],
+                )
+                no_landmark_count= 0
+
+                landmark_left_or_right_hands.append(
+                    from86extract87(
+                        landmarks=np.array(landmarks),
+                        left_hand=has_lhand,
+                        right_hand=has_rhand,
+                    )
+                )
+                if len(landmark_left_or_right_hands) >= QUANTITY_FRAME:
+                    probabilities: list[float]= list(model.predict(
+                        np.array(landmark_left_or_right_hands[-QUANTITY_FRAME:])[None, ...]
+                    )[0])
+                    top_indices: list[int]= np.argsort(probabilities).tolist()
+                    top_indices.reverse()
+                    print("Top 5 Sign Classifications:")
+                    for rank, idx in enumerate(top_indices[:5]):
+                        print(f"    {rank} --> {labels[idx]} (probability: {(probabilities[idx]*100):.5f} %)")
+                    print()
+                    landmark_left_or_right_hands= []
+            else:
+                no_landmark_count += 1
+                img_with_skeleton= rgb_frame
+
+                if no_landmark_count >= 3:
+                    print("No landmarks detected. Please slow down. Or there is no human being in front")
+                    no_landmark_count= 0
+
+            # Display the image with skeleton
+            # display_frame= cv.cvtColor(img_with_skeleton, cv.COLOR_BGR2RGB)
+            display_frame= cv.flip( # flip to mirror, left be right, right be left
+                resize_image(img_with_skeleton, IMG_SIZE),
+                1
+            )
+            pygame_surface= pygame.surfarray.make_surface(display_frame.swapaxes(0, 1))
+            screen.blit(pygame_surface, (0, 0))
+            pygame.display.flip()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT: # Check quit event
+                    raise KeyboardInterrupt
+    except KeyboardInterrupt:
+        print("Exiting...")
+    finally:
+        cap.release()
+        pygame.quit()
+        MPH_fph.close()
+if __name__=="__main__":
+    main()
