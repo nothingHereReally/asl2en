@@ -1,0 +1,54 @@
+Model: "functional"
+┏━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━━━━━━━━━━━━━┳━━━━━━━━━━━━━━━━━┓
+┃ Layer (type)                         ┃ Output Shape                ┃         Param # ┃
+┡━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━━━━━━━━━━━━━╇━━━━━━━━━━━━━━━━━┩
+│ batch_vid (InputLayer)               │ (None, 26, 87, 2)           │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ extract_features (ExtractFeatures)   │ (None, 26, 120)             │               0 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ multi_encoder_in_sequence            │ (None, 26, 120)             │         106,464 │
+│ (NTimesEncoderTransformer)           │                             │                 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ attention_pooling (AttentionPooling) │ (None, 120)                 │             121 │
+├──────────────────────────────────────┼─────────────────────────────┼─────────────────┤
+│ batch_class (Dense)                  │ (None, 38)                  │           4,598 │
+└──────────────────────────────────────┴─────────────────────────────┴─────────────────┘
+ Total params: 111,183 (434.31 KB)
+ Trainable params: 111,183 (434.31 KB)
+ Non-trainable params: 0 (0.00 B)
+Epoch 1/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 45s 94ms/step - accuracy: 0.2600 - loss: 2.7714 - val_accuracy: 0.4698 - val_loss: 2.0692 - learning_rate: 1.0000e-04
+Epoch 2/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 30s 87ms/step - accuracy: 0.6054 - loss: 1.5598 - val_accuracy: 0.6668 - val_loss: 1.4118 - learning_rate: 1.0000e-04
+Epoch 3/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 29s 86ms/step - accuracy: 0.7887 - loss: 0.9718 - val_accuracy: 0.7584 - val_loss: 1.0277 - learning_rate: 1.0000e-04
+Epoch 4/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 30s 88ms/step - accuracy: 0.8772 - loss: 0.6163 - val_accuracy: 0.8201 - val_loss: 0.8107 - learning_rate: 1.0000e-04
+Epoch 5/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 31s 91ms/step - accuracy: 0.9256 - loss: 0.4154 - val_accuracy: 0.8303 - val_loss: 0.7209 - learning_rate: 1.0000e-04
+Epoch 6/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 33s 96ms/step - accuracy: 0.9525 - loss: 0.2956 - val_accuracy: 0.8423 - val_loss: 0.6687 - learning_rate: 1.0000e-04
+Epoch 7/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 33s 96ms/step - accuracy: 0.9719 - loss: 0.2175 - val_accuracy: 0.8470 - val_loss: 0.6436 - learning_rate: 1.0000e-04
+Epoch 8/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 0s 51ms/step - accuracy: 0.9808 - loss: 0.1635
+Epoch 8: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-06.
+342/342 ━━━━━━━━━━━━━━━━━━━━ 31s 91ms/step - accuracy: 0.9808 - loss: 0.1635 - val_accuracy: 0.8427 - val_loss: 0.6260 - learning_rate: 1.0000e-04
+Epoch 9/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step - accuracy: 0.9913 - loss: 0.1229
+Epoch 9: ReduceLROnPlateau reducing learning rate to 9.999999747378752e-07.
+342/342 ━━━━━━━━━━━━━━━━━━━━ 31s 89ms/step - accuracy: 0.9913 - loss: 0.1229 - val_accuracy: 0.8463 - val_loss: 0.5979 - learning_rate: 1.0000e-05
+Epoch 10/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 0s 51ms/step - accuracy: 0.9916 - loss: 0.1191
+Epoch 10: ReduceLROnPlateau reducing learning rate to 9.999999974752428e-08.
+342/342 ━━━━━━━━━━━━━━━━━━━━ 31s 91ms/step - accuracy: 0.9916 - loss: 0.1191 - val_accuracy: 0.8448 - val_loss: 0.5989 - learning_rate: 1.0000e-06
+Epoch 11/20
+342/342 ━━━━━━━━━━━━━━━━━━━━ 0s 50ms/step - accuracy: 0.9920 - loss: 0.1178
+Epoch 11: ReduceLROnPlateau reducing learning rate to 1.0000000116860975e-08.
+342/342 ━━━━━━━━━━━━━━━━━━━━ 31s 90ms/step - accuracy: 0.9920 - loss: 0.1178 - val_accuracy: 0.8438 - val_loss: 0.6015 - learning_rate: 1.0000e-07
+Epoch 11: early stopping
+Restoring model weights from the end of the best epoch: 9.
+Quantity images --> 26
+Quantity categories --> 38
+model( --> aslvid2gloss_v82.keras <-- )
+--> took about 6 minutes 3 seconds
